@@ -7,7 +7,7 @@ spring:
     hikari:
       connection-test-query: select 1
   jpa:
-    show-sql: false
+    show-sql: true
     generate-ddl: true
     database-platform: '@datasource.platform@'
     hibernate:

@@ -1,11 +1,13 @@
 package com.dm.uap.service.impl;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dm.common.exception.DataValidateException;
 import com.dm.uap.converter.MenuConverter;
 import com.dm.uap.dto.MenuDto;
+import com.dm.uap.entity.Authority;
 import com.dm.uap.entity.Menu;
 import com.dm.uap.entity.QMenu;
+import com.dm.uap.repository.AuthorityRepository;
 import com.dm.uap.repository.MenuRepository;
 import com.dm.uap.service.MenuService;
 import com.querydsl.core.BooleanBuilder;
@@ -35,6 +39,9 @@ public class MenuServcieImpl implements MenuService {
 	@Autowired
 	private MenuConverter menuConverter;
 
+	@Autowired
+	private AuthorityRepository authorityRepository;
+
 	private final QMenu qMenu = QMenu.menu;
 
 	@Override
@@ -45,12 +52,16 @@ public class MenuServcieImpl implements MenuService {
 		menuConverter.copyProperties(menu, menuDto);
 		MenuDto parentDto = menuDto.getParent();
 		// 在保存新菜单时，继承父菜单的权限设置
-		if (!Objects.isNull(parentDto)) {
+		if (!Objects.isNull(parentDto) && !Objects.isNull(parentDto.getId())) {
 			Menu parent = menuRepository.getOne(parentDto.getId());
 			menu.setParent(parent);
-//			List<Role> roles = parent.getRoles();
-//			List<Role> roles_ = roles.stream().map(role -> role).collect(Collectors.toList());
-//			menu.setRoles(roles_);
+			// 添加权限信息
+			List<Authority> authorities = authorityRepository.findByMenus(Collections.singleton(parent));
+			if (CollectionUtils.isNotEmpty(authorities)) {
+				for (Authority authority : authorities) {
+					authority.getMenus().add(menu);
+				}
+			}
 		}
 		menu = menuRepository.save(menu);
 		menu.setOrder(menu.getId());
@@ -82,10 +93,16 @@ public class MenuServcieImpl implements MenuService {
 	@Override
 	@Transactional
 	public void delete(Long id) {
-//		Optional<Menu> menu = menuRepository.findById(id);
-//		List<Role> roles = roleRepository.findAll();
-//		roles.forEach(role -> role.getMenus().remove(menu.get()));
-		menuRepository.deleteById(id);
+		Menu menu = menuRepository.getOne(id);
+		List<Authority> authorities = authorityRepository.findByMenus(Collections.singleton(menu));
+		// 删除菜单之前，先移除相关的权限配置信息
+		if (CollectionUtils.isNotEmpty(authorities)) {
+			for (Authority authority : authorities) {
+				authority.getMenus().remove(menu);
+			}
+		}
+		// 删除菜单
+		menuRepository.delete(menu);
 	}
 
 	@Override
@@ -97,8 +114,10 @@ public class MenuServcieImpl implements MenuService {
 			builder.and(qMenu.parent.id.eq(parentId));
 		}
 		if (StringUtils.isNotBlank(key)) {
-			builder.and(qMenu.name.containsIgnoreCase(key).or(qMenu.title.containsIgnoreCase(key))
-					.or(qMenu.url.containsIgnoreCase(key)).or(qMenu.description.containsIgnoreCase(key)));
+			builder.and(qMenu.name.containsIgnoreCase(key)
+					.or(qMenu.title.containsIgnoreCase(key))
+					.or(qMenu.url.containsIgnoreCase(key))
+					.or(qMenu.description.containsIgnoreCase(key)));
 		}
 		return menuRepository.findAll(builder.getValue(), pageable);
 	}

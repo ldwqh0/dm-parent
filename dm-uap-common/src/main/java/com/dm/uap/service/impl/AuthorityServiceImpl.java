@@ -54,7 +54,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 			authority = authorityRepository.save(authority);
 		}
 		List<MenuDto> menus = authorityDto.getAuthorityMenus();
-		List<Menu> list = menus.stream().map(m -> menuRepository.getOne(m.getId())).collect(Collectors.toList());
+		Set<Menu> list = menus.stream().map(m -> menuRepository.getOne(m.getId())).collect(Collectors.toSet());
 		authority.setMenus(list);
 		return authority;
 	}
@@ -71,7 +71,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 		Set<Menu> parents = new HashSet<Menu>();
 		roles.forEach(role -> {
 			if (authorityRepository.existsById(role.getId())) {
-				List<Menu> menus_ = authorityRepository.getOne(role.getId()).getMenus();
+				Set<Menu> menus_ = authorityRepository.getOne(role.getId()).getMenus();
 				menus.addAll(menus_.stream().filter(m -> m.isEnabled()).collect(Collectors.toSet()));
 			} //
 		});

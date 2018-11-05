@@ -1,6 +1,6 @@
 package com.dm.uap.converter;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
 	protected AuthorityDto toDtoActual(Authority model) {
 		AuthorityDto dto = new AuthorityDto();
 		dto.setRoleId(model.getId());
-		List<Menu> menus = model.getMenus();
+		Set<Menu> menus = model.getMenus();
 		dto.setAuthorityMenus(menuConverter.toDto(menus));
 		return dto;
 	}

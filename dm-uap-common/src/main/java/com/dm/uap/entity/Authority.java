@@ -1,7 +1,7 @@
 package com.dm.uap.entity;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,7 +50,7 @@ public class Authority implements Serializable {
 			@JoinColumn(name = "authority_id_", referencedColumnName = "role_id_") }, inverseJoinColumns = {
 					@JoinColumn(name = "menu_id_", referencedColumnName = "id_") }, indexes = {
 							@Index(columnList = "authority_id_", name = "IDX_dm_authority_menu_authority_id_") })
-	private List<Menu> menus;
+	private Set<Menu> menus;
 
 	protected void setId(Long id) {
 		this.id = id;

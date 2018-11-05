@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dm.uap.entity.QUser;
 import com.dm.uap.entity.User;
@@ -22,6 +23,7 @@ public class UserRepositoryImpl {
 
 	private final QUser qUser = QUser.user;
 
+	@Transactional
 	public Page<User> find(String key, Pageable pageable) {
 		JPAQuery<User> query = new JPAQuery<User>(em);
 		query.select(qUser).from(qUser);
@@ -32,7 +34,9 @@ public class UserRepositoryImpl {
 		long total = query.fetchCount();
 		query.offset(pageable.getOffset());
 		query.limit(pageable.getPageSize());
+		pageable.getSort();
 		List<User> content = query.fetch();
 		return new PageImpl<User>(content, pageable, total);
+
 	}
 }
