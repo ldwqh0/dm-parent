@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.dm.springboot.autoconfigure.uap.UapAutoConfiguration,\
+com.dm.springboot.autoconfigure.common.AuditingAutoConfiguration,\
+com.dm.springboot.autoconfigure.security.SecurityConfiguration
