@@ -1,8 +1,10 @@
 package com.dm.uap.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.dm.uap.entity.Menu.MenuType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -24,5 +26,10 @@ public class MenusTreeDto implements Serializable {
 	private String icon;
 	private String href;
 	private String description;
+	private MenuType type;
 	private List<MenusTreeDto> submenus;
+
+	public MenusTreeDto() {
+		submenus = new ArrayList<MenusTreeDto>();
+	}
 }

@@ -55,7 +55,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 		dto.setIcon(menu.getIcon());
 		dto.setHref(menu.getUrl());
 		dto.setDescription(menu.getDescription());
-		dto.setSubmenus(new ArrayList<MenusTreeDto>());
+		dto.setType(menu.getType());
 		return dto;
 	}
 
@@ -72,6 +72,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 			menuDto.setParent(toDto(model.getParent()));
 		}
 		menuDto.setDescription(model.getDescription());
+		menuDto.setType(model.getType());
 		return menuDto;
 	}
 
@@ -83,6 +84,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 		model.setUrl(dto.getUrl());
 		model.setIcon(dto.getIcon());
 		model.setDescription(dto.getDescription());
+		model.setType(dto.getType());
 	}
 
 }

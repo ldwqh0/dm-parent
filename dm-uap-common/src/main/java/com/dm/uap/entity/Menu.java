@@ -2,6 +2,8 @@ package com.dm.uap.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,6 +22,23 @@ import lombok.Setter;
 public class Menu extends AbstractEntity {
 
 	private static final long serialVersionUID = -5469864417544946812L;
+
+	/**
+	 * 菜单类型，指定一个菜单的链接类型，可以是链接到业务组件，也可以是页面URL
+	 * 
+	 * @author LiDong
+	 *
+	 */
+	public enum MenuType {
+		/**
+		 * 链接到业务组件
+		 */
+		COMPONENT,
+		/**
+		 * 链接到超链接
+		 */
+		HYPERLINK
+	}
 
 	/**
 	 * 菜单名称
@@ -66,5 +85,9 @@ public class Menu extends AbstractEntity {
 	@ManyToOne
 	@JoinColumn(name = "parent_")
 	private Menu parent;
+
+	@Column(name = "type_")
+	@Enumerated(EnumType.STRING)
+	private MenuType type = MenuType.COMPONENT;
 
 }

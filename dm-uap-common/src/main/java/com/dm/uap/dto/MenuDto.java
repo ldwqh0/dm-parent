@@ -2,6 +2,7 @@ package com.dm.uap.dto;
 
 import java.io.Serializable;
 
+import com.dm.uap.entity.Menu.MenuType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -24,5 +25,6 @@ public class MenuDto implements Serializable {
 	private String url;
 	private String icon;
 	private String description;
+	private MenuType type;
 	private MenuDto parent;
 }
