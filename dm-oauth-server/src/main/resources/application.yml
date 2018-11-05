@@ -2,7 +2,7 @@ spring:
   datasource:
     url: '@datasource.url@'
     username: '@datasource.username@'
-    driver-class-name: 'org.mariadb.jdbc.Driver'
+    driver-class-name: '@datasource.driver@'
     password: '@datasource.password@'
     hikari:
       connection-test-query: select 1
