@@ -11,4 +11,6 @@ public interface UserApprovalRepository extends JpaRepository<UserApproval, User
 
 	public List<UserApproval> findByClientIdAndUserId(String clientId, String userId);
 
+	public void deleteByClientId(String clientId);
+
 }

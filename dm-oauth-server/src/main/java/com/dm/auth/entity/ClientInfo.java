@@ -23,7 +23,7 @@ public class ClientInfo implements Persistable<String>, Serializable {
 
 	@Id
 	@Column(name = "client_id_")
-	private String client_id_;
+	private String clientId;
 
 	@Column(name = "client_secret_")
 	private String clientSecret;
@@ -51,12 +51,12 @@ public class ClientInfo implements Persistable<String>, Serializable {
 
 	@Override
 	public boolean isNew() {
-		return StringUtils.isBlank(client_id_);
+		return StringUtils.isBlank(clientId);
 	}
 
 	@Override
 	public String getId() {
-		return this.client_id_;
+		return this.clientId;
 	}
 
 }

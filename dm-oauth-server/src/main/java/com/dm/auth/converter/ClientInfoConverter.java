@@ -3,12 +3,14 @@ package com.dm.auth.converter;
 import java.util.Optional;
 
 import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.stereotype.Component;
 
 import com.dm.auth.dto.ClientDetailsDto;
 import com.dm.auth.dto.ClientInfoDto;
 import com.dm.auth.entity.ClientInfo;
 import com.dm.common.converter.AbstractConverter;
 
+@Component
 public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInfoDto> {
 
 	@Override
@@ -19,8 +21,12 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 
 	@Override
 	public void copyProperties(ClientInfo model, ClientInfoDto dto) {
-		// TODO Auto-generated method stub
-
+		model.setAccessTokenValiditySeconds(dto.getAccessTokenValiditySeconds());
+		model.setAuthorizedGrantTypes(dto.getAuthorizedGrantTypes());
+		model.setRefreshTokenValiditySeconds(dto.getRefreshTokenValiditySeconds());
+		model.setRegisteredRedirectUri(dto.getRegisteredRedirectUri());
+		model.setResourceIds(dto.getResourceIds());
+		model.setScope(dto.getScope());
 	}
 
 	public ClientDetailsDto toClientDetails(ClientInfo model) {
@@ -42,7 +48,7 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 
 	private ClientDetailsDto toClientDetailsActual(ClientInfo model) {
 		ClientDetailsDto dto = new ClientDetailsDto();
-		dto.setClient_id_(model.getClient_id_());
+		dto.setClient_id_(model.getClientId());
 		dto.setAccessTokenValiditySeconds(model.getAccessTokenValiditySeconds());
 		dto.setAuthorizedGrantTypes(model.getAuthorizedGrantTypes());
 		dto.setClientSecret(model.getClientSecret());

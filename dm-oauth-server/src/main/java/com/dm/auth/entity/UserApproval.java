@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
@@ -30,10 +32,11 @@ public class UserApproval {
 	private String clientId;
 
 	@Id
-	@Column(name = "scope")
+	@Column(name = "scope_")
 	private String scope;
 
 	@Column(name = "status_")
+	@Enumerated(EnumType.STRING)
 	private ApprovalStatus status;
 
 	@Column(name = "expires_at_")

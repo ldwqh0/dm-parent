@@ -75,4 +75,10 @@ public class UserApprovalServiceImpl implements UserApprovalService {
 		return userApprovalConverter.toDto(approvals);
 	}
 
+	@Override
+	@Transactional
+	public void deleteByClient(String clientId) {
+		userApprovalRepository.deleteByClientId(clientId);
+	}
+
 }

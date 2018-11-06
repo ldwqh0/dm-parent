@@ -12,7 +12,7 @@ public class ClientDetailsDto implements ClientDetails {
 
 	private static final long serialVersionUID = 3990161608565888894L;
 
-	private String client_id_;
+	private String clientId;
 
 	private String clientSecret;
 
@@ -30,7 +30,7 @@ public class ClientDetailsDto implements ClientDetails {
 
 	@Override
 	public String getClientId() {
-		return client_id_;
+		return clientId;
 	}
 
 	@Override
@@ -93,8 +93,8 @@ public class ClientDetailsDto implements ClientDetails {
 		return Collections.emptyMap();
 	}
 
-	public void setClient_id_(String client_id_) {
-		this.client_id_ = client_id_;
+	public void setClient_id_(String clientId) {
+		this.clientId = clientId;
 	}
 
 	public void setClientSecret(String clientSecret) {
