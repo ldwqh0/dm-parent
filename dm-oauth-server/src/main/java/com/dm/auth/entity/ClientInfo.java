@@ -23,7 +23,7 @@ public class ClientInfo implements Persistable<String>, Serializable {
 
 	@Id
 	@Column(name = "client_id_")
-	private String id;
+	private String client_id_;
 
 	@Column(name = "client_secret_")
 	private String clientSecret;
@@ -37,6 +37,9 @@ public class ClientInfo implements Persistable<String>, Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> registeredRedirectUri;
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> resourceIds;
+
 	@Column(name = "access_token_validity_seconds_")
 	private Integer accessTokenValiditySeconds;
 
@@ -48,6 +51,12 @@ public class ClientInfo implements Persistable<String>, Serializable {
 
 	@Override
 	public boolean isNew() {
-		return StringUtils.isBlank(id);
+		return StringUtils.isBlank(client_id_);
 	}
+
+	@Override
+	public String getId() {
+		return this.client_id_;
+	}
+
 }
