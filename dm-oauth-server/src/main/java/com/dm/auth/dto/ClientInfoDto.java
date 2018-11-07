@@ -1,6 +1,7 @@
 package com.dm.auth.dto;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 import lombok.Data;
@@ -13,9 +14,9 @@ public class ClientInfoDto implements Serializable {
 
 	private String clientSecret;
 
-	private Set<String> scope;
+	private Set<String> scope = Collections.singleton("app");
 
-	private Set<String> authorizedGrantTypes;
+	private Set<String> authorizedGrantTypes = Collections.singleton("authorization_code");
 
 	private Set<String> registeredRedirectUri;
 

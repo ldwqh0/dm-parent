@@ -25,4 +25,6 @@ public class OAuthResourceConfigurer extends ResourceServerConfigurerAdapter {
 		resources.resourceId("USERS");
 		resources.stateless(true); // 指定服务是无状态的
 	}
+	
+	
 }

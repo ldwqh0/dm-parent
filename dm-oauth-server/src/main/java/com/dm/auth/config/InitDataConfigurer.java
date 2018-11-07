@@ -30,7 +30,6 @@ public class InitDataConfigurer {
 		client.setClientSecret("123456");
 		client.setRefreshTokenValiditySeconds(50000);
 		client.setRegisteredRedirectUri(Collections.singleton("http://www.baidu.com"));
-		client.setResourceIds(Collections.singleton("1"));
 		client.setScope(Collections.singleton("app"));
 		clientService.save(client);
 	}

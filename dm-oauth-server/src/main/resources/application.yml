@@ -17,6 +17,9 @@ spring:
       ddl-auto: update
   main:
     allow-bean-definition-overriding: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
 management:
   endpoints:
     enabled-by-default: false

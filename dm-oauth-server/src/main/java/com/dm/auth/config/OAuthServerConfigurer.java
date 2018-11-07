@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -14,6 +16,8 @@ import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import com.dm.auth.service.UserApprovalService;
 
@@ -30,6 +34,12 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 
 	@Autowired
 	private UserApprovalService userApprovalService;
+
+	@Autowired
+	private RedisConnectionFactory connectionFactory;
+
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	/**
 	 * 这个主要是针对授权服务的配置，也就是针对/oauth/token这个地址的相关配置，比如添加过滤器什么的
@@ -68,17 +78,18 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		super.configure(endpoints);
-
-//		endpoints.accessTokenConverter(tokenConverter()); // 终结点的accessTokenConverter,用于将用户授权信息转化为token
-//		endpoints.tokenStore(tokenStore()); // token存储器
 		endpoints.userApprovalHandler(userApprovalHandler()); // 用户授权处理逻辑
-//		endpoints.accessTokenConverter(accessTokenConverter)
-//		endpoints.tokenStore(tokenStore)
+		endpoints.tokenStore(tokenStore());
+		// 指定是否可以重用refreshToken
+		endpoints.reuseRefreshTokens(true);
+		// 如果要使用RefreshToken可用，必须指定UserDetailsService
+		endpoints.userDetailsService(userDetailsService);
 		// endpoints.authenticationManager(); // 这个作用待研究
 	}
 
 	@Bean
 	public UserApprovalHandler userApprovalHandler() {
+		// 存储用户的授权结果
 		ApprovalStoreUserApprovalHandler handler = new ApprovalStoreUserApprovalHandler();
 		handler.setApprovalStore(userApprovalService);
 		handler.setRequestFactory(requestFactory());
@@ -88,6 +99,11 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Bean
 	public OAuth2RequestFactory requestFactory() {
 		return new DefaultOAuth2RequestFactory(clientDetailsService);
+	}
+
+	@Bean
+	public TokenStore tokenStore() {
+		return new RedisTokenStore(connectionFactory);
 	}
 
 }
