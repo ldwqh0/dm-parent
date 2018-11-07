@@ -27,7 +27,7 @@ import com.dm.uap.service.AuthorityService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("authorities")
+@RequestMapping({ "authorities", "oauth2/authorities" })
 public class AuthorityController {
 
 	@Autowired
