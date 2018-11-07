@@ -70,7 +70,7 @@
 			</activation>
 			<properties>
 				<profiles.active>localhost-mariadb</profiles.active>
-				<datasource.url>jdbc:mariadb://localhost:3306/oauth-server?createDatabaseIfNotExist=true</datasource.url>
+				<datasource.url>jdbc:mariadb://localhost:3306/oauth?createDatabaseIfNotExist=true</datasource.url>
 				<datasource.driver>org.mariadb.jdbc.Driver</datasource.driver>
 				<datasource.username>root</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>

@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -16,6 +18,7 @@ import com.dm.auth.dto.ClientInfoDto;
 import com.dm.auth.entity.ClientInfo;
 import com.dm.auth.repository.ClientInfoRepository;
 import com.dm.auth.service.ClientInfoService;
+import com.dm.auth.service.UserApprovalService;
 
 @Service("clientInfoService")
 public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsService {
@@ -28,6 +31,9 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private UserApprovalService userApprovalService;
 
 	@Override
 	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
@@ -55,6 +61,17 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	@Transactional
 	public void delete(String clientId) {
 		clientInfoRepository.deleteById(clientId);
+		userApprovalService.deleteByClient(clientId);
+	}
+
+	@Override
+	public Optional<ClientInfo> findById(String id) {
+		return clientInfoRepository.findById(id);
+	}
+
+	@Override
+	public Page<ClientInfo> find(String key, Pageable pageable) {
+		return clientInfoRepository.findByNameContains(key, pageable);
 	}
 
 }

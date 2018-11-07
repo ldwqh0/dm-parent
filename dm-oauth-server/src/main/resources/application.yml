@@ -9,11 +9,12 @@ spring:
     hikari:
       connection-test-query: select 1
   jpa:
-    show-sql: false
+    show-sql: true
     generate-ddl: true
     database-platform: '@datasource.platform@'
     hibernate:
       use-new-id-generator-mappings: true
+      ddl-auto: update
   main:
     allow-bean-definition-overriding: true
 management:

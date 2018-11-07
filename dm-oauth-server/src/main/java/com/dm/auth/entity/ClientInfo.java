@@ -28,6 +28,9 @@ public class ClientInfo implements Persistable<String>, Serializable {
 	@Column(name = "client_secret_")
 	private String clientSecret;
 
+	@Column(name = "name_")
+	private String name;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> scope;
 
