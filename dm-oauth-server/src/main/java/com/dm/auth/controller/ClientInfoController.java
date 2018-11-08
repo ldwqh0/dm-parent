@@ -48,6 +48,7 @@ public class ClientInfoController {
 	}
 
 	@PostMapping
+	@ResponseStatus(CREATED)
 	public ClientInfoDto save(@RequestBody ClientInfoDto client) {
 		ClientInfo client_ = clientService.save(client);
 		return clientInfoConverter.toDto(client_);

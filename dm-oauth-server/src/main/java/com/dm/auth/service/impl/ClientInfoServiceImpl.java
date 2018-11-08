@@ -17,6 +17,7 @@ import com.dm.auth.converter.ClientInfoConverter;
 import com.dm.auth.dto.ClientInfoDto;
 import com.dm.auth.entity.ClientInfo;
 import com.dm.auth.repository.ClientInfoRepository;
+import com.dm.auth.repository.UserApprovalRepository;
 import com.dm.auth.service.ClientInfoService;
 import com.dm.auth.service.UserApprovalService;
 
@@ -33,7 +34,7 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	private UserApprovalService userApprovalService;
+	private UserApprovalRepository userApprovalRepository;
 
 	@Override
 	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
@@ -61,7 +62,7 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	@Transactional
 	public void delete(String clientId) {
 		clientInfoRepository.deleteById(clientId);
-		userApprovalService.deleteByClient(clientId);
+		userApprovalRepository.deleteByClientId(clientId);
 	}
 
 	@Override

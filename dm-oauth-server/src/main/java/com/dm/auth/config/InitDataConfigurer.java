@@ -28,6 +28,7 @@ public class InitDataConfigurer {
 		client.setAccessTokenValiditySeconds(60000);
 		client.setAuthorizedGrantTypes(Collections.singleton("authorization_code"));
 		client.setClientSecret("123456");
+		client.setName("admin");
 		client.setRefreshTokenValiditySeconds(50000);
 		client.setRegisteredRedirectUri(Collections.singleton("http://www.baidu.com"));
 		client.setScope(Collections.singleton("app"));

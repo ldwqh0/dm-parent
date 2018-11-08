@@ -15,8 +15,17 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 
 	@Override
 	protected ClientInfoDto toDtoActual(ClientInfo model) {
-		// TODO Auto-generated method stub
-		return null;
+		ClientInfoDto info = new ClientInfoDto();
+		info.setAccessTokenValiditySeconds(model.getAccessTokenValiditySeconds());
+		info.setAuthorizedGrantTypes(model.getAuthorizedGrantTypes());
+		info.setClientId(model.getClientId());
+		info.setClientSecret(model.getClientSecret());
+		info.setRefreshTokenValiditySeconds(model.getRefreshTokenValiditySeconds());
+		info.setRegisteredRedirectUri(model.getRegisteredRedirectUri());
+		info.setResourceIds(model.getResourceIds());
+		info.setScope(model.getScope());
+		info.setName(model.getName());
+		return info;
 	}
 
 	@Override
@@ -27,6 +36,7 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 		model.setRegisteredRedirectUri(dto.getRegisteredRedirectUri());
 		model.setResourceIds(dto.getResourceIds());
 		model.setScope(dto.getScope());
+		model.setName(dto.getName());
 	}
 
 	public ClientDetailsDto toClientDetails(ClientInfo model) {
