@@ -118,7 +118,12 @@
 				<artifactId>springfox-swagger-ui</artifactId>
 				<version>${springfox.version}</version>
 			</dependency>
-
+			
+			<dependency>
+				<groupId>com.dm</groupId>
+				<artifactId>dm-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.dm</groupId>

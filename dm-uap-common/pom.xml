@@ -67,7 +67,6 @@
 		<dependency>
 			<groupId>com.dm</groupId>
 			<artifactId>dm-common</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	<profiles>
