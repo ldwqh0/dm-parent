@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.dm.uap.dto.AuthorityDto;
+import com.dm.uap.dto.MenuAuthorityDto;
 import com.dm.uap.dto.MenuDto;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
@@ -67,7 +67,7 @@ public class UapAutoConfiguration {
 		Optional<Role> role = roleService.getFirst();
 		List<Menu> menus = menuService.listAllEnabled(Sort.by("order"));
 		if (!authorityService.exists() && role.isPresent()) {
-			AuthorityDto authority = new AuthorityDto();
+			MenuAuthorityDto authority = new MenuAuthorityDto();
 			authority.setRoleId(role.get().getId());
 			List<MenuDto> menus_ = menus.stream().map(m -> {
 				MenuDto md = new MenuDto();

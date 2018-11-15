@@ -1,5 +1,6 @@
 package com.dm.uap.converter;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import com.dm.common.converter.AbstractConverter;
 import com.dm.uap.dto.AuthorityDto;
+import com.dm.uap.dto.MenuAuthorityDto;
+import com.dm.uap.dto.ResourceAuthorityDto;
 import com.dm.uap.entity.Authority;
 import com.dm.uap.entity.Menu;
 
@@ -18,17 +21,28 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
 
 	@Override
 	protected AuthorityDto toDtoActual(Authority model) {
-		AuthorityDto dto = new AuthorityDto();
-		dto.setRoleId(model.getId());
-		Set<Menu> menus = model.getMenus();
-		dto.setAuthorityMenus(menuConverter.toDto(menus));
-		return dto;
+		return null;
+	}
+
+	public ResourceAuthorityDto toResourceAuthorityDto(Authority authority) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public void copyProperties(Authority model, AuthorityDto dto) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public MenuAuthorityDto toMenuAuthorityDto(Authority menuAuthority) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public MenuAuthorityDto toMenuAuthorityDto(Optional<Authority> authority) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

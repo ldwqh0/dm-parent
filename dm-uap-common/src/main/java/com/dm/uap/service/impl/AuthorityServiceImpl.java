@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dm.uap.dto.AuthorityDto;
+import com.dm.uap.dto.MenuAuthorityDto;
 import com.dm.uap.dto.MenuDto;
+import com.dm.uap.dto.ResourceAuthorityDto;
 import com.dm.uap.entity.Menu;
 import com.dm.uap.entity.Authority;
 import com.dm.uap.entity.Role;
@@ -42,7 +43,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
 	@Override
 	@Transactional
-	public Authority save(AuthorityDto authorityDto) {
+	public Authority save(MenuAuthorityDto authorityDto) {
 		Role role = roleRepository.getOne(authorityDto.getRoleId());
 		Long roleId = authorityDto.getRoleId();
 		Authority authority = null;
@@ -140,6 +141,12 @@ public class AuthorityServiceImpl implements AuthorityService {
 	@Override
 	public boolean exists() {
 		return authorityRepository.count() > 0;
+	}
+
+	@Override
+	public Authority save(ResourceAuthorityDto resourceAuthority) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

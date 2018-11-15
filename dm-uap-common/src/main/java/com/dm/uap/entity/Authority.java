@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -47,10 +48,15 @@ public class Authority implements Serializable {
 
 	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinTable(name = "dm_authority_menu_", joinColumns = {
-			@JoinColumn(name = "authority_id_", referencedColumnName = "role_id_") }, inverseJoinColumns = {
+			@JoinColumn(name = "role_id_", referencedColumnName = "role_id_") }, inverseJoinColumns = {
 					@JoinColumn(name = "menu_id_", referencedColumnName = "id_") }, indexes = {
-							@Index(columnList = "authority_id_", name = "IDX_dm_authority_menu_authority_id_") })
+							@Index(columnList = "role_id_", name = "IDX_dm_authority_menu_authority_id_") })
 	private Set<Menu> menus;
+
+	@ElementCollection
+	@JoinTable(name = "dm_authority__resource_operation_", joinColumns = {
+			@JoinColumn(name = "role_id_", referencedColumnName = "role_id_") })
+	private Set<ResourceOperation> resourceOperations;
 
 	protected void setId(Long id) {
 		this.id = id;
