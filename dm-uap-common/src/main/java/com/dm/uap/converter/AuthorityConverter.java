@@ -45,4 +45,9 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
 		return null;
 	}
 
+	public ResourceAuthorityDto toResourceAuthorityDto(Optional<Authority> authority) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

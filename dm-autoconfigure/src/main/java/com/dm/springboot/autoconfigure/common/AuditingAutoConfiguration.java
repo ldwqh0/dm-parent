@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.dm.uap.dto.UserDetailsDto;
+import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
 

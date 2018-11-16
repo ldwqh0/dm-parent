@@ -68,6 +68,11 @@
 			<groupId>com.dm</groupId>
 			<artifactId>dm-common</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-security-common</artifactId>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>

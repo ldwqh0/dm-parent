@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 
 import com.dm.common.entity.AbstractEntity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 定义资源
  * 
@@ -12,6 +15,8 @@ import com.dm.common.entity.AbstractEntity;
  *
  */
 @Entity(name = "dm_resource_")
+@Getter
+@Setter
 public class Resource extends AbstractEntity {
 	private static final long serialVersionUID = 8273786895229540103L;
 

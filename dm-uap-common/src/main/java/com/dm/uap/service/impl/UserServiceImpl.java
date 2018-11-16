@@ -15,9 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.RoleDto;
-import com.dm.uap.dto.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.QUser;
 import com.dm.uap.entity.Role;

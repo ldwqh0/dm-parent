@@ -30,5 +30,7 @@ public class ResourceOperation implements Serializable {
 
 	@Column(name = "delete_able_")
 	private boolean deleteable = false;
+	
+	
 
 }

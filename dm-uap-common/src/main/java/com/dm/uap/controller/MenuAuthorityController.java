@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.AuthorityConverter;
 import com.dm.uap.converter.MenuConverter;
 import com.dm.uap.dto.MenuAuthorityDto;
 import com.dm.uap.dto.MenusTreeDto;
-import com.dm.uap.dto.UserDetailsDto;
 import com.dm.uap.entity.Menu;
 import com.dm.uap.entity.Authority;
 import com.dm.uap.security.CurrentUser;

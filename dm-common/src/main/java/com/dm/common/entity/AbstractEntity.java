@@ -19,7 +19,7 @@ public abstract class AbstractEntity implements Persistable<Long>, Serializable 
 	private static final long serialVersionUID = 6496721356813862072L;
 
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGenerator")
-	@TableGenerator(name = "tableGenerator", pkColumnName = "table_name_", table = "auto_pk_support_", valueColumnName = "next_id_")
+	@TableGenerator(name = "tableGenerator", pkColumnName = "table_name_", table = "auto_pk_support_", valueColumnName = "next_id_", allocationSize = 50)
 	@Id
 	@Column(name = "id_")
 	private Long id;

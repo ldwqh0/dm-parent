@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dm.common.converter.AbstractConverter;
-import com.dm.uap.dto.UserDetailsDto;
+import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;

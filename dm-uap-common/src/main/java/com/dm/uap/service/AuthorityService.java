@@ -20,4 +20,7 @@ public interface AuthorityService {
 
 	public Authority save(ResourceAuthorityDto resourceAuthority);
 
+	// 根据角色，删除资源权限配置
+	public void deleteResourceAuthoritiesByRoleId(Long roleId);
+
 }

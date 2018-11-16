@@ -9,14 +9,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.uap.converter.ResourceOperationConverter;
 import com.dm.uap.dto.MenuAuthorityDto;
 import com.dm.uap.dto.MenuDto;
 import com.dm.uap.dto.ResourceAuthorityDto;
+import com.dm.uap.dto.ResourceOperationDto;
 import com.dm.uap.entity.Menu;
+import com.dm.uap.entity.ResourceOperation;
 import com.dm.uap.entity.Authority;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
@@ -40,6 +44,9 @@ public class AuthorityServiceImpl implements AuthorityService {
 
 	@Autowired
 	private AuthorityRepository authorityRepository;
+
+	@Autowired
+	private ResourceOperationConverter resourceOperationConverter;
 
 	@Override
 	@Transactional
@@ -144,9 +151,39 @@ public class AuthorityServiceImpl implements AuthorityService {
 	}
 
 	@Override
-	public Authority save(ResourceAuthorityDto resourceAuthority) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public Authority save(ResourceAuthorityDto authorityDto) {
+		Role role = roleRepository.getOne(authorityDto.getRoleId());
+		Long roleId = authorityDto.getRoleId();
+		Authority authority = null;
+		if (authorityRepository.existsById(roleId)) {
+			authority = authorityRepository.getOne(roleId);
+		} else {
+			authority = new Authority();
+			authority.setRole(role);
+			authority = authorityRepository.save(authority);
+		}
+		List<ResourceOperationDto> _resourceOperations = authorityDto.getResourceAuthority();
+
+		// 保存资源权限配置
+		Set<ResourceOperation> resourceOperations = _resourceOperations.stream().map(m -> {
+			ResourceOperation operation = new ResourceOperation();
+			resourceOperationConverter.copyProperties(operation, m);
+			return operation;
+		}).collect(Collectors.toSet());
+		authority.setResourceOperations(resourceOperations);
+		return authority;
+	}
+
+	@Override
+	public void deleteResourceAuthoritiesByRoleId(Long roleId) {
+		if (authorityRepository.existsById(roleId)) {
+			Authority authority = authorityRepository.getOne(roleId);
+			Set<ResourceOperation> operations = authority.getResourceOperations();
+			if (CollectionUtils.isNotEmpty(operations)) {
+				operations.clear();
+			}
+		}
 	}
 
 }
