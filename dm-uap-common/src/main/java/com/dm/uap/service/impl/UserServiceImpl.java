@@ -141,6 +141,5 @@ public class UserServiceImpl implements UserService {
 			builder.and(QUser.user.username.containsIgnoreCase(key).or(QUser.user.fullname.containsIgnoreCase(key)));
 		}
 		return userRepository.find(key, pageable);
-//		return userRepository.findAll(builder.getValue(), pageable);
 	}
 }

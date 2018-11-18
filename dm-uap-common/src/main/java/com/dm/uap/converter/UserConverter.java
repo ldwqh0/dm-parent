@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.dm.common.converter.AbstractConverter;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.entity.RegionInfo;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 
@@ -55,6 +56,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		if (CollectionUtils.isNotEmpty(roles)) {
 			dto.setRoles(roleConverter.toSimpleDto(user.getRoles()));
 		}
+		dto.setRegion(user.getRegion().asList());
 		return dto;
 	}
 
@@ -67,6 +69,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			user.setMobile(userDto.getMobile());
 			user.setDescribe(userDto.getDescribe());
 			user.setEmail(userDto.getEmail());
+			user.setRegion(RegionInfo.fromList(userDto.getRegion()));
 		}
 	}
 

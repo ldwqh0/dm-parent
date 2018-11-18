@@ -60,6 +60,7 @@ public class ResourceController {
 		return resourceConverter.toDto(resource_);
 	}
 
+	@GetMapping(params = { "draw" })
 	public TableResultDto<ResourceDto> search(@RequestParam("draw") Long draw,
 			@PageableDefault Pageable pageable,
 			@RequestParam(value = "search", required = false) String keywords) {

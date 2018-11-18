@@ -17,6 +17,5 @@ public class ResourceAuthorityDto implements Serializable {
 	private static final long serialVersionUID = -5060713882698127082L;
 
 	private Long roleId;
-	private List<ResourceOperationDto> resourceAuthority;
-
+	private List<ResourceOperationDto> resourceAuthorities;
 }

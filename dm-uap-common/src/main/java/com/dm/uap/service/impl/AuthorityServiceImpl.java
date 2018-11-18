@@ -26,6 +26,7 @@ import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.AuthorityRepository;
 import com.dm.uap.repository.MenuRepository;
+import com.dm.uap.repository.ResourceRepository;
 import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.AuthorityService;
@@ -47,6 +48,9 @@ public class AuthorityServiceImpl implements AuthorityService {
 
 	@Autowired
 	private ResourceOperationConverter resourceOperationConverter;
+
+	@Autowired
+	private ResourceRepository resourceReopsitory;
 
 	@Override
 	@Transactional
@@ -153,8 +157,8 @@ public class AuthorityServiceImpl implements AuthorityService {
 	@Override
 	@Transactional
 	public Authority save(ResourceAuthorityDto authorityDto) {
-		Role role = roleRepository.getOne(authorityDto.getRoleId());
 		Long roleId = authorityDto.getRoleId();
+		Role role = roleRepository.getOne(roleId);
 		Authority authority = null;
 		if (authorityRepository.existsById(roleId)) {
 			authority = authorityRepository.getOne(roleId);
@@ -163,12 +167,13 @@ public class AuthorityServiceImpl implements AuthorityService {
 			authority.setRole(role);
 			authority = authorityRepository.save(authority);
 		}
-		List<ResourceOperationDto> _resourceOperations = authorityDto.getResourceAuthority();
+		List<ResourceOperationDto> _resourceOperations = authorityDto.getResourceAuthorities();
 
 		// 保存资源权限配置
 		Set<ResourceOperation> resourceOperations = _resourceOperations.stream().map(m -> {
 			ResourceOperation operation = new ResourceOperation();
 			resourceOperationConverter.copyProperties(operation, m);
+			operation.setResource(resourceReopsitory.getOne(m.getResource().getId()));
 			return operation;
 		}).collect(Collectors.toSet());
 		authority.setResourceOperations(resourceOperations);

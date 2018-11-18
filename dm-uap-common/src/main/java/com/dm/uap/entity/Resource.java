@@ -20,7 +20,7 @@ import lombok.Setter;
 public class Resource extends AbstractEntity {
 	private static final long serialVersionUID = 8273786895229540103L;
 
-	@Column(name = "matcher_", length = 400)
+	@Column(name = "matcher_", length = 400, unique = true)
 	public String matcher;
 
 	@Column(name = "description_", length = 800)

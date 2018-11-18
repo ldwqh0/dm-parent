@@ -31,4 +31,6 @@ public class UserDto implements Serializable {
 		return roles;
 	}
 
+	private List<String> region;
+
 }
