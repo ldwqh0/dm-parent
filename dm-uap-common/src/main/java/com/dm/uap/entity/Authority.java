@@ -17,6 +17,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,9 +55,10 @@ public class Authority implements Serializable {
 							@Index(columnList = "role_id_", name = "IDX_dm_authority_menu_authority_id_") })
 	private Set<Menu> menus;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "dm_authority__resource_operation_", joinColumns = {
 			@JoinColumn(name = "role_id_", referencedColumnName = "role_id_") })
+	@OrderColumn(name = "order_by_")
 	private Set<ResourceOperation> resourceOperations;
 
 	protected void setId(Long id) {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dm.uap.converter.ResourceConverter;
 import com.dm.uap.dto.ResourceDto;
 import com.dm.uap.entity.Authority;
+import com.dm.uap.entity.QResource;
 import com.dm.uap.entity.Resource;
 import com.dm.uap.entity.ResourceOperation;
 import com.dm.uap.repository.AuthorityRepository;
 import com.dm.uap.repository.ResourceRepository;
 import com.dm.uap.service.ResourceService;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -32,6 +35,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Autowired
 	private AuthorityRepository authorityRepository;
+
+	private final QResource qResource = QResource.resource;
 
 	@Override
 	@Transactional
@@ -67,12 +72,23 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Override
 	public Page<Resource> search(String keywords, Pageable pageable) {
-		return resourceRepository.find(keywords, pageable);
+		if (StringUtils.isNotBlank(keywords)) {
+			BooleanExpression expression = qResource.description.containsIgnoreCase(keywords);
+			expression.or(qResource.matcher.containsIgnoreCase(keywords));
+			return resourceRepository.findAll(expression, pageable);
+		} else {
+			return resourceRepository.findAll(pageable);
+		}
 	}
 
 	@Override
 	public Optional<Resource> findById(Long id) {
 		return resourceRepository.findById(id);
+	}
+
+	@Override
+	public List<Resource> listAll() {
+		return resourceRepository.findAll();
 	}
 
 }

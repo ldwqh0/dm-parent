@@ -109,7 +109,7 @@ public class RoleServiceImpl implements RoleService {
 
 	private List<User> getUsersFromDto(List<UserDto> users) {
 		if (CollectionUtils.isNotEmpty(users)) {
-			return users.stream().map(user -> userRepository.getOne(user.getId())).collect(Collectors.toList());
+			return users.stream().map(user -> user.getId()).map(userRepository::getOne).collect(Collectors.toList());
 		} else {
 			return Collections.emptyList();
 		}

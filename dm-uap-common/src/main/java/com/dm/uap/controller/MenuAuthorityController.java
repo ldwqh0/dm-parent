@@ -53,8 +53,6 @@ public class MenuAuthorityController {
 		return authorityConverter.toMenuAuthorityDto(menuAuthority);
 	}
 
-
-
 	/**
 	 * 获取某个角色的可视菜单，<br />
 	 * 

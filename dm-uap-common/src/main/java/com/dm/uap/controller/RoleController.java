@@ -90,7 +90,7 @@ public class RoleController {
 			@RequestParam(value = "draw", required = false) Long draw) {
 		try {
 			Page<Role> result = roleService.search(key, pageable);
-			return TableResultDto.success(draw, result, r -> roleConverter.toDto(r));
+			return TableResultDto.success(draw, result, roleConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询角色时发生错误", e);
 			return TableResultDto.failure(draw, pageable, e.getMessage());

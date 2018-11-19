@@ -83,7 +83,7 @@ public class UserController {
 			@RequestParam(value = "draw", required = false) Long draw) {
 		try {
 			Page<User> result = userService.search(key, pageable);
-			return TableResultDto.success(draw, result, r -> userConverter.toDto(r));
+			return TableResultDto.success(draw, result, userConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询用户信息出错", e);
 			return TableResultDto.failure(draw, pageable, e.getMessage());

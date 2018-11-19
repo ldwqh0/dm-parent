@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Api(tags = { "menu" })
-@RequestMapping( "menus" )
+@RequestMapping("menus")
 @RestController
 @Slf4j
 public class MenuController {
@@ -91,7 +91,7 @@ public class MenuController {
 			@RequestParam(value = "parentId", required = false) Long parentId) {
 		try {
 			Page<Menu> result = menuService.search(parentId, key, pageable);
-			return TableResultDto.success(draw, result, r -> menuConverter.toDto(r));
+			return TableResultDto.success(draw, result, menuConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询菜单出错", e);
 			return TableResultDto.failure(draw, pageable, "查询菜单信息出错！");

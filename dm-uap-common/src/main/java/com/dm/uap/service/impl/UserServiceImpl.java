@@ -26,6 +26,7 @@ import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
 		}
 		List<RoleDto> rolesDto = userDto.getRoles();
 		if (CollectionUtils.isNotEmpty(rolesDto)) {
-			List<Role> roles = rolesDto.stream().map(roleDto -> roleRepository.getOne(roleDto.getId()))
+			List<Role> roles = rolesDto.stream().map(role -> role.getId()).map(roleRepository::getOne)
 					.collect(Collectors.toList());
 			user.setRoles(roles);
 		}
@@ -127,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
 		List<RoleDto> _roles = userDto.getRoles();
 		if (CollectionUtils.isNotEmpty(_roles)) {
-			List<Role> roles = _roles.stream().map(role -> roleRepository.getOne(role.getId()))
+			List<Role> roles = _roles.stream().map(role -> role.getId()).map(roleRepository::getOne)
 					.collect(Collectors.toList());
 			user.setRoles(roles);
 		}
@@ -136,10 +137,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Page<User> search(String key, Pageable pageable) {
-		BooleanBuilder builder = new BooleanBuilder();
 		if (StringUtils.isNotBlank(key)) {
-			builder.and(QUser.user.username.containsIgnoreCase(key).or(QUser.user.fullname.containsIgnoreCase(key)));
+			BooleanExpression expression = qUser.username.containsIgnoreCase(key)
+					.or(qUser.fullname.containsIgnoreCase(key));
+			return userRepository.findAll(expression, pageable);
+		} else {
+			return userRepository.findAll(pageable);
 		}
-		return userRepository.find(key, pageable);
+
 	}
 }

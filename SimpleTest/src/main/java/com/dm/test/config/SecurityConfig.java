@@ -1,18 +1,29 @@
 package com.dm.test.config;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+
+import com.dm.test.security.RequestAuthoritiesAccessDecisionVoter;
+import com.dm.test.security.RequestAuthoritiesFilterInvocationSecurityMetadataSource;
 
 @EnableWebSecurity
 @Configuration
@@ -52,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		http.addFilter(casAuthenticationFilter());
 
 		// 增加自定义资源过滤器，对资源进行详细过滤，（可选项）
-//		http.addFilterBefore(interceptor(), FilterSecurityInterceptor.class);
+		http.addFilterBefore(interceptor(), FilterSecurityInterceptor.class);
 
 		// session管理相关
 		// maximumSessions设置每个用户最大会话数，
@@ -64,6 +75,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// 当登录成功之后，更换会话标识，IBM Secrity AppScan 会话标识未更新错误
 //		http.sessionManagement().sessionFixation().changeSessionId();
 
+	}
+
+	@Bean
+	public FilterSecurityInterceptor interceptor() throws Exception {
+		FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
+		interceptor.setAuthenticationManager(authenticationManager());
+		List<AccessDecisionVoter<?>> voters = Collections.singletonList(new RequestAuthoritiesAccessDecisionVoter());
+		AccessDecisionManager accessDecisionManager = new AffirmativeBased(voters);
+		interceptor.setAccessDecisionManager(accessDecisionManager);
+		interceptor.setSecurityMetadataSource(securityMetadataSource());
+		return interceptor;
+	}
+
+	@Bean
+	public FilterInvocationSecurityMetadataSource securityMetadataSource() {
+		return new RequestAuthoritiesFilterInvocationSecurityMetadataSource();
 	}
 
 	@Override

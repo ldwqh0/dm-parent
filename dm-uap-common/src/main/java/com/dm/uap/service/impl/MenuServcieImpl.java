@@ -48,7 +48,7 @@ public class MenuServcieImpl implements MenuService {
 	@Transactional
 	public Menu save(MenuDto menuDto) {
 		preCheck(menuDto);
-		Menu menu = new Menu();
+		final Menu menu = new Menu();
 		menuConverter.copyProperties(menu, menuDto);
 		MenuDto parentDto = menuDto.getParent();
 		// 在保存新菜单时，继承父菜单的权限设置
@@ -58,14 +58,12 @@ public class MenuServcieImpl implements MenuService {
 			// 添加权限信息
 			List<Authority> authorities = authorityRepository.findByMenus(Collections.singleton(parent));
 			if (CollectionUtils.isNotEmpty(authorities)) {
-				for (Authority authority : authorities) {
-					authority.getMenus().add(menu);
-				}
+				authorities.stream().map(authority -> authority.getMenus()).forEach(menus -> menus.add(menu));
 			}
 		}
-		menu = menuRepository.save(menu);
-		menu.setOrder(menu.getId());
-		return menu;
+		Menu menuResult = menuRepository.save(menu);
+		menuResult.setOrder(menu.getId());
+		return menuResult;
 	}
 
 	@Override

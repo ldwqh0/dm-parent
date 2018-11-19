@@ -23,6 +23,7 @@ import com.dm.uap.service.ResourceService;
 
 import static org.springframework.http.HttpStatus.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -65,6 +66,12 @@ public class ResourceController {
 			@PageableDefault Pageable pageable,
 			@RequestParam(value = "search", required = false) String keywords) {
 		Page<Resource> resources = resourceService.search(keywords, pageable);
-		return TableResultDto.success(draw, resources, r -> resourceConverter.toDto(r));
+		return TableResultDto.success(draw, resources, resourceConverter::toDto);
+	}
+
+	@GetMapping
+	public List<ResourceDto> listAll() {
+		List<Resource> resources = resourceService.listAll();
+		return resourceConverter.toDto(resources);
 	}
 }

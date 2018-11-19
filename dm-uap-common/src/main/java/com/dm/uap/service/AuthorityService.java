@@ -3,6 +3,7 @@ package com.dm.uap.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.dm.security.access.RequestAuthorityAttribute;
 import com.dm.uap.dto.MenuAuthorityDto;
 import com.dm.uap.dto.ResourceAuthorityDto;
 import com.dm.uap.entity.Menu;
@@ -32,5 +33,7 @@ public interface AuthorityService {
 	 * @param roleId
 	 */
 	public void deleteResourceAuthoritiesByRoleId(Long roleId);
+
+	public List<RequestAuthorityAttribute> listAllAttributes();
 
 }

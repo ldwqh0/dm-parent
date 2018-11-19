@@ -48,7 +48,7 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
 		if (CollectionUtils.isEmpty(roles)) {
 			return Collections.emptyList();
 		} else {
-			return roles.stream().map(role -> toSimpleDto(role)).collect(Collectors.toList());
+			return roles.stream().map(this::toSimpleDto).collect(Collectors.toList());
 		}
 	}
 
@@ -64,7 +64,7 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
 
 	public List<? extends GrantedAuthorityDto> toGrantedAuthorityDto(List<Role> roles) {
 		if (CollectionUtils.isNotEmpty(roles)) {
-			return roles.stream().map(role -> toGrantedAuthorityDto(role)).collect(Collectors.toList());
+			return roles.stream().map(this::toGrantedAuthorityDto).collect(Collectors.toList());
 		} else {
 			return Collections.emptyList();
 		}

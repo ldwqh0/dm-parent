@@ -13,8 +13,10 @@ public class ResourceConverter extends AbstractConverter<Resource, ResourceDto> 
 	protected ResourceDto toDtoActual(Resource model) {
 		ResourceDto dto = new ResourceDto();
 		dto.setId(model.getId());
+		dto.setName(model.getName());
 		dto.setMatcher(model.getMatcher());
 		dto.setDescription(model.getDescription());
+		dto.setMatchType(model.getMatchType());
 		return dto;
 	}
 
@@ -22,6 +24,8 @@ public class ResourceConverter extends AbstractConverter<Resource, ResourceDto> 
 	public void copyProperties(Resource model, ResourceDto dto) {
 		model.setMatcher(dto.getMatcher());
 		model.setDescription(dto.getDescription());
+		model.setName(dto.getName());
+		model.setMatchType(dto.getMatchType());
 	}
 
 }

@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.security.access.RequestAuthorityAttribute;
 import com.dm.uap.converter.ResourceOperationConverter;
 import com.dm.uap.dto.MenuAuthorityDto;
 import com.dm.uap.dto.MenuDto;
@@ -66,7 +68,8 @@ public class AuthorityServiceImpl implements AuthorityService {
 			authority = authorityRepository.save(authority);
 		}
 		List<MenuDto> menus = authorityDto.getAuthorityMenus();
-		Set<Menu> list = menus.stream().map(m -> menuRepository.getOne(m.getId())).collect(Collectors.toSet());
+		Set<Menu> list = menus.stream().map(m -> m.getId()).map(menuRepository::getOne)
+				.collect(Collectors.toSet());
 		authority.setMenus(list);
 		return authority;
 	}
@@ -105,10 +108,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
 		List<Menu> result = new ArrayList<Menu>();
 		result.addAll(menus);
-		Collections.sort(result, (o1, o2) -> {
-			return (int) (o1.getOrder() - o2.getOrder());
-		});
-
+		Collections.sort(result, (o1, o2) -> (int) (o1.getOrder() - o2.getOrder()));
 		return result;
 	}
 
@@ -189,6 +189,40 @@ public class AuthorityServiceImpl implements AuthorityService {
 				operations.clear();
 			}
 		}
+	}
+
+	@Override
+	public List<RequestAuthorityAttribute> listAllAttributes() {
+		List<Authority> authorities = authorityRepository.findAll();
+		List<RequestAuthorityAttribute> attributes = new ArrayList<>();
+		for (Authority authority : authorities) {
+			Set<ResourceOperation> operations = authority.getResourceOperations();
+			String roleName = authority.getRole().getName();
+			for (ResourceOperation operation : operations) {
+				attributes.add(new RequestAuthorityAttribute(
+						roleName,
+						operation.getResource().getMatcher(),
+						operation.getResource().getMatchType(),
+						HttpMethod.POST, operation.isSaveable()));
+
+				attributes.add(new RequestAuthorityAttribute(roleName,
+						operation.getResource().getMatcher(),
+						operation.getResource().getMatchType(),
+						HttpMethod.GET, operation.isReadable()));
+
+				attributes.add(new RequestAuthorityAttribute(roleName,
+						operation.getResource().getMatcher(),
+						operation.getResource().getMatchType(),
+						HttpMethod.PUT, operation.isUpdateable()));
+
+				attributes.add(new RequestAuthorityAttribute(roleName,
+						operation.getResource().getMatcher(),
+						operation.getResource().getMatchType(),
+						HttpMethod.DELETE, operation.isDeleteable()));
+
+			}
+		}
+		return attributes;
 	}
 
 }

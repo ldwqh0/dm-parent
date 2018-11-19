@@ -1,5 +1,6 @@
 package com.dm.uap.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -19,5 +20,7 @@ public interface ResourceService {
 	public Page<Resource> search(String keywords, Pageable pageable);
 
 	public Optional<Resource> findById(Long id);
+
+	public List<Resource> listAll();
 
 }

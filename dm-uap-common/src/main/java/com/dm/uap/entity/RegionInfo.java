@@ -41,7 +41,7 @@ public class RegionInfo implements Serializable {
 				regionInfo.cityCode = region.get(1);
 			}
 			if (length > 2) {
-				regionInfo.cityCode = region.get(2);
+				regionInfo.countyCode = region.get(2);
 			}
 		}
 		return regionInfo;

@@ -39,13 +39,18 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
 	}
 
 	public MenuAuthorityDto toMenuAuthorityDto(Authority menuAuthority) {
-		// TODO Auto-generated method stub
-		return null;
+		MenuAuthorityDto dto = new MenuAuthorityDto();
+		dto.setRoleId(menuAuthority.getId());
+		dto.setAuthorityMenus(menuConverter.toDto(menuAuthority.getMenus()));
+		return dto;
 	}
 
 	public MenuAuthorityDto toMenuAuthorityDto(Optional<Authority> authority) {
-		// TODO Auto-generated method stub
-		return null;
+		if (authority.isPresent()) {
+			return toMenuAuthorityDto(authority.get());
+		} else {
+			throw new DataNotExistException();
+		}
 	}
 
 	public ResourceAuthorityDto toResourceAuthorityDto(Optional<Authority> authority) {

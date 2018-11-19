@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.dm.common.converter.AbstractConverter;
 import com.dm.uap.dto.ResourceOperationDto;
+import com.dm.uap.entity.Resource;
 import com.dm.uap.entity.ResourceOperation;
 
 @Component
@@ -32,4 +33,9 @@ public class ResourceOperationConverter extends AbstractConverter<ResourceOperat
 		model.setUpdateable(dto.isUpdateable());
 	}
 
+	public ResourceOperationDto toDto(Resource resource) {
+		ResourceOperationDto dto = new ResourceOperationDto();
+		dto.setResource(resourceConverter.toDto(resource));
+		return dto;
+	}
 }

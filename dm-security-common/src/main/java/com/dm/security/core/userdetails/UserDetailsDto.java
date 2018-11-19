@@ -24,6 +24,7 @@ public class UserDetailsDto implements UserDetails {
 	private boolean locked;
 	private List<? extends GrantedAuthorityDto> grantedAuthority;
 	private String fullname;
+	private List<String> region;
 
 	@Override
 	@JsonProperty("roles")
@@ -115,6 +116,14 @@ public class UserDetailsDto implements UserDetails {
 		return (UserDetailsDto) super.clone();
 	}
 
+	public List<String> getRegion() {
+		return region;
+	}
+
+	public void setRegion(List<String> region) {
+		this.region = region;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -139,5 +148,5 @@ public class UserDetailsDto implements UserDetails {
 			return false;
 		return true;
 	}
-	
+
 }

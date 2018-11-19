@@ -19,18 +19,16 @@ public class ResourceOperation implements Serializable {
 	@ManyToOne
 	private Resource resource;
 
-	@Column(name = "read_able_")
+	@Column(name = "read_able_", nullable = false)
 	private boolean readable = true;
 
-	@Column(name = "save_able_")
+	@Column(name = "save_able_", nullable = false)
 	private boolean saveable = false;
 
-	@Column(name = "update_able_")
+	@Column(name = "update_able_", nullable = false)
 	private boolean updateable = false;
 
-	@Column(name = "delete_able_")
+	@Column(name = "delete_able_", nullable = false)
 	private boolean deleteable = false;
-	
-	
 
 }
