@@ -1,4 +1,4 @@
-package com.dm.test.security;
+package com.dm.security.access;
 
 import java.util.Collection;
 import java.util.Objects;

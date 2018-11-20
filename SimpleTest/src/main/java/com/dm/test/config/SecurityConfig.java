@@ -22,8 +22,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-import com.dm.test.security.RequestAuthoritiesAccessDecisionVoter;
-import com.dm.test.security.RequestAuthoritiesFilterInvocationSecurityMetadataSource;
+import com.dm.security.access.RequestAuthoritiesAccessDecisionVoter;
+import com.dm.security.access.RequestAuthoritiesFilterInvocationSecurityMetadataSource;
 
 @EnableWebSecurity
 @Configuration

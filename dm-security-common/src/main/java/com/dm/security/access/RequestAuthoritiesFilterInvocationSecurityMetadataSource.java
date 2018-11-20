@@ -1,4 +1,4 @@
-package com.dm.test.security;
+package com.dm.security.access;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -20,13 +20,13 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import com.dm.security.access.RequestAuthorityAttribute;
 import com.dm.security.access.RequestAuthorityAttribute.MatchType;
-import com.dm.uap.service.AuthorityService;
+import com.dm.security.provider.RequestAuthoritiesService;
 
 public class RequestAuthoritiesFilterInvocationSecurityMetadataSource
 		implements FilterInvocationSecurityMetadataSource {
 
 	@Autowired
-	private AuthorityService requestAuthoritiesService;
+	private RequestAuthoritiesService requestAuthoritiesService;
 
 	private Map<RequestInfo, RequestMatcher> requestMatchMap = new ConcurrentHashMap<RequestInfo, RequestMatcher>();
 
@@ -34,13 +34,14 @@ public class RequestAuthoritiesFilterInvocationSecurityMetadataSource
 		super();
 	}
 
-	public RequestAuthoritiesFilterInvocationSecurityMetadataSource(AuthorityService requestAuthoritiesService) {
+	public RequestAuthoritiesFilterInvocationSecurityMetadataSource(
+			RequestAuthoritiesService requestAuthoritiesService) {
 		super();
 		this.requestAuthoritiesService = requestAuthoritiesService;
 	}
 
 	@Autowired
-	public void setRequestAuthoritiesService(AuthorityService requestAuthoritiesService) {
+	public void setRequestAuthoritiesService(RequestAuthoritiesService requestAuthoritiesService) {
 		this.requestAuthoritiesService = requestAuthoritiesService;
 	}
 
