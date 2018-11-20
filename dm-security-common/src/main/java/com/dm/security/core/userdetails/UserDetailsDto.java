@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
@@ -16,10 +17,12 @@ public class UserDetailsDto implements UserDetails {
 	private static final long serialVersionUID = -4337846050031244208L;
 
 	private Long id;
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	private String username;
 	private boolean accountExpired;
 	private boolean credentialsExpired;
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private boolean enabled;
 	private boolean locked;
 	private List<? extends GrantedAuthorityDto> grantedAuthority;
@@ -37,7 +40,6 @@ public class UserDetailsDto implements UserDetails {
 	}
 
 	@Override
-	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -66,7 +68,6 @@ public class UserDetailsDto implements UserDetails {
 	}
 
 	@Override
-	@JsonIgnore
 	public boolean isEnabled() {
 		return enabled;
 	}

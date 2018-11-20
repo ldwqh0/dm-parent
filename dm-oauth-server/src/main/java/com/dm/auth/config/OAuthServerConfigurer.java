@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -40,6 +41,9 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	/**
 	 * 这个主要是针对授权服务的配置，也就是针对/oauth/token这个地址的相关配置，比如添加过滤器什么的
@@ -84,7 +88,8 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 		endpoints.reuseRefreshTokens(true);
 		// 如果要使用RefreshToken可用，必须指定UserDetailsService
 		endpoints.userDetailsService(userDetailsService);
-		// endpoints.authenticationManager(); // 这个作用待研究
+		// 使用这个authenticationManager可以启用密码模式
+		endpoints.authenticationManager(authenticationManager);
 	}
 
 	@Bean
