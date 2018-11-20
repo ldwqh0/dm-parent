@@ -19,7 +19,6 @@ import com.dm.auth.entity.ClientInfo;
 import com.dm.auth.repository.ClientInfoRepository;
 import com.dm.auth.repository.UserApprovalRepository;
 import com.dm.auth.service.ClientInfoService;
-import com.dm.auth.service.UserApprovalService;
 
 @Service("clientInfoService")
 public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsService {

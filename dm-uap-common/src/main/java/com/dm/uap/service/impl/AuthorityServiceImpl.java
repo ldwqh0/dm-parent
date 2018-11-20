@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -68,8 +69,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 			authority = authorityRepository.save(authority);
 		}
 		List<MenuDto> menus = authorityDto.getAuthorityMenus();
-		Set<Menu> list = menus.stream().map(m -> m.getId()).map(menuRepository::getOne)
-				.collect(Collectors.toSet());
+		Set<Menu> list = menus.stream().map(m -> m.getId()).map(menuRepository::getOne).collect(Collectors.toSet());
 		authority.setMenus(list);
 		return authority;
 	}
@@ -84,12 +84,11 @@ public class AuthorityServiceImpl implements AuthorityService {
 		Set<Menu> menus = new HashSet<Menu>();
 		// 所有菜单的父级菜单
 		Set<Menu> parents = new HashSet<Menu>();
-		roles.forEach(role -> {
-			if (authorityRepository.existsById(role.getId())) {
-				Set<Menu> menus_ = authorityRepository.getOne(role.getId()).getMenus();
-				menus.addAll(menus_.stream().filter(m -> m.isEnabled()).collect(Collectors.toSet()));
-			} //
-		});
+		roles.stream().map(role -> role.getId()).filter(id_ -> !Objects.isNull(id_))
+				.filter(authorityRepository::existsById).forEach(id_ -> {
+					Set<Menu> menus_ = authorityRepository.getOne(id_).getMenus();
+					menus.addAll(menus_.stream().filter(m -> m.isEnabled()).collect(Collectors.toSet()));
+				});
 
 		// 递归添加所有父级菜单
 		for (Menu menu : menus) {
@@ -199,26 +198,17 @@ public class AuthorityServiceImpl implements AuthorityService {
 			Set<ResourceOperation> operations = authority.getResourceOperations();
 			String roleName = authority.getRole().getName();
 			for (ResourceOperation operation : operations) {
-				attributes.add(new RequestAuthorityAttribute(
-						roleName,
-						operation.getResource().getMatcher(),
-						operation.getResource().getMatchType(),
-						HttpMethod.POST, operation.isSaveable()));
+				attributes.add(new RequestAuthorityAttribute(roleName, operation.getResource().getMatcher(),
+						operation.getResource().getMatchType(), HttpMethod.POST, operation.isSaveable()));
 
-				attributes.add(new RequestAuthorityAttribute(roleName,
-						operation.getResource().getMatcher(),
-						operation.getResource().getMatchType(),
-						HttpMethod.GET, operation.isReadable()));
+				attributes.add(new RequestAuthorityAttribute(roleName, operation.getResource().getMatcher(),
+						operation.getResource().getMatchType(), HttpMethod.GET, operation.isReadable()));
 
-				attributes.add(new RequestAuthorityAttribute(roleName,
-						operation.getResource().getMatcher(),
-						operation.getResource().getMatchType(),
-						HttpMethod.PUT, operation.isUpdateable()));
+				attributes.add(new RequestAuthorityAttribute(roleName, operation.getResource().getMatcher(),
+						operation.getResource().getMatchType(), HttpMethod.PUT, operation.isUpdateable()));
 
-				attributes.add(new RequestAuthorityAttribute(roleName,
-						operation.getResource().getMatcher(),
-						operation.getResource().getMatchType(),
-						HttpMethod.DELETE, operation.isDeleteable()));
+				attributes.add(new RequestAuthorityAttribute(roleName, operation.getResource().getMatcher(),
+						operation.getResource().getMatchType(), HttpMethod.DELETE, operation.isDeleteable()));
 
 			}
 		}

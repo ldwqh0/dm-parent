@@ -74,14 +74,4 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		}
 	}
 
-	public Object toResponseDto(UserDetailsDto user) {
-		UserDetailsDto rDto = null;
-		try {
-			rDto = user.clone();
-			rDto.setPassword(null);
-		} catch (CloneNotSupportedException e) {
-		}
-		return rDto;
-	}
-
 }

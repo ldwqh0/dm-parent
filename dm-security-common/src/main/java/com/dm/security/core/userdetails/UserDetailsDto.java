@@ -112,11 +112,6 @@ public class UserDetailsDto implements UserDetails {
 		return fullname;
 	}
 
-	@Override
-	public UserDetailsDto clone() throws CloneNotSupportedException {
-		return (UserDetailsDto) super.clone();
-	}
-
 	public List<String> getRegion() {
 		return region;
 	}
