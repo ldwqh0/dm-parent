@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.dm</groupId>
+		<artifactId>dm-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>dm-resource-server-spring-boot-starter</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-security-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-autoconfigure</artifactId>
+		</dependency>
+	</dependencies>
+</project>

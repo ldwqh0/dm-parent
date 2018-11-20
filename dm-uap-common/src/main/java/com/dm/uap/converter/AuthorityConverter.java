@@ -1,6 +1,8 @@
 package com.dm.uap.converter;
 
 import java.util.Optional;
+
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +29,7 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
 
 	@Override
 	public void copyProperties(Authority model, AuthorityDto dto) {
-		// TODO Auto-generated method stub
-
+		throw new NotImplementedException("该方法未实现");
 	}
 
 	public ResourceAuthorityDto toResourceAuthorityDto(Authority authority) {
