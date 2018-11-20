@@ -21,7 +21,7 @@ public class ResourceOperationDto implements Serializable {
 
 	private boolean deleteable = false;
 
-	@JsonIgnoreProperties({ "description", "matcher" })
+	@JsonIgnoreProperties({ "description" })
 	public ResourceDto getResource() {
 		return resource;
 	}
