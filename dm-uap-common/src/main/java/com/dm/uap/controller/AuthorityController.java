@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dm.security.annotation.CurrentUser;
 import com.dm.security.core.userdetails.UserDetailsDto;
-import com.dm.uap.security.CurrentUser;
 
 import io.swagger.annotations.ApiOperation;
 
