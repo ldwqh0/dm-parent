@@ -24,15 +24,15 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 public class UserApproval {
 	@Id
-	@Column(name = "user_id_")
+	@Column(name = "user_id_", length = 50)
 	private String userId;
 
 	@Id
-	@Column(name = "client_id_")
+	@Column(name = "client_id_", length = 50)
 	private String clientId;
 
 	@Id
-	@Column(name = "scope_")
+	@Column(name = "scope_", length = 100)
 	private String scope;
 
 	@Column(name = "status_")

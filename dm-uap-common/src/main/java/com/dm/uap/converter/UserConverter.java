@@ -35,7 +35,10 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			dto.setUsername(user_.getUsername());
 			dto.setFullname(user_.getFullname());
 			List<Role> roles = user_.getRoles();
-			dto.setRegion(user_.getRegion().asList());
+			RegionInfo region = user_.getRegion();
+			if (!Objects.isNull(region)) {
+				dto.setRegion(region.asList());
+			}
 			if (CollectionUtils.isNotEmpty(roles)) {
 				dto.setGrantedAuthority(roleConverter.toGrantedAuthorityDto(user_.getRoles()));
 			}

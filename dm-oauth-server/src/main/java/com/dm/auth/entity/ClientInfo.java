@@ -22,7 +22,7 @@ public class ClientInfo implements Persistable<String>, Serializable {
 	private static final long serialVersionUID = -8180613850135404512L;
 
 	@Id
-	@Column(name = "client_id_")
+	@Column(name = "client_id_", nullable = false, length = 50)
 	private String clientId;
 
 	@Column(name = "client_secret_")

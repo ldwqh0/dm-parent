@@ -30,7 +30,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -72,7 +72,7 @@
 		<profile>
 			<id>mariadb@local</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
 				<profiles.active>localhost-mariadb</profiles.active>
@@ -81,6 +81,20 @@
 				<datasource.username>root</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
 				<datasource.platform>org.hibernate.dialect.MariaDB53Dialect</datasource.platform>
+			</properties>
+		</profile>
+		<profile>
+			<id>mysql@dm</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<profiles.active>mysql-dm</profiles.active>
+				<datasource.url>jdbc:mysql://192.168.2.127:3306/oauth?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true</datasource.url>
+				<datasource.driver>com.mysql.jdbc.Driver</datasource.driver>
+				<datasource.username>root</datasource.username>
+				<datasource.password>damei2018</datasource.password>
+				<datasource.platform>org.hibernate.dialect.MySQL55Dialect</datasource.platform>
 			</properties>
 		</profile>
 	</profiles>

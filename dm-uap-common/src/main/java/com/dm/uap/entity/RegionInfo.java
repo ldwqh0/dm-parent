@@ -31,20 +31,25 @@ public class RegionInfo implements Serializable {
 	}
 
 	public static RegionInfo fromList(List<String> region) {
-		RegionInfo regionInfo = new RegionInfo();
-		int length = region.size();
 		if (CollectionUtils.isNotEmpty(region)) {
-			if (length > 0) {
-				regionInfo.provincialCode = region.get(0);
+			RegionInfo regionInfo = new RegionInfo();
+			int length = region.size();
+			if (CollectionUtils.isNotEmpty(region)) {
+				if (length > 0) {
+					regionInfo.provincialCode = region.get(0);
+				}
+				if (length > 1) {
+					regionInfo.cityCode = region.get(1);
+				}
+				if (length > 2) {
+					regionInfo.countyCode = region.get(2);
+				}
 			}
-			if (length > 1) {
-				regionInfo.cityCode = region.get(1);
-			}
-			if (length > 2) {
-				regionInfo.countyCode = region.get(2);
-			}
+			return regionInfo;
+		} else {
+			return null;
 		}
-		return regionInfo;
+
 	}
 
 	public RegionInfo() {
