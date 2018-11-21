@@ -23,14 +23,18 @@ public class InitDataConfigurer {
 		}
 	}
 
+	/**
+	 * 系统启动时，新建一个默认应用
+	 */
 	private void init() {
 		ClientInfoDto client = new ClientInfoDto();
+		client.setClientId("ownerapp");
 		client.setAccessTokenValiditySeconds(60000);
-		client.setAuthorizedGrantTypes(Collections.singleton("authorization_code"));
+		client.setAuthorizedGrantTypes(Collections.singleton("password"));
 		client.setClientSecret("123456");
-		client.setName("admin");
-		client.setRefreshTokenValiditySeconds(50000);
-		client.setRegisteredRedirectUri(Collections.singleton("http://www.baidu.com"));
+		client.setName("自有应用");
+		client.setRefreshTokenValiditySeconds(60000);
+//		client.setRegisteredRedirectUri(Collections.singleton(""));
 		client.setScope(Collections.singleton("app"));
 		clientService.save(client);
 	}

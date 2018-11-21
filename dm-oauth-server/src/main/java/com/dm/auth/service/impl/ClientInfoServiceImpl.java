@@ -1,5 +1,6 @@
 package com.dm.auth.service.impl;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,7 +46,12 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	@Override
 	public ClientInfo save(ClientInfoDto dto) {
 		ClientInfo model = new ClientInfo();
-		String id = UUID.randomUUID().toString();
+		String id;
+		if (Objects.isNull(dto.getClientId())) {
+			id = UUID.randomUUID().toString();
+		} else {
+			id = dto.getClientId();
+		}
 		clientInfoConverter.copyProperties(model, dto);
 		model.setClientSecret(passwordEncoder.encode(dto.getClientSecret()));
 		model.setClientId(id);

@@ -60,7 +60,9 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		if (CollectionUtils.isNotEmpty(roles)) {
 			dto.setRoles(roleConverter.toSimpleDto(user.getRoles()));
 		}
-		dto.setRegion(user.getRegion().asList());
+		if (!Objects.isNull(user.getRegion())) {
+			dto.setRegion(user.getRegion().asList());
+		}
 		return dto;
 	}
 
