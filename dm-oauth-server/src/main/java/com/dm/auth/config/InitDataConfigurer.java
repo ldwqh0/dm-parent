@@ -34,7 +34,6 @@ public class InitDataConfigurer {
 		client.setClientSecret("123456");
 		client.setName("自有应用");
 		client.setRefreshTokenValiditySeconds(60000);
-//		client.setRegisteredRedirectUri(Collections.singleton(""));
 		client.setScope(Collections.singleton("app"));
 		clientService.save(client);
 	}
