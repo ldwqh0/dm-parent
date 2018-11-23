@@ -78,7 +78,7 @@
 				<profiles.active>localhost-mariadb</profiles.active>
 				<datasource.url>jdbc:mariadb://localhost:3306/oauth?createDatabaseIfNotExist=true</datasource.url>
 				<datasource.driver>org.mariadb.jdbc.Driver</datasource.driver>
-				<datasource.username>root</datasource.username>
+				<datasource.username>lidong</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
 				<datasource.platform>org.hibernate.dialect.MariaDB53Dialect</datasource.platform>
 			</properties>

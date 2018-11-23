@@ -8,5 +8,6 @@ import com.dm.auth.entity.ClientInfo;
 
 public interface ClientInfoRepository extends JpaRepository<ClientInfo, String> {
 	Page<ClientInfo> findByNameContains(String name, Pageable pageable);
+
 	Page<ClientInfo> find(String key, Pageable pageable);
 }
