@@ -29,4 +29,6 @@ public interface RoleService {
 
 	public List<Role> listAllEnabled();
 
+	public Optional<Role> findByName(String string);
+
 }

@@ -91,12 +91,20 @@ public class UapAutoConfiguration {
 	}
 
 	private void initRole() {
-		if (!roleService.exist()) {
-			RoleDto dto = new RoleDto();
-			dto.setName("ROLE_ADMIN");
-			dto.setState(Status.ENABLED);
-			roleService.save(dto);
+		if (!roleService.findByName("ROLE_ANONYMOUS").isPresent()) {
+			RoleDto role = new RoleDto();
+			role.setName("ROLE_ANONYMOUS");
+			role.setState(Status.ENABLED);
+			roleService.save(role);
 		}
+
+		if (!roleService.findByName("ROLE_ADMIN").isPresent()) {
+			RoleDto role = new RoleDto();
+			role.setName("ROLE_ADMIN");
+			role.setState(Status.ENABLED);
+			roleService.save(role);
+		}
+
 	}
 
 	private void initUser() {

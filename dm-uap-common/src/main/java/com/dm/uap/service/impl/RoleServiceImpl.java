@@ -47,6 +47,11 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	public Optional<Role> findByName(String name) {
+		return roleRepository.findByName(name);
+	}
+
+	@Override
 	@Transactional
 	public Role save(RoleDto roleDto) {
 		Role role = new Role();
