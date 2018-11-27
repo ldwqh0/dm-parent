@@ -36,7 +36,7 @@ public class TableResultDto<T> implements Serializable {
 	private Long draw;
 	private Long page;
 	private Long size;
-	private Long count;
+	private Long recordsTotal;
 	private List<T> data;
 	private String error;
 	private boolean success;
@@ -57,7 +57,7 @@ public class TableResultDto<T> implements Serializable {
 		TableResultDto<DTO> result = new TableResultDto<DTO>();
 		Pageable pageable = data.getPageable();
 		result.setDraw(draw);
-		result.setCount(data.getTotalElements());
+		result.setRecordsTotal(data.getTotalElements());
 		result.setSuccess(Boolean.TRUE);
 		result.setPage((long) pageable.getPageNumber());
 		result.setSize((long) pageable.getPageSize());
