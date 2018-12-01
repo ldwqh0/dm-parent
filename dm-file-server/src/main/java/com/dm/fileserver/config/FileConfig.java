@@ -22,8 +22,13 @@ public class FileConfig {
 		this.mime.put("png", "image/png");
 		this.mime.put("bmp", "image/bmp");
 		this.mime.put("gif", "image/gif");
-		this.mime.put("txt ", "text/plain");
+		this.mime.put("txt", "text/plain");
 		this.mime.put("pdf", "application/pdf");
+		this.mime.put("doc", "application/msword");
+		this.mime.put("xls", "application/vnd.ms-excel");
+		this.mime.put("zip", "application/zip");
+		this.mime.put("html", "text/xml");
+		this.mime.put("xhtml", "application/xhtml+xml");
 	}
 
 	public String getPath() {

@@ -48,6 +48,11 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -75,6 +80,7 @@
 				<datasource.username>lidong</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
 				<datasource.platform>org.hibernate.dialect.MariaDB53Dialect</datasource.platform>
+				<user.info.url>http://127.0.0.1:8887/authorities/currentUser</user.info.url>
 			</properties>
 		</profile>
 	</profiles>

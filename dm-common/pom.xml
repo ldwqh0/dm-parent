@@ -42,9 +42,14 @@
 			<artifactId>spring-web</artifactId>
 		</dependency>
 
+		<!-- 添加以下依赖，解决JDK 9+ 之后的模块依赖问题，主要是apt插件的问题 -->
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
 
 	</dependencies>

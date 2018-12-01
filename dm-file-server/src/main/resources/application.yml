@@ -14,10 +14,11 @@ spring:
     show-sql: true
     generate-ddl: true
     database-platform: '@datasource.platform@'
+    open-in-view: false
     hibernate:
       use-new-id-generator-mappings: true
       ddl-auto: update
 security:
   oauth2:
     resource:
-      user-info-uri: http://127.0.0.1:8887/authorities/currentUser
+      user-info-uri: '@user.info.url@'
