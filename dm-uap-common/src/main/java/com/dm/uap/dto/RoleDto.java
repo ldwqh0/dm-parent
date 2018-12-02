@@ -9,6 +9,8 @@ import com.dm.uap.entity.Role.Status;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Data;
 
@@ -27,6 +29,7 @@ public class RoleDto implements Serializable, GrantedAuthority {
 	private String name;
 	private String describe;
 	private Status state;
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<UserDto> users;
 
 	@JsonIgnoreProperties({ "password", "roles" })

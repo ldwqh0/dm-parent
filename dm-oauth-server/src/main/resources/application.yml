@@ -21,6 +21,12 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
+system: 
+  default:
+    su:
+      username: 'admin'
+      password: '654321'
+      fullname: '李东'
 management:
   endpoints:
     enabled-by-default: false

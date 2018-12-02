@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
@@ -33,7 +34,12 @@ import com.dm.uap.service.UserService;
 @EntityScan({ "com.dm.uap" })
 @EnableJpaRepositories({ "com.dm.uap" })
 @ComponentScan({ "com.dm.uap" })
+@EnableConfigurationProperties({ DefaultUserProperties.class })
 public class UapAutoConfiguration {
+
+	@Autowired
+	private DefaultUserProperties defaultUser;
+
 	@Autowired
 	private RoleService roleService;
 
@@ -108,20 +114,22 @@ public class UapAutoConfiguration {
 	}
 
 	private void initUser() {
+		String username = defaultUser.getUsername();
+		String password = defaultUser.getPassword();
+		String fullname = defaultUser.getFullname();
+
 		if (!userService.exist()) {
 			UserDto user = new UserDto();
-			user.setUsername("admin");
-			user.setFullname("系统管理员");
-			user.setPassword("123456");
+			user.setUsername(username);
+			user.setFullname(fullname);
+			user.setPassword(password);
 			user.setEnabled(true);
-
-			if (roleService.exist()) {
-				Role _role = roleService.getFirst().get();
+			Optional<Role> _role = roleService.findByName("ROLE_ADMIN");
+			if (_role.isPresent()) {
 				RoleDto role = new RoleDto();
-				role.setId(_role.getId());
+				role.setId(_role.get().getId());
 				user.setRoles(Collections.singletonList(role));
 			}
-
 			userService.save(user);
 		}
 	}
