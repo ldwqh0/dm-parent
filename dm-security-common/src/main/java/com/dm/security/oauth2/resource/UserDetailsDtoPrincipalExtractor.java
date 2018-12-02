@@ -18,9 +18,9 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 		userDetailsDto.setId(Long.valueOf(map.get("id").toString()));
 		userDetailsDto.setUsername(map.get("username").toString());
 		userDetailsDto.setFullname(map.get("fullname").toString());
-		if (!Objects.isNull(map.get("roles"))) {
+		if (!Objects.isNull(map.get("authorities"))) {
 			@SuppressWarnings("unchecked")
-			List<Map<String, Object>> roles = (List<Map<String, Object>>) map.get("roles");
+			List<Map<String, Object>> roles = (List<Map<String, Object>>) map.get("authorities");
 			List<GrantedAuthorityDto> authorities = roles.stream()
 					.map(role -> new GrantedAuthorityDto(role.get("authority").toString(),
 							Long.valueOf(role.get("id").toString())))

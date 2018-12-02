@@ -1,0 +1,43 @@
+server:
+  port: 8080
+zuul:  add-host-header: true
+  ## 默认情况下，zuul 会将 authorization cookie set-cookie 这三个敏感的header不作为转发对象
+  ## 在这里重新定义
+  sensitive-headers:   - cookie
+  - set-cookie
+  routes:     data: ## 数据中心的代理
+      strip-prefix: true
+      path: '/data/**'
+      url: 'http://127.0.0.1:8080/'
+    oauth: ## 认证服务器的代理
+      strip-prefix: true
+      path: '/oauth/**'
+      url: 'http://127.0.0.1:8887/'
+    files: ## 授权服务器的代理
+      strip-prefix: false
+      path: '/files**'
+      url: 'http://127.0.0.1:8886'
+    uap: ## 用户服务器的代理
+      path: '/d/**'
+      strip-prefix: true
+      url: 'http://127.0.0.1:8887/'
+spring:  main:    allow-bean-definition-overriding: true
+  datasource:
+    url: '@datasource.url@'
+    username: '@datasource.username@'
+    driver-class-name: '@datasource.driver@'
+    password: '@datasource.password@'
+    hikari:
+      connection-test-query: select 1
+  jpa:
+    show-sql: true ## 查询时是否显示Sql语句，在生成环境禁用
+    generate-ddl: false ## 字符创建表结构
+    database-platform: '@datasource.platform@'
+    hibernate:
+      use-new-id-generator-mappings: true
+security:
+  oauth2:
+    resource:
+      user-info-uri: '@user.info.url@'
+
+    

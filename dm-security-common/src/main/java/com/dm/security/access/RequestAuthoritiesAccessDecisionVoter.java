@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.FilterInvocation;
 
 import com.dm.security.access.RequestAuthorityAttribute;
@@ -27,7 +28,14 @@ public class RequestAuthoritiesAccessDecisionVoter implements AccessDecisionVote
 	@Override
 	public int vote(Authentication authentication, FilterInvocation object, Collection<ConfigAttribute> attributes) {
 		int grantCount = 0;
-		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		Authentication userAuthentication;
+		if (authentication instanceof OAuth2Authentication) {
+			userAuthentication = ((OAuth2Authentication) authentication).getUserAuthentication();
+		} else {
+			userAuthentication = authentication;
+		}
+
+		Collection<? extends GrantedAuthority> authorities = userAuthentication.getAuthorities();
 		if (CollectionUtils.isEmpty(attributes)) {
 			return ACCESS_ABSTAIN;
 		}
