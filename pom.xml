@@ -25,11 +25,12 @@
 		<module>dm-security-common</module>
 		<module>dm-autoconfigure</module>
 		<module>dm-uap-common</module>
-		<module>dm-oauth-server</module><!-- <module>SimpleTest</module> -->
+		<!-- <module>dm-oauth-server</module> -->
+		<!-- <module>SimpleTest</module> -->
 		<module>dm-resource-server-spring-boot-starter</module>
 		<module>dm-security-spring-boot-starter</module>
-		<module>dm-file-server</module>
-		<module>dm-zuul</module>
+		<!-- <module>dm-file-server</module> -->
+		<!-- <module>dm-zuul</module> -->
 	</modules>
 	<packaging>pom</packaging>
 
