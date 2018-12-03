@@ -48,7 +48,7 @@ public class Role extends AbstractEntity {
 	@Column(name = "describe_", length = 1000)
 	private String describe;
 
-	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinTable(name = "dm_user_role_", joinColumns = {
 			@JoinColumn(name = "role_", referencedColumnName = "id_") }, inverseJoinColumns = {
 					@JoinColumn(name = "user_", referencedColumnName = "id_") }, indexes = {

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dm.common.converter.AbstractConverter;
@@ -16,13 +16,13 @@ import com.dm.uap.entity.Role;
 @Component
 public class RoleConverter extends AbstractConverter<Role, RoleDto> {
 
-	@Autowired
-	private UserConverter userConverter;
+//	@Autowired
+//	private UserConverter userConverter;
 
 	@Override
 	protected RoleDto toDtoActual(Role role) {
 		RoleDto dto = toSimpleDto(role);
-		dto.setUsers(userConverter.toDto(role.getUsers()));
+//		dto.setUsers(userConverter.toDto(role.getUsers()));
 		return dto;
 	}
 

@@ -64,7 +64,7 @@ public class User extends AbstractEntity {
 	@Column(name = "order_")
 	private Long order;
 
-	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinTable(name = "dm_user_role_", joinColumns = {
 			@JoinColumn(name = "user_", referencedColumnName = "id_") }, inverseJoinColumns = {
 					@JoinColumn(name = "role_", referencedColumnName = "id_") }, indexes = {
