@@ -13,13 +13,13 @@ public class ResourceOperationDto implements Serializable {
 
 	private ResourceDto resource;
 
-	private Boolean readable = false;
+	private Boolean readable;
 
-	private Boolean saveable = false;
+	private Boolean saveable;
 
-	private Boolean updateable = false;
+	private Boolean updateable;
 
-	private Boolean deleteable = false;
+	private Boolean deleteable;
 
 	@JsonIgnoreProperties({ "description" })
 	public ResourceDto getResource() {

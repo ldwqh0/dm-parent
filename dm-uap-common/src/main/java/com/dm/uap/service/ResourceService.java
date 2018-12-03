@@ -23,4 +23,10 @@ public interface ResourceService {
 
 	public List<Resource> listAll();
 
+	public List<Resource> findByIdNotIn(List<Long> ids);
+
+	public boolean exist();
+
+	public Optional<Resource> findByName(String name);
+
 }

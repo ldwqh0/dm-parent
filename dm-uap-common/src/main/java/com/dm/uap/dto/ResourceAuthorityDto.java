@@ -1,6 +1,7 @@
 package com.dm.uap.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -17,5 +18,5 @@ public class ResourceAuthorityDto implements Serializable {
 	private static final long serialVersionUID = -5060713882698127082L;
 
 	private Long roleId;
-	private List<ResourceOperationDto> resourceAuthorities;
+	private List<ResourceOperationDto> resourceAuthorities = new ArrayList<ResourceOperationDto>();
 }

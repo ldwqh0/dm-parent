@@ -91,4 +91,20 @@ public class ResourceServiceImpl implements ResourceService {
 		return resourceRepository.findAll();
 	}
 
+	@Override
+	public boolean exist() {
+		return resourceRepository.count() > 0;
+	}
+
+	@Override
+	public Optional<Resource> findByName(String name) {
+		return resourceRepository.findByName(name);
+	}
+
+	@Override
+	public List<Resource> findByIdNotIn(List<Long> ids) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

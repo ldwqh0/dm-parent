@@ -169,12 +169,15 @@ public class AuthorityServiceImpl implements AuthorityService {
 		List<ResourceOperationDto> _resourceOperations = authorityDto.getResourceAuthorities();
 
 		// 保存资源权限配置
-		Set<ResourceOperation> resourceOperations = _resourceOperations.stream().map(m -> {
-			ResourceOperation operation = new ResourceOperation();
-			resourceOperationConverter.copyProperties(operation, m);
-			operation.setResource(resourceReopsitory.getOne(m.getResource().getId()));
-			return operation;
-		}).collect(Collectors.toSet());
+		Set<ResourceOperation> resourceOperations = _resourceOperations.stream()
+				// 如果某组配置全部为空，代表该组未配置，则删除该组配置
+				.filter(this::hasAuhtority)
+				.map(m -> {
+					ResourceOperation operation = new ResourceOperation();
+					resourceOperationConverter.copyProperties(operation, m);
+					operation.setResource(resourceReopsitory.getOne(m.getResource().getId()));
+					return operation;
+				}).collect(Collectors.toSet());
 		authority.setResourceOperations(resourceOperations);
 		return authority;
 	}
@@ -218,6 +221,20 @@ public class AuthorityServiceImpl implements AuthorityService {
 			}
 		}
 		return attributes;
+	}
+
+	/**
+	 * 判断一组资源操作是否被配置<br />
+	 * 如果所有的配置都为空，则判定为未配置
+	 * 
+	 * @param op
+	 * @return
+	 */
+	private boolean hasAuhtority(ResourceOperationDto op) {
+		return !Objects.isNull(op.getDeleteable()) ||
+				!Objects.isNull(op.getReadable()) ||
+				!Objects.isNull(op.getSaveable()) ||
+				!Objects.isNull(op.getUpdateable());
 	}
 
 }
