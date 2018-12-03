@@ -3,6 +3,7 @@ package com.dm.security.core.userdetails;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -121,6 +122,33 @@ public class UserDetailsDto implements UserDetails {
 
 	public void setRegion(List<String> region) {
 		this.region = region;
+	}
+
+	@JsonIgnore
+	public String getProvinceCode() {
+		if (CollectionUtils.isNotEmpty(this.region) && this.region.size() > 0) {
+			return region.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	@JsonIgnore
+	public String getCityCode() {
+		if (CollectionUtils.isNotEmpty(this.region) && this.region.size() > 1) {
+			return region.get(1);
+		} else {
+			return null;
+		}
+	}
+
+	@JsonIgnore
+	public String getCountryCode() {
+		if (CollectionUtils.isNotEmpty(this.region) && this.region.size() > 2) {
+			return region.get(2);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
