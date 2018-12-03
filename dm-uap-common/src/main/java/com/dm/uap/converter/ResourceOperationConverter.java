@@ -17,20 +17,20 @@ public class ResourceOperationConverter extends AbstractConverter<ResourceOperat
 	@Override
 	protected ResourceOperationDto toDtoActual(ResourceOperation model) {
 		ResourceOperationDto dto = new ResourceOperationDto();
-		dto.setSaveable(model.isSaveable());
-		dto.setDeleteable(model.isDeleteable());
-		dto.setReadable(model.isReadable());
+		dto.setSaveable(model.getSaveable());
+		dto.setDeleteable(model.getDeleteable());
+		dto.setReadable(model.getReadable());
 		dto.setResource(resourceConverter.toDto(model.getResource()));
-		dto.setUpdateable(model.isUpdateable());
+		dto.setUpdateable(model.getUpdateable());
 		return dto;
 	}
 
 	@Override
 	public void copyProperties(ResourceOperation model, ResourceOperationDto dto) {
-		model.setSaveable(dto.isSaveable());
-		model.setDeleteable(dto.isDeleteable());
-		model.setReadable(dto.isReadable());
-		model.setUpdateable(dto.isUpdateable());
+		model.setSaveable(dto.getSaveable());
+		model.setDeleteable(dto.getDeleteable());
+		model.setReadable(dto.getReadable());
+		model.setUpdateable(dto.getUpdateable());
 	}
 
 	public ResourceOperationDto toDto(Resource resource) {

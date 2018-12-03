@@ -12,14 +12,14 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 	 *
 	 */
 	public enum MatchType {
-	/**
-	 * 路径匹配
-	 */
-	ANT_PATH,
-	/**
-	 * 正则表达式匹配
-	 */
-	REGEXP,
+		/**
+		 * 路径匹配
+		 */
+		ANT_PATH,
+		/**
+		 * 正则表达式匹配
+		 */
+		REGEXP,
 	}
 
 	private static final long serialVersionUID = -5892097102006537218L;
@@ -35,10 +35,10 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 
 	private HttpMethod method;
 
-	private boolean accessable = false;
+	private Boolean accessable;
 
 	public RequestAuthorityAttribute(String authority, String pattern, MatchType matchType, HttpMethod method,
-			boolean accessable) {
+			Boolean accessable) {
 		super();
 		this.authority = authority;
 		this.pattern = pattern;
@@ -88,11 +88,11 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 		this.pattern = pattern;
 	}
 
-	public boolean isAccessable() {
+	public Boolean getAccessable() {
 		return accessable;
 	}
 
-	public void setAccessable(boolean accessable) {
+	public void setAccessable(Boolean accessable) {
 		this.accessable = accessable;
 	}
 

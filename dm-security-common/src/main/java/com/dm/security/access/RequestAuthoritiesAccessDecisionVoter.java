@@ -1,14 +1,15 @@
 package com.dm.security.access;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.FilterInvocation;
 
 import com.dm.security.access.RequestAuthorityAttribute;
@@ -27,30 +28,34 @@ public class RequestAuthoritiesAccessDecisionVoter implements AccessDecisionVote
 
 	@Override
 	public int vote(Authentication authentication, FilterInvocation object, Collection<ConfigAttribute> attributes) {
-		int grantCount = 0;
-		Authentication userAuthentication;
-		if (authentication instanceof OAuth2Authentication) {
-			userAuthentication = ((OAuth2Authentication) authentication).getUserAuthentication();
-		} else {
-			userAuthentication = authentication;
-		}
-
-		Collection<? extends GrantedAuthority> authorities = userAuthentication.getAuthorities();
+		// 如果没有找到相匹配的信息，弃权
 		if (CollectionUtils.isEmpty(attributes)) {
 			return ACCESS_ABSTAIN;
 		}
-
-		for (ConfigAttribute _attribute : attributes) {
+		List<RequestAuthorityAttribute> rAttributes = attributes.stream()
+				.map(attribute -> (RequestAuthorityAttribute) attribute)
+				.filter(attribute -> !Objects.isNull(attribute.getAccessable()))
+				.collect(Collectors.toList());
+		int grantCount = 0;
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		for (ConfigAttribute _attribute : rAttributes) {
 			RequestAuthorityAttribute attribute = (RequestAuthorityAttribute) _attribute;
 			for (GrantedAuthority authority : authorities) {
 				if (Objects.equals(authority.getAuthority(), attribute.getAuthority())) {
-					if (attribute.isAccessable()) {
-						grantCount++;
-					} else {
-						return ACCESS_DENIED;
+					Boolean accessable = attribute.getAccessable();
+					if (!Objects.isNull(accessable)) {
+						if (accessable) {
+							grantCount++;
+						} else {
+							return ACCESS_DENIED;
+						}
 					}
 				}
 			}
+		}
+		// 如果过程中没有产生成功的投票，弃权
+		if (grantCount == 0) {
+			return ACCESS_ABSTAIN;
 		}
 		return grantCount > 0 ? ACCESS_GRANTED : ACCESS_DENIED;
 	}
