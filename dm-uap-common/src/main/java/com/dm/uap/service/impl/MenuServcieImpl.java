@@ -185,7 +185,8 @@ public class MenuServcieImpl implements MenuService {
 	 * @return
 	 */
 	private boolean preCheck(MenuDto menu) {
-		if (Objects.isNull(menu.getId()) || Objects.isNull(menu.getParent())) {
+		if (Objects.isNull(menu.getId()) || Objects.isNull(menu.getParent())
+				|| Objects.isNull(menu.getParent().getId())) {
 			return true;
 		} else {
 			Menu parent = get(menu.getParent().getId()).get();
