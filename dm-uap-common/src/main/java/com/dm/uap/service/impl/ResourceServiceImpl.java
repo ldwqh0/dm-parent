@@ -103,8 +103,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Override
 	public List<Resource> findByIdNotIn(List<Long> ids) {
-		// TODO Auto-generated method stub
-		return null;
+		return resourceRepository.findByIdNotIn(ids);
 	}
 
 }

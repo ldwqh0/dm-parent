@@ -10,10 +10,8 @@ import com.dm.uap.entity.Resource;
 
 public interface ResourceRepository extends JpaRepository<Resource, Long>, QuerydslPredicateExecutor<Resource> {
 
-	public Optional<Resource> find(String name);
+	public Optional<Resource> findByName(String name);
 
 	public List<Resource> findByIdNotIn(List<Long> ids);
-
-	public Optional<Resource> findByName(String name);
 
 }
