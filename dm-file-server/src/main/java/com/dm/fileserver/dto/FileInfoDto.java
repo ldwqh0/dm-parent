@@ -2,6 +2,7 @@ package com.dm.fileserver.dto;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,7 +26,7 @@ public class FileInfoDto implements Serializable {
 
 	private Long size;
 
-	private String createUser;
+	private Optional<String> createUser;
 
-	private ZonedDateTime createTime;
+	private Optional<ZonedDateTime> createTime;
 }

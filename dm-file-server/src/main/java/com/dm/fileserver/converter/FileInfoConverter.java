@@ -14,8 +14,8 @@ public class FileInfoConverter extends AbstractConverter<FileInfo, FileInfoDto> 
 		FileInfoDto file_ = new FileInfoDto();
 		file_.setId(model.getId());
 		file_.setFilename(model.getFilename());
-		file_.setCreateTime(model.getCreatedDate().orElse(null));
-		file_.setCreateUser(model.getCreatedBy().orElse(null));
+		file_.setCreateTime(model.getCreatedDate());
+		file_.setCreateUser(model.getCreatedBy());
 		file_.setPath(model.getPath());
 		file_.setSize(model.getSize());
 		return file_;
