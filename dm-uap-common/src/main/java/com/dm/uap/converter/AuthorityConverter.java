@@ -34,6 +34,7 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
 
 	public ResourceAuthorityDto toResourceAuthorityDto(Authority authority) {
 		ResourceAuthorityDto dto = new ResourceAuthorityDto();
+		dto.setRoleName(authority.getRole().getName());
 		dto.setRoleId(authority.getId());
 		dto.setResourceAuthorities(resourceOperationConverter.toDto(authority.getResourceOperations()));
 		return dto;
@@ -42,6 +43,7 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
 	public MenuAuthorityDto toMenuAuthorityDto(Authority menuAuthority) {
 		MenuAuthorityDto dto = new MenuAuthorityDto();
 		dto.setRoleId(menuAuthority.getId());
+		dto.setRoleName(menuAuthority.getRole().getName());
 		dto.setAuthorityMenus(menuConverter.toDto(menuAuthority.getMenus()));
 		return dto;
 	}

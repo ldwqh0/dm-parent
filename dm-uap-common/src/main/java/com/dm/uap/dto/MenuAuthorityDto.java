@@ -19,5 +19,6 @@ import lombok.Data;
 public class MenuAuthorityDto implements Serializable {
 	private static final long serialVersionUID = 4813613447760388284L;
 	private Long roleId;
+	private String roleName;
 	private List<MenuDto> authorityMenus;
 }
