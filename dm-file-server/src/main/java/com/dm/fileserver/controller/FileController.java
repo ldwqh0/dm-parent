@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FileController {
 
 	@Autowired
-	private FileInfoService fileService;	
+	private FileInfoService fileService;
 
 	@Autowired
 	@Lazy
@@ -78,7 +78,9 @@ public class FileController {
 		while (filenames.hasNext()) {
 			MultipartFile file = request.getFile(filenames.next());
 			FileInfoDto infoDto = new FileInfoDto();
-			infoDto.setFilename(DmFileUtils.getOriginalFilename(file.getOriginalFilename()));
+			if (StringUtils.isNotBlank(file.getOriginalFilename())) {
+				infoDto.setFilename(DmFileUtils.getOriginalFilename(file.getOriginalFilename()));
+			}
 			infoDto.setSize(file.getSize());
 			FileInfo file_ = fileService.save(file.getInputStream(), infoDto);
 			result.add(file_);
