@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
-import com.dm.auth.provider.endpoint.token.OwnerDefaultTokenService;
+import com.dm.auth.provider.token.OwnerDefaultTokenService;
 import com.dm.auth.service.UserApprovalService;
 
 import lombok.extern.slf4j.Slf4j;

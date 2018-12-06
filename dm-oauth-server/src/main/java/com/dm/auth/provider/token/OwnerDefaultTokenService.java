@@ -1,4 +1,4 @@
-package com.dm.auth.provider.endpoint.token;
+package com.dm.auth.provider.token;
 
 import java.util.Date;
 import java.util.Set;
