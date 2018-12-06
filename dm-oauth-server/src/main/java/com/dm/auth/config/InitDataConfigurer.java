@@ -1,6 +1,8 @@
 package com.dm.auth.config;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -30,7 +32,10 @@ public class InitDataConfigurer {
 		ClientInfoDto client = new ClientInfoDto();
 		client.setClientId("ownerapp");
 		client.setAccessTokenValiditySeconds(60000);
-		client.setAuthorizedGrantTypes(Collections.singleton("password"));
+		Set<String> grantTypes = new HashSet<String>();
+		grantTypes.add("password"); // 初始化的app有默认的两种grandType
+		grantTypes.add("refresh_token");
+		client.setAuthorizedGrantTypes(grantTypes);
 		client.setClientSecret("123456");
 		client.setName("自有应用");
 		client.setRefreshTokenValiditySeconds(60000);

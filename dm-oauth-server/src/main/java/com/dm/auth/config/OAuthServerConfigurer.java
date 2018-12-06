@@ -17,9 +17,11 @@ import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
+import com.dm.auth.provider.endpoint.token.OwnerDefaultTokenService;
 import com.dm.auth.service.UserApprovalService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -75,17 +77,19 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 		log.info("use clientDetailsService" + clientDetailsService);
 		clients.withClientDetails(clientDetailsService);
 	}
-
 	/**
 	 * 这个是针对/oauth/token这个地址的配置
 	 */
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		super.configure(endpoints);
+		endpoints.tokenServices(tokenService());
 		endpoints.userApprovalHandler(userApprovalHandler()); // 用户授权处理逻辑
-		endpoints.tokenStore(tokenStore());
+
+		// 如果使用自定义的tokenService,以下的配置都不可用，需要在tokenService中重新配置
+//		endpoints.tokenStore(tokenStore());
 		// 指定是否可以重用refreshToken
-		endpoints.reuseRefreshTokens(true);
+//		endpoints.reuseRefreshTokens(true);
 		// 如果要使用RefreshToken可用，必须指定UserDetailsService
 		endpoints.userDetailsService(userDetailsService);
 		// 使用这个authenticationManager可以启用密码模式
@@ -109,6 +113,16 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Bean
 	public TokenStore tokenStore() {
 		return new RedisTokenStore(connectionFactory);
+	}
+
+	@Bean
+	public AuthorizationServerTokenServices tokenService() {
+		OwnerDefaultTokenService tokenService = new OwnerDefaultTokenService();
+		tokenService.setTokenStore(tokenStore());
+		tokenService.setClientDetailsService(clientDetailsService);
+		tokenService.setSupportRefreshToken(true);
+		tokenService.setReuseRefreshToken(false); // 不允许
+		return tokenService;
 	}
 
 }
