@@ -60,7 +60,7 @@
 				<datasource.username>lidong</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
 				<datasource.platform>org.hibernate.dialect.MariaDB53Dialect</datasource.platform>
-				<user.info.url>http://localhost:8887/authorities/currentUser</user.info.url>
+				<user.info.url>http://localhost:8887/users/current</user.info.url>
 			</properties>
 		</profile>
 	</profiles>

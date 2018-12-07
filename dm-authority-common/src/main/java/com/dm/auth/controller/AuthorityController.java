@@ -10,7 +10,7 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = { "authorities", "oauth2/authorities" })
+@RequestMapping(value = { "authorities" })
 public class AuthorityController {
 	/**
 	 * 获取当前用户信息

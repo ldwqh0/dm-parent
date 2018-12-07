@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("resources")
+@RequestMapping({ "resources" })
 public class ResourceController {
 
 	@Autowired

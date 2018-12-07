@@ -96,6 +96,7 @@ public class AuthAutoConfiguration {
 				// 将知道的授权组装为一个授权对象
 				ResourceAuthorityDto resourceAuthority = new ResourceAuthorityDto();
 				resourceAuthority.setRoleId(roleId);
+				resourceAuthority.setRoleName("ROLE_ADMIN");
 				resourceAuthority.setResourceAuthorities(Collections.singletonList(resourceOperation));
 				authorityService.save(resourceAuthority);
 			}

@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.entity.Menu;
 
-
 public interface MenuService {
 
 	public Menu save(MenuDto menuDto);

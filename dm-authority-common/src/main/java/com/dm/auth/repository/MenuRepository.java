@@ -8,7 +8,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.dm.auth.entity.Menu;
 
-
 public interface MenuRepository extends JpaRepository<Menu, Long>, QuerydslPredicateExecutor<Menu> {
 
 	List<Menu> findByEnabled(boolean b, Sort sort);

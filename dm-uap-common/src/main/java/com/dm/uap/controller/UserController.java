@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dm.common.dto.TableResultDto;
+import com.dm.security.annotation.CurrentUser;
+import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.User;
@@ -88,5 +90,11 @@ public class UserController {
 			log.error("查询用户信息出错", e);
 			return TableResultDto.failure(draw, pageable, e.getMessage());
 		}
+	}
+
+	@GetMapping({ "current", "authorities/currentUser" })
+	@ApiOperation("获取当前用户信息")
+	public UserDetailsDto getCurrentUser(@CurrentUser UserDetailsDto currentUser) {
+		return currentUser;
 	}
 }

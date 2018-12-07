@@ -10,10 +10,11 @@ spring:  main:    allow-bean-definition-overriding: true
       connection-test-query: select 1
   jpa:
     show-sql: true ## 查询时是否显示Sql语句，在生成环境禁用
-    generate-ddl: false ## 字符创建表结构
+    generate-ddl: true ## 字符创建表结构
     database-platform: '@datasource.platform@'
     hibernate:
       use-new-id-generator-mappings: true
+      ddl-auto: update
 security:
   oauth2:
     resource:
@@ -39,7 +40,7 @@ zuul:
       path: '/d/files/**'
       url: 'http://127.0.0.1:8886/files'
     uap: ## 用户服务器的代理
-      path: '/d/**'
+      path: '/u/**'
       strip-prefix: true
       url: 'http://127.0.0.1:8887/'
 

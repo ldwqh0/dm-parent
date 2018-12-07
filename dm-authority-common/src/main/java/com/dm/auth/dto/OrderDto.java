@@ -21,7 +21,7 @@ public class OrderDto {
 	 *
 	 */
 	public enum Position {
-	UP, DOWN
+		UP, DOWN
 	}
 
 	private Position position;

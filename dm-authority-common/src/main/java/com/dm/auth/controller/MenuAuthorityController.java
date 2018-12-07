@@ -32,7 +32,7 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping({ "menuAuthorities", "oauth2/menuAuthorities" })
+@RequestMapping({ "menuAuthorities" })
 public class MenuAuthorityController {
 
 	@Autowired

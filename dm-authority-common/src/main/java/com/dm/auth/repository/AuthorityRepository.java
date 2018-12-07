@@ -9,8 +9,8 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 
-
 public interface AuthorityRepository extends JpaRepository<Authority, Long>, QuerydslPredicateExecutor<Authority> {
 	public List<Authority> findByMenus(Set<Menu> menus);
+
 	public List<Authority> findByResourceOperationsResourceId(Long resourceId);
 }
