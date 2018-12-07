@@ -50,10 +50,10 @@ public class MenuAuthorityController {
 	 * @param authorityDto
 	 * @return
 	 */
-	@PutMapping("{roleId}")
+	@PutMapping("{rolename}")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public MenuAuthorityDto save(@PathVariable("roleId") Long roleId, @RequestBody MenuAuthorityDto authorityDto) {
+	public MenuAuthorityDto save(@PathVariable("rolename") String rolename, @RequestBody MenuAuthorityDto authorityDto) {
 		Authority menuAuthority = authorityService.save(authorityDto);
 		return authorityConverter.toMenuAuthorityDto(menuAuthority);
 	}
@@ -66,9 +66,9 @@ public class MenuAuthorityController {
 	 * @param id 角色ID
 	 * @return
 	 */
-	@GetMapping("{roleId}")
-	public MenuAuthorityDto get(@PathVariable("roleId") Long roleId) {
-		Optional<Authority> authority = authorityService.get(roleId);
+	@GetMapping("{rolename}")
+	public MenuAuthorityDto get(@PathVariable("rolename") String rolename) {
+		Optional<Authority> authority = authorityService.get(rolename);
 		return authorityConverter.toMenuAuthorityDto(authority);
 	}
 
@@ -84,9 +84,9 @@ public class MenuAuthorityController {
 	public List<MenusTreeDto> systemMenu(@CurrentUser UserDetailsDto userDto) {
 		Collection<GrantedAuthorityDto> authorities = userDto.getRoles();
 		if (CollectionUtils.isNotEmpty(authorities)) {
-			List<Long> authoritiesIds = authorities.stream().map(authority -> authority.getId())
+			List<String> authorityNames = authorities.stream().map(authority -> authority.getAuthority())
 					.collect(Collectors.toList());
-			List<Menu> menus = authorityService.listMenuByAuthorities(authoritiesIds);
+			List<Menu> menus = authorityService.listMenuByAuthorities(authorityNames);
 			return menuConverter.toAuthorityMenusDto(menus);
 		} else {
 			return Collections.emptyList();

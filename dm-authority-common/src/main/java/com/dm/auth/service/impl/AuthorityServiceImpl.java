@@ -51,11 +51,11 @@ public class AuthorityServiceImpl implements AuthorityService {
 		Long roleId = authorityDto.getRoleId();
 		String roleName = authorityDto.getRoleName();
 		Authority authority = null;
-		if (authorityRepository.existsById(roleId)) {
-			authority = authorityRepository.getOne(roleId);
+		if (authorityRepository.existsById(roleName)) {
+			authority = authorityRepository.getOne(roleName);
 		} else {
 			authority = new Authority();
-			authority.setId(roleId);
+//			authority.setId(roleId);
 			authority.setRoleName(roleName);
 			authority = authorityRepository.save(authority);
 		}
@@ -67,7 +67,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
 	@Override
 	@Transactional
-	public List<Menu> listMenuByAuthorities(List<Long> ids) {
+	public List<Menu> listMenuByAuthorities(List<String> ids) {
 		// 添加所有菜单项
 		Set<Menu> menus = new HashSet<Menu>();
 		// 所有菜单的父级菜单
@@ -131,8 +131,8 @@ public class AuthorityServiceImpl implements AuthorityService {
 	}
 
 	@Override
-	public Optional<Authority> get(Long roleId) {
-		return authorityRepository.findById(roleId);
+	public Optional<Authority> get(String rolename) {
+		return authorityRepository.findById(rolename);
 	}
 
 	@Override
@@ -146,11 +146,11 @@ public class AuthorityServiceImpl implements AuthorityService {
 		Long roleId = authorityDto.getRoleId();
 		String roleName = authorityDto.getRoleName();
 		Authority authority = null;
-		if (authorityRepository.existsById(roleId)) {
-			authority = authorityRepository.getOne(roleId);
+		if (authorityRepository.existsById(roleName)) {
+			authority = authorityRepository.getOne(roleName);
 		} else {
 			authority = new Authority();
-			authority.setId(roleId);
+//			authority.setId(roleId);
 			authority.setRoleName(roleName);
 			authority = authorityRepository.save(authority);
 		}
@@ -171,9 +171,9 @@ public class AuthorityServiceImpl implements AuthorityService {
 	}
 
 	@Override
-	public void deleteResourceAuthoritiesByRoleId(Long roleId) {
-		if (authorityRepository.existsById(roleId)) {
-			Authority authority = authorityRepository.getOne(roleId);
+	public void deleteResourceAuthoritiesByRoleName(String rolename) {
+		if (authorityRepository.existsById(rolename)) {
+			Authority authority = authorityRepository.getOne(rolename);
 			Set<ResourceOperation> operations = authority.getResourceOperations();
 			if (CollectionUtils.isNotEmpty(operations)) {
 				operations.clear();

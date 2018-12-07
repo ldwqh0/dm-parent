@@ -61,9 +61,9 @@ public class ResourceAuthorityController {
 	 * @param roleId
 	 * @return
 	 */
-	@GetMapping("{roleId}")
-	public ResourceAuthorityDto get(@PathVariable("roleId") Long roleId) {
-		Optional<Authority> authority = authorityService.get(roleId);
+	@GetMapping("{rolename}")
+	public ResourceAuthorityDto get(@PathVariable("rolename") String rolename) {
+		Optional<Authority> authority = authorityService.get(rolename);
 		ResourceAuthorityDto result;
 
 		// 没有被权限设置所包含的资源
@@ -77,7 +77,7 @@ public class ResourceAuthorityController {
 		} else {
 			notIncludeResource = resourceService.listAll();
 			result = new ResourceAuthorityDto();
-			result.setRoleId(roleId);
+			result.setRoleName(rolename);
 		}
 		List<ResourceOperationDto> operations = result.getResourceAuthorities();
 		if (CollectionUtils.isNotEmpty(notIncludeResource)) {
@@ -94,9 +94,9 @@ public class ResourceAuthorityController {
 	 * 
 	 * @param roleId
 	 */
-	@DeleteMapping("{roleId}")
-	public void deleteByRoleId(@PathVariable("roleId") Long roleId) {
-		authorityService.deleteResourceAuthoritiesByRoleId(roleId);
+	@DeleteMapping("{rolename}")
+	public void deleteByRoleId(@PathVariable("rolename") String rolename) {
+		authorityService.deleteResourceAuthoritiesByRoleName(rolename);
 	}
 
 }

@@ -13,9 +13,7 @@ public interface AuthorityService extends RequestAuthoritiesService {
 
 	public Authority save(MenuAuthorityDto authorityDto);
 
-//	public List<Menu> listUserMenusTree(Long userId);
-
-	public Optional<Authority> get(Long roleId);
+	public Optional<Authority> get(String rolename);
 
 	public boolean exists();
 
@@ -32,8 +30,8 @@ public interface AuthorityService extends RequestAuthoritiesService {
 	 * 
 	 * @param roleId
 	 */
-	public void deleteResourceAuthoritiesByRoleId(Long roleId);
+	public void deleteResourceAuthoritiesByRoleName(String rolenamme);
 
-	public List<Menu> listMenuByAuthorities(List<Long> authoritiesIds);
+	public List<Menu> listMenuByAuthorities(List<String> authorities);
 
 }
