@@ -83,13 +83,13 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		super.configure(endpoints);
-		endpoints.tokenServices(tokenService());
+//		endpoints.tokenServices(tokenService());
 		endpoints.userApprovalHandler(userApprovalHandler()); // 用户授权处理逻辑
 
 		// 如果使用自定义的tokenService,以下的配置都不可用，需要在tokenService中重新配置
-//		endpoints.tokenStore(tokenStore());
+		endpoints.tokenStore(tokenStore());
 		// 指定是否可以重用refreshToken
-//		endpoints.reuseRefreshTokens(true);
+		endpoints.reuseRefreshTokens(false);
 		// 如果要使用RefreshToken可用，必须指定UserDetailsService
 		endpoints.userDetailsService(userDetailsService);
 		// 使用这个authenticationManager可以启用密码模式
@@ -115,14 +115,14 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 		return new RedisTokenStore(connectionFactory);
 	}
 
-	@Bean
-	public AuthorizationServerTokenServices tokenService() {
-		OwnerDefaultTokenService tokenService = new OwnerDefaultTokenService();
-		tokenService.setTokenStore(tokenStore());
-		tokenService.setClientDetailsService(clientDetailsService);
-		tokenService.setSupportRefreshToken(true);
-		tokenService.setReuseRefreshToken(false); // 不允许
-		return tokenService;
-	}
+//	@Bean
+//	public AuthorizationServerTokenServices tokenService() {
+//		OwnerDefaultTokenService tokenService = new OwnerDefaultTokenService();
+//		tokenService.setTokenStore(tokenStore());
+//		tokenService.setClientDetailsService(clientDetailsService);
+//		tokenService.setSupportRefreshToken(true);
+//		tokenService.setReuseRefreshToken(false); // 不允许
+//		return tokenService;
+//	}
 
 }
