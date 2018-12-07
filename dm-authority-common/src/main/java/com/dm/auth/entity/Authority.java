@@ -38,7 +38,6 @@ public class Authority implements Serializable {
 	@Column(name = "role_id_")
 	private Long id;
 
-	@Id
 	@Column(name = "role_name_")
 	private String roleName;
 

@@ -50,12 +50,21 @@ public class UapAutoConfiguration {
 	}
 
 	private void initRole() {
+		// 增加默认管理员角色
 		if (!roleService.findByName("ROLE_ADMIN").isPresent()) {
 			RoleDto role = new RoleDto();
 			role.setName("ROLE_ADMIN");
 			role.setState(Status.ENABLED);
 			roleService.save(role);
 		}
+		// 增加默认普通用户角色
+		if (!roleService.findByName("ROLE_USER").isPresent()) {
+			RoleDto role = new RoleDto();
+			role.setName("ROLE_USER");
+			role.setState(Status.ENABLED);
+			roleService.save(role);
+		}
+		// 增加默认匿名用户角色
 		if (!roleService.findByName("ROLE_ANONYMOUS").isPresent()) {
 			RoleDto role = new RoleDto();
 			role.setName("ROLE_ANONYMOUS");

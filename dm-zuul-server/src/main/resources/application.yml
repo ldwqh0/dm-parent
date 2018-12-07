@@ -1,26 +1,5 @@
 server:
   port: 8880
-logging: 
-  level: 
-    com.netflix: DEBUG
-zuul:  add-host-header: true
-  ## 默认情况下，zuul 会将 authorization cookie set-cookie 这三个敏感的header不作为转发对象
-  ## 在这里重新定义
-  sensitive-headers:   - cookie
-  - set-cookie  
-  include-debug-header: true
-  routes:     data: ## 数据中心的代理
-      strip-prefix: true
-      path: '/d/data/**'
-      url: 'http://127.0.0.1:8081/'
-    files: ## 文件服务器的代理
-      strip-prefix: true
-      path: '/d/files/**'
-      url: 'http://127.0.0.1:8886/files'
-    uap: ## 用户服务器的代理
-      path: '/d/**'
-      strip-prefix: true
-      url: 'http://127.0.0.1:8887/'
 spring:  main:    allow-bean-definition-overriding: true
   datasource:
     url: '@datasource.url@'
@@ -39,5 +18,29 @@ security:
   oauth2:
     resource:
       user-info-uri: '@user.info.url@'
+logging: 
+  level: 
+    com.netflix: DEBUG
+zuul:
+  add-host-header: true
+  ## 默认情况下，zuul 会将 authorization cookie set-cookie 这三个敏感的header不作为转发对象
+  ## 在这里重新定义
+  sensitive-headers: 
+  - cookie
+  - set-cookie  
+  include-debug-header: true
+  routes: 
+    data: ## 数据中心的代理
+      strip-prefix: true
+      path: '/d/data/**'
+      url: 'http://127.0.0.1:8081/'
+    files: ## 文件服务器的代理
+      strip-prefix: true
+      path: '/d/files/**'
+      url: 'http://127.0.0.1:8886/files'
+    uap: ## 用户服务器的代理
+      path: '/d/**'
+      strip-prefix: true
+      url: 'http://127.0.0.1:8887/'
 
     
