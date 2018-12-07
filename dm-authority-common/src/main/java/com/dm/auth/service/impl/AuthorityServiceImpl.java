@@ -55,7 +55,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 			authority = authorityRepository.getOne(roleName);
 		} else {
 			authority = new Authority();
-//			authority.setId(roleId);
+			authority.setId(roleId);
 			authority.setRoleName(roleName);
 			authority = authorityRepository.save(authority);
 		}
@@ -150,7 +150,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 			authority = authorityRepository.getOne(roleName);
 		} else {
 			authority = new Authority();
-//			authority.setId(roleId);
+			authority.setId(roleId);
 			authority.setRoleName(roleName);
 			authority = authorityRepository.save(authority);
 		}

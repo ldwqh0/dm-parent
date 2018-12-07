@@ -34,8 +34,8 @@ public class Authority implements Serializable {
 
 	private static final long serialVersionUID = 1819180600973309677L;
 
-//	@Column(name = "role_id_")
-//	private Long id;
+	@Column(name = "role_id_")
+	private Long id;
 
 	@Id
 	@Column(name = "role_name_", length = 100)
