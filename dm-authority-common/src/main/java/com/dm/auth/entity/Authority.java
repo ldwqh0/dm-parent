@@ -38,7 +38,7 @@ public class Authority implements Serializable {
 //	private Long id;
 
 	@Id
-	@Column(name = "role_name_")
+	@Column(name = "role_name_", length = 100)
 	private String roleName;
 
 	@Column(name = "describe_")
