@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,12 +55,18 @@ public class ClientInfoController {
 		return clientInfoConverter.toDto(client_);
 	}
 
+	@PutMapping("{id}")
+	public ClientInfoDto update(@PathVariable("id") String id, @RequestBody ClientInfoDto client) {
+		ClientInfo client_ = clientService.update(id, client);
+		return clientInfoConverter.toDto(client_);
+	}
+
 	@GetMapping(params = { "draw" })
 	public TableResultDto<ClientInfoDto> search(
 			@RequestParam(value = "draw", defaultValue = "1") Long draw,
-			@RequestParam(value = "key", required = false) String key,
+			@RequestParam(value = "search", required = false) String key,
 			@PageableDefault(page = 0, size = 10) Pageable pageable) {
 		Page<ClientInfo> clients = clientService.find(key, pageable);
-		return TableResultDto.success(draw, clients, client -> clientInfoConverter.toDto(client));
+		return TableResultDto.success(draw, clients, clientInfoConverter::toDto);
 	}
 }

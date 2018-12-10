@@ -13,8 +13,12 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 public class OAuthResourceConfigurer extends ResourceServerConfigurerAdapter {
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		super.configure(http);
-//		http.antMatcher("/**");
+		http.authorizeRequests().anyRequest().authenticated();
+		// 仅仅将部分路径认定为资源
+		http.requestMatchers()
+				.antMatchers("/user**/**")
+				.antMatchers("/roles**/**")
+				.antMatchers("/clients**/**");
 	}
 
 	@Override

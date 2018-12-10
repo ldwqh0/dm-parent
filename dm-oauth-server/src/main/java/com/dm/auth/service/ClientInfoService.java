@@ -20,4 +20,6 @@ public interface ClientInfoService {
 
 	public Page<ClientInfo> find(String key, Pageable pageable);
 
+	public ClientInfo update(String id, ClientInfoDto client);
+
 }

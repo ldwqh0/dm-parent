@@ -14,6 +14,8 @@ public class ClientDetailsDto implements ClientDetails {
 
 	private String clientId;
 
+	private String clientName;
+
 	private String clientSecret;
 
 	private Set<String> scope;
@@ -95,6 +97,14 @@ public class ClientDetailsDto implements ClientDetails {
 
 	public void setClient_id_(String clientId) {
 		this.clientId = clientId;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 
 	public void setClientSecret(String clientSecret) {

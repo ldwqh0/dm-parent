@@ -1,5 +1,6 @@
 package com.dm.auth.entity;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -44,9 +45,9 @@ public class UserApproval {
 
 	@Column(name = "last_update_at_")
 	@LastModifiedDate
-	private Date lastUpdatedAt;
+	private ZonedDateTime lastUpdatedAt;
 
-	protected void setLastUpdatedAt(Date date) {
+	protected void setLastUpdatedAt(ZonedDateTime date) {
 		this.lastUpdatedAt = date;
 	}
 

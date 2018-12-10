@@ -1,5 +1,7 @@
 package com.dm.auth.converter;
 
+import java.util.Date;
+
 import org.springframework.security.oauth2.provider.approval.Approval;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,7 @@ public class UserApprovalConverter extends AbstractConverter<UserApproval, Appro
 				model.getScope(),
 				model.getExpiresAt(),
 				model.getStatus());
-		approval.setLastUpdatedAt(model.getLastUpdatedAt());
+		approval.setLastUpdatedAt(Date.from(model.getLastUpdatedAt().toInstant()));
 		return approval;
 	}
 

@@ -32,4 +32,6 @@ public class ClientInfoDto implements Serializable {
 
 	private Integer refreshTokenValiditySeconds;
 
+	private Boolean autoApprove;
+
 }

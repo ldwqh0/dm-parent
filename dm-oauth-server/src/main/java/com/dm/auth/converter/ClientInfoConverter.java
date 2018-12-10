@@ -25,6 +25,7 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 		info.setResourceIds(model.getResourceIds());
 		info.setScope(model.getScope());
 		info.setName(model.getName());
+		info.setAutoApprove(model.isAutoApprove());
 		return info;
 	}
 
@@ -36,6 +37,7 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 		model.setRegisteredRedirectUri(dto.getRegisteredRedirectUri());
 		model.setResourceIds(dto.getResourceIds());
 		model.setScope(dto.getScope());
+		model.setAutoApprove(dto.getAutoApprove());
 		model.setName(dto.getName());
 	}
 
@@ -66,6 +68,7 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 		dto.setRegisteredRedirectUri(model.getRegisteredRedirectUri());
 		dto.setResourceIds(model.getResourceIds());
 		dto.setScope(model.getScope());
+		dto.setClientName(model.getName());
 		return dto;
 	}
 

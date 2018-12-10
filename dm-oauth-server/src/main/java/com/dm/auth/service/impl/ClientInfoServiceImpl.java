@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,7 +78,18 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 
 	@Override
 	public Page<ClientInfo> find(String key, Pageable pageable) {
-		return clientInfoRepository.findByNameContains(key, pageable);
+		if (StringUtils.isNotBlank(key)) {
+			return clientInfoRepository.findByNameContains(key, pageable);
+		} else {
+			return clientInfoRepository.findAll(pageable);
+		}
 	}
 
+	@Override
+	@Transactional
+	public ClientInfo update(String id, ClientInfoDto client) {
+		ClientInfo _client = clientInfoRepository.getOne(id);
+		clientInfoConverter.copyProperties(_client, client);
+		return _client;
+	}
 }

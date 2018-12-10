@@ -47,6 +47,8 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
+ 
+
 	/**
 	 * 这个主要是针对授权服务的配置，也就是针对/oauth/token这个地址的相关配置，比如添加过滤器什么的
 	 */
@@ -77,6 +79,7 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 		log.info("use clientDetailsService" + clientDetailsService);
 		clients.withClientDetails(clientDetailsService);
 	}
+
 	/**
 	 * 这个是针对/oauth/token这个地址的配置
 	 */
@@ -116,13 +119,13 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	}
 
 //	@Bean
-//	public AuthorizationServerTokenServices tokenService() {
-//		OwnerDefaultTokenService tokenService = new OwnerDefaultTokenService();
-//		tokenService.setTokenStore(tokenStore());
-//		tokenService.setClientDetailsService(clientDetailsService);
-//		tokenService.setSupportRefreshToken(true);
-//		tokenService.setReuseRefreshToken(false); // 不允许
-//		return tokenService;
-//	}
+	public AuthorizationServerTokenServices tokenService() {
+		OwnerDefaultTokenService tokenService = new OwnerDefaultTokenService();
+		tokenService.setTokenStore(tokenStore());
+		tokenService.setClientDetailsService(clientDetailsService);
+		tokenService.setSupportRefreshToken(true);
+		tokenService.setReuseRefreshToken(false); // 不允许
+		return tokenService;
+	}
 
 }
