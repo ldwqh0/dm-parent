@@ -1,0 +1,3 @@
+一个综合性质的网关
+支持oauth2的sso登录,这通常用于web网关
+当请求携带有access_token的时候，直接走ResourceServer校验流程

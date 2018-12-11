@@ -74,7 +74,10 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 		super.configure(resources);
 		// 指定这是一个restful service,不会保存会话状态
 		resources.stateless(true);
-//		resources.tokenServices(tokenStoreResourceServerTokenServices());
+
+		// 这里指定通过token store来校验token
+		// 当第三方服务通过access_token来访问服务时，直接从token_store中获取相关信息，而不用再发起远程调用请求
+		resources.tokenServices(tokenStoreResourceServerTokenServices());
 	}
 
 	/**
