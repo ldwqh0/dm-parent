@@ -17,12 +17,16 @@ import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import com.dm.auth.provider.token.OwnerDefaultTokenService;
 import com.dm.auth.service.UserApprovalService;
+import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,8 +51,6 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
- 
-
 	/**
 	 * 这个主要是针对授权服务的配置，也就是针对/oauth/token这个地址的相关配置，比如添加过滤器什么的
 	 */
@@ -59,6 +61,8 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 		// 也就是通过http请求头的 Authorization传递，具体的请参考http basic
 		// 或者http://client_id:client_secret@server/oauth/token的模式传递的
 		// 当启用这个配置之后，server可以从表单参数中获取相应的client_id和client_secret信息
+		// 默认情况下，checkToken的验证时denyAll的，需要手动开启
+		security.checkTokenAccess("isAuthenticated()");
 		security.allowFormAuthenticationForClients();
 	}
 
@@ -91,12 +95,29 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 
 		// 如果使用自定义的tokenService,以下的配置都不可用，需要在tokenService中重新配置
 		endpoints.tokenStore(tokenStore());
+		endpoints.accessTokenConverter(accessTokenConverter());
+//		endpoints
 		// 指定是否可以重用refreshToken
 		endpoints.reuseRefreshTokens(false);
 		// 如果要使用RefreshToken可用，必须指定UserDetailsService
 		endpoints.userDetailsService(userDetailsService);
 		// 使用这个authenticationManager可以启用密码模式
 		endpoints.authenticationManager(authenticationManager);
+	}
+
+	@Bean
+	public AccessTokenConverter accessTokenConverter() {
+		DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+		tokenConverter.setUserTokenConverter(userTokenConverter());
+		return tokenConverter;
+	}
+
+	@Bean
+	public UserAuthenticationConverter userTokenConverter() {
+		UserDetailsAuthenticationConverter userTokenConverter = new UserDetailsAuthenticationConverter();
+		// TODO 是否要设置UserDetailsService?
+//		userTokenConverter.setUserDetailsService(userDetailsService);
+		return userTokenConverter;
 	}
 
 	@Bean

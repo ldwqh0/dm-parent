@@ -90,6 +90,7 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	public ClientInfo update(String id, ClientInfoDto client) {
 		ClientInfo _client = clientInfoRepository.getOne(id);
 		clientInfoConverter.copyProperties(_client, client);
+		_client.setClientSecret(passwordEncoder.encode(client.getClientSecret()));
 		return _client;
 	}
 }

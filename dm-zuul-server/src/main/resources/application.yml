@@ -17,7 +17,10 @@ spring:  main:    allow-bean-definition-overriding: true
       ddl-auto: update
 security:
   oauth2:
-    resource:
+    client:      client-id: ownerapp
+      client-secret: 123456
+    resource:      
+      token-info-uri: 'http://127.0.0.1:8887/oauth/check_token'
       user-info-uri: '@user.info.url@'
 logging: 
   level: 

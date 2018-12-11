@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.dm.security.LoginFailureHandler;
-import com.dm.security.LoginSuccessHandler;
+import com.dm.security.web.authentication.LoginFailureHandler;
+import com.dm.security.web.authentication.LoginSuccessHandler;
 
 @Configuration
 @ConditionalOnClass(LoginSuccessHandler.class)

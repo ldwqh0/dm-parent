@@ -12,19 +12,27 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dm.auth.converter.ClientInfoConverter;
+import com.dm.auth.dto.AccessTokenInfoDto;
 import com.dm.auth.dto.ClientInfoDto;
 import com.dm.auth.entity.ClientInfo;
+import com.dm.auth.service.AccessTokenService;
 import com.dm.auth.service.ClientInfoService;
 import com.dm.common.dto.TableResultDto;
 
 import static org.springframework.http.HttpStatus.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 @RestController
 @RequestMapping("clients")
@@ -35,6 +43,9 @@ public class ClientInfoController {
 
 	@Autowired
 	private ClientInfoConverter clientInfoConverter;
+
+	@Autowired
+	private AccessTokenService tokenService;
 
 	@DeleteMapping("{clientId}")
 	@ResponseStatus(NO_CONTENT)
@@ -68,5 +79,15 @@ public class ClientInfoController {
 			@PageableDefault(page = 0, size = 10) Pageable pageable) {
 		Page<ClientInfo> clients = clientService.find(key, pageable);
 		return TableResultDto.success(draw, clients, clientInfoConverter::toDto);
+	}
+
+	@GetMapping(value = "{client}/tokens", params = { "draw" })
+	public TableResultDto<AccessTokenInfoDto> tokens(
+			@RequestParam("draw") Long draw,
+			@RequestParam(value = "search", required = false) String key,
+			@PageableDefault Pageable pageable,
+			@PathVariable("client") String client) {
+		Page<AccessTokenInfoDto> tokens = tokenService.listTokensByClient(client, pageable);
+		return TableResultDto.success(draw, tokens, token -> token);
 	}
 }

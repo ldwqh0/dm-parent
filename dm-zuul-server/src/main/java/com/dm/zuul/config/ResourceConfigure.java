@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
@@ -17,11 +16,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
+import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import com.dm.security.access.RequestAuthoritiesAccessDecisionVoter;
 import com.dm.security.access.RequestAuthoritiesFilterInvocationSecurityMetadataSource;
+import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
 import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
 
 @EnableResourceServer
@@ -29,7 +33,7 @@ import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
 public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 
 	@Autowired
-	private UserInfoTokenServices userInfoTokenServices;
+	private RemoteTokenServices remoteTokenServices;
 
 	/**
 	 * 配置对资源的保护模式
@@ -63,12 +67,34 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 		super.configure(resources);
 		// 指定这是一个restful service,不会保存会话状态
 		resources.stateless(true);
+//		resources.tokenStore(tokenStore)
 	}
 
-	// 指定用户信息的解码器
+	/**
+	 * 指定解码Token信息的解码器
+	 */
 	@PostConstruct
 	public void config() {
-		userInfoTokenServices.setPrincipalExtractor(principalExtractor());
+		remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
+	}
+
+	@Bean
+	public AccessTokenConverter accessTokenConverter() {
+		DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+		tokenConverter.setUserTokenConverter(userTokenConverter());
+		return tokenConverter;
+	}
+
+	/**
+	 * 配置一个Converter，使之可以解析token_info中的Pripical
+	 * 
+	 * @return
+	 */
+	@Bean
+	public UserAuthenticationConverter userTokenConverter() {
+		UserDetailsAuthenticationConverter authenticationConverter = new UserDetailsAuthenticationConverter();
+		authenticationConverter.setPrincipalExtractor(principalExtractor());
+		return authenticationConverter;
 	}
 
 	/**
