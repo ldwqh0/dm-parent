@@ -54,7 +54,7 @@ public abstract class AbstractConverter<M, DTO> {
 		if (IterableUtils.isEmpty(models)) {
 			return Collections.emptyList();
 		} else {
-			return StreamSupport.stream(models.spliterator(), false).map(m -> toDto(m)).collect(Collectors.toList());
+			return StreamSupport.stream(models.spliterator(), false).map(this::toDto).collect(Collectors.toList());
 		}
 	}
 

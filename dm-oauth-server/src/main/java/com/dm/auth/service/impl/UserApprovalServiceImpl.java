@@ -26,18 +26,14 @@ public class UserApprovalServiceImpl implements UserApprovalService {
 	@Override
 	@Transactional
 	public boolean addApprovals(Collection<Approval> approvals) {
-		approvals.forEach(approval -> {
-			save(approval);
-		});
+		approvals.forEach(this::save);
 		return true;
 	}
 
 	@Override
 	@Transactional
 	public boolean revokeApprovals(Collection<Approval> approvals) {
-		approvals.forEach(approval -> {
-			delete(approval);
-		});
+		approvals.forEach(this::delete);
 		return true;
 	}
 

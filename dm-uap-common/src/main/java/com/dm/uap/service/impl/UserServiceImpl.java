@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 		}
 		List<RoleDto> rolesDto = userDto.getRoles();
 		if (CollectionUtils.isNotEmpty(rolesDto)) {
-			List<Role> roles = rolesDto.stream().map(role -> role.getId()).map(roleRepository::getOne)
+			List<Role> roles = rolesDto.stream().map(RoleDto::getId).map(roleRepository::getOne)
 					.collect(Collectors.toList());
 			user.setRoles(roles);
 		}
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
 		List<RoleDto> _roles = userDto.getRoles();
 		if (CollectionUtils.isNotEmpty(_roles)) {
-			List<Role> roles = _roles.stream().map(role -> role.getId()).map(roleRepository::getOne)
+			List<Role> roles = _roles.stream().map(RoleDto::getId).map(roleRepository::getOne)
 					.collect(Collectors.toList());
 			user.setRoles(roles);
 		}

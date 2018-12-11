@@ -60,7 +60,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 			authority = authorityRepository.save(authority);
 		}
 		List<MenuDto> menus = authorityDto.getAuthorityMenus();
-		Set<Menu> list = menus.stream().map(m -> m.getId()).map(menuRepository::getOne).collect(Collectors.toSet());
+		Set<Menu> list = menus.stream().map(MenuDto::getId).map(menuRepository::getOne).collect(Collectors.toSet());
 		authority.setMenus(list);
 		return authority;
 	}
@@ -69,13 +69,14 @@ public class AuthorityServiceImpl implements AuthorityService {
 	@Transactional
 	public List<Menu> listMenuByAuthorities(List<String> ids) {
 		// 添加所有菜单项
-		Set<Menu> menus = new HashSet<Menu>();
 		// 所有菜单的父级菜单
 		Set<Menu> parents = new HashSet<Menu>();
-		ids.stream().filter(authorityRepository::existsById).forEach(id_ -> {
-			Set<Menu> menus_ = authorityRepository.getOne(id_).getMenus();
-			menus.addAll(menus_.stream().filter(m -> m.isEnabled()).collect(Collectors.toSet()));
-		});
+		Set<Menu> menus = ids.stream().filter(authorityRepository::existsById)
+				.map(authorityRepository::getOne)
+				.map(Authority::getMenus)
+				.flatMap(Set::stream)
+				.filter(Menu::isEnabled)
+				.collect(Collectors.toSet());
 
 		// 递归添加所有父级菜单
 		for (Menu menu : menus) {

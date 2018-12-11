@@ -53,7 +53,8 @@ public class MenuAuthorityController {
 	@PutMapping("{rolename}")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public MenuAuthorityDto save(@PathVariable("rolename") String rolename, @RequestBody MenuAuthorityDto authorityDto) {
+	public MenuAuthorityDto save(@PathVariable("rolename") String rolename,
+			@RequestBody MenuAuthorityDto authorityDto) {
 		Authority menuAuthority = authorityService.save(authorityDto);
 		return authorityConverter.toMenuAuthorityDto(menuAuthority);
 	}
@@ -84,7 +85,7 @@ public class MenuAuthorityController {
 	public List<MenusTreeDto> systemMenu(@CurrentUser UserDetailsDto userDto) {
 		Collection<GrantedAuthorityDto> authorities = userDto.getRoles();
 		if (CollectionUtils.isNotEmpty(authorities)) {
-			List<String> authorityNames = authorities.stream().map(authority -> authority.getAuthority())
+			List<String> authorityNames = authorities.stream().map(GrantedAuthorityDto::getAuthority)
 					.collect(Collectors.toList());
 			List<Menu> menus = authorityService.listMenuByAuthorities(authorityNames);
 			return menuConverter.toAuthorityMenusDto(menus);

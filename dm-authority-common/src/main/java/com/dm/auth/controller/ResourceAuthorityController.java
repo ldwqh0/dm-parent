@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dm.auth.converter.AuthorityConverter;
 import com.dm.auth.converter.ResourceOperationConverter;
 import com.dm.auth.dto.ResourceAuthorityDto;
+import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.dto.ResourceOperationDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Resource;
@@ -71,7 +72,9 @@ public class ResourceAuthorityController {
 		if (authority.isPresent() && CollectionUtils.isNotEmpty(authority.get().getResourceOperations())) {
 			result = authorityConverter.toResourceAuthorityDto(authority);
 			// 获取没有被资源权限设置所包含的资源
-			List<Long> existResource = result.getResourceAuthorities().stream().map(dto -> dto.getResource().getId())
+			List<Long> existResource = result.getResourceAuthorities().stream()
+					.map(ResourceOperationDto::getResource)
+					.map(ResourceDto::getId)
 					.collect(Collectors.toList());
 			notIncludeResource = resourceService.findByIdNotIn(existResource);
 		} else {

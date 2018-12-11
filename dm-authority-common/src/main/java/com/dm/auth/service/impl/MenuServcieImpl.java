@@ -58,7 +58,7 @@ public class MenuServcieImpl implements MenuService {
 			// 添加权限信息
 			List<Authority> authorities = authorityRepository.findByMenus(Collections.singleton(parent));
 			if (CollectionUtils.isNotEmpty(authorities)) {
-				authorities.stream().map(authority -> authority.getMenus()).forEach(menus -> menus.add(menu));
+				authorities.stream().map(Authority::getMenus).forEach(menus -> menus.add(menu));
 			}
 		}
 		Menu menuResult = menuRepository.save(menu);
