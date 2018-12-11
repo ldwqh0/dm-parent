@@ -122,7 +122,7 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 	 * 
 	 * @return
 	 */
-	@Bean
+//	@Bean
 	public UserAuthenticationConverter userTokenConverter() {
 		UserDetailsAuthenticationConverter authenticationConverter = new UserDetailsAuthenticationConverter();
 		authenticationConverter.setPrincipalExtractor(principalExtractor());
@@ -134,7 +134,7 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 	 * 
 	 * @return
 	 */
-	@Bean
+//	@Bean
 	public PrincipalExtractor principalExtractor() {
 		return new UserDetailsDtoPrincipalExtractor();
 	}
