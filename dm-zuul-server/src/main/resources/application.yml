@@ -16,13 +16,16 @@ spring:  main:    allow-bean-definition-overriding: true
       use-new-id-generator-mappings: true
       ddl-auto: update  redis:    host: 127.0.0.1
     port: 6379
-#security:
-#  oauth2:
-#    client:#      client-id: ownerapp
-#      client-secret: 123456
-#    resource:      
-#      token-info-uri: 'http://127.0.0.1:8887/oauth/check_token'
-#      user-info-uri: '@user.info.url@'
+security:
+  oauth2:
+    client:      client-id: zuul
+      client-secret: 123456
+      access-token-uri: http://localhost:8887/oauth/token
+      user-authorization-uri: http://localhost:8887/oauth/authorize
+      client-authentication-scheme: form
+    resource:      
+      token-info-uri: 'http://127.0.0.1:8887/oauth/check_token'
+      user-info-uri: '@user.info.url@'
 logging: 
   level: 
     com.netflix: DEBUG

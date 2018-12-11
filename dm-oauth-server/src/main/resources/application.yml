@@ -1,5 +1,9 @@
 server:
   port: 8887
+  servlet:
+    session:
+      cookie:
+        name: OAUTHSESSION
 spring:
   datasource:
     url: '@datasource.url@'
