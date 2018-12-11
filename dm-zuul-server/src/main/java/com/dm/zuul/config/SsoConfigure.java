@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
@@ -24,20 +23,27 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
 import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
 
+/**
+ * 配置zuul网关服务的单点登录
+ * 
+ * @author LiDong
+ *
+ */
 @Configuration
 @EnableOAuth2Sso
 @EnableWebSecurity
 public class SsoConfigure extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private FilterSecurityInterceptor filterSecurityInterceptor;
 
 	@Autowired
 	private RemoteTokenServices remoteTokenServices;
-	
+
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
+		// 指定相关资源的权限校验过滤器
 		http.addFilterBefore(filterSecurityInterceptor, FilterSecurityInterceptor.class);
 	}
 

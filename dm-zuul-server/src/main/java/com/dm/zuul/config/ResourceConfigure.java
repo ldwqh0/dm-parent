@@ -14,6 +14,7 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -28,6 +29,12 @@ import com.dm.security.access.RequestAuthoritiesAccessDecisionVoter;
 import com.dm.security.access.RequestAuthoritiesFilterInvocationSecurityMetadataSource;
 import com.dm.security.oauth2.provider.token.TokenStoreResourceServerTokenServices;
 
+/**
+ * 当请求中携带了access_token之后，
+ * 
+ * @author LiDong
+ *
+ */
 @EnableResourceServer
 @EnableWebSecurity
 public class ResourceConfigure extends ResourceServerConfigurerAdapter {
@@ -85,10 +92,19 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 	}
 
 	static class BearerTokenRequestMatcher implements RequestMatcher {
+
+		private boolean matchHeader(HttpServletRequest request) {
+			String authHeader = request.getHeader("Authorization");
+			return StringUtils.startsWithIgnoreCase(authHeader, OAuth2AccessToken.BEARER_TYPE);
+		}
+
 		@Override
 		public boolean matches(HttpServletRequest request) {
-			String authHeader = request.getHeader("Authorization");
-			return StringUtils.startsWithIgnoreCase(authHeader, "bearer");
+			return matchHeader(request) || matchParameter(request);
+		}
+
+		private boolean matchParameter(HttpServletRequest request) {
+			return StringUtils.isNotBlank(request.getParameter(OAuth2AccessToken.ACCESS_TOKEN));
 		}
 
 	}
