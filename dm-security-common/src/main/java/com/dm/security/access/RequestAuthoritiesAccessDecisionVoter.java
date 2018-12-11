@@ -38,7 +38,7 @@ public class RequestAuthoritiesAccessDecisionVoter implements AccessDecisionVote
 		if (authentication instanceof OAuth2Authentication) {
 			Object principal = ((OAuth2Authentication) authentication).getPrincipal();
 			Set<String> scopes = ((OAuth2Authentication) authentication).getOAuth2Request().getScope();
-			System.out.print(scopes);
+//			System.out.print(scopes);
 		}
 		List<RequestAuthorityAttribute> rAttributes = attributes.stream()
 				.map(attribute -> (RequestAuthorityAttribute) attribute)

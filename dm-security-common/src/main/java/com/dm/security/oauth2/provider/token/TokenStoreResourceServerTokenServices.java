@@ -18,6 +18,10 @@ import org.springframework.util.Assert;
 public class TokenStoreResourceServerTokenServices implements ResourceServerTokenServices, InitializingBean {
 
 	private TokenStore tokenStore;
+	
+	public void setTokenStore(TokenStore tokenStore) {
+		this.tokenStore = tokenStore;
+	}
 
 	@Override
 	public OAuth2Authentication loadAuthentication(String accessTokenValue)
