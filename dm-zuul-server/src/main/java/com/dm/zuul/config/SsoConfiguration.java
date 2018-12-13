@@ -23,6 +23,8 @@ import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -40,8 +42,7 @@ import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
 @Configuration
 @EnableConfigurationProperties(OAuth2SsoProperties.class)
 @Import({ ResourceServerTokenServicesConfiguration.class })
-//@EnableOAuth2Sso
-public class SsoConfigure extends WebSecurityConfigurerAdapter {
+public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private FilterSecurityInterceptor filterSecurityInterceptor;
@@ -54,11 +55,10 @@ public class SsoConfigure extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserInfoRestTemplateFactory restTemplateFactory;
+	
+	@Autowired
+	private AuthenticationSuccessHandler loginSuccessHandler;
 
-	/**
-	 * 以下代码抄写自
-	 * {@link org.springframework.boot.autoconfigure.security.oauth2.client.SsoSecurityConfigurer}
-	 */
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.antMatcher("/**").authorizeRequests().anyRequest().authenticated();
@@ -111,6 +111,7 @@ public class SsoConfigure extends WebSecurityConfigurerAdapter {
 		filter.setRestTemplate(restTemplateFactory.getUserInfoRestTemplate());
 		filter.setTokenServices(remoteTokenServices);
 		filter.setApplicationEventPublisher(getApplicationContext());
+		filter.setAuthenticationSuccessHandler(loginSuccessHandler);
 		return filter;
 	}
 

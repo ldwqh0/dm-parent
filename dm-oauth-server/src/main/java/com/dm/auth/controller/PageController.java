@@ -11,14 +11,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 @SessionAttributes({ "authorizationRequest" })
 @Controller
-public class AuthorizationController {
+public class PageController {
+
+	@GetMapping("/oauth/login.html")
+	public String login() {
+		return "login/login.html";
+	}
 
 	@GetMapping("/oauth/confirm_access")
 	public ModelAndView getAccessConfirmation(Map<String, Object> model, HttpServletRequest request) throws Exception {
 		return new ModelAndView("oauth2/confirm_access", model);
 	}
 
-	@GetMapping("/")
+	@GetMapping({ "/oauth/", "/oauth/index.html" })
 	public String index() {
 		return "forward:/index.html";
 	}

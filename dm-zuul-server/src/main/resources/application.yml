@@ -24,7 +24,7 @@ security:
       user-authorization-uri: http://localhost:8887/oauth/authorize
       client-authentication-scheme: form
       use-current-uri: false
-      pre-established-redirect-uri: http://localhost/element-seed/login
+      pre-established-redirect-uri: /login
     resource:      
       token-info-uri: 'http://127.0.0.1:8887/oauth/check_token'
 #      user-info-uri: '@user.info.url@'     #    sso:
