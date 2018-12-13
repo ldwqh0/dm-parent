@@ -26,6 +26,7 @@ spring:
     port: 6379
   thymeleaf:
     cache: false
+    prefix: classpath:/templates/
 management:
   endpoints:
     enabled-by-default: false
