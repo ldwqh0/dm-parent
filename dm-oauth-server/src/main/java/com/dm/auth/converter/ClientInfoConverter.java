@@ -1,5 +1,6 @@
 package com.dm.auth.converter;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -37,7 +38,7 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 		model.setRegisteredRedirectUri(dto.getRegisteredRedirectUri());
 		model.setResourceIds(dto.getResourceIds());
 		model.setScope(dto.getScope());
-		model.setAutoApprove(dto.getAutoApprove());
+		model.setAutoApprove(Objects.isNull(dto.getAutoApprove()) ? false : dto.getAutoApprove());
 		model.setName(dto.getName());
 	}
 
