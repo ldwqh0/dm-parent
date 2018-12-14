@@ -80,11 +80,13 @@ public class AddAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSu
 		this.stateKeyGenerator = stateKeyGenerator;
 	}
 
+	@Override
 	public boolean supportsResource(OAuth2ProtectedResourceDetails resource) {
 		return resource instanceof AuthorizationCodeResourceDetails
 				&& "authorization_code".equals(resource.getGrantType());
 	}
 
+	@Override
 	public boolean supportsRefresh(OAuth2ProtectedResourceDetails resource) {
 		return supportsResource(resource);
 	}
@@ -155,12 +157,14 @@ public class AddAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSu
 
 	protected ResponseExtractor<ResponseEntity<Void>> getAuthorizationResponseExtractor() {
 		return new ResponseExtractor<ResponseEntity<Void>>() {
+			@Override
 			public ResponseEntity<Void> extractData(ClientHttpResponse response) throws IOException {
 				return new ResponseEntity<Void>(response.getHeaders(), response.getStatusCode());
 			}
 		};
 	}
 
+	@Override
 	public OAuth2AccessToken obtainAccessToken(OAuth2ProtectedResourceDetails details, AccessTokenRequest request)
 			throws UserRedirectRequiredException, UserApprovalRequiredException, AccessDeniedException,
 			OAuth2AccessDeniedException {
@@ -178,6 +182,7 @@ public class AddAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSu
 
 	}
 
+	@Override
 	public OAuth2AccessToken refreshAccessToken(OAuth2ProtectedResourceDetails resource,
 			OAuth2RefreshToken refreshToken, AccessTokenRequest request) throws UserRedirectRequiredException,
 			OAuth2AccessDeniedException {

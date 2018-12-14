@@ -93,4 +93,9 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 		_client.setClientSecret(passwordEncoder.encode(client.getClientSecret()));
 		return _client;
 	}
+
+	@Override
+	public Optional<ClientInfo> findByName(String name) {
+		return clientInfoRepository.findByName(name);
+	}
 }

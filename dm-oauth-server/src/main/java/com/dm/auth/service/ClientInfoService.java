@@ -22,4 +22,6 @@ public interface ClientInfoService {
 
 	public ClientInfo update(String id, ClientInfoDto client);
 
+	public Optional<ClientInfo> findByName(String name);
+
 }
