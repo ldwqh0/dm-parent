@@ -24,4 +24,6 @@ public interface ClientInfoService {
 
 	public Optional<ClientInfo> findByName(String name);
 
+	public Optional<ClientInfo> getOne(String string);
+
 }

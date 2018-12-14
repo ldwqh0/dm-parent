@@ -98,4 +98,9 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	public Optional<ClientInfo> findByName(String name) {
 		return clientInfoRepository.findByName(name);
 	}
+
+	@Override
+	public Optional<ClientInfo> getOne(String id) {
+		return clientInfoRepository.findById(id);
+	}
 }
