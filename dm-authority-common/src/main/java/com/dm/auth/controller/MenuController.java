@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Api(tags = { "menu" })
-@RequestMapping("menus")
+@RequestMapping({ "menus", "p/menus" })
 @RestController
 @Slf4j
 public class MenuController {

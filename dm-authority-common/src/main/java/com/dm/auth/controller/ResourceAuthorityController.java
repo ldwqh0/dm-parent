@@ -1,6 +1,5 @@
 package com.dm.auth.controller;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ import com.dm.auth.service.AuthorityService;
 import com.dm.auth.service.ResourceService;
 
 @RestController
-@RequestMapping(value = { "resourceAuthorities" })
+@RequestMapping({ "resourceAuthorities", "p/resourceAuthorities" })
 public class ResourceAuthorityController {
 
 	@Autowired
@@ -68,7 +67,7 @@ public class ResourceAuthorityController {
 		ResourceAuthorityDto result;
 
 		// 没有被权限设置所包含的资源
-		List<Resource> notIncludeResource = Collections.emptyList();
+		List<Resource> notIncludeResource = null;
 		if (authority.isPresent() && CollectionUtils.isNotEmpty(authority.get().getResourceOperations())) {
 			result = authorityConverter.toResourceAuthorityDto(authority);
 			// 获取没有被资源权限设置所包含的资源
@@ -99,6 +98,7 @@ public class ResourceAuthorityController {
 	 */
 	@DeleteMapping("{rolename}")
 	public void deleteByRoleId(@PathVariable("rolename") String rolename) {
+
 		authorityService.deleteResourceAuthoritiesByRoleName(rolename);
 	}
 

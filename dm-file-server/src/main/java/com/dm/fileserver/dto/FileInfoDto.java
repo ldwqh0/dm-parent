@@ -26,7 +26,7 @@ public class FileInfoDto implements Serializable {
 
 	private Long size;
 
-	private Optional<String> createUser;
+	private  String createUser;
 
-	private Optional<ZonedDateTime> createTime;
+	private  ZonedDateTime createTime;
 }

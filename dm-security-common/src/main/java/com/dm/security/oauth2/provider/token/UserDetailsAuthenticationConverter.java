@@ -25,8 +25,7 @@ import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
  * @author LiDong
  *
  */
-public class UserDetailsAuthenticationConverter extends DefaultUserAuthenticationConverter
-		implements UserAuthenticationConverter {
+public class UserDetailsAuthenticationConverter extends DefaultUserAuthenticationConverter {
 	private static final String PRINCIPAL = "principal";
 
 	private Collection<? extends GrantedAuthority> defaultAuthorities;

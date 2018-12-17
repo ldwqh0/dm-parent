@@ -17,8 +17,8 @@ import org.springframework.util.Assert;
  */
 public class TokenStoreResourceServerTokenServices implements ResourceServerTokenServices, InitializingBean {
 
-	private TokenStore tokenStore;
-	
+	private TokenStore tokenStore = null;
+
 	public void setTokenStore(TokenStore tokenStore) {
 		this.tokenStore = tokenStore;
 	}

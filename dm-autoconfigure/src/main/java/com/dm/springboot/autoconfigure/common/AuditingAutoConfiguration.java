@@ -34,11 +34,6 @@ public class AuditingAutoConfiguration {
 	 */
 	@PostConstruct
 	public void configAuditingHandler() {
-		handler.setDateTimeProvider(new DateTimeProvider() {
-			@Override
-			public Optional<TemporalAccessor> getNow() {
-				return Optional.of(ZonedDateTime.now());
-			}
-		});
+		handler.setDateTimeProvider(() -> Optional.of(ZonedDateTime.now()));
 	}
 }

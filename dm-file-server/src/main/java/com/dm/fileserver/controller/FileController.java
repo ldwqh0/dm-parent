@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -77,15 +78,17 @@ public class FileController {
 		Iterator<String> filenames = request.getFileNames();
 		while (filenames.hasNext()) {
 			MultipartFile file = request.getFile(filenames.next());
-			FileInfoDto infoDto = new FileInfoDto();
-			if (StringUtils.isNotBlank(file.getOriginalFilename())) {
-				infoDto.setFilename(DmFileUtils.getOriginalFilename(file.getOriginalFilename()));
+			if (!Objects.isNull(file)) {
+				FileInfoDto infoDto = new FileInfoDto();
+				if (StringUtils.isNotBlank(file.getOriginalFilename())) {
+					infoDto.setFilename(DmFileUtils.getOriginalFilename(file.getOriginalFilename()));
+				}
+				infoDto.setSize(file.getSize());
+				FileInfo file_ = fileService.save(file.getInputStream(), infoDto);
+				result.add(file_);
+				// 创建缩略图
+				thumbnailService.createThumbnail(file_.getPath());
 			}
-			infoDto.setSize(file.getSize());
-			FileInfo file_ = fileService.save(file.getInputStream(), infoDto);
-			result.add(file_);
-			// 创建缩略图
-			thumbnailService.createThumbnail(file_.getPath());
 		}
 		return fileInfoConverter.toDto(result);
 	}

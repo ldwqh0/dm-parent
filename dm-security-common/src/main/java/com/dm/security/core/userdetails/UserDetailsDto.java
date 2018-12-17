@@ -29,7 +29,7 @@ public class UserDetailsDto implements UserDetails {
 	private boolean locked;
 	private List<? extends GrantedAuthorityDto> grantedAuthority;
 	private String fullname;
-	private List<String> region;
+	private List<String> region = null;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -100,7 +100,7 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (accessable ? 1231 : 1237);
+		result = prime * result + ((accessable == null) ? 0 : accessable.hashCode());
 		result = prime * result + ((authority == null) ? 0 : authority.hashCode());
 		result = prime * result + ((matchType == null) ? 0 : matchType.hashCode());
 		result = prime * result + ((method == null) ? 0 : method.hashCode());
@@ -117,7 +117,10 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 		if (getClass() != obj.getClass())
 			return false;
 		RequestAuthorityAttribute other = (RequestAuthorityAttribute) obj;
-		if (accessable != other.accessable)
+		if (accessable == null) {
+			if (other.accessable != null)
+				return false;
+		} else if (!accessable.equals(other.accessable))
 			return false;
 		if (authority == null) {
 			if (other.authority != null)
