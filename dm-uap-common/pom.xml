@@ -90,7 +90,7 @@
 				<datasource.driver>org.mariadb.jdbc.Driver</datasource.driver>
 				<datasource.username>root</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
-				<datasource.platform>org.hibernate.dialect.MariaDB53Dialect</datasource.platform>
+				<datasource.platform>org.hibernate.dialect.MariaDB103Dialect</datasource.platform>
 			</properties>
 		</profile>
 	</profiles>

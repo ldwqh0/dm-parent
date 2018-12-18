@@ -79,7 +79,7 @@
 				<datasource.driver>org.mariadb.jdbc.Driver</datasource.driver>
 				<datasource.username>lidong</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
-				<datasource.platform>org.hibernate.dialect.MariaDB53Dialect</datasource.platform>
+				<datasource.platform>org.hibernate.dialect.MariaDB103Dialect</datasource.platform>
 				<user.info.url>http://127.0.0.1:8887/users/current</user.info.url>
 			</properties>
 		</profile>
