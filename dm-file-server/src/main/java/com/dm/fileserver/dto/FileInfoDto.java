@@ -2,7 +2,6 @@ package com.dm.fileserver.dto;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

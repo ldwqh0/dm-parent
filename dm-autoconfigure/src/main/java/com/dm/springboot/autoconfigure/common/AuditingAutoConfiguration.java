@@ -1,7 +1,6 @@
 package com.dm.springboot.autoconfigure.common;
 
 import java.time.ZonedDateTime;
-import java.time.temporal.TemporalAccessor;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
@@ -11,7 +10,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.auditing.AuditingHandler;
-import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 /**

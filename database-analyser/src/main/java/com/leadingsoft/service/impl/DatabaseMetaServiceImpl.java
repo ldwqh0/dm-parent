@@ -55,15 +55,6 @@ public class DatabaseMetaServiceImpl implements DatabaseMetaService {
 			column.setDataType(columnResult.getInt("DATA_TYPE"));
 			column.setComment(columnResult.getString("REMARKS"));
 			columns.add(column);
-			System.out.println(columnResult.getString("REMARKS"));
-			var columnMetaData = columnResult.getMetaData();
-			var columnCount = columnMetaData.getColumnCount();
-			System.out.println("------------------------");
-			for (int i = 1; i <= columnCount; i++) {
-				System.out.println(columnMetaData.getColumnLabel(i));
-			}
-			System.out.println("------------------------");
-
 		}
 		table.setColumns(columns);
 	}
