@@ -21,17 +21,23 @@
 		<querydsl.version>4.2.1</querydsl.version>
 	</properties>
 	<modules>
+		<!-- 平台公共模块 -->
 		<module>dm-common</module>
+		<!-- 平台安全共功模块 -->
 		<module>dm-security-common</module>
-		<module>dm-autoconfigure</module>
+		<!-- 平台用户模块 -->
 		<module>dm-uap-common</module>
-		<!-- <module>dm-oauth-server</module> -->
-		<!-- <module>SimpleTest</module> -->
+		<!-- 平台权限模块 -->
+		<module>dm-authority-common</module>
+		<!-- 自动配置工具 -->
+		<module>dm-autoconfigure</module>
 		<module>dm-resource-server-spring-boot-starter</module>
 		<module>dm-security-spring-boot-starter</module>
+		<!-- <module>dm-oauth-server</module> -->
+		<!-- <module>SimpleTest</module> -->
 		<!-- <module>dm-file-server</module> -->
 		<!-- <module>dm-zuul</module> -->
-		<module>dm-authority-common</module>
+		<!-- <module>database-analyser</module> -->
 	</modules>
 	<packaging>pom</packaging>
 
@@ -57,7 +63,7 @@
 				<artifactId>spring-security-oauth2</artifactId>
 				<version>2.3.4.RELEASE</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.dm</groupId>
 				<artifactId>dm-authority-common</artifactId>
