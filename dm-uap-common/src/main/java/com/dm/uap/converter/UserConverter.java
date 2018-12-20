@@ -75,7 +75,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			user.setMobile(userDto.getMobile());
 			user.setDescribe(userDto.getDescribe());
 			user.setEmail(userDto.getEmail());
-			user.setRegion(RegionInfo.fromList(userDto.getRegion()));
+//			user.setRegion(RegionInfo.fromList(userDto.getRegion()));
 		}
 	}
 

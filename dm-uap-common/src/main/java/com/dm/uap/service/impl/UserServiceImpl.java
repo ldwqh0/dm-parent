@@ -20,8 +20,10 @@ import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.QUser;
+import com.dm.uap.entity.RegionInfo;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
+import com.dm.uap.repository.RegionRepository;
 import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
@@ -44,6 +46,9 @@ public class UserServiceImpl implements UserService {
 	private PasswordEncoder passwordEncoder;
 
 	private final QUser qUser = QUser.user;
+
+	@Autowired
+	private RegionRepository regionRepository;
 
 	@Override
 	@Transactional
@@ -77,6 +82,7 @@ public class UserServiceImpl implements UserService {
 					.collect(Collectors.toList());
 			user.setRoles(roles);
 		}
+		setRegion(user, userDto);
 		user = userRepository.save(user);
 		user.setOrder(user.getId());
 		return user;
@@ -132,6 +138,7 @@ public class UserServiceImpl implements UserService {
 					.collect(Collectors.toList());
 			user.setRoles(roles);
 		}
+		setRegion(user, userDto);
 		return user;
 	}
 
@@ -144,6 +151,25 @@ public class UserServiceImpl implements UserService {
 		} else {
 			return userRepository.findAll(pageable);
 		}
+	}
 
+	private void setRegion(User user, UserDto userDto) {
+		List<String> region = userDto.getRegion();
+		if (CollectionUtils.isNotEmpty(region)) {
+			RegionInfo regionInfo = new RegionInfo();
+			int length = region.size();
+			if (CollectionUtils.isNotEmpty(region)) {
+				if (length > 0) {
+					regionInfo.setProvincial(regionRepository.getOne(region.get(0)));
+				}
+				if (length > 1) {
+					regionInfo.setCity(regionRepository.getOne(region.get(1)));
+				}
+				if (length > 2) {
+					regionInfo.setCounty(regionRepository.getOne(region.get(2)));
+				}
+			}
+			user.setRegion(regionInfo);
+		}
 	}
 }
