@@ -1,5 +1,8 @@
 package com.dm.security.access;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
 
@@ -37,10 +40,14 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 
 	private Boolean accessable;
 
-	public RequestAuthorityAttribute(String authority, String pattern, MatchType matchType, HttpMethod method,
+	private Set<String> scope;
+
+	public RequestAuthorityAttribute(String authority, String pattern, MatchType matchType, Set<String> scope,
+			HttpMethod method,
 			Boolean accessable) {
 		super();
 		this.authority = authority;
+		this.scope = scope;
 		this.pattern = pattern;
 		this.matchType = matchType;
 		this.method = method;
@@ -96,6 +103,14 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 		this.accessable = accessable;
 	}
 
+	public Set<String> getScope() {
+		return scope;
+	}
+
+	public void setScope(Set<String> scope) {
+		this.scope = scope;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -105,6 +120,7 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 		result = prime * result + ((matchType == null) ? 0 : matchType.hashCode());
 		result = prime * result + ((method == null) ? 0 : method.hashCode());
 		result = prime * result + ((pattern == null) ? 0 : pattern.hashCode());
+		result = prime * result + ((scope == null) ? 0 : scope.hashCode());
 		return result;
 	}
 
@@ -135,6 +151,11 @@ public class RequestAuthorityAttribute implements ConfigAttribute {
 			if (other.pattern != null)
 				return false;
 		} else if (!pattern.equals(other.pattern))
+			return false;
+		if (scope == null) {
+			if (other.scope != null)
+				return false;
+		} else if (!scope.equals(other.scope))
 			return false;
 		return true;
 	}

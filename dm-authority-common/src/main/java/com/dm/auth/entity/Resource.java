@@ -1,9 +1,14 @@
 package com.dm.auth.entity;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 
 import com.dm.common.entity.AbstractEntity;
 import com.dm.security.access.RequestAuthorityAttribute.MatchType;
@@ -29,13 +34,28 @@ public class Resource extends AbstractEntity {
 	@Column(name = "name_", length = 100, unique = true)
 	private String name;
 
+	/**
+	 * 资源匹配路径
+	 */
 	@Column(name = "matcher_", length = 400, unique = true)
 	private String matcher;
 
+	/**
+	 * 路径匹配类型
+	 */
 	@Column(name = "match_type_")
 	@Enumerated(EnumType.STRING)
 	private MatchType matchType = MatchType.ANT_PATH;
 
+	/**
+	 * 资源所属范围
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> scope;
+
+	/**
+	 * 资源描述
+	 */
 	@Column(name = "description_", length = 800)
 	private String description;
 

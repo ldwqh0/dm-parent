@@ -56,8 +56,8 @@ public class OAuth2ClientConfiguration {
 
 	@Bean
 	public UserInfoRestTemplateCustomizer userInfoRestTemplateCustomizer() {
-
 		AccessTokenProviderChain provicerChain = new AccessTokenProviderChain(Arrays.<AccessTokenProvider>asList(
+				// 更换原有的AuthorizationCodeAccessTokenProvider
 				new AddAuthorizationCodeAccessTokenProvider(),
 				new ImplicitAccessTokenProvider(),
 				new ResourceOwnerPasswordAccessTokenProvider(),
@@ -69,6 +69,5 @@ public class OAuth2ClientConfiguration {
 				template.setAccessTokenProvider(provicerChain);
 			}
 		};
-
 	}
 }

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 
 @RestController
 @RequestMapping("clients")
@@ -40,6 +41,9 @@ public class ClientInfoController {
 
 	@Autowired
 	private AccessTokenService tokenService;
+
+	@Autowired
+	private ConsumerTokenServices consumerTokenServices;
 
 	@DeleteMapping("{clientId}")
 	@ResponseStatus(NO_CONTENT)
@@ -61,6 +65,7 @@ public class ClientInfoController {
 	}
 
 	@PutMapping("{id}")
+	@ResponseStatus(CREATED)
 	public ClientInfoDto update(@PathVariable("id") String id, @RequestBody ClientInfoDto client) {
 		ClientInfo client_ = clientService.update(id, client);
 		return clientInfoConverter.toDto(client_);
@@ -83,5 +88,11 @@ public class ClientInfoController {
 			@PathVariable("client") String client) {
 		Page<AccessTokenInfoDto> tokens = tokenService.listTokensByClient(client, pageable);
 		return TableResultDto.success(draw, tokens, token -> token);
+	}
+
+	@DeleteMapping(value = "/tokens/{token}")
+	@ResponseStatus(value = NO_CONTENT)
+	public void revokeToken(@PathVariable("token") String token) {
+		consumerTokenServices.revokeToken(token);
 	}
 }

@@ -73,6 +73,7 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
 		super.configure(resources);
 		// 指定这是一个restful service,不会保存会话状态
+		resources.resourceId("ZUUL");
 		resources.stateless(true);
 
 		// 这里指定通过token store来校验token
@@ -111,6 +112,5 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 		}
 
 	}
-
 
 }

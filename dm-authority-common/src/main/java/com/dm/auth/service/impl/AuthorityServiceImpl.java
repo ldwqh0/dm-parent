@@ -23,6 +23,7 @@ import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.dto.ResourceOperationDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
+import com.dm.auth.entity.Resource;
 import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
@@ -190,22 +191,39 @@ public class AuthorityServiceImpl implements AuthorityService {
 			Set<ResourceOperation> operations = authority.getResourceOperations();
 			String roleName = authority.getRoleName();
 			for (ResourceOperation operation : operations) {
+				Resource resource = operation.getResource();
 				if (!Objects.isNull(operation.getSaveable())) {
-					attributes.add(new RequestAuthorityAttribute(roleName, operation.getResource().getMatcher(),
-							operation.getResource().getMatchType(), HttpMethod.POST, operation.getSaveable()));
+					attributes.add(new RequestAuthorityAttribute(
+							roleName,
+							resource.getMatcher(),
+							resource.getMatchType(),
+							resource.getScope(),
+							HttpMethod.POST,
+							operation.getSaveable()));
 				}
 				if (!Objects.isNull(operation.getReadable())) {
-					attributes.add(new RequestAuthorityAttribute(roleName, operation.getResource().getMatcher(),
-							operation.getResource().getMatchType(), HttpMethod.GET, operation.getReadable()));
+					attributes.add(new RequestAuthorityAttribute(
+							roleName,
+							resource.getMatcher(),
+							resource.getMatchType(),
+							resource.getScope(),
+							HttpMethod.GET,
+							operation.getReadable()));
 				}
 				if (!Objects.isNull(operation.getUpdateable())) {
-					attributes.add(new RequestAuthorityAttribute(roleName, operation.getResource().getMatcher(),
-							operation.getResource().getMatchType(), HttpMethod.PUT, operation.getUpdateable()));
+					attributes.add(new RequestAuthorityAttribute(
+							roleName,
+							resource.getMatcher(),
+							resource.getMatchType(),
+							resource.getScope(),
+							HttpMethod.PUT,
+							operation.getUpdateable()));
 				}
 
 				if (!Objects.isNull(operation.getDeleteable())) {
-					attributes.add(new RequestAuthorityAttribute(roleName, operation.getResource().getMatcher(),
-							operation.getResource().getMatchType(), HttpMethod.DELETE, operation.getDeleteable()));
+					attributes.add(new RequestAuthorityAttribute(roleName, resource.getMatcher(),
+							resource.getMatchType(),
+							resource.getScope(), HttpMethod.DELETE, operation.getDeleteable()));
 				}
 			}
 		}

@@ -16,10 +16,7 @@ public class OAuthResourceConfigurer extends ResourceServerConfigurerAdapter {
 		http.authorizeRequests().anyRequest().authenticated();
 		// 仅仅将部分路径认定为资源
 		http.requestMatchers()
-				.antMatchers("/regions**/**")
-				.antMatchers("/user**/**")
-				.antMatchers("/roles**/**")
-				.antMatchers("/clients**/**");
+				.antMatchers("/regions**/**", "/user**/**", "/roles**/**", "/clients**/**", "/tokens**/**");
 	}
 
 	@Override

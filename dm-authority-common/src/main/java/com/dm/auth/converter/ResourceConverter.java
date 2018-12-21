@@ -17,6 +17,7 @@ public class ResourceConverter extends AbstractConverter<Resource, ResourceDto> 
 		dto.setMatcher(model.getMatcher());
 		dto.setDescription(model.getDescription());
 		dto.setMatchType(model.getMatchType());
+		dto.setScope(model.getScope());
 		return dto;
 	}
 
@@ -26,6 +27,7 @@ public class ResourceConverter extends AbstractConverter<Resource, ResourceDto> 
 		model.setDescription(dto.getDescription());
 		model.setName(dto.getName());
 		model.setMatchType(dto.getMatchType());
+		model.setScope(dto.getScope());
 	}
 
 }

@@ -35,6 +35,22 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.ResponseExtractor;
 
+/**
+ * 所有的代码逻辑和{@link org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider}一致<br
+ * />
+ * 
+ * 修改的逻辑和原因:<br />
+ * 
+ * 系统使用前后端分离策略，并且后台经过了端口映射。<br />
+ * 这样前端在做oauth授权跳转的时候，前端的跳转路径，后台保存的跳转路径.可能不一致，这种不一致会导致后台根据oauth_code获取access_token的时候不能正常通过
+ * <br />
+ * 解决方案:<br />
+ * 让前端页面决定跳转路径，并在登录时将跳转路和其它参数，包括state,和code,和current_uri.<br />
+ * 验证代码在验证时，优先使用前端传入的跳转路径进行验证
+ * 
+ * @author LiDong
+ *
+ */
 public class AddAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSupport implements AccessTokenProvider {
 	private StateKeyGenerator stateKeyGenerator = new DefaultStateKeyGenerator();
 
@@ -229,6 +245,8 @@ public class AddAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSu
 			}
 		}
 
+		// 小修改验证参数获取逻辑，优先使用前端传入的路径。
+		// 如果不存在相关路径，才使用保存的路径
 		List<String> currentUris = request.get(CURRENT_URI);
 		if (CollectionUtils.isNotEmpty(currentUris)) {
 			String currentUri = currentUris.stream().findFirst().get();

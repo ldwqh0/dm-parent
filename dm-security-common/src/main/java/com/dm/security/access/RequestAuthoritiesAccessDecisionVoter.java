@@ -35,12 +35,6 @@ public class RequestAuthoritiesAccessDecisionVoter implements AccessDecisionVote
 			return ACCESS_ABSTAIN;
 		}
 
-		if (authentication instanceof OAuth2Authentication) {
-			Object principal = ((OAuth2Authentication) authentication).getPrincipal();
-			Set<String> scopes = ((OAuth2Authentication) authentication).getOAuth2Request().getScope();
-//			System.out.print(scopes);
-			// TODO 校验SCOPE
-		}
 		List<RequestAuthorityAttribute> rAttributes = attributes.stream()
 				.map(attribute -> (RequestAuthorityAttribute) attribute)
 				.filter(attribute -> !Objects.isNull(attribute.getAccessable()))
@@ -53,7 +47,7 @@ public class RequestAuthoritiesAccessDecisionVoter implements AccessDecisionVote
 				if (Objects.equals(authority.getAuthority(), attribute.getAuthority())) {
 					Boolean accessable = attribute.getAccessable();
 					if (!Objects.isNull(accessable)) {
-						if (accessable) {
+						if (accessable && validScope(attribute, authentication)) {
 							grantCount++;
 						} else {
 							return ACCESS_DENIED;
@@ -67,6 +61,24 @@ public class RequestAuthoritiesAccessDecisionVoter implements AccessDecisionVote
 			return ACCESS_ABSTAIN;
 		}
 		return grantCount > 0 ? ACCESS_GRANTED : ACCESS_DENIED;
+	}
+
+	/**
+	 * 验证Scope
+	 * 
+	 * @param attribute
+	 * @param request
+	 * @return
+	 */
+	private boolean validScope(RequestAuthorityAttribute attribute, Authentication authentication) {
+		if (authentication instanceof OAuth2Authentication) {
+			Set<String> resourceScope = attribute.getScope();
+			Set<String> requestScopes = ((OAuth2Authentication) authentication).getOAuth2Request().getScope();
+			if (CollectionUtils.isNotEmpty(resourceScope)) {
+				return CollectionUtils.containsAny(requestScopes, resourceScope);
+			}
+		}
+		return true;
 	}
 
 }

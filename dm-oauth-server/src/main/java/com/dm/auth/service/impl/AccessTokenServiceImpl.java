@@ -2,6 +2,7 @@ package com.dm.auth.service.impl;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.dm.auth.dto.AccessTokenInfoDto;
 import com.dm.auth.service.AccessTokenService;
+import com.sun.el.stream.Stream;
 
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
@@ -33,7 +35,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 	}
 
 	private List<AccessTokenInfoDto> toAccessTokenInfoDto(Collection<OAuth2AccessToken> tokens) {
-		return tokens.stream().map(this::toAccessTokenInfoDto).collect(Collectors.toList());
+		return tokens.stream().map(this::toAccessTokenInfoDto).distinct().collect(Collectors.toList());
 	}
 
 	private AccessTokenInfoDto toAccessTokenInfoDto(OAuth2AccessToken token) {
@@ -42,9 +44,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 		result.setExpiration(ZonedDateTime.ofInstant(token.getExpiration().toInstant(), ZoneId.systemDefault()));
 		result.setScope(token.getScope());
 		result.setTokenType(token.getTokenType());
-		Object principal = authentication.getPrincipal();
-		if (!Objects.isNull(principal) && principal instanceof UserDetails) {
-			result.setUsername(((UserDetails) principal).getUsername());
+		if (!Objects.isNull(authentication)) {
+			Object principal = authentication.getPrincipal();
+			if (!Objects.isNull(principal) && principal instanceof UserDetails) {
+				result.setUsername(((UserDetails) principal).getUsername());
+			}
 		}
 		result.setValue(token.getValue());
 		return result;

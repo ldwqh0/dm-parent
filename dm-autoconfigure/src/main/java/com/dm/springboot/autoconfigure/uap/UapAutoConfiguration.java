@@ -114,14 +114,14 @@ public class UapAutoConfiguration {
 				role.setId(_role.get().getId());
 				user.setRoles(Collections.singletonList(role));
 			}
-			userService.save(user);
+			userService.save(user);	
 		}
 	}
 
 	// 初始化用户的区划
 	private void initRegion() {
 		if (!regionService.existAny()) {
-			try (InputStream iStream = ClassLoader.getSystemResourceAsStream("regions.json")) {
+			try (InputStream iStream = this.getClass().getClassLoader().getResourceAsStream("regions.json")) {
 				MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class,
 						String.class);
 				CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class,
