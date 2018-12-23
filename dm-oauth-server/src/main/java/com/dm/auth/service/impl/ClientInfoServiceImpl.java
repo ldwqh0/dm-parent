@@ -79,7 +79,7 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	@Override
 	public Page<ClientInfo> find(String key, Pageable pageable) {
 		if (StringUtils.isNotBlank(key)) {
-			return clientInfoRepository.findByNameContains(key, pageable);
+			return clientInfoRepository.find(key, pageable);
 		} else {
 			return clientInfoRepository.findAll(pageable);
 		}
@@ -103,4 +103,5 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	public Optional<ClientInfo> getOne(String id) {
 		return clientInfoRepository.findById(id);
 	}
+
 }

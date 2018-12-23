@@ -1,14 +1,15 @@
 package com.dm.auth.entity;
 
-import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 
 import com.dm.common.entity.AbstractEntity;
 import com.dm.security.access.RequestAuthorityAttribute.MatchType;
@@ -51,6 +52,10 @@ public class Resource extends AbstractEntity {
 	 * 资源所属范围
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Column(name = "scope_")
+	@CollectionTable(name = "dm_resource_scope_", joinColumns = {
+			@JoinColumn(name = "resource_")
+	})
 	private Set<String> scope;
 
 	/**

@@ -106,4 +106,9 @@ public class ResourceServiceImpl implements ResourceService {
 		return resourceRepository.findByIdNotIn(ids);
 	}
 
+	@Override
+	public List<String> listScopes() {
+		return resourceRepository.listScopes();
+	}
+
 }

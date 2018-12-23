@@ -22,7 +22,6 @@ import com.dm.common.dto.TableResultDto;
 import static org.springframework.http.HttpStatus.*;
 
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -90,8 +89,8 @@ public class ClientInfoController {
 		return TableResultDto.success(draw, tokens, token -> token);
 	}
 
-	@DeleteMapping(value = "/tokens/{token}")
-	@ResponseStatus(value = NO_CONTENT)
+	@DeleteMapping("/tokens/{token}")
+	@ResponseStatus(NO_CONTENT)
 	public void revokeToken(@PathVariable("token") String token) {
 		consumerTokenServices.revokeToken(token);
 	}

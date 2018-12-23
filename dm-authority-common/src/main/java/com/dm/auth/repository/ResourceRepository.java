@@ -14,4 +14,11 @@ public interface ResourceRepository extends JpaRepository<Resource, Long>, Query
 
 	public List<Resource> findByIdNotIn(List<Long> ids);
 
+	/**
+	 * 获取所有资源的Scope
+	 * 
+	 * @return
+	 */
+	public List<String> listScopes();
+
 }

@@ -28,5 +28,7 @@ public interface ResourceService {
 	public boolean exist();
 
 	public Optional<Resource> findByName(String name);
+	
+	public List<String> listScopes();
 
 }

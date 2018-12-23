@@ -3,11 +3,13 @@ package com.dm.auth.entity;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Persistable;
@@ -15,7 +17,7 @@ import org.springframework.data.domain.Persistable;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "dm_client_info_")
+@Entity(name = "dm_client_")
 @Getter
 @Setter
 public class ClientInfo implements Persistable<String>, Serializable {
@@ -32,15 +34,31 @@ public class ClientInfo implements Persistable<String>, Serializable {
 	private String name;
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Column(name = "scope_")
+	@CollectionTable(name = "dm_client_scope_", joinColumns = {
+			@JoinColumn(name = "client_")
+	})
 	private Set<String> scope;
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Column(name = "authorized_grant_type_")
+	@CollectionTable(name = "dm_client_authorized_grant_type_", joinColumns = {
+			@JoinColumn(name = "client_")
+	})
 	private Set<String> authorizedGrantTypes;
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Column(name = "registered_redirect_uri_")
+	@CollectionTable(name = "dm_client_registered_redirect_uri_", joinColumns = {
+			@JoinColumn(name = "client_")
+	})
 	private Set<String> registeredRedirectUri;
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Column(name = "resource_id_")
+	@CollectionTable(name = "dm_client_resource_id_", joinColumns = {
+			@JoinColumn(name = "client_")
+	})
 	private Set<String> resourceIds;
 
 	@Column(name = "access_token_validity_seconds_")
