@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.common.dto.TableResultDto;
+import com.dm.common.dto.TableResult;
 import com.dm.auth.converter.ResourceConverter;
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.entity.Resource;
@@ -62,11 +62,11 @@ public class ResourceController {
 	}
 
 	@GetMapping(params = { "draw" })
-	public TableResultDto<ResourceDto> search(@RequestParam("draw") Long draw,
+	public TableResult<ResourceDto> search(@RequestParam("draw") Long draw,
 			@PageableDefault Pageable pageable,
 			@RequestParam(value = "search", required = false) String keywords) {
 		Page<Resource> resources = resourceService.search(keywords, pageable);
-		return TableResultDto.success(draw, resources, resourceConverter::toDto);
+		return TableResult.success(draw, resources, resourceConverter::toDto);
 	}
 
 	@GetMapping

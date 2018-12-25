@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.common.dto.TableResultDto;
+import com.dm.common.dto.TableResult;
 import com.dm.common.exception.DataValidateException;
 import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.dto.RoleDto;
@@ -85,15 +85,15 @@ public class RoleController {
 
 	@ApiOperation("查询角色")
 	@GetMapping(params = { "draw" })
-	public TableResultDto<?> list(@PageableDefault(page = 0, size = 10) Pageable pageable,
+	public TableResult<?> list(@PageableDefault(page = 0, size = 10) Pageable pageable,
 			@RequestParam(value = "search", required = false) String key,
 			@RequestParam(value = "draw", required = false) Long draw) {
 		try {
 			Page<Role> result = roleService.search(key, pageable);
-			return TableResultDto.success(draw, result, roleConverter::toDto);
+			return TableResult.success(draw, result, roleConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询角色时发生错误", e);
-			return TableResultDto.failure(draw, pageable, e.getMessage());
+			return TableResult.failure(draw, pageable, e.getMessage());
 		}
 	}
 

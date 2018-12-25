@@ -17,7 +17,7 @@ import com.dm.auth.dto.ClientInfoDto;
 import com.dm.auth.entity.ClientInfo;
 import com.dm.auth.service.AccessTokenService;
 import com.dm.auth.service.ClientInfoService;
-import com.dm.common.dto.TableResultDto;
+import com.dm.common.dto.TableResult;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -71,22 +71,22 @@ public class ClientInfoController {
 	}
 
 	@GetMapping(params = { "draw" })
-	public TableResultDto<ClientInfoDto> search(
+	public TableResult<ClientInfoDto> search(
 			@RequestParam(value = "draw", defaultValue = "1") Long draw,
 			@RequestParam(value = "search", required = false) String key,
 			@PageableDefault(page = 0, size = 10) Pageable pageable) {
 		Page<ClientInfo> clients = clientService.find(key, pageable);
-		return TableResultDto.success(draw, clients, clientInfoConverter::toDto);
+		return TableResult.success(draw, clients, clientInfoConverter::toDto);
 	}
 
 	@GetMapping(value = "{client}/tokens", params = { "draw" })
-	public TableResultDto<AccessTokenInfoDto> tokens(
+	public TableResult<AccessTokenInfoDto> tokens(
 			@RequestParam("draw") Long draw,
 			@RequestParam(value = "search", required = false) String key,
 			@PageableDefault Pageable pageable,
 			@PathVariable("client") String client) {
 		Page<AccessTokenInfoDto> tokens = tokenService.listTokensByClient(client, pageable);
-		return TableResultDto.success(draw, tokens, token -> token);
+		return TableResult.success(draw, tokens, token -> token);
 	}
 
 	@DeleteMapping("/tokens/{token}")

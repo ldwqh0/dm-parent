@@ -31,7 +31,7 @@ import lombok.Data;
  */
 @JsonInclude(Include.NON_NULL)
 @Data
-public class TableResultDto<T> implements TableResult<T> {
+class TableResultDto<T> implements TableResult<T> {
 	private static final long serialVersionUID = -7642770441688089769L;
 
 	private Long draw;
@@ -58,7 +58,7 @@ public class TableResultDto<T> implements TableResult<T> {
 	 */
 
 	@Deprecated
-	public static <DTO, M> TableResultDto<DTO> success(Long draw, Page<M> data, Function<M, DTO> converter) {
+	public static <DTO, M> TableResult<DTO> success(Long draw, Page<M> data, Function<M, DTO> converter) {
 		TableResultDto<DTO> result = new TableResultDto<DTO>();
 		Pageable pageable = data.getPageable();
 		result.setDraw(draw);
@@ -83,7 +83,7 @@ public class TableResultDto<T> implements TableResult<T> {
 	 * @return
 	 */
 	@Deprecated
-	public static <DTO, M> TableResultDto<DTO> failure(Long draw, Pageable pageable, String err) {
+	public static <DTO, M> TableResult<DTO> failure(Long draw, Pageable pageable, String err) {
 		TableResultDto<DTO> result = new TableResultDto<>();
 		result.setDraw(draw);
 		result.setError(err);

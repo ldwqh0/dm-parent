@@ -25,7 +25,7 @@ import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.OrderDto;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.MenuService;
-import com.dm.common.dto.TableResultDto;
+import com.dm.common.dto.TableResult;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -84,17 +84,17 @@ public class MenuController {
 
 	@ApiOperation("根据关键字查询菜单")
 	@GetMapping(params = { "draw" })
-	public TableResultDto<MenuDto> list(
+	public TableResult<MenuDto> list(
 			@PageableDefault(page = 0, size = 10, direction = Direction.ASC, sort = "order") Pageable pageable,
 			@RequestParam(value = "search", required = false) String key,
 			@RequestParam(value = "draw", required = false) Long draw,
 			@RequestParam(value = "parentId", required = false) Long parentId) {
 		try {
 			Page<Menu> result = menuService.search(parentId, key, pageable);
-			return TableResultDto.success(draw, result, menuConverter::toDto);
+			return TableResult.success(draw, result, menuConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询菜单出错", e);
-			return TableResultDto.failure(draw, pageable, "查询菜单信息出错！");
+			return TableResult.failure(draw, pageable, "查询菜单信息出错！");
 		}
 
 	}

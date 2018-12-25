@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.common.dto.TableResultDto;
+import com.dm.common.dto.TableResult;
 import com.dm.security.annotation.CurrentUser;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
@@ -79,16 +79,16 @@ public class UserController {
 
 	@ApiOperation("列表查询用户")
 	@GetMapping
-	public TableResultDto<UserDto> list(
+	public TableResult<UserDto> list(
 			@PageableDefault(page = 0, size = 10, sort = { "order" }, direction = Direction.ASC) Pageable pageable,
 			@RequestParam(value = "search", required = false) String key,
 			@RequestParam(value = "draw", required = false) Long draw) {
 		try {
 			Page<User> result = userService.search(key, pageable);
-			return TableResultDto.success(draw, result, userConverter::toDto);
+			return TableResult.success(draw, result, userConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询用户信息出错", e);
-			return TableResultDto.failure(draw, pageable, e.getMessage());
+			return TableResult.failure(draw, pageable, e.getMessage());
 		}
 	}
 
