@@ -1,6 +1,5 @@
 package com.dm.common.dto;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -25,12 +24,14 @@ import lombok.Data;
  * 如果表格响应错误，则应该在message中包含错误的详情
  * 
  * @author LiDong
+ * 
+ * 
  *
  * @param <T> 列表的数据类型
  */
 @JsonInclude(Include.NON_NULL)
 @Data
-public class TableResultDto<T> implements Serializable {
+public class TableResultDto<T> implements TableResult<T> {
 	private static final long serialVersionUID = -7642770441688089769L;
 
 	private Long draw;
@@ -41,18 +42,22 @@ public class TableResultDto<T> implements Serializable {
 	private String error;
 	private boolean success;
 
-	private TableResultDto() {
+	TableResultDto() {
 
 	}
 
 	/**
-	 * 使用制定的converter将分页实体数据转换为表格数据
+	 * 使用制定的converter将分页实体数据转换为表格数据<br >
+	 * 
+	 * use {@link TableResult}
 	 * 
 	 * @param draw
 	 * @param data
 	 * @param converter
 	 * @return
 	 */
+
+	@Deprecated
 	public static <DTO, M> TableResultDto<DTO> success(Long draw, Page<M> data, Function<M, DTO> converter) {
 		TableResultDto<DTO> result = new TableResultDto<DTO>();
 		Pageable pageable = data.getPageable();
@@ -71,11 +76,13 @@ public class TableResultDto<T> implements Serializable {
 	}
 
 	/**
-	 * 返回一个表格错误信息
+	 * 返回一个表格错误信息<br />
+	 * use {@link TableResult}
 	 * 
 	 * @param err
 	 * @return
 	 */
+	@Deprecated
 	public static <DTO, M> TableResultDto<DTO> failure(Long draw, Pageable pageable, String err) {
 		TableResultDto<DTO> result = new TableResultDto<>();
 		result.setDraw(draw);

@@ -52,7 +52,7 @@ public class Authority implements Serializable {
 	private Set<Menu> menus;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	@JoinTable(name = "dm_authority__resource_operation_", joinColumns = {
+	@JoinTable(name = "dm_authority_resource_operation_", joinColumns = {
 			@JoinColumn(name = "role_name_", referencedColumnName = "role_name_") })
 	@OrderColumn(name = "order_by_")
 	private Set<ResourceOperation> resourceOperations;
