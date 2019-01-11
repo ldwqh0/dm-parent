@@ -2,9 +2,11 @@ package com.dm.security.core.userdetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -30,6 +32,8 @@ public class UserDetailsDto implements UserDetails {
 	private List<? extends GrantedAuthorityDto> grantedAuthority;
 	private String fullname;
 	private List<String> region = null;
+
+	private String regionCode;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -125,6 +129,21 @@ public class UserDetailsDto implements UserDetails {
 
 	public void setRegion(List<String> region) {
 		this.region = region;
+		if (CollectionUtils.isNotEmpty(region)) {
+			Iterator<String> regionIterator = region.iterator();
+			String regionCode = null;
+			while (StringUtils.isNotBlank(regionCode = regionIterator.next())) {
+				this.regionCode = regionCode;
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getRegionCode() {
+		return regionCode;
 	}
 
 	@JsonIgnore
