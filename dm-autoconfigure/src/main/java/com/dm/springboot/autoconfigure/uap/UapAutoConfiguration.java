@@ -114,7 +114,7 @@ public class UapAutoConfiguration {
 				role.setId(_role.get().getId());
 				user.setRoles(Collections.singletonList(role));
 			}
-			userService.save(user);	
+			userService.save(user);
 		}
 	}
 
@@ -126,13 +126,15 @@ public class UapAutoConfiguration {
 						String.class);
 				CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class,
 						elementType);
-				List<Map<String, String>> result = objectMapper.readValue(iStream, collectionType);
+				List<Map<String, Object>> result = objectMapper.readValue(iStream, collectionType);
 				if (CollectionUtils.isNotEmpty(result)) {
 					List<RegionDto> regions = result.stream().map(r -> {
 						RegionDto region = new RegionDto();
-						region.setName(r.get("name"));
-						region.setCode(r.get("code"));
-						String parentCode = r.get("parent");
+						region.setName(String.valueOf(r.get("name")));
+						region.setCode(String.valueOf(r.get("code")));
+						region.setLatitude(Double.valueOf(String.valueOf(r.get("lat"))));
+						region.setLongitude(Double.valueOf(String.valueOf(r.get("lng"))));
+						String parentCode = String.valueOf(r.get("parent"));
 						if (StringUtils.isNotBlank(parentCode)) {
 							RegionDto parent = new RegionDto();
 							parent.setCode(parentCode);
