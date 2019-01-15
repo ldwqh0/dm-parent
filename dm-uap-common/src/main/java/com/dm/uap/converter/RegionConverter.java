@@ -16,6 +16,8 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 		RegionDto region = new RegionDto();
 		region.setName(model.getName());
 		region.setCode(model.getCode());
+		region.setLatitude(model.getLatitude());
+		region.setLongitude(model.getLongitude());
 		Region _parent = model.getParent();
 		if (!Objects.isNull(_parent)) {
 			region.setParent(toDto(_parent));
@@ -27,6 +29,8 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 	public void copyProperties(Region model, RegionDto dto) {
 		model.setCode(dto.getCode());
 		model.setName(dto.getName());
+		model.setLongitude(dto.getLongitude());
+		model.setLatitude(dto.getLatitude());
 		RegionDto _parent = dto.getParent();
 		if (!Objects.isNull(_parent)) {
 			Region parent = new Region();

@@ -45,4 +45,10 @@ public class Region implements Serializable {
 	@JoinColumn(name = "parent_")
 	private Region parent;
 
+	@Column(name = "longitude_")
+	private Double longitude;
+
+	@Column(name = "latitude_")
+	private Double latitude;
+
 }
