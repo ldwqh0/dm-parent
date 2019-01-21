@@ -134,7 +134,7 @@ public class UapAutoConfiguration {
 						region.setCode(String.valueOf(r.get("code")));
 						region.setLatitude(Double.valueOf(String.valueOf(r.get("lat"))));
 						region.setLongitude(Double.valueOf(String.valueOf(r.get("lng"))));
-						String parentCode = String.valueOf(r.get("parent"));
+						String parentCode = (String) r.get("parent");
 						if (StringUtils.isNotBlank(parentCode)) {
 							RegionDto parent = new RegionDto();
 							parent.setCode(parentCode);
