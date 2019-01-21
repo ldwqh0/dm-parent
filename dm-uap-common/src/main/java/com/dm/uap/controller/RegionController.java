@@ -21,13 +21,20 @@ public class RegionController {
 
 	@Autowired
 	private RegionService regionService;
-	
+
 	@Autowired
 	private RegionConverter regionConverter;
 
+	/**
+	 * 获取所有的区划列表
+	 * 
+	 * @param user
+	 * @return
+	 */
 	@GetMapping
 	public List<RegionDto> findAll(@CurrentUser UserDetailsDto user) {
-		List<Region> regions = regionService.findParentsAndChildren(user.getRegion());
+//		List<Region> regions = regionService.findParentsAndChildren(user.getRegion());
+		List<Region> regions = regionService.findAll();
 		return regions.stream().map(regionConverter::toDto).collect(Collectors.toList());
 	}
 }

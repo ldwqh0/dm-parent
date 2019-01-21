@@ -51,7 +51,8 @@ public class RegionServiceImpl implements RegionService {
 		return regionRepository.save(region_);
 	}
 
-	@Override
+//	@Override
+	@Deprecated
 	public List<Region> findParentsAndChildren(List<String> regions) {
 		if (CollectionUtils.isNotEmpty(regions)) {
 			String last = null;
@@ -90,5 +91,10 @@ public class RegionServiceImpl implements RegionService {
 			collection.addAll(children);
 			children.forEach(child -> findChildren(collection, child));
 		}
+	}
+
+	@Override
+	public List<Region> findAll() {
+		return regionRepository.findAll();
 	}
 }

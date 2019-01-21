@@ -12,5 +12,12 @@ public interface RegionService {
 
 	public Region save(RegionDto region);
 
-	public List<Region> findParentsAndChildren(List<String> region);
+//	public List<Region> findParentsAndChildren(List<String> region);
+
+	/**
+	 * 获取所有的区划列表
+	 * 
+	 * @return
+	 */
+	public List<Region> findAll();
 }
