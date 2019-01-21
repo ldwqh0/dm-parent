@@ -34,6 +34,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			dto.setLocked(user_.isLocked());
 			dto.setUsername(user_.getUsername());
 			dto.setFullname(user_.getFullname());
+			dto.setScenicName(user_.getScenicName());
 			List<Role> roles = user_.getRoles();
 			RegionInfo region = user_.getRegion();
 			if (!Objects.isNull(region)) {
@@ -56,6 +57,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		dto.setMobile(user.getMobile());
 		dto.setEmail(user.getEmail());
 		dto.setDescribe(user.getDescribe());
+		dto.setScenicName(user.getScenicName());
 		List<Role> roles = user.getRoles();
 		if (CollectionUtils.isNotEmpty(roles)) {
 			dto.setRoles(roleConverter.toSimpleDto(user.getRoles()));
@@ -75,6 +77,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			user.setMobile(userDto.getMobile());
 			user.setDescribe(userDto.getDescribe());
 			user.setEmail(userDto.getEmail());
+			user.setScenicName(userDto.getScenicName());
 //			user.setRegion(RegionInfo.fromList(userDto.getRegion()));
 		}
 	}
