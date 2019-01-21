@@ -160,13 +160,22 @@ public class UserServiceImpl implements UserService {
 			int length = region.size();
 			if (CollectionUtils.isNotEmpty(region)) {
 				if (length > 0) {
-					regionInfo.setProvincial(regionRepository.getOne(region.get(0)));
+					String provincial = region.get(0);
+					if (StringUtils.isNotBlank(provincial)) {
+						regionInfo.setProvincial(regionRepository.getOne(provincial));
+					}
 				}
 				if (length > 1) {
-					regionInfo.setCity(regionRepository.getOne(region.get(1)));
+					String city = region.get(1);
+					if (StringUtils.isNotBlank(city)) {
+						regionInfo.setCity(regionRepository.getOne(city));
+					}
 				}
 				if (length > 2) {
-					regionInfo.setCounty(regionRepository.getOne(region.get(2)));
+					String country = region.get(2);
+					if (StringUtils.isNotBlank(country)) {
+						regionInfo.setCounty(regionRepository.getOne(country));
+					}
 				}
 			}
 			user.setRegion(regionInfo);
