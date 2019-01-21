@@ -74,4 +74,6 @@ public class User extends AbstractEntity {
 	@Embedded
 	private RegionInfo region;
 
+	@Column(name = "scenic_name_", length = 200)
+	private String scenicName;
 }

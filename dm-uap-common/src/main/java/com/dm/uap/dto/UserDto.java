@@ -25,6 +25,7 @@ public class UserDto implements Serializable {
 	private String mobile;
 	private String describe;
 	private List<RoleDto> roles;
+	private String scenicName;
 
 	@JsonIgnoreProperties(value = { "users", "state", "describe" })
 	public List<RoleDto> getRoles() {
