@@ -35,6 +35,8 @@ public class UserDetailsDto implements UserDetails {
 
 	private String regionCode;
 
+	private String scenicName;
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return grantedAuthority;
@@ -125,6 +127,14 @@ public class UserDetailsDto implements UserDetails {
 
 	public List<String> getRegion() {
 		return region;
+	}
+
+	public String getScenicName() {
+		return scenicName;
+	}
+
+	public void setScenicName(String scenicName) {
+		this.scenicName = scenicName;
 	}
 
 	public void setRegion(List<String> region) {
