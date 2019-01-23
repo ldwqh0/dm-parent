@@ -76,7 +76,7 @@ public class MenuAuthorityController {
 	/**
 	 * 获取当前用户的可用菜单项，当某个子菜单可用时，父菜单也会被列出来
 	 * 
-	 * Description: 根据登陆用户获取菜单
+	 * Description: 根据登录用户获取菜单
 	 * 
 	 * @return
 	 */
