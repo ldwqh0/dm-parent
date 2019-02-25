@@ -15,18 +15,20 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 	@Override
 	public Object extractPrincipal(Map<String, Object> map) {
 		UserDetailsDto userDetailsDto = new UserDetailsDto();
-		userDetailsDto.setId(Long.valueOf(map.get("id").toString()));
-		userDetailsDto.setUsername(map.get("username").toString());
-		userDetailsDto.setFullname(map.get("fullname").toString());
+		userDetailsDto.setId((Long) map.get("id"));
+		userDetailsDto.setUsername((String) map.get("username"));
+		userDetailsDto.setFullname((String) map.get("fullname"));
 		if (!Objects.isNull(map.get("authorities"))) {
 			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> roles = (List<Map<String, Object>>) map.get("authorities");
 			List<GrantedAuthorityDto> authorities = roles.stream()
-					.map(role -> new GrantedAuthorityDto(role.get("authority").toString(),
-							Long.valueOf(role.get("id").toString())))
+					.map(role -> new GrantedAuthorityDto((String) role.get("authority"),
+							(Long) role.get("id")))
 					.collect(Collectors.toList());
 			userDetailsDto.setGrantedAuthority(authorities);
 		}
+
+		userDetailsDto.setScenicName((String) map.get("scenicName"));
 
 		if (map.get("region") != null) {
 			@SuppressWarnings({ "unchecked" })
