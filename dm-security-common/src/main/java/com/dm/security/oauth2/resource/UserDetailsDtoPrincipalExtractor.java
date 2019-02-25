@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 
 import com.dm.security.core.userdetails.GrantedAuthorityDto;
@@ -15,7 +16,7 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 	@Override
 	public Object extractPrincipal(Map<String, Object> map) {
 		UserDetailsDto userDetailsDto = new UserDetailsDto();
-		userDetailsDto.setId((Long) map.get("id"));
+		userDetailsDto.setId(((Integer) map.get("id")).longValue());
 		userDetailsDto.setUsername((String) map.get("username"));
 		userDetailsDto.setFullname((String) map.get("fullname"));
 		if (!Objects.isNull(map.get("authorities"))) {
