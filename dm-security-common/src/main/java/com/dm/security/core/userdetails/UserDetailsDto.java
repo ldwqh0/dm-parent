@@ -133,10 +133,6 @@ public class UserDetailsDto implements UserDetails {
 		this.scenicName = scenicName;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	public String getRegionCode() {
 		return regionCode;
 	}
