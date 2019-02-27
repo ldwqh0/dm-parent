@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import com.dm.common.converter.AbstractConverter;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
-import com.dm.uap.entity.RegionInfo;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 
@@ -36,10 +35,6 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			dto.setFullname(user_.getFullname());
 			dto.setScenicName(user_.getScenicName());
 			List<Role> roles = user_.getRoles();
-			RegionInfo region = user_.getRegion();
-			if (!Objects.isNull(region)) {
-				dto.setRegion(region.asList());
-			}
 			if (CollectionUtils.isNotEmpty(roles)) {
 				dto.setGrantedAuthority(roleConverter.toGrantedAuthorityDto(user_.getRoles()));
 			}
@@ -58,12 +53,10 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		dto.setEmail(user.getEmail());
 		dto.setDescribe(user.getDescribe());
 		dto.setScenicName(user.getScenicName());
+		dto.setRegionCode(user.getRegionCode());
 		List<Role> roles = user.getRoles();
 		if (CollectionUtils.isNotEmpty(roles)) {
 			dto.setRoles(roleConverter.toSimpleDto(user.getRoles()));
-		}
-		if (!Objects.isNull(user.getRegion())) {
-			dto.setRegion(user.getRegion().asList());
 		}
 		return dto;
 	}
@@ -78,7 +71,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			user.setDescribe(userDto.getDescribe());
 			user.setEmail(userDto.getEmail());
 			user.setScenicName(userDto.getScenicName());
-//			user.setRegion(RegionInfo.fromList(userDto.getRegion()));
+			user.setRegionCode(userDto.getRegionCode());
 		}
 	}
 

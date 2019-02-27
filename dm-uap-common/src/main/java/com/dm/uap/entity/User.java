@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
@@ -71,8 +70,8 @@ public class User extends AbstractEntity {
 							@Index(columnList = "user_", name = "IDX_dm_user_role_user_") })
 	private List<Role> roles;
 
-	@Embedded
-	private RegionInfo region;
+	@Column(name = "region_code_")
+	private String regionCode;
 
 	@Column(name = "scenic_name_", length = 200)
 	private String scenicName;

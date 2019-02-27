@@ -92,6 +92,5 @@ public class MenuAuthorityController {
 		} else {
 			return Collections.emptyList();
 		}
-
 	}
 }

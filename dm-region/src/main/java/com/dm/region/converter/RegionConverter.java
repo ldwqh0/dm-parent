@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.bag.TreeBag;
@@ -65,7 +66,7 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 		result.sort((v1, v2) -> {
 			return Integer.valueOf(v1.getCode()) - Integer.valueOf(v2.getCode());
 		});
-		return result;
+		return result.stream().filter(item -> StringUtils.isEmpty(item.getParentCode())).collect(Collectors.toList());
 	}
 
 	private RegionTreeDto toRegionTreeDto(Region region) {

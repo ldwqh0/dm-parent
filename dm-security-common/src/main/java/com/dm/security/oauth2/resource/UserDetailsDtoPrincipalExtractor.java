@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 
 import com.dm.security.core.userdetails.GrantedAuthorityDto;
@@ -19,6 +18,7 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 		userDetailsDto.setId(((Integer) map.get("id")).longValue());
 		userDetailsDto.setUsername((String) map.get("username"));
 		userDetailsDto.setFullname((String) map.get("fullname"));
+		userDetailsDto.setRegionCode((String) map.get("regionCode"));
 		if (!Objects.isNull(map.get("authorities"))) {
 			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> roles = (List<Map<String, Object>>) map.get("authorities");
@@ -28,15 +28,7 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 					.collect(Collectors.toList());
 			userDetailsDto.setGrantedAuthority(authorities);
 		}
-
 		userDetailsDto.setScenicName((String) map.get("scenicName"));
-
-		if (map.get("region") != null) {
-			@SuppressWarnings({ "unchecked" })
-			List<String> regions = (List<String>) map.get("region");
-			userDetailsDto.setRegion(regions);
-		}
-
 		return userDetailsDto;
 	}
 

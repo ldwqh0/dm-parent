@@ -1,19 +1,9 @@
 package com.dm.springboot.autoconfigure.uap;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -22,20 +12,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.dm.uap.dto.RegionDto;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.entity.Role.Status;
-import com.dm.uap.service.RegionService;
 import com.dm.uap.service.RoleService;
 import com.dm.uap.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.MapType;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @ConditionalOnClass(User.class)
@@ -43,11 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableJpaRepositories({ "com.dm.uap" })
 @ComponentScan({ "com.dm.uap" })
 @EnableConfigurationProperties({ DefaultUserProperties.class })
-@Slf4j
 public class UapAutoConfiguration {
-
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	@Autowired
 	private DefaultUserProperties defaultUser;
@@ -58,15 +37,11 @@ public class UapAutoConfiguration {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private RegionService regionService;
-
 	/**
 	 * 初始化默认用户
 	 */
 	@PostConstruct
 	public void initData() {
-		initRegion();
 		// 初始化角色
 		initRole();
 		// 初始化用户
@@ -118,35 +93,4 @@ public class UapAutoConfiguration {
 		}
 	}
 
-	// 初始化用户的区划
-	private void initRegion() {
-		if (!regionService.existAny()) {
-			try (InputStream iStream = this.getClass().getClassLoader().getResourceAsStream("regions.json")) {
-				MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class,
-						String.class);
-				CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class,
-						elementType);
-				List<Map<String, Object>> result = objectMapper.readValue(iStream, collectionType);
-				if (CollectionUtils.isNotEmpty(result)) {
-					List<RegionDto> regions = result.stream().map(r -> {
-						RegionDto region = new RegionDto();
-						region.setName(String.valueOf(r.get("name")));
-						region.setCode(String.valueOf(r.get("code")));
-						region.setLatitude(Double.valueOf(String.valueOf(r.get("lat"))));
-						region.setLongitude(Double.valueOf(String.valueOf(r.get("lng"))));
-						String parentCode = (String) r.get("parent");
-						if (StringUtils.isNotBlank(parentCode)) {
-							RegionDto parent = new RegionDto();
-							parent.setCode(parentCode);
-							region.setParent(parent);
-						}
-						return region;
-					}).collect(Collectors.toList());
-					regionService.save(regions);
-				}
-			} catch (IOException e) {
-				log.error("解析json文件时发生错误", e);
-			}
-		}
-	}
 }

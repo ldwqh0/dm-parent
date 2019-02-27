@@ -2,11 +2,8 @@ package com.dm.security.core.userdetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,9 +28,12 @@ public class UserDetailsDto implements UserDetails {
 	private boolean locked;
 	private List<? extends GrantedAuthorityDto> grantedAuthority;
 	private String fullname;
-	private List<String> region = null;
 
 	private String regionCode;
+
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
+	}
 
 	private String scenicName;
 
@@ -125,10 +125,6 @@ public class UserDetailsDto implements UserDetails {
 		return fullname;
 	}
 
-	public List<String> getRegion() {
-		return region;
-	}
-
 	public String getScenicName() {
 		return scenicName;
 	}
@@ -137,50 +133,12 @@ public class UserDetailsDto implements UserDetails {
 		this.scenicName = scenicName;
 	}
 
-	public void setRegion(List<String> region) {
-		this.region = region;
-		if (CollectionUtils.isNotEmpty(region)) {
-			Iterator<String> regionIterator = region.iterator();
-			String regionCode = null;
-			while (StringUtils.isNotBlank(regionCode = regionIterator.next())) {
-				this.regionCode = regionCode;
-			}
-		}
-	}
-
 	/**
 	 * 
 	 * @return
 	 */
 	public String getRegionCode() {
 		return regionCode;
-	}
-
-	@JsonIgnore
-	public String getProvinceCode() {
-		if (CollectionUtils.isNotEmpty(this.region) && this.region.size() > 0) {
-			return region.get(0);
-		} else {
-			return null;
-		}
-	}
-
-	@JsonIgnore
-	public String getCityCode() {
-		if (CollectionUtils.isNotEmpty(this.region) && this.region.size() > 1) {
-			return region.get(1);
-		} else {
-			return null;
-		}
-	}
-
-	@JsonIgnore
-	public String getCountryCode() {
-		if (CollectionUtils.isNotEmpty(this.region) && this.region.size() > 2) {
-			return region.get(2);
-		} else {
-			return null;
-		}
 	}
 
 	@Override
