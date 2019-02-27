@@ -51,48 +51,6 @@ public class RegionServiceImpl implements RegionService {
 		return regionRepository.save(region_);
 	}
 
-//	@Override
-	@Deprecated
-	public List<Region> findParentsAndChildren(List<String> regions) {
-		if (CollectionUtils.isNotEmpty(regions)) {
-			String last = null;
-			for (String current : regions) {
-				if (StringUtils.isBlank(current)) {
-					break;
-				} else {
-					last = current;
-				}
-			}
-			if (StringUtils.isNoneBlank(last)) {
-				Set<Region> result = new LinkedHashSet<>();
-				Optional<Region> current = regionRepository.findById(last);
-				if (current.isPresent()) {
-					result.add(current.get());
-					findParents(result, current.get());
-					findChildren(result, current.get());
-				}
-				return result.stream().collect(Collectors.toList());
-			}
-		}
-		return regionRepository.findAll();
-	}
-
-	private void findParents(Set<Region> collection, Region current) {
-		Region parent = current.getParent();
-		if (!Objects.isNull(parent)) {
-			collection.add(current.getParent());
-			findParents(collection, current.getParent());
-		}
-	}
-
-	private void findChildren(Set<Region> collection, Region current) {
-		List<Region> children = regionRepository.findAllByParentCode(current.getCode());
-		if (CollectionUtils.isNotEmpty(children)) {
-			collection.addAll(children);
-			children.forEach(child -> findChildren(collection, child));
-		}
-	}
-
 	@Override
 	public List<Region> findAll() {
 		return regionRepository.findAll();

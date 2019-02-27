@@ -45,28 +45,6 @@ public class RegionInfo implements Serializable {
 		}
 		return Arrays.asList(new String[] { provincialCode, cityCode, countryCode });
 	}
-//
-//	public static RegionInfo fromList(List<String> region) {
-//		if (CollectionUtils.isNotEmpty(region)) {
-//			RegionInfo regionInfo = new RegionInfo();
-//			int length = region.size();
-//			if (CollectionUtils.isNotEmpty(region)) {
-//				if (length > 0) {
-//					regionInfo.provincialCode = region.get(0);
-//				}
-//				if (length > 1) {
-//					regionInfo.cityCode = region.get(1);
-//				}
-//				if (length > 2) {
-//					regionInfo.countyCode = region.get(2);
-//				}
-//			}
-//			return regionInfo;
-//		} else {
-//			return null;
-//		}
-//
-//	}
 
 	public RegionInfo() {
 		super();

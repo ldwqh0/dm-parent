@@ -33,7 +33,6 @@ public class RegionController {
 	 */
 	@GetMapping
 	public List<RegionDto> findAll(@CurrentUser UserDetailsDto user) {
-//		List<Region> regions = regionService.findParentsAndChildren(user.getRegion());
 		List<Region> regions = regionService.findAll();
 		return regions.stream().map(regionConverter::toDto).collect(Collectors.toList());
 	}

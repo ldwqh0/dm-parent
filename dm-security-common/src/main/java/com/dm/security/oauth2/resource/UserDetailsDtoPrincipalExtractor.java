@@ -24,7 +24,7 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 			List<Map<String, Object>> roles = (List<Map<String, Object>>) map.get("authorities");
 			List<GrantedAuthorityDto> authorities = roles.stream()
 					.map(role -> new GrantedAuthorityDto((String) role.get("authority"),
-							(Long) role.get("id")))
+							((Integer) role.get("id")).longValue()))
 					.collect(Collectors.toList());
 			userDetailsDto.setGrantedAuthority(authorities);
 		}
