@@ -18,7 +18,7 @@ public class UserDetailsDto implements UserDetails {
 	private static final long serialVersionUID = -4337846050031244208L;
 
 	private Long id;
-	@JsonProperty(access = Access.WRITE_ONLY)
+	@JsonIgnore
 	private String password;
 	private String username;
 	private boolean accountExpired;
