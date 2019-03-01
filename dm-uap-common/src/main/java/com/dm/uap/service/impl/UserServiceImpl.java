@@ -22,6 +22,7 @@ import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.QUser;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
+import com.dm.uap.exception.DataConflictException;
 import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
 			throw new RuntimeException("The username can not be empty");
 		}
 		if (userRepository.exists(builder.getValue())) {
-			throw new RuntimeException("用户名已被占用");
+			throw new DataConflictException("用户名已被占用");
 		}
 	}
 
@@ -143,5 +144,19 @@ public class UserServiceImpl implements UserService {
 		} else {
 			return userRepository.findAll(pageable);
 		}
+	}
+
+	@Override
+	public boolean checkPassword(Long id, String password) {
+		User user = userRepository.getOne(id);
+		return passwordEncoder.matches(password, user.getPassword());
+	}
+
+	@Override
+	@Transactional
+	public User repassword(Long id, String password) {
+		User user = userRepository.getOne(id);
+		user.setPassword(passwordEncoder.encode(password));
+		return user;
 	}
 }

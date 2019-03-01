@@ -2,6 +2,7 @@ package com.dm.uap.controller;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +27,8 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.User;
+import com.dm.uap.exception.ValidOldPasswordFailureException;
+import com.dm.uap.exception.ValidRePasswordFailureException;
 import com.dm.uap.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -67,6 +71,33 @@ public class UserController {
 	public void delete(@PathVariable("id") Long id) {
 		userService.delete(id);
 	}
+	
+	@ApiOperation("重置用户密码")
+	@PatchMapping(value = { "{id}/password" }, params = { "!oldPassword" })
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@ResponseStatus(CREATED)
+	public UserDto resetPassword(
+			@PathVariable("id") Long id,
+			@RequestParam("password") String password,
+			@RequestParam("rePassword") String rePassword) {
+		validRePassword(password, rePassword);
+		return userConverter.toDto(userService.repassword(id, password));
+	}
+
+	@ApiOperation("修改用户密码")
+	@PatchMapping(value = { "{id}/password" }, params = { "oldPassword" })
+	@ResponseStatus(CREATED)
+	public UserDto changePassword(
+			@PathVariable("id") Long id,
+			@RequestParam("oldPassword") String oldPassword,
+			@RequestParam("password") String password,
+			@RequestParam("rePassword") String rePassword) {
+		validRePassword(password, rePassword);
+		if (!userService.checkPassword(id, oldPassword)) {
+			throw new ValidOldPasswordFailureException("原始密码校验错误");
+		}
+		return userConverter.toDto(userService.repassword(id, password));
+	}
 
 	@ApiOperation("更新用户")
 	@PutMapping("{id}")
@@ -96,5 +127,11 @@ public class UserController {
 	@ApiOperation("获取当前用户信息")
 	public UserDetailsDto getCurrentUser(@CurrentUser UserDetailsDto currentUser) {
 		return currentUser;
+	}
+	
+	private void validRePassword(String password, String rePassword) {
+		if (!StringUtils.equals(password, rePassword)) {
+			throw new ValidRePasswordFailureException("两次密码输入不一致");
+		}
 	}
 }

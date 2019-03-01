@@ -34,4 +34,8 @@ public interface UserService extends UserDetailsService {
 
 	public Page<User> search(String key, Pageable pageable);
 
+	public boolean checkPassword(Long id, String password);
+
+	public User repassword(Long id, String password);
+
 }
