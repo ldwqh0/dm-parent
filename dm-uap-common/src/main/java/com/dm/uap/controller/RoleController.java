@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dm.common.dto.TableResult;
-import com.dm.common.exception.DataValidateException;
 import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.entity.Role;
+import com.dm.uap.exception.DataConflictException;
 import com.dm.uap.service.RoleService;
 
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +48,7 @@ public class RoleController {
 	@ResponseStatus(CREATED)
 	public RoleDto save(@RequestBody RoleDto roleDto) {
 		if (roleService.nameExist(null, roleDto.getName())) {
-			throw new DataValidateException("角色名称被占用");
+			throw new DataConflictException("角色名称被占用");
 		} else {
 			Role role = roleService.save(roleDto);
 			return roleConverter.toDto(role);
@@ -61,7 +61,7 @@ public class RoleController {
 	@ResponseStatus(CREATED)
 	public RoleDto update(@PathVariable("id") long id, @RequestBody RoleDto roleDto) {
 		if (roleService.nameExist(id, roleDto.getName())) {
-			throw new DataValidateException("角色名称被占用");
+			throw new DataConflictException("角色名称被占用");
 		} else {
 			Role role = roleService.update(id, roleDto);
 			return roleConverter.toDto(role);
