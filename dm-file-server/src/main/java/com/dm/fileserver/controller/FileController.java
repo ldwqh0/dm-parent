@@ -3,8 +3,7 @@ package com.dm.fileserver.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -12,18 +11,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -147,21 +149,24 @@ public class FileController {
 			MediaType.IMAGE_JPEG_VALUE,
 			MediaType.IMAGE_PNG_VALUE,
 			"image/*" })
-	public void preview(@PathVariable("id") UUID id, HttpServletResponse response) {
+	public ResponseEntity<InputStreamResource> preview(@PathVariable("id") UUID id, WebRequest request) {
+
 		try {
 			FileInfo file = fileService.get(id).get();
-			String fileName = file.getFilename();
-			String ext = StringUtils.substringAfterLast(fileName, ".").toLowerCase();
-			if (MapUtils.isNotEmpty(config.getMime()) && StringUtils.isNotBlank(ext)) {
-				response.setContentType(config.getMime().get(ext));
-			}
-			try (InputStream is = fileStorageService.getInputStream(file.getPath());
-					OutputStream os = response.getOutputStream();) {
-				IOUtils.copy(is, os);
+			Optional<ZonedDateTime> lastModify = file.getLastModifiedDate();
+			if (lastModify.isPresent() && request.checkNotModified(lastModify.get().toInstant().toEpochMilli())) {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
+			} else {
+				String fileName = file.getFilename();
+				String ext = StringUtils.substringAfterLast(fileName, ".").toLowerCase();
+				return ResponseEntity.ok().lastModified(lastModify.get())
+						.cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+						.contentType(MediaType.valueOf(config.getMime().get(ext)))
+						.body(new InputStreamResource(fileStorageService.getInputStream(file.getPath())));
 			}
 		} catch (Exception e) {
-			response.setStatus(HttpStatus.NOT_FOUND.value());
 			log.error("预览文件时出错", e);
+			return ResponseEntity.notFound().build();
 		}
 	}
 
@@ -173,25 +178,30 @@ public class FileController {
 	 * @param response
 	 */
 	@GetMapping(value = "thumbnails/{id}")
-	public void preview(
+	public ResponseEntity<InputStreamResource> preview(
 			@PathVariable("id") UUID id,
 			@RequestParam(value = "level", defaultValue = "1") int level,
-			HttpServletResponse response) {
+			WebRequest request) {
+
 		Optional<FileInfo> file = fileService.get(id);
 		if (file.isPresent()) {
-			try (InputStream iStream = thumbnailService.getStream(file.get().getPath(), level);
-					OutputStream oStream = response.getOutputStream()) {
-				IOUtils.copy(iStream, oStream);
-				response.setContentType("image/jpeg");
-			} catch (FileNotFoundException e) {
-				response.setStatus(404);
-			} catch (IOException e) {
-				response.setStatus(500);
-				log.error("预览文件失败", e);
+			Optional<ZonedDateTime> lastModify = file.get().getLastModifiedDate();
+			if (lastModify.isPresent() && request.checkNotModified(lastModify.get().toInstant().toEpochMilli())) {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
+			} else {
+				try {
+					return ResponseEntity.ok().lastModified(lastModify.get())
+							.cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+							.contentType(MediaType.IMAGE_JPEG)
+							.body(new InputStreamResource(thumbnailService.getStream(file.get().getPath(), level)));
+				} catch (FileNotFoundException e) {
+					return ResponseEntity.notFound().build();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		} else {
-			response.setStatus(404);
+			return ResponseEntity.notFound().build();
 		}
 	}
-
 }

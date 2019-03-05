@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.dm.fileserver.config.FileConfig;
 import com.dm.fileserver.service.ThumbnailService;
+import com.dm.fileserver.util.DmFileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,34 +31,33 @@ public class LocalThumbnailServiceImpl implements ThumbnailService {
 	@Autowired
 	private FileConfig fileConfig;
 
-	private String l1;
-
-	private String l2;
-
 	private static final String[] imgExt = { "jpg", "png", "bmp" };
+	private final int[][] levelScales = { { 128, 128 }, { 256, 256 }, { 512, 512 }, { 1080, 1920 } };
+
+	private void createThumbnail(Image image, String filename, int level) throws FileNotFoundException, IOException {
+		try (OutputStream oStream = new FileOutputStream(getPath(filename, level))) {
+			int o_w = image.getWidth(null);
+			int o_h = image.getHeight(null);
+			int max_width = levelScales[level][0];
+			int max_height = levelScales[level][1];
+			double scale = Math.max(o_w * 1.0 / max_width, o_h * 1.0 / max_height);
+			int n_w = Double.valueOf(o_w / scale).intValue();
+			int n_h = Double.valueOf(o_h / scale).intValue();
+			BufferedImage bi = new BufferedImage(n_w, n_h, BufferedImage.TYPE_INT_RGB);
+			bi.getGraphics().drawImage(image, 0, 0, n_w, n_h, null);
+			ImageIO.write(bi, "jpg", oStream);
+		}
+	}
 
 	@Override
 	public void createThumbnail(String filename) {
-		String ext = com.dm.fileserver.util.DmFileUtils.getExt(filename);
+		String ext = DmFileUtils.getExt(filename);
 		if (ArrayUtils.contains(imgExt, ext)) {
-			try (InputStream iStream = new FileInputStream(getPath(filename));
-					OutputStream oStream = getOutputStream(1, filename);
-					OutputStream oStream2 = getOutputStream(2, filename)) {
+			try (InputStream iStream = new FileInputStream(getPath(filename))) {
 				Image image = ImageIO.read(iStream);
-				int o_w = image.getWidth(null);
-				int o_h = image.getHeight(null);
-				double scale = Math.max(o_w * 1.0 / 512, o_h * 1.0 / 512);
-				double scale2 = Math.max(o_w * 1.0 / 256, o_h * 1.0 / 256);
-				int n_w = Double.valueOf(o_w / scale).intValue();
-				int n_h = Double.valueOf(o_h / scale).intValue();
-				int n2_w = Double.valueOf(o_w / scale2).intValue();
-				int n2_h = Double.valueOf(o_h / scale2).intValue();
-				BufferedImage bi = new BufferedImage(n_w, n_h, BufferedImage.TYPE_INT_RGB);
-				BufferedImage bi2 = new BufferedImage(n2_w, n2_h, BufferedImage.TYPE_INT_RGB);
-				bi.getGraphics().drawImage(image, 0, 0, n_w, n_h, null);
-				bi2.getGraphics().drawImage(image, 0, 0, n2_w, n2_h, null);
-				ImageIO.write(bi, "jpg", oStream);
-				ImageIO.write(bi2, "jpg", oStream2);
+				for (int i = 0; i < levelScales.length; i++) {
+					createThumbnail(image, filename, i);
+				}
 			} catch (Exception e) {
 				log.error("创建文件缩略图时出错", e);
 			}
@@ -72,20 +72,10 @@ public class LocalThumbnailServiceImpl implements ThumbnailService {
 	@PostConstruct
 	public void initService() throws Exception {
 		String path = fileConfig.getPath();
-		l1 = path + File.separator + "th1" + File.separator;
-		l2 = path + File.separator + "th2" + File.separator;
-		FileUtils.forceMkdir(new File(l1));
-		FileUtils.forceMkdir(new File(l2));
-	}
-
-	private OutputStream getOutputStream(int level, String path) throws FileNotFoundException {
-		switch (level) {
-		case 1:
-			return new FileOutputStream(l1 + path + ".jpg");
-		case 2:
-			return new FileOutputStream(l2 + path + ".jpg");
+		for (int i = 0; i < levelScales.length; i++) {
+			String levelPath = path + File.separator + "th" + i + File.separator;
+			FileUtils.forceMkdir(new File(levelPath));
 		}
-		return null;
 	}
 
 	private String getPath(String filename) {
