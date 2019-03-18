@@ -115,8 +115,6 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Bean
 	public UserAuthenticationConverter userTokenConverter() {
 		UserDetailsAuthenticationConverter userTokenConverter = new UserDetailsAuthenticationConverter();
-		// TODO 是否要设置UserDetailsService?
-//		userTokenConverter.setUserDetailsService(userDetailsService);
 		return userTokenConverter;
 	}
 
