@@ -19,4 +19,5 @@ yarn-error.log*
 target
 .classpath
 .springBeans
+.factorypath
 rebel.xml
