@@ -102,7 +102,7 @@ public class RoleServiceImpl implements RoleService {
 		if (StringUtils.isBlank(key)) {
 			return roleRepository.findAll(pageable);
 		} else {
-			BooleanExpression exp = qRole.name.containsIgnoreCase(key).or(qRole.describe.containsIgnoreCase(key));
+			BooleanExpression exp = qRole.name.containsIgnoreCase(key).or(qRole.description.containsIgnoreCase(key));
 			return roleRepository.findAll(exp, pageable);
 		}
 	}

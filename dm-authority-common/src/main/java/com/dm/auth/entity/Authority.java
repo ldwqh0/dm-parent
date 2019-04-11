@@ -41,8 +41,8 @@ public class Authority implements Serializable {
 	@Column(name = "role_name_", length = 100)
 	private String roleName;
 
-	@Column(name = "describe_")
-	private String describe;
+	@Column(name = "description_")
+	private String description;
 
 	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinTable(name = "dm_authority_menu_", joinColumns = {

@@ -45,8 +45,8 @@ public class Role extends AbstractEntity {
 	@Enumerated(EnumType.STRING)
 	private Status state;
 
-	@Column(name = "describe_", length = 1000)
-	private String describe;
+	@Column(name = "description_", length = 1000)
+	private String description;
 
 	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinTable(name = "dm_user_role_", joinColumns = {

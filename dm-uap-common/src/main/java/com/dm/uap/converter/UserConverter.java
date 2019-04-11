@@ -52,7 +52,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		dto.setFullname(user.getFullname());
 		dto.setMobile(user.getMobile());
 		dto.setEmail(user.getEmail());
-		dto.setDescribe(user.getDescribe());
+		dto.setDescription(user.getDescription());
 		dto.setScenicName(user.getScenicName());
 		dto.setRegionCode(user.getRegionCode());
 		List<Role> roles = user.getRoles();
@@ -69,7 +69,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			user.setUsername(userDto.getUsername());
 			user.setFullname(userDto.getFullname());
 			user.setMobile(userDto.getMobile());
-			user.setDescribe(userDto.getDescribe());
+			user.setDescription(userDto.getDescription());
 			user.setEmail(userDto.getEmail());
 			user.setScenicName(userDto.getScenicName());
 			user.setRegionCode(userDto.getRegionCode());

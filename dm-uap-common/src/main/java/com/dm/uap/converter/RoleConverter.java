@@ -39,7 +39,7 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
 			dto.setId(role.getId());
 			dto.setName(role.getName());
 			dto.setState(role.getState());
-			dto.setDescribe(role.getDescribe());
+			dto.setDescription(role.getDescription());
 		}
 		return dto;
 	}
@@ -56,7 +56,7 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
 	public void copyProperties(Role role, RoleDto roleDto) {
 		if (role != null && roleDto != null) {
 			role.setName(roleDto.getName());
-			role.setDescribe(roleDto.getDescribe());
+			role.setDescription(roleDto.getDescription());
 			role.setState(roleDto.getState());
 		}
 

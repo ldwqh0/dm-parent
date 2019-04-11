@@ -27,7 +27,7 @@ public class RoleDto implements Serializable, GrantedAuthority {
 	private static final long serialVersionUID = 4725729366179649819L;
 	private Long id;
 	private String name;
-	private String describe;
+	private String description;
 	private Status state;
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<UserDto> users;

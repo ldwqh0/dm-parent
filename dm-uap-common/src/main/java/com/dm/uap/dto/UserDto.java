@@ -23,7 +23,7 @@ public class UserDto implements Serializable {
 	private Boolean enabled;
 	private String email;
 	private String mobile;
-	private String describe;
+	private String description;
 	private List<RoleDto> roles;
 	private String scenicName;
 	private String regionCode;
