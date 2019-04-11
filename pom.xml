@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dm</groupId>
 	<artifactId>dm-parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.2.0-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -17,7 +17,6 @@
 		<commons-io.version>2.6</commons-io.version>
 		<resource.delimiter>@</resource.delimiter>
 		<commons-collections4.version>4.3</commons-collections4.version>
-		<plat.version>0.0.1-SNAPSHOT</plat.version>
 		<querydsl.version>4.2.1</querydsl.version>
 	</properties>
 	<modules>
@@ -43,7 +42,7 @@
 		<!-- <module>dm-zuul</module> -->
 		<!-- <module>database-analyser</module> -->
 
-		<module>DingApp</module>
+		<!-- <module>DingApp</module> -->
 	</modules>
 	<packaging>pom</packaging>
 
@@ -149,6 +148,12 @@
 			<dependency>
 				<groupId>com.dm</groupId>
 				<artifactId>dm-uap-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.dm</groupId>
+				<artifactId>dingding-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

@@ -7,19 +7,19 @@
 		<artifactId>dm-parent</artifactId>
 		<version>0.2.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>dm-security-spring-boot-starter</artifactId>
+	<artifactId>dingding-api</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>com.dm</groupId>
-			<artifactId>dm-security-common</artifactId>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.dm</groupId>
-			<artifactId>dm-uap-common</artifactId>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.dm</groupId>
-			<artifactId>dm-autoconfigure</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
 		</dependency>
 	</dependencies>
 </project>
