@@ -10,9 +10,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
-		<springboot.version>2.1.3.RELEASE</springboot.version>
+		<springboot.version>2.1.4.RELEASE</springboot.version>
 		<springfox.version>2.9.2</springfox.version>
-		<hibernate.version>5.4.1.Final</hibernate.version>
+		<hibernate.version>5.4.2.Final</hibernate.version>
 		<commons-lang3.version>3.8.1</commons-lang3.version>
 		<commons-io.version>2.6</commons-io.version>
 		<resource.delimiter>@</resource.delimiter>
@@ -33,6 +33,8 @@
 		<module>dm-region</module>
 		<!-- 自动配置工具 -->
 		<module>dm-autoconfigure</module>
+		<!-- 钉钉API模块 -->
+		<module>dingding-api</module>
 		<module>dm-resource-server-spring-boot-starter</module>
 		<module>dm-security-spring-boot-starter</module>
 		<!-- <module>dm-oauth-server</module> -->
@@ -40,6 +42,8 @@
 		<!-- <module>dm-file-server</module> -->
 		<!-- <module>dm-zuul</module> -->
 		<!-- <module>database-analyser</module> -->
+
+		<module>DingApp</module>
 	</modules>
 	<packaging>pom</packaging>
 
