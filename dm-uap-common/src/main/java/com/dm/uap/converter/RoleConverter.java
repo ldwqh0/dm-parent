@@ -73,7 +73,7 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
 	public GrantedAuthorityDto toGrantedAuthorityDto(Role role) {
 		GrantedAuthorityDto dto = new GrantedAuthorityDto();
 		dto.setId(role.getId());
-		dto.setAuthority(role.getName());
+		dto.setAuthority(role.getGroup().getName()+ role.getName());
 		return dto;
 	}
 

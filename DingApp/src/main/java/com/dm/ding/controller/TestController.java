@@ -18,4 +18,9 @@ public class TestController {
 		return dingService.getAccessToken();
 	}
 
+	@GetMapping("userInfo")
+	public Object getUserInfo() {
+		return dingService.getUserInfoByUserid("0338161858839822");
+	}
+
 }

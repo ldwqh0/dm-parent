@@ -68,9 +68,12 @@ public class User extends AbstractEntity {
 
 	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinTable(name = "dm_user_role_", joinColumns = {
-			@JoinColumn(name = "user_", referencedColumnName = "id_") }, inverseJoinColumns = {
-					@JoinColumn(name = "role_", referencedColumnName = "id_") }, indexes = {
-							@Index(columnList = "user_", name = "IDX_dm_user_role_user_") })
+			@JoinColumn(name = "user_", referencedColumnName = "id_")
+	}, inverseJoinColumns = {
+			@JoinColumn(name = "role_", referencedColumnName = "id_")
+	}, indexes = {
+			@Index(columnList = "user_", name = "IDX_dm_user_role_user_")
+	})
 	private List<Role> roles;
 
 	/**

@@ -3,8 +3,6 @@ package com.dm.uap.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import com.dm.uap.entity.Role.Status;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,8 +20,7 @@ import lombok.Data;
  */
 @Data
 @JsonInclude(value = Include.NON_EMPTY)
-
-public class RoleDto implements Serializable, GrantedAuthority {
+public class RoleDto implements Serializable {
 	private static final long serialVersionUID = 4725729366179649819L;
 	private Long id;
 	private String name;
@@ -35,11 +32,6 @@ public class RoleDto implements Serializable, GrantedAuthority {
 	@JsonIgnoreProperties({ "password", "roles" })
 	public List<UserDto> getUsers() {
 		return users;
-	}
-
-	@Override
-	public String getAuthority() {
-		return name;
 	}
 
 }

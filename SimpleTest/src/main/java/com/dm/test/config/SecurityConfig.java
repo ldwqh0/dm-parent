@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		http.addFilter(casAuthenticationFilter());
 
 		// 增加自定义资源过滤器，对资源进行详细过滤，（可选项）
-		http.addFilterBefore(interceptor(), FilterSecurityInterceptor.class);
+//		http.addFilterBefore(interceptor(), FilterSecurityInterceptor.class);
 
 		// session管理相关
 		// maximumSessions设置每个用户最大会话数，
@@ -77,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	}
 
-	@Bean
+//	@Bean
 	public FilterSecurityInterceptor interceptor() throws Exception {
 		FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
 		interceptor.setAuthenticationManager(authenticationManager());
@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return interceptor;
 	}
 
-	@Bean
+//	@Bean
 	public FilterInvocationSecurityMetadataSource securityMetadataSource() {
 		return new RequestAuthoritiesFilterInvocationSecurityMetadataSource();
 	}
