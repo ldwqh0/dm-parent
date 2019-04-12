@@ -18,6 +18,6 @@ public interface DepartmentService {
 
 	public void deleteById(Long id);
 
-	Page<Department> find(String key, Pageable pageable);
+	public Page<Department> find(String key, Pageable pageable);
 
 }

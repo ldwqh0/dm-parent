@@ -3,17 +3,16 @@ package com.dm.dingding.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class AccessToken {
-	
+@EqualsAndHashCode(callSuper = true)
+public class AccessToken extends DingTalkResponse {
+
 	@JsonProperty(value = "expires_in")
 	private Long expiresIn;
-	
-	private String errmsg;
-	
+
 	@JsonProperty("access_token")
 	private String accessToken;
-	
-	private int errcode;
+
 }

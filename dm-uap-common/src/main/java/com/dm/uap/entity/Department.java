@@ -34,4 +34,7 @@ public class Department extends AbstractEntity {
 	 */
 	@Column(name = "description_", length = 2000)
 	private String description;
+
+	@Column(name = "order_")
+	private Long order;
 }

@@ -74,5 +74,4 @@ public class DepartmentServiceImpl implements DepartmentService {
 			return departmentRepository.findAll(query, pageable);
 		}
 	}
-
 }

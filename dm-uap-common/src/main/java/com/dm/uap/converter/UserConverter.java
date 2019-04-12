@@ -1,16 +1,21 @@
 package com.dm.uap.converter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dm.common.converter.AbstractConverter;
 import com.dm.security.core.userdetails.UserDetailsDto;
+import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.entity.Department;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 
@@ -19,6 +24,9 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 
 	@Autowired
 	private RoleConverter roleConverter;
+
+	@Autowired
+	private DepartmentConverter departmentConverter;
 
 	public UserDetailsDto toUserDetailsDto(Optional<User> user) {
 		UserDetailsDto dto = null;
@@ -55,6 +63,15 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		dto.setDescription(user.getDescription());
 		dto.setScenicName(user.getScenicName());
 		dto.setRegionCode(user.getRegionCode());
+		Map<Department, String> _posts = user.getPosts();
+		// TODO 这里要解决职务模型问题
+		if (MapUtils.isNotEmpty(_posts)) {
+			Map<DepartmentDto, String> posts = new HashMap<>();
+			_posts.entrySet().forEach(a -> {
+				posts.put(departmentConverter.toDto(a.getKey()), a.getValue());
+			});
+			dto.setPosts(posts);
+		}
 		List<Role> roles = user.getRoles();
 		if (CollectionUtils.isNotEmpty(roles)) {
 			dto.setRoles(roleConverter.toSimpleDto(user.getRoles()));

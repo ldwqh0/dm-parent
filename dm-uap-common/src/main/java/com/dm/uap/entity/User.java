@@ -1,7 +1,7 @@
 package com.dm.uap.entity;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,12 +13,12 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 
 import com.dm.common.entity.AbstractEntity;
 
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -77,8 +77,23 @@ public class User extends AbstractEntity {
 	 * 用户的职务信息
 	 */
 	@ElementCollection
-	@JoinTable(name = "dm_user_post_")
-	private Set<Post> posts;
+	@JoinTable(name = "dm_user_post_", joinColumns = {
+			@JoinColumn(name = "user_id_")
+	})
+	@MapKeyJoinColumn(name = "department_id_")
+	@Column(name = "post_")
+	private Map<Department, String> posts;
+
+	/**
+	 * 用户的排序
+	 */
+	@ElementCollection
+	@JoinTable(name = "dm_user_order_", joinColumns = {
+			@JoinColumn(name = "user_id_")
+	})
+	@MapKeyJoinColumn(name = "department_id_")
+	@Column(name = "order_")
+	private Map<Department, Long> orders;
 
 	@Column(name = "region_code_")
 	private String regionCode;

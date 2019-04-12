@@ -2,6 +2,7 @@ package com.dm.uap.dto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,5 +28,7 @@ public class UserDto implements Serializable {
 	private List<RoleDto> roles;
 	private String scenicName;
 	private String regionCode;
+
+	private Map<DepartmentDto, String> posts;
 
 }
