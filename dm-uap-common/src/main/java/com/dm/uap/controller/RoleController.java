@@ -85,11 +85,13 @@ public class RoleController {
 
 	@ApiOperation("查询角色")
 	@GetMapping(params = { "draw" })
-	public TableResult<?> list(@PageableDefault(page = 0, size = 10) Pageable pageable,
+	public TableResult<?> list(
+			@RequestParam(value = "groupId", required = false) Long groupId,
 			@RequestParam(value = "search", required = false) String key,
-			@RequestParam(value = "draw", required = false) Long draw) {
+			@RequestParam(value = "draw", required = false) Long draw,
+			@PageableDefault(page = 0, size = 10) Pageable pageable) {
 		try {
-			Page<Role> result = roleService.search(key, pageable);
+			Page<Role> result = roleService.search(groupId, key, pageable);
 			return TableResult.success(draw, result, roleConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询角色时发生错误", e);
@@ -101,6 +103,6 @@ public class RoleController {
 	@GetMapping
 	public List<RoleDto> listEnabled() {
 		List<Role> roles = roleService.listAllEnabled();
-		return roleConverter.toSimpleDto(roles);
+		return roleConverter.toDto(roles);
 	}
 }

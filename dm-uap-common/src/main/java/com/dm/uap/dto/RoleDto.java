@@ -26,6 +26,7 @@ public class RoleDto implements Serializable {
 	private String name;
 	private String description;
 	private Status state;
+	private RoleGroupDto group;
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<UserDto> users;
 

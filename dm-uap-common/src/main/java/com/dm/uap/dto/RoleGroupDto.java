@@ -11,5 +11,5 @@ public class RoleGroupDto implements Serializable {
 	private Long id;
 	private String name;
 	private String description;
-	private List<RoleDto> roles;
+//	private List<RoleDto> roles;
 }

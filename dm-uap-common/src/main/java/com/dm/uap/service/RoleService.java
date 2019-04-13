@@ -25,7 +25,7 @@ public interface RoleService {
 
 	public void delete(long id);
 
-	public Page<Role> search(String key, Pageable pageable);
+	public Page<Role> search(Long groupId, String key, Pageable pageable);
 
 	public List<Role> listAllEnabled();
 

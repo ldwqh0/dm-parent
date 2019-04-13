@@ -13,10 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.dm.uap.dto.RoleDto;
+import com.dm.uap.dto.RoleGroupDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.entity.Role.Status;
+import com.dm.uap.entity.RoleGroup;
+import com.dm.uap.service.RoleGroupService;
 import com.dm.uap.service.RoleService;
 import com.dm.uap.service.UserService;
 
@@ -37,11 +40,16 @@ public class UapAutoConfiguration {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private RoleGroupService roleGroupService;
+
 	/**
 	 * 初始化默认用户
 	 */
 	@PostConstruct
 	public void initData() {
+		// 初始化角色组
+		initRoleGroup();
 		// 初始化角色
 		initRole();
 		// 初始化用户
@@ -49,10 +57,17 @@ public class UapAutoConfiguration {
 	}
 
 	private void initRole() {
+		Optional<RoleGroup> defaultGroupOptional = roleGroupService.findByName("默认");
+		RoleGroup defaultGroup = defaultGroupOptional.get();
+		RoleGroupDto drg = new RoleGroupDto();
+		drg.setId(defaultGroup.getId());
+
 		// 增加默认管理员角色
 		if (!roleService.findByName("ROLE_ADMIN").isPresent()) {
 			RoleDto role = new RoleDto();
 			role.setName("ROLE_ADMIN");
+			role.setGroup(drg);
+			role.setDescription("系统内置管理员角色");
 			role.setState(Status.ENABLED);
 			roleService.save(role);
 		}
@@ -60,13 +75,17 @@ public class UapAutoConfiguration {
 		if (!roleService.findByName("ROLE_USER").isPresent()) {
 			RoleDto role = new RoleDto();
 			role.setName("ROLE_USER");
+			role.setGroup(drg);
 			role.setState(Status.ENABLED);
+			role.setDescription("系统内置普通用户角色");
 			roleService.save(role);
 		}
 		// 增加默认匿名用户角色
 		if (!roleService.findByName("ROLE_ANONYMOUS").isPresent()) {
 			RoleDto role = new RoleDto();
 			role.setName("ROLE_ANONYMOUS");
+			role.setGroup(drg);
+			role.setDescription("系统内置匿名角色");
 			role.setState(Status.ENABLED);
 			roleService.save(role);
 		}
@@ -90,6 +109,15 @@ public class UapAutoConfiguration {
 				user.setRoles(Collections.singletonList(role));
 			}
 			userService.save(user);
+		}
+	}
+
+	private void initRoleGroup() {
+		if (!roleGroupService.exist()) {
+			RoleGroupDto roleGroup = new RoleGroupDto();
+			roleGroup.setName("默认");
+			roleGroup.setDescription("系统默认角色分组");
+			roleGroupService.save(roleGroup);
 		}
 	}
 

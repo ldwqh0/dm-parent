@@ -20,6 +20,7 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import com.dm.security.access.RequestAuthoritiesAccessDecisionVoter;
@@ -50,8 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll();
 		// 对资源进行授权验证，这个和下面的interceptor是互斥的，如果启用下面的interceptor,则不要启用这个配置
 		http.authorizeRequests().anyRequest().authenticated();
-		http.formLogin().successHandler(loginSuccessHandler).failureHandler(loginFailureHandler).and().httpBasic()
-				.disable();
+		http.formLogin().successHandler(loginSuccessHandler).failureHandler(loginFailureHandler)
+		.and().logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+				.and().httpBasic().disable();
 		http.csrf().disable();
 
 		// 添加登出成功请求handler

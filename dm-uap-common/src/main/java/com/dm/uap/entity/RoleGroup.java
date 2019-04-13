@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
 import com.dm.common.entity.AbstractEntity;
@@ -23,7 +24,7 @@ public class RoleGroup extends AbstractEntity {
 	@Column(name = "description_", length = 500)
 	private String description;
 
-	@OneToMany(mappedBy = "group")
+	@OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
 	private Set<Role> roles;
 
 }

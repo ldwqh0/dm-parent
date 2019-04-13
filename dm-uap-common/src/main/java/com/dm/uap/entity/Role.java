@@ -43,7 +43,7 @@ public class Role extends AbstractEntity {
 	private String name;
 
 	@ManyToOne
-	@JoinColumn(name = "role_group_id_")
+	@JoinColumn(name = "role_group_id_", nullable = false)
 	private RoleGroup group;
 
 	@Column(name = "state_")

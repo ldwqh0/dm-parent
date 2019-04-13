@@ -2,6 +2,7 @@ package com.dm.uap.service.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ import com.dm.uap.entity.QRole;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.Role.Status;
 import com.dm.uap.entity.User;
+import com.dm.uap.repository.RoleGroupRepository;
 import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.RoleService;
@@ -38,6 +40,9 @@ public class RoleServiceImpl implements RoleService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private RoleGroupRepository roleGroupRepository;
 
 	private final QRole qRole = QRole.role;
 
@@ -57,6 +62,7 @@ public class RoleServiceImpl implements RoleService {
 		Role role = new Role();
 		roleConverter.copyProperties(role, roleDto);
 		role.setUsers(getUsersFromDto(roleDto.getUsers()));
+		role.setGroup(roleGroupRepository.getOne(roleDto.getGroup().getId()));
 		return roleRepository.save(role);
 	}
 
@@ -82,6 +88,7 @@ public class RoleServiceImpl implements RoleService {
 		Role role = roleRepository.getOne(id);
 		roleConverter.copyProperties(role, roleDto);
 		role.setUsers(getUsersFromDto(roleDto.getUsers()));
+		role.setGroup(roleGroupRepository.getOne(roleDto.getGroup().getId()));
 		roleRepository.save(role);
 		return role;
 	}
@@ -98,13 +105,16 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public Page<Role> search(String key, Pageable pageable) {
-		if (StringUtils.isBlank(key)) {
-			return roleRepository.findAll(pageable);
-		} else {
-			BooleanExpression exp = qRole.name.containsIgnoreCase(key).or(qRole.description.containsIgnoreCase(key));
-			return roleRepository.findAll(exp, pageable);
+	public Page<Role> search(Long groupId, String key, Pageable pageable) {
+		BooleanBuilder query = new BooleanBuilder();
+		if (!Objects.isNull(groupId)) {
+			query.and(qRole.group.id.eq(groupId));
 		}
+		if (StringUtils.isNotBlank(key)) {
+			query.and(qRole.name.containsIgnoreCase(key).or(qRole.description.containsIgnoreCase(key)));
+			return roleRepository.findAll(query, pageable);
+		}
+		return roleRepository.findAll(query, pageable);
 	}
 
 	@Override

@@ -74,7 +74,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		}
 		List<Role> roles = user.getRoles();
 		if (CollectionUtils.isNotEmpty(roles)) {
-			dto.setRoles(roleConverter.toSimpleDto(user.getRoles()));
+			dto.setRoles(roleConverter.toDto(user.getRoles()));
 		}
 		return dto;
 	}

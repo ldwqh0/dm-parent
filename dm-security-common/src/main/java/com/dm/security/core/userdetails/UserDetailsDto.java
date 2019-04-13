@@ -38,6 +38,7 @@ public class UserDetailsDto implements UserDetails {
 	private String scenicName;
 
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return grantedAuthority;
 	}
