@@ -1,0 +1,28 @@
+{
+  "include": [
+    "code-generator/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "noEmit": false,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    // "allowJs": false,
+    "declarationDir": "dist/types",
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "es2018"
+    ],
+    "experimentalDecorators": true
+    //    "allowJs": true
+  }
+}

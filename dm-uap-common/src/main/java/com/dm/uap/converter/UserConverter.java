@@ -70,7 +70,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			_posts.entrySet().forEach(a -> {
 				posts.put(departmentConverter.toDto(a.getKey()), a.getValue());
 			});
-			dto.setPosts(posts);
+//			dto.setPosts(posts);
 		}
 		List<Role> roles = user.getRoles();
 		if (CollectionUtils.isNotEmpty(roles)) {

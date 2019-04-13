@@ -66,7 +66,7 @@ public class UapAutoConfiguration {
 		if (!roleService.findByName("ROLE_ADMIN").isPresent()) {
 			RoleDto role = new RoleDto();
 			role.setName("ROLE_ADMIN");
-			role.setGroup(drg);
+//			role.setGroup(drg);
 			role.setDescription("系统内置管理员角色");
 			role.setState(Status.ENABLED);
 			roleService.save(role);
@@ -75,7 +75,7 @@ public class UapAutoConfiguration {
 		if (!roleService.findByName("ROLE_USER").isPresent()) {
 			RoleDto role = new RoleDto();
 			role.setName("ROLE_USER");
-			role.setGroup(drg);
+//			role.setGroup(drg);
 			role.setState(Status.ENABLED);
 			role.setDescription("系统内置普通用户角色");
 			roleService.save(role);
@@ -84,7 +84,7 @@ public class UapAutoConfiguration {
 		if (!roleService.findByName("ROLE_ANONYMOUS").isPresent()) {
 			RoleDto role = new RoleDto();
 			role.setName("ROLE_ANONYMOUS");
-			role.setGroup(drg);
+//			role.setGroup(drg);
 			role.setDescription("系统内置匿名角色");
 			role.setState(Status.ENABLED);
 			roleService.save(role);

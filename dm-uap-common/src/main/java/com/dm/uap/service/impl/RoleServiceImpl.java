@@ -27,7 +27,6 @@ import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.RoleService;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.BooleanExpression;
 
 @Service
 public class RoleServiceImpl implements RoleService {

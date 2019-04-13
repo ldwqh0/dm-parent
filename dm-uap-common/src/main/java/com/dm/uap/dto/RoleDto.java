@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.dm.uap.entity.Role.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -27,12 +28,14 @@ public class RoleDto implements Serializable {
 	private String description;
 	private Status state;
 	private RoleGroupDto group;
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private List<UserDto> users;
+	
+ 	@JsonProperty(access = Access.WRITE_ONLY)
+ 	@JsonIgnore
+ 	private  List<UserDto> users;
 
-	@JsonIgnoreProperties({ "password", "roles" })
-	public List<UserDto> getUsers() {
-		return users;
-	}
+ 	@JsonIgnoreProperties({ "password", "roles" })
+ 	public List<UserDto> getUsers() {
+ 		return users;
+ 	}
 
 }

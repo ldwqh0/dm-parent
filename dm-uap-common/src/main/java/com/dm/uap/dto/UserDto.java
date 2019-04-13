@@ -28,7 +28,9 @@ public class UserDto implements Serializable {
 	private List<RoleDto> roles;
 	private String scenicName;
 	private String regionCode;
-
-	private Map<DepartmentDto, String> posts;
+	/**
+	 * 用户的部门和职务关系
+	 */
+	private Map<Long, String> posts;
 
 }
