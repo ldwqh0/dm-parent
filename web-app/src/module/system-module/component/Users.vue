@@ -151,6 +151,7 @@
 
     created () {
       this.listRoles()
+      this.loadDepartments()
     }
   }
 </script>
