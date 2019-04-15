@@ -1,5 +1,6 @@
 package com.dm.uap.service.impl;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -73,5 +74,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 					.or(qDepartment.description.containsIgnoreCase(key));
 			return departmentRepository.findAll(query, pageable);
 		}
+	}
+
+	@Override
+	public List<Department> findAll() {
+		return departmentRepository.findAll();
 	}
 }

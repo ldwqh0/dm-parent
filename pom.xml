@@ -43,7 +43,6 @@
 		<!-- <module>database-analyser</module> -->
 
 		<!-- <module>DingApp</module> -->
-		<module>test</module>
 	</modules>
 	<packaging>pom</packaging>
 

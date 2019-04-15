@@ -55,7 +55,7 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 				parent.getChildren().add(current);
 			}
 		});
-		return results.stream().filter(dep -> Objects.isNull(dep.getId())).collect(Collectors.toList());
+		return results.stream().filter(dep -> Objects.isNull(dep.getParentId())).collect(Collectors.toList());
 	}
 
 	private DepartmentTreeDto toTreeDto(Department department) {

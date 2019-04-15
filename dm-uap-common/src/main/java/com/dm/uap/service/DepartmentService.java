@@ -1,5 +1,6 @@
 package com.dm.uap.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -19,5 +20,7 @@ public interface DepartmentService {
 	public void deleteById(Long id);
 
 	public Page<Department> find(String key, Pageable pageable);
+	
+	public List<Department> findAll();
 
 }

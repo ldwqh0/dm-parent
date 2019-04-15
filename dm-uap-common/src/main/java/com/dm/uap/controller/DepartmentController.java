@@ -65,9 +65,8 @@ public class DepartmentController {
 	}
 
 	@GetMapping(params = "type=tree")
-	public List<DepartmentTreeDto> tree() {
-
-		return null;
-
+	public List<DepartmentTreeDto> tree(
+			@PageableDefault(size = 10000) Pageable pageable) {
+		return departmentConverter.toTree(departmentService.findAll());
 	}
 }
