@@ -1,11 +1,11 @@
 <!--左侧菜单模板-->
 <template>
   <el-container id="app" class="app" v-loading="loading">
-    <el-header>
+    <el-header style="background:#1D2023">
       <el-row class="title-wrapper">
         <el-col :span="12">
           <div class="title">
-            <router-link to="/">枣庄指挥旅游大数据指挥平台</router-link>
+            <router-link to="/">系统管理</router-link>
           </div>
         </el-col>
         <el-col :span="12">
@@ -23,32 +23,30 @@
         </el-col>
       </el-row>
     </el-header>
-    <el-container>
-      <el-aside class="left-template">
-        <el-menu :collapse="true"
-                 style="min-height: 120px"
-                 text-color="#FFF"
-                 background-color="#1D2023">
-          <menu-item v-for="(menu,index) in systemMenus"
-                     :key="index"
-                     :item="menu"/>
-        </el-menu>
-      </el-aside>
-      <el-main v-loading="routing">
-        <el-row class="breadCurb" style="">
-          <el-col :span="24">
-            <el-breadcrumb separator="/"
-                           v-if="crumbs && crumbs.length>0">
-              <el-breadcrumb-item v-for="crumb in crumbs"
-                                  :key="crumb.id">
-                {{ crumb.title }}
-              </el-breadcrumb-item>
-            </el-breadcrumb>
-          </el-col>
-        </el-row>
-        <router-view/>
-      </el-main>
-    </el-container>
+    <!--      <el-aside class="left-template">-->
+    <!--        <el-menu :collapse="true"-->
+    <!--                 style="min-height: 120px"-->
+    <!--                 text-color="#FFF"-->
+    <!--                 background-color="#1D2023">-->
+    <!--          <menu-item v-for="(menu,index) in systemMenus"-->
+    <!--                     :key="index"-->
+    <!--                     :item="menu"/>-->
+    <!--        </el-menu>-->
+    <!--      </el-aside>-->
+    <el-main v-loading="routing">
+      <!--      <el-row class="breadCurb" style="">-->
+      <!--        <el-col :span="24">-->
+      <!--          <el-breadcrumb separator="/"-->
+      <!--                         v-if="crumbs && crumbs.length>0">-->
+      <!--            <el-breadcrumb-item v-for="crumb in crumbs"-->
+      <!--                                :key="crumb.id">-->
+      <!--              {{ crumb.title }}-->
+      <!--            </el-breadcrumb-item>-->
+      <!--          </el-breadcrumb>-->
+      <!--        </el-col>-->
+      <!--      </el-row>-->
+      <router-view/>
+    </el-main>
   </el-container>
 </template>
 
@@ -187,9 +185,9 @@
     width: unset;
   }
 
-  .el-header {
-    background: #1D2023;
-  }
+  /*.el-header {*/
+  /*  background: #1D2023;*/
+  /*}*/
 
   .title-wrapper {
     width: 100%;

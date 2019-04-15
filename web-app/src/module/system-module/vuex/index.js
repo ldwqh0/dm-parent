@@ -7,6 +7,7 @@ import resource from './resource'
 import client from './client'
 import region from './region'
 import roleGroup from './roleGroup'
+import department from './department'
 
 export default {
   namespaced: true,
@@ -21,6 +22,7 @@ export default {
     resource,
     client,
     region,
-    roleGroup
+    roleGroup,
+    department
   }
 }

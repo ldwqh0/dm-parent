@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dm.common.dto.TableResult;
 import com.dm.uap.converter.DepartmentConverter;
 import com.dm.uap.dto.DepartmentDto;
+import com.dm.uap.dto.DepartmentTreeDto;
 import com.dm.uap.service.DepartmentService;
 
 import static org.springframework.http.HttpStatus.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("departments")
@@ -61,4 +64,10 @@ public class DepartmentController {
 		return TableResult.success(draw, departmentService.find(key, pageable), departmentConverter::toDto);
 	}
 
+	@GetMapping(params = "type=tree")
+	public List<DepartmentTreeDto> tree() {
+
+		return null;
+
+	}
 }

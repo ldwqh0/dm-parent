@@ -1,5 +1,8 @@
 import Vue from 'vue'
+import { groupBy, reduce, flatMap } from 'rxjs/operators'
+import { from } from 'rxjs'
 
+console.log(groupBy)
 export default {
   namespaced: true,
   state: {
@@ -9,6 +12,22 @@ export default {
   mutations: {
     updateRoles (state, roles) {
       state.roles = roles
+    }
+  },
+  getters: {
+    roleTree ({ roles }) {
+      let roleTree = []
+      from(roles).pipe(
+        groupBy(role => role.group.id),
+        flatMap(role => role.pipe(
+          reduce(({ children }, { id, name, description, group: { id: groupId, name: groupName } }) => ({
+            id: `group-${groupId}`,
+            name: groupName,
+            children: [...children, { id, name, description }]
+          }), { children: [] })
+        ))
+      ).subscribe(next => roleTree.push(next))
+      return roleTree
     }
   },
   actions: {

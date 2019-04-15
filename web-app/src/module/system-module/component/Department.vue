@@ -29,7 +29,6 @@
     </el-form-item>
     <el-form-item label="上级单位：">
       <el-cascader
-
         v-model="department.parents"
         expand-trigger="hover"
         :options="tree"
