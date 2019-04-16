@@ -1,11 +1,14 @@
 package com.dm.uap.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +22,12 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.exception.DataConflictException;
+import com.dm.uap.repository.DepartmentRepository;
 import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
@@ -44,7 +49,14 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private DepartmentRepository departmentRepository;
+
+	@Autowired
+	private DepartmentRepository dpr;
+
 	private final QUser qUser = QUser.user;
+//	private final QDepartment qDepartment = QDepartment.department;
 
 	@Override
 	@Transactional
@@ -72,12 +84,7 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.isNotBlank(password)) {
 			user.setPassword(passwordEncoder.encode(password));
 		}
-		List<RoleDto> rolesDto = userDto.getRoles();
-		if (CollectionUtils.isNotEmpty(rolesDto)) {
-			List<Role> roles = rolesDto.stream().map(RoleDto::getId).map(roleRepository::getOne)
-					.collect(Collectors.toList());
-			user.setRoles(roles);
-		}
+		addPostsAndRoles(user, userDto);
 		user = userRepository.save(user);
 		user.setOrder(user.getId());
 		return user;
@@ -126,12 +133,7 @@ public class UserServiceImpl implements UserService {
 		checkUsernameExists(id, userDto.getUsername());
 		User user = userRepository.getOne(id);
 		userConverter.copyProperties(user, userDto);
-		List<RoleDto> _roles = userDto.getRoles();
-		if (CollectionUtils.isNotEmpty(_roles)) {
-			List<Role> roles = _roles.stream().map(RoleDto::getId).map(roleRepository::getOne)
-					.collect(Collectors.toList());
-			user.setRoles(roles);
-		}
+		addPostsAndRoles(user, userDto);
 		return user;
 	}
 
@@ -158,5 +160,41 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.getOne(id);
 		user.setPassword(passwordEncoder.encode(password));
 		return user;
+	}
+
+	@Override
+	public Page<User> search(Long department, Long role, String key, Pageable pageable) {
+		BooleanBuilder query = new BooleanBuilder();
+		if (!Objects.isNull(department)) {
+			Department dep = dpr.getOne(department);
+			query.and(qUser.posts.containsKey(dep));
+		}
+		if (!Objects.isNull(role)) {
+			query.and(qUser.roles.any().id.eq(role));
+		}
+		if (StringUtils.isNotBlank(key)) {
+			query.and(qUser.username.containsIgnoreCase(key)
+					.or(qUser.fullname.containsIgnoreCase(key)));
+		}
+		return userRepository.findAll(query, pageable);
+	}
+
+	// 添加用户的职务和角色信息
+	private void addPostsAndRoles(User model, UserDto dto) {
+		Map<Long, String> posts = dto.getPosts();
+		List<RoleDto> _roles = dto.getRoles();
+		if (MapUtils.isNotEmpty(posts)) {
+			Map<Department, String> posts_ = new HashMap<>();
+			posts.entrySet().forEach(entry -> {
+				posts_.put(departmentRepository.getOne(entry.getKey()), entry.getValue());
+			});
+			model.setPosts(posts_);
+		}
+
+		if (CollectionUtils.isNotEmpty(_roles)) {
+			List<Role> roles = _roles.stream().map(RoleDto::getId).map(roleRepository::getOne)
+					.collect(Collectors.toList());
+			model.setRoles(roles);
+		}
 	}
 }

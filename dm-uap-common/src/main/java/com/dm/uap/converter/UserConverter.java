@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.dm.common.converter.AbstractConverter;
 import com.dm.security.core.userdetails.UserDetailsDto;
-import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.Role;
@@ -66,11 +65,11 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		Map<Department, String> _posts = user.getPosts();
 		// TODO 这里要解决职务模型问题
 		if (MapUtils.isNotEmpty(_posts)) {
-			Map<DepartmentDto, String> posts = new HashMap<>();
+			Map<Long, String> posts = new HashMap<>();
 			_posts.entrySet().forEach(a -> {
-				posts.put(departmentConverter.toDto(a.getKey()), a.getValue());
+				posts.put(a.getKey().getId(), a.getValue());
 			});
-//			dto.setPosts(posts);
+			dto.setPosts(posts);
 		}
 		List<Role> roles = user.getRoles();
 		if (CollectionUtils.isNotEmpty(roles)) {

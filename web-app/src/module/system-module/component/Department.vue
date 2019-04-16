@@ -89,9 +89,6 @@
     @departmentModule.Action('loadDepartments')
     loadDepartments
 
-    @departmentModule.Action('get')
-    getDepartment
-
     @departmentModule.Action('save')
     save
 

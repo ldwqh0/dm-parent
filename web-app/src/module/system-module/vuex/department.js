@@ -7,7 +7,37 @@ export default {
     departments: []
   },
   getters: {
-    departments: ({ departments }) => departments
+    departments: ({ departments }) => departments,
+    getParents: ({ departments }, { getDepartment }) => {
+      return (id) => {
+        let result = [id]
+        let dep = getDepartment(id)
+        while (dep && dep.parentId) {
+          dep = getDepartment(dep.parentId)
+          result.push(dep.id)
+        }
+        return result.reverse()
+      }
+    },
+    getDepartment ({ departments }) {
+      return (id) => {
+        let result
+
+        // 查找结点
+        let findNode = (id$, departments$) => {
+          for (let d of departments$) {
+            if (d.id === id$) {
+              result = d
+              return
+            } else if (d.children !== undefined && d.children !== null) {
+              findNode(id$, d.children)
+            }
+          }
+        }
+        findNode(id, departments)
+        return result
+      }
+    }
   },
   mutations: {
     departments (state, data) {

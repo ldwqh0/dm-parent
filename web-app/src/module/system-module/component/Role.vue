@@ -14,8 +14,9 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <el-form-item label="角色组：" placeholder="请选择角色所属组">
+        <el-form-item label="角色组：">
           <el-select v-model="role.group.id"
+                     placeholder="请选择角色所属组,也可以直接输入新增一个角色组"
                      allow-create
                      filterable>
             <el-option v-for="roleGroup in roleGroups"

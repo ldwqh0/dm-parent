@@ -34,7 +34,6 @@
       <el-col :span="12">
         <el-form-item label="确认密码" prop="repassword">
           <el-input
-
             type="password"
             v-model="user.repassword"/>
         </el-form-item>
@@ -59,6 +58,8 @@
       </el-col>
     </el-row>
     -->
+    <!--    {{ posts }}-->
+
     <el-row>
       <el-col :span="12">
         <el-form-item label="状态">
@@ -68,7 +69,6 @@
       <el-col :span="12">
         <el-form-item label="所属角色" prop="roles">
           <el-select multiple
-
                      value-key="id"
                      placeholder="请选择"
                      v-model="user.roles">
@@ -77,6 +77,23 @@
                        :value="item"
                        :label="item.name"/>
           </el-select>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row v-for="post in posts" :key="post.key">
+      <el-col :span="12">
+        <el-form-item label="部门">
+          <el-cascader
+            v-model="post.department"
+            expand-trigger="hover"
+            :options="departmentTree"
+            :props="treeProp"
+            change-on-select/>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="职务">
+          <el-input v-model="post.post"/>
         </el-form-item>
       </el-col>
     </el-row>
@@ -121,17 +138,22 @@
   const userSpace = namespace('system/user')
   const roleSpace = namespace('system/role')
   const regionSpace = namespace('system/region')
+  const departmentModule = namespace('system/department')
   @Component
   export default class User extends Vue {
     user = {
       enabled: true,
+      // posts: {},
       roles: []
     }
+
+    // 渲染部门列表
+    posts = [{}]
 
     treeProp = {
       children: 'children',
       label: 'name',
-      value: 'code'
+      value: 'id'
     }
 
     // @regionSpace.Getter('regionTree')
@@ -145,6 +167,12 @@
 
     @Prop({ default: () => 'new' })
     id
+
+    @departmentModule.Getter('departments')
+    departmentTree
+
+    @departmentModule.Getter('getParents')
+    getParents
 
     // get region () {
     //   return this.codeToArray(this.user.regionCode, this.regions)
@@ -212,8 +240,17 @@
       if (this.id === 'new') {
 
       } else {
-        this.getUser({ id: this.id }).then(({ data }) => {
+        // 获取用户之后，重置用户的职务信息
+        this.getUser({ id: this.id }).then(({ data, data: { posts } }) => {
           this.user = data
+          if (posts) {
+            this.posts = Object.keys(posts).map(department => ({
+              department: this.getParents(Number.parseInt(department)),
+              post: posts[Number.parseInt(department)]
+            }))
+          } else {
+            this.posts = []
+          }
         })
       }
     }
@@ -223,9 +260,14 @@
     }
 
     doSubmit () {
+      // 提交时修改职务信息
       this.$refs.userform.validate(valid => {
         if (valid) {
           let user = Object.assign({}, this.user)
+          user.posts = this.posts.reduce((acc, { department, post }) => ({
+            ...acc,
+            [department[department.length - 1]]: post
+          }), {})
           if (this.id === 'new') {
             this.save(user).then(response => {
               this.$emit('complete')

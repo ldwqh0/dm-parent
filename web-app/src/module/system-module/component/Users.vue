@@ -6,13 +6,14 @@
           <el-input placeholder="请输入搜索关键字"/>
         </el-form-item>
       </el-form>
-      <el-tabs>
-        <el-tab-pane label="组织机构">
+      <el-tabs v-model="filter">
+        <el-tab-pane label="组织机构" name="department">
           <el-tree
             default-expand-all
             :expand-on-click-node="false"
             :props="departmentTreeProps"
-            :data="departmentTree">
+            :data="departmentTree"
+            @node-click="({id})=> currentNode=id">
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span>{{ node.label }}</span>
               <span>
@@ -22,7 +23,7 @@
             </span>
           </el-tree>
         </el-tab-pane>
-        <el-tab-pane label="角色">
+        <el-tab-pane label="角色" name="role">
           <el-tree
             :expand-on-click-node="false"
             :data="roleTree"
@@ -42,7 +43,7 @@
               <el-form-item class="pull-left">
                 <el-input
                   placeholder="请输入关键字"
-                  v-model="searchObj.search"/>
+                  v-model="userSearchKey"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -124,12 +125,15 @@
     }
   })
   export default class Users extends Vue {
+    filter = 'department' // 过滤类型
+    userSearchKey = '' // 用户搜索的关键字
     userDialogVisible = false // 用户对话框是否可见
     departmentDialogVisible = false
     roleDialogVisible = false
     currentUser = 'new' // 显示当前用户
     currentDepartment = 'new' // 当前组织机构
     currentRole = 'new'
+    currentNode = '' // 当前选中的节点
 
     get departmentTreeProps () {
       return {
@@ -145,8 +149,11 @@
       }
     }
 
-    searchObj = {
-      search: null
+    get searchObj () {
+      return {
+        search: this.userSearchKey,
+        [`${this.filter}`]: this.currentNode
+      }
     }
 
     @userModule.State('url')
@@ -196,8 +203,10 @@
       })
     }
 
-    nodeChange (data) {
-      this.searchObj.department = data.id
+    nodeChange ({ id }, b, c) {
+      this.currentNode = id
+      // debugger
+      // this.searchObj.department = data.id
     }
 
     // 启用、禁用

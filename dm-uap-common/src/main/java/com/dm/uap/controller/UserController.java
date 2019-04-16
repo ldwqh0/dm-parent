@@ -71,7 +71,7 @@ public class UserController {
 	public void delete(@PathVariable("id") Long id) {
 		userService.delete(id);
 	}
-	
+
 	@ApiOperation("重置用户密码")
 	@PatchMapping(value = { "{id}/password" }, params = { "!oldPassword" })
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
@@ -111,11 +111,14 @@ public class UserController {
 	@ApiOperation("列表查询用户")
 	@GetMapping
 	public TableResult<UserDto> list(
-			@PageableDefault(page = 0, size = 10, sort = { "order" }, direction = Direction.ASC) Pageable pageable,
+			@RequestParam(value = "department", required = false) Long department,
+			@RequestParam(value = "role", required = false) Long role,
 			@RequestParam(value = "search", required = false) String key,
-			@RequestParam(value = "draw", required = false) Long draw) {
+			@RequestParam(value = "draw", required = false) Long draw,
+			@PageableDefault(page = 0, size = 10, sort = { "order" }, direction = Direction.ASC) Pageable pageable) {
 		try {
-			Page<User> result = userService.search(key, pageable);
+//			Page<User> result = userService.search(key, pageable);
+			Page<User> result = userService.search(department,role,key, pageable);
 			return TableResult.success(draw, result, userConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询用户信息出错", e);
@@ -128,7 +131,7 @@ public class UserController {
 	public UserDetailsDto getCurrentUser(@CurrentUser UserDetailsDto currentUser) {
 		return currentUser;
 	}
-	
+
 	private void validRePassword(String password, String rePassword) {
 		if (!StringUtils.equals(password, rePassword)) {
 			throw new ValidRePasswordFailureException("两次密码输入不一致");
