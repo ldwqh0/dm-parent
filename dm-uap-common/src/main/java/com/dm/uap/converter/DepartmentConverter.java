@@ -21,7 +21,8 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 	protected DepartmentDto toDtoActual(Department model) {
 		DepartmentDto result = new DepartmentDto();
 		result.setId(model.getId());
-		result.setName(model.getName());
+		result.setFullname(model.getFullname());
+		result.setShortname(model.getShortName());
 		result.setDescription(model.getDescription());
 		Department parent = model.getParent();
 		if (!Objects.isNull(parent)) {
@@ -32,7 +33,8 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 
 	@Override
 	public void copyProperties(Department model, DepartmentDto dto) {
-		model.setName(dto.getName());
+		model.setFullname(dto.getFullname());
+		model.setShortName(dto.getShortname());
 		model.setDescription(dto.getDescription());
 	}
 
@@ -61,7 +63,7 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 	private DepartmentTreeDto toTreeDto(Department department) {
 		DepartmentTreeDto tree = new DepartmentTreeDto();
 		tree.setId(department.getId());
-		tree.setName(department.getName());
+		tree.setName(department.getFullname());
 		tree.setDescription(department.getDescription());
 		Department parent = department.getParent();
 		if (!Objects.isNull(parent)) {

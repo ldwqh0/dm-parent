@@ -19,9 +19,9 @@ export default {
       return Vue.http.put(`${state.url}/${role.id}`, role)
     },
     listAll ({ state, commit }) {
-      return Vue.http.get(state.url).then(roleGroups => {
-        commit('roleGroups', roleGroups)
-        return roleGroups
+      return Vue.http.get(state.url).then(({ data }) => {
+        commit('roleGroups', data)
+        return data
       })
     },
     get ({ commit, state }, { id }) {

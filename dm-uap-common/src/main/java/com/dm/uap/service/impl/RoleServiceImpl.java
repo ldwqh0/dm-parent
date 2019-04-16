@@ -17,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.dto.RoleDto;
+import com.dm.uap.dto.RoleGroupDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.QRole;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.Role.Status;
+import com.dm.uap.entity.RoleGroup;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.RoleGroupRepository;
 import com.dm.uap.repository.RoleRepository;
@@ -59,9 +61,7 @@ public class RoleServiceImpl implements RoleService {
 	@Transactional
 	public Role save(RoleDto roleDto) {
 		Role role = new Role();
-		roleConverter.copyProperties(role, roleDto);
-		role.setUsers(getUsersFromDto(roleDto.getUsers()));
-		role.setGroup(roleGroupRepository.getOne(roleDto.getGroup().getId()));
+		copyProperties(role, roleDto);
 		return roleRepository.save(role);
 	}
 
@@ -85,10 +85,7 @@ public class RoleServiceImpl implements RoleService {
 	@Transactional
 	public Role update(long id, RoleDto roleDto) {
 		Role role = roleRepository.getOne(id);
-		roleConverter.copyProperties(role, roleDto);
-		role.setUsers(getUsersFromDto(roleDto.getUsers()));
-		role.setGroup(roleGroupRepository.getOne(roleDto.getGroup().getId()));
-		roleRepository.save(role);
+		copyProperties(role, roleDto);
 		return role;
 	}
 
@@ -126,6 +123,22 @@ public class RoleServiceImpl implements RoleService {
 			return users.stream().map(UserDto::getId).map(userRepository::getOne).collect(Collectors.toList());
 		} else {
 			return Collections.emptyList();
+		}
+	}
+
+	private void copyProperties(Role data, RoleDto dto) {
+		roleConverter.copyProperties(data, dto);
+		data.setUsers(getUsersFromDto(dto.getUsers()));
+		RoleGroupDto _group = dto.getGroup();
+		if (!Objects.isNull(_group)) {
+			Long groupId = _group.getId();
+			String groupName = _group.getName();
+			if (!Objects.isNull(groupId)) {
+				data.setGroup(roleGroupRepository.getOne(groupId));
+			} else if (StringUtils.isNotBlank(groupName)) {
+				RoleGroup group = new RoleGroup(groupName);
+				data.setGroup(roleGroupRepository.save(group));
+			}
 		}
 	}
 }

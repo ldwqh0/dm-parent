@@ -27,4 +27,13 @@ public class RoleGroup extends AbstractEntity {
 	@OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
 	private Set<Role> roles;
 
+	public RoleGroup() {
+		super();
+	}
+
+	public RoleGroup(String name) {
+		super();
+		this.name = name;
+	}
+
 }

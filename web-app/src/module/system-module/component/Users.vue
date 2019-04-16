@@ -9,12 +9,24 @@
       <el-tabs>
         <el-tab-pane label="组织机构">
           <el-tree
-            :data="departmentTree"/>
+            default-expand-all
+            :expand-on-click-node="false"
+            :props="departmentTreeProps"
+            :data="departmentTree">
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+              <span>{{ node.label }}</span>
+              <span>
+                <a @click="editDepartment(data)">编辑</a>
+                <a @click="deleteDepartment(data)">删除</a>
+              </span>
+            </span>
+          </el-tree>
         </el-tab-pane>
         <el-tab-pane label="角色">
           <el-tree
+            :expand-on-click-node="false"
             :data="roleTree"
-            :props="defaultTreeProps"
+            :props="roleTreeProps"
             default-expand-all/>
         </el-tab-pane>
       </el-tabs>
@@ -35,7 +47,9 @@
             </el-col>
             <el-col :span="12">
               <el-form-item class="pull-right">
-                <el-button type="primary" @click="add()">新增</el-button>
+                <el-button type="primary" @click="editDepartment()">新增组织机构</el-button>
+                <el-button type="primary" @click="editRole()">新增角色</el-button>
+                <el-button type="primary" @click="editUser()">新增用户</el-button>
               </el-form-item>
             </el-col>
           </el-row>
@@ -57,7 +71,7 @@
             </el-table-column>
             <el-table-column label="操作" :min-width="60">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
+                <el-button type="text" size="small" @click="editUser(scope.row)">编辑</el-button>
                 <el-button type="text" size="small" @click="toggleEnabled(scope.row)">
                   {{ scope.row.enabled ? '禁用' : '启用' }}
                 </el-button>
@@ -67,34 +81,64 @@
         </el-main>
       </el-header>
     </el-container>
+
+    <el-dialog title="用户编辑"
+               :visible.sync="userDialogVisible"
+               v-if="userDialogVisible">
+      <user :id="currentUser" @complete="(userDialogVisible=false) || reloadUser()"/>
+    </el-dialog>
+    <el-dialog title="组织机构编辑"
+               :visible.sync="departmentDialogVisible"
+               v-if="departmentDialogVisible">
+      <department :id="currentDepartment"
+                  @complete="(departmentDialogVisible=false) || loadDepartments()"/>
+    </el-dialog>
+    <el-dialog title="角色编辑"
+               :visible.sync="roleDialogVisible"
+               v-if="roleDialogVisible">
+      <role :id="currentRole"
+            @complete="(roleDialogVisible=false) || loadRoles()"/>
+    </el-dialog>
   </el-container>
 </template>
 
 <script>
   import Vue from 'vue'
   import { Component } from 'vue-property-decorator'
+  import User from '../component/User'
+  import Department from '../component/Department'
+  import Role from '../component/Role'
   // import EleDataTables from 'element-datatables'
 
   import { namespace } from 'vuex-class'
 
-  const userSpace = namespace('system/user')
+  const userModule = namespace('system/user')
   const roleModule = namespace('system/role')
   const departmentModule = namespace('system/department')
 
   @Component({
-    // components: {
-    //   EleDataTables
-    // }
+    components: {
+      User,
+      Department,
+      Role
+    }
   })
   export default class Users extends Vue {
-    get defaultProps () {
+    userDialogVisible = false // 用户对话框是否可见
+    departmentDialogVisible = false
+    roleDialogVisible = false
+    currentUser = 'new' // 显示当前用户
+    currentDepartment = 'new' // 当前组织机构
+    currentRole = 'new'
+
+    get departmentTreeProps () {
       return {
         children: 'children',
-        label: 'text'
+        label: 'name'
       }
     }
 
-    get defaultTreeProps () {
+    get roleTreeProps () {
       return {
         children: 'children',
         label: 'name'
@@ -105,28 +149,51 @@
       search: null
     }
 
+    @userModule.State('url')
+    ajax
+
+    @userModule.Action('update')
+    update
+
     @roleModule.Getter('roleTree')
     roleTree
 
-    @userSpace.State('url')
-    ajax
-
-    @userSpace.Action('update')
-    update
-
     @roleModule.Action('listAll')
-    listRoles
+    loadRoles
 
+    // 获取部门树
+    @departmentModule.Getter('departments')
+    departmentTree
+
+    // 加载部门树
     @departmentModule.Action('loadDepartments')
     loadDepartments
 
+    // 删除部门
+    @departmentModule.Action('del')
+    delDepartment
+
     // 新增
-    add () {
-      this.$router.push({ name: 'user', params: { id: 'new' } })
+    editUser ({ id = 'new' } = { id: 'new' }) {
+      this.currentUser = id
+      this.userDialogVisible = true
+      // this.$router.push({ name: 'user', params: { id: 'new' } })
     }
 
-    edit (params) {
-      this.$router.push({ name: 'user', params })
+    editDepartment ({ id = 'new' } = { id: 'new' }) {
+      this.currentDepartment = id
+      this.departmentDialogVisible = true
+    }
+
+    editRole ({ id = 'new' } = { id: 'new' }) {
+      this.currentRole = id
+      this.roleDialogVisible = true
+    }
+
+    deleteDepartment ({ id }) {
+      this.delDepartment({ id }).then(() => {
+        this.loadDepartments()
+      })
     }
 
     nodeChange (data) {
@@ -150,8 +217,12 @@
     }
 
     created () {
-      this.listRoles()
+      this.loadRoles()
       this.loadDepartments()
+    }
+
+    reloadUser () {
+      this.$refs['list'].reloadData()
     }
   }
 </script>
@@ -163,4 +234,13 @@
   /*height: 99%;*/
   /*}*/
   /*}*/
+
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
 </style>

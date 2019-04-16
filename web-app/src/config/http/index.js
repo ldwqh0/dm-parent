@@ -22,17 +22,17 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(response => {
   store.commit('loadingComplete')
   let err = '与服务器交互时出现错误'
-  let { status, data, error } = response
+  let { status, error } = response
 
   if (status >= 200 && status < 300) {
-    return data
+    return response
   } else {
     err += `,错误信息=[${error}]`
   }
   store.commit('addError', err)
   return Promise.reject(response)
 }, error => {
-  console.log(error)
+  console.error(error)
   store.commit('loadingComplete')
   let { response: { status } } = error
   if (status === 401) {

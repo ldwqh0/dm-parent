@@ -7,7 +7,7 @@ export default {
     departments: []
   },
   getters: {
-    departments ({ departments }) {}
+    departments: ({ departments }) => departments
   },
   mutations: {
     departments (state, data) {
@@ -17,8 +17,21 @@ export default {
   actions: {
     loadDepartments ({ state, commit }, params) {
       return Vue.http.get(state.url, { params: { ...params, type: 'tree' } }).then(({ data }) => {
-        console.log(data)
+        commit('departments', data)
+        return data
       })
+    },
+    get ({ state }, { id }) {
+      return Vue.http.get(`${state.url}/${id}`)
+    },
+    update ({ state }, data) {
+      return Vue.http.update
+    },
+    save ({ state }, data) {
+      return Vue.http.post(state.url, data)
+    },
+    del ({ state }, { id }) {
+      return Vue.http.delete(`${state.url}/${id}`)
     }
   }
 }

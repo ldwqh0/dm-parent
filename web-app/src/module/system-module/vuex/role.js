@@ -2,7 +2,6 @@ import Vue from 'vue'
 import { groupBy, reduce, flatMap } from 'rxjs/operators'
 import { from } from 'rxjs'
 
-console.log(groupBy)
 export default {
   namespaced: true,
   state: {
@@ -38,9 +37,9 @@ export default {
       return Vue.http.put(`${state.url}/${role.id}`, role)
     },
     listAll ({ state, commit }) {
-      return Vue.http.get(state.url).then(roles => {
-        commit('updateRoles', roles)
-        return roles
+      return Vue.http.get(state.url).then(({ data }) => {
+        commit('updateRoles', data)
+        return data
       })
     },
     get ({ commit, state }, { id }) {

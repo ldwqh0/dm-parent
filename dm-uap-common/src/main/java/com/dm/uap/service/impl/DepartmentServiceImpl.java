@@ -70,7 +70,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 		if (StringUtils.isBlank(key)) {
 			return departmentRepository.findAll(pageable);
 		} else {
-			BooleanExpression query = qDepartment.name.containsIgnoreCase(key)
+			BooleanExpression query = qDepartment.fullname.containsIgnoreCase(key)
+					.or(qDepartment.shortName.containsIgnoreCase(key))
 					.or(qDepartment.description.containsIgnoreCase(key));
 			return departmentRepository.findAll(query, pageable);
 		}
