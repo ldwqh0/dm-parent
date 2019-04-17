@@ -6,7 +6,7 @@ import com.dm.dingding.model.UserInfo;
 import com.dm.dingding.model.response.AccessTokenResponse;
 import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
 
-public interface DingService {
+public interface DingTalkService {
 	/**
 	 * 获取accessToken
 	 * 

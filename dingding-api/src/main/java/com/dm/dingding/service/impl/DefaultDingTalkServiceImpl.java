@@ -14,9 +14,9 @@ import com.dm.dingding.model.UserInfo;
 import com.dm.dingding.model.response.AccessTokenResponse;
 import com.dm.dingding.model.response.OapiDepartmentListResponse;
 import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
-import com.dm.dingding.service.DingService;
+import com.dm.dingding.service.DingTalkService;
 
-public class DefaultDingServiceImpl implements DingService, InitializingBean {
+public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
 	private RestTemplate restTemplate;
 	private DingClientConfig clientConfig;
 	private static final String SERVER = "https://oapi.dingtalk.com";
@@ -29,11 +29,11 @@ public class DefaultDingServiceImpl implements DingService, InitializingBean {
 	 */
 	private AccessTokenResponse existToken;
 
-	public DefaultDingServiceImpl() {
+	public DefaultDingTalkServiceImpl() {
 		super();
 	}
 
-	public DefaultDingServiceImpl(DingClientConfig clientConfig) {
+	public DefaultDingTalkServiceImpl(DingClientConfig clientConfig) {
 		super();
 		this.clientConfig = clientConfig;
 	}

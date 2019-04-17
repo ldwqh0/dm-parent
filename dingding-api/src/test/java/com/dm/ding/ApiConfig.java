@@ -6,15 +6,15 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingding.model.DingClientConfig;
-import com.dm.dingding.service.DingService;
-import com.dm.dingding.service.impl.DefaultDingServiceImpl;
+import com.dm.dingding.service.DingTalkService;
+import com.dm.dingding.service.impl.DefaultDingTalkServiceImpl;
 
 @Configuration
 public class ApiConfig {
 
 	@Bean
-	public DingService dingService() {
-		return new DefaultDingServiceImpl(clientConfig());
+	public DingTalkService dingService() {
+		return new DefaultDingTalkServiceImpl(clientConfig());
 	}
 
 	@Bean
