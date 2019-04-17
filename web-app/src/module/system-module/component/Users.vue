@@ -110,7 +110,6 @@
   import User from '../component/User'
   import Department from '../component/Department'
   import Role from '../component/Role'
-  // import EleDataTables from 'element-datatables'
 
   import { namespace } from 'vuex-class'
 
@@ -205,7 +204,11 @@
       })
     }
 
-    switchRoleNode ({ id }, b, c) {
+    /**
+     * 将用户过滤的条件切换到按角色过滤
+     * @param id
+     */
+    switchRoleNode ({ id }) {
       if (typeof (id) === 'string' && id.startsWith('group')) {
         this.filter = 'roleGroup'
         this.currentNode = id.split('-')[1]

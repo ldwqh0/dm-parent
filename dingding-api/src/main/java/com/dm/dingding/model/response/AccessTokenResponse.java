@@ -1,4 +1,4 @@
-package com.dm.dingding.model;
+package com.dm.dingding.model.response;
 
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -10,7 +10,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AccessToken extends DingTalkResponse {
+public class AccessTokenResponse extends TaobaoResponse {
+
+	private static final long serialVersionUID = -866304342538258608L;
 
 	@JsonProperty(value = "expires_in")
 	private Long expiresIn;

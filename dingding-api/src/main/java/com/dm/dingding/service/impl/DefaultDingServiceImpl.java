@@ -1,6 +1,7 @@
 package com.dm.dingding.service.impl;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -8,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import com.dm.dingding.model.AccessToken;
 import com.dm.dingding.model.DingClientConfig;
 import com.dm.dingding.model.UserInfo;
+import com.dm.dingding.model.response.AccessTokenResponse;
+import com.dm.dingding.model.response.OapiDepartmentListResponse;
+import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
 import com.dm.dingding.service.DingService;
 
 public class DefaultDingServiceImpl implements DingService, InitializingBean {
@@ -24,7 +27,7 @@ public class DefaultDingServiceImpl implements DingService, InitializingBean {
 	 * 请使用 getAccessToken 方法获取可用的token
 	 * 
 	 */
-	private AccessToken existToken;
+	private AccessTokenResponse existToken;
 
 	public DefaultDingServiceImpl() {
 		super();
@@ -46,7 +49,7 @@ public class DefaultDingServiceImpl implements DingService, InitializingBean {
 	 * @return
 	 */
 	@Override
-	public AccessToken getAccessToken() {
+	public AccessTokenResponse getAccessToken() {
 		if (!validateAccessToken(this.existToken)) {
 			synchronized (tokenLock) {
 				if (!validateAccessToken(existToken)) {
@@ -77,13 +80,13 @@ public class DefaultDingServiceImpl implements DingService, InitializingBean {
 	 * 
 	 * @return
 	 */
-	private AccessToken getAccessTokenFromServer() {
+	private AccessTokenResponse getAccessTokenFromServer() {
 		String url = SERVER + "/gettoken?appkey={appkey}&appsecret={appsecret}";
 		clientConfig.getAppsecret();
-		return restTemplate.getForObject(url, AccessToken.class, clientConfig);
+		return restTemplate.getForObject(url, AccessTokenResponse.class, clientConfig);
 	}
 
-	private boolean validateAccessToken(AccessToken token) {
+	private boolean validateAccessToken(AccessTokenResponse token) {
 		if (Objects.isNull(token)) {
 			return false;
 		}
@@ -92,5 +95,13 @@ public class DefaultDingServiceImpl implements DingService, InitializingBean {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public List<Department> listDepartment() {
+		String url = SERVER + "/department/list?access_token={0}";
+		OapiDepartmentListResponse response = restTemplate.getForObject(url, OapiDepartmentListResponse.class,
+				getAccessToken().getAccessToken());
+		return response.getDepartment();
 	}
 }

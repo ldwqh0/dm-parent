@@ -30,7 +30,7 @@ export default {
       return loginInstance.post(state.url.login, data)
     },
     loadCurrentUser ({ commit, state: { url: { currentUser } } }) {
-      return Vue.http.get(currentUser).then((data) => {
+      return Vue.http.get(currentUser).then(({ data }) => {
         commit('currentUser', data)
         return data
       })
