@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
 	private DepartmentRepository dpr;
 
 	private final QUser qUser = QUser.user;
-//	private final QDepartment qDepartment = QDepartment.department;
 
 	@Override
 	@Transactional
@@ -94,7 +93,6 @@ public class UserServiceImpl implements UserService {
 	 * 判断某个用户名是否被占用，检测用户ID!=指定ID
 	 * 
 	 * @param id
-	 * 
 	 * 
 	 * @param usernamee
 	 * @return
@@ -193,7 +191,6 @@ public class UserServiceImpl implements UserService {
 			});
 			model.setPosts(posts_);
 		}
-
 		if (CollectionUtils.isNotEmpty(_roles)) {
 			List<Role> roles = _roles.stream().map(RoleDto::getId).map(roleRepository::getOne)
 					.collect(Collectors.toList());
