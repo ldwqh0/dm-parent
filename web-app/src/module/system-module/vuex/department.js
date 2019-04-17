@@ -4,25 +4,51 @@ export default {
   namespaced: true,
   state: {
     url: `${CONTEXT_PATH}u/departments`,
+    // 这里存储的是树形结构
+    // 数据结构如下
+    // [{
+    //   "id":1
+    //   "name":"节点名称",
+    //   "children":[{
+    //     "id":2
+    //     "name":"子节点名称"，
+    //     "parentId":1,
+    //     "children":[{
+    //       ...
+    //     }]
+    //   }]
+    // }]
     departments: []
   },
   getters: {
     departments: ({ departments }) => departments,
+    // 获取一个节点的上级节点到本节点的数组结构
+    // 示例,假设数据结构如下
+    // [{
+    //   "id":1,
+    //   "name":"根节点"
+    //   "children":[{
+    //     "id":2,
+    //     "name":"子节点",
+    //     "parentId":1
+    //   }]
+    // }]
+    // 使用该getter getParents(2) 获取到的结果应该是 [1,2]
+    //
     getParents: ({ departments }, { getDepartment }) => {
       return (id) => {
         let result = [id]
         let dep = getDepartment(id)
         while (dep && dep.parentId) {
           dep = getDepartment(dep.parentId)
-          result.push(dep.id)
+          result.unshift(dep.id)
         }
-        return result.reverse()
+        return result
       }
     },
     getDepartment ({ departments }) {
       return (id) => {
         let result
-
         // 查找结点
         let findNode = (id$, departments$) => {
           for (let d of departments$) {

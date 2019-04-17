@@ -39,7 +39,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 		if (!Objects.isNull(parent)) {
 			department.setParent(departmentRepository.getOne(parent.getId()));
 		}
-		return departmentRepository.save(department);
+		Department dep = departmentRepository.save(department);
+		// 设置部门的顺序
+		dep.setOrder(dep.getId());
+		return dep;
 	}
 
 	@Override

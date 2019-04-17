@@ -3,14 +3,8 @@
            size="mini"
            :model="user"
            :rules="rules"
-           label-width="120px"
+           label-width="100px"
            ref="userform">
-    <!--        <el-row style="margin-bottom: 20px;margin-top:7px;">
-               <el-col :span="5" :offset="19" style="display: flex;justify-content: flex-end;">
-              <el-button @click="goBack" size="mini">返回</el-button>
-               <el-button type="primary" @click="onSubmit" size="mini">提交</el-button>
-            </el-col>
-           </el-row>-->
     <el-row>
       <el-col :span="12">
         <el-form-item label="用户名" prop="username">
@@ -75,25 +69,53 @@
             <el-option v-for="item in roles"
                        :key="item.id"
                        :value="item"
-                       :label="item.name"/>
+                       :label="item.name">
+              <span style="float: left">{{ item.group.name }}</span>
+              <span style="float: right">{{ item.name }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row v-for="post in posts" :key="post.key">
-      <el-col :span="12">
-        <el-form-item label="部门">
-          <el-cascader
-            v-model="post.department"
-            expand-trigger="hover"
-            :options="departmentTree"
-            :props="treeProp"
-            change-on-select/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="职务">
-          <el-input v-model="post.post"/>
+    <!--关于职务的验证需要单独处理-->
+    <el-form ref="postForms"
+             v-for="(post,index) in posts"
+             :key="index"
+             size="mini"
+             label-width="100px"
+             :model="post"
+             :rules="postRules">
+      <el-row>
+        <el-col :span="11">
+          <el-form-item prop="department">
+            <template #label>
+              职务 {{ index+1 }}
+            </template>
+            <el-cascader
+              v-model="post.department"
+              expand-trigger="hover"
+              :options="departmentTree"
+              :props="treeProp"
+              change-on-select/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11">
+          <el-form-item label="职务" prop="post">
+            <el-input v-model="post.post"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="2">
+          <!--        <el-form-item>-->
+          <!--这里做一个减号图标-->
+          <el-button size="mini" @click="removePost(index)">移除</el-button>
+          <!--        </el-form-item>-->
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-row>
+      <el-col :span="24">
+        <el-form-item>
+          <el-button @click="addPost">添加职务</el-button>
         </el-form-item>
       </el-col>
     </el-row>
@@ -139,11 +161,12 @@
   const roleSpace = namespace('system/role')
   const regionSpace = namespace('system/region')
   const departmentModule = namespace('system/department')
-  @Component
+  @Component({
+    components: {}
+  })
   export default class User extends Vue {
     user = {
       enabled: true,
-      // posts: {},
       roles: []
     }
 
@@ -184,6 +207,21 @@
     //     this.user.regionCode = result
     //   }
     // }
+
+    get postRules () {
+      return {
+        department: [{
+          required: true,
+          message: '请选择任职部门',
+          trigger: 'blur'
+        }],
+        post: [{
+          required: true,
+          message: '请输入职务名称',
+          trigger: 'blur'
+        }]
+      }
+    }
 
     get rules () {
       return {
@@ -255,36 +293,45 @@
       }
     }
 
-    goBack () {
-      this.$router.push({ name: 'users' })
+    // 添加职务信息
+    addPost () {
+      this.posts.push({})
+    }
+
+    // 移除指定索引位置的职务
+    removePost (index) {
+      this.posts.splice(index, 1)
     }
 
     doSubmit () {
-      // 提交时修改职务信息
-      this.$refs.userform.validate(valid => {
-        if (valid) {
-          let user = Object.assign({}, this.user)
-          user.posts = this.posts.reduce((acc, { department, post }) => ({
-            ...acc,
-            [department[department.length - 1]]: post
-          }), {})
-          if (this.id === 'new') {
-            this.save(user).then(response => {
-              this.$emit('complete')
-              // this.$router.push({ name: 'users' })
-            })
-          } else {
-            this.update(user).then(response => {
-              this.$emit('complete')
-              // this.$router.push({ name: 'users' })
-            })
-          }
+      let validations = [...this.$refs['postForms'], this.$refs['userform']]
+        .map(form => new Promise((resolve, reject) => {
+          form.validate(valid => {
+            valid ? resolve() : reject(new Error('验证失败'))
+          })
+        }))
+
+      Promise.all(validations).then(() => {
+        let user = Object.assign({}, this.user)
+        user.posts = this.posts.reduce((acc, { department, post }) => ({
+          ...acc,
+          [department[department.length - 1]]: post
+        }), {})
+        if (this.id === 'new') {
+          this.save(user).then(response => {
+            this.$emit('complete')
+          })
         } else {
-          console.error('校验不通过')
+          this.update(user).then(response => {
+            this.$emit('complete')
+          })
         }
+      }).catch(e => {
+        console.error('校验不通过')
       })
     }
 
+    // 取消按钮
     doCancel () {
       this.$emit('complete')
     }

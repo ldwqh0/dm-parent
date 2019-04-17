@@ -38,6 +38,6 @@ public interface UserService extends UserDetailsService {
 
 	public User repassword(Long id, String password);
 
-	public Page<User> search(Long department, Long role, String key, Pageable pageable);
+	public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable);
 
 }

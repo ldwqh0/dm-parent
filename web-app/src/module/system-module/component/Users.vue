@@ -6,7 +6,7 @@
           <el-input placeholder="请输入搜索关键字"/>
         </el-form-item>
       </el-form>
-      <el-tabs v-model="filter">
+      <el-tabs v-model="active" @tab-click="({name})=>filter=name">
         <el-tab-pane label="组织机构" name="department">
           <el-tree
             default-expand-all
@@ -28,6 +28,7 @@
             :expand-on-click-node="false"
             :data="roleTree"
             :props="roleTreeProps"
+            @node-click="switchRoleNode"
             default-expand-all/>
         </el-tab-pane>
       </el-tabs>
@@ -125,6 +126,7 @@
     }
   })
   export default class Users extends Vue {
+    active = 'department' // 当前激活的选项卡
     filter = 'department' // 过滤类型
     userSearchKey = '' // 用户搜索的关键字
     userDialogVisible = false // 用户对话框是否可见
@@ -203,10 +205,14 @@
       })
     }
 
-    nodeChange ({ id }, b, c) {
-      this.currentNode = id
-      // debugger
-      // this.searchObj.department = data.id
+    switchRoleNode ({ id }, b, c) {
+      if (typeof (id) === 'string' && id.startsWith('group')) {
+        this.filter = 'roleGroup'
+        this.currentNode = id.split('-')[1]
+      } else {
+        this.filter = 'role'
+        this.currentNode = id
+      }
     }
 
     // 启用、禁用

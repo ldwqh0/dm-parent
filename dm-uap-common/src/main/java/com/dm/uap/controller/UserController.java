@@ -113,12 +113,13 @@ public class UserController {
 	public TableResult<UserDto> list(
 			@RequestParam(value = "department", required = false) Long department,
 			@RequestParam(value = "role", required = false) Long role,
+			@RequestParam(value = "roleGroup", required = false) Long roleGroup,
 			@RequestParam(value = "search", required = false) String key,
 			@RequestParam(value = "draw", required = false) Long draw,
 			@PageableDefault(page = 0, size = 10, sort = { "order" }, direction = Direction.ASC) Pageable pageable) {
 		try {
 //			Page<User> result = userService.search(key, pageable);
-			Page<User> result = userService.search(department,role,key, pageable);
+			Page<User> result = userService.search(department, role, roleGroup, key, pageable);
 			return TableResult.success(draw, result, userConverter::toDto);
 		} catch (Exception e) {
 			log.error("查询用户信息出错", e);

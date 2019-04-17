@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Page<User> search(Long department, Long role, String key, Pageable pageable) {
+	public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable) {
 		BooleanBuilder query = new BooleanBuilder();
 		if (!Objects.isNull(department)) {
 			Department dep = dpr.getOne(department);
@@ -171,6 +171,9 @@ public class UserServiceImpl implements UserService {
 		}
 		if (!Objects.isNull(role)) {
 			query.and(qUser.roles.any().id.eq(role));
+		}
+		if (!Objects.isNull(roleGroup)) {
+			query.and(qUser.roles.any().group.id.eq(roleGroup));
 		}
 		if (StringUtils.isNotBlank(key)) {
 			query.and(qUser.username.containsIgnoreCase(key)

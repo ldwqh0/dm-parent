@@ -21,11 +21,6 @@ export default [{
     props: true,
     component: () => import('../component/Role')
   }, {
-    name: 'roleGroup',
-    path: 'roleGroups/:id',
-    props: true,
-    component: () => import('../component/RoleGroup.vue')
-  }, {
     name: 'menus',
     path: 'menus',
     component: () => import('../component/Menus')
