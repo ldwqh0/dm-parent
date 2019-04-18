@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.dm.common.entity.AbstractEntity;
@@ -23,6 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "dm_role_")
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "role_group_id_", "name_" }) })
 public class Role extends AbstractEntity {
 
 	public enum Status {
@@ -38,7 +41,7 @@ public class Role extends AbstractEntity {
 
 	private static final long serialVersionUID = -7562410173176807166L;
 
-	@Column(name = "name_", length = 100, unique = true, nullable = false)
+	@Column(name = "name_", length = 100, nullable = false)
 	@NotNull
 	private String name;
 
@@ -46,11 +49,11 @@ public class Role extends AbstractEntity {
 	@JoinColumn(name = "role_group_id_", nullable = false)
 	private RoleGroup group;
 
-	@Column(name = "state_")
+	@Column(name = "state_", length = 50)
 	@Enumerated(EnumType.STRING)
 	private Status state;
 
-	@Column(name = "description_", length = 1000)
+	@Column(name = "description_", length = 2000)
 	private String description;
 
 	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)

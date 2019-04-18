@@ -60,7 +60,7 @@ public class User extends AbstractEntity {
 	@Column(name = "mobile_", length = 20)
 	private String mobile;
 
-	@Column(name = "description_", length = 1000)
+	@Column(name = "description_", length = 2000)
 	private String description;
 
 	@Column(name = "order_")
@@ -84,7 +84,7 @@ public class User extends AbstractEntity {
 			@JoinColumn(name = "user_id_")
 	})
 	@MapKeyJoinColumn(name = "department_id_")
-	@Column(name = "post_")
+	@Column(name = "post_", length = 50)
 	private Map<Department, String> posts;
 
 	/**
@@ -98,7 +98,7 @@ public class User extends AbstractEntity {
 	@Column(name = "order_")
 	private Map<Department, Long> orders;
 
-	@Column(name = "region_code_")
+	@Column(name = "region_code_", length = 20)
 	private String regionCode;
 
 	@Column(name = "scenic_name_", length = 200)

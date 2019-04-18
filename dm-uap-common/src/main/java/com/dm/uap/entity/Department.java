@@ -19,7 +19,7 @@ public class Department extends AbstractEntity {
 	/**
 	 * 部门名称
 	 */
-	@Column(name = "full_name_", length = 100, nullable = false)
+	@Column(name = "full_name_", length = 100, nullable = false, unique = true)
 	private String fullname;
 
 	@Column(name = "short_name_", length = 100)
