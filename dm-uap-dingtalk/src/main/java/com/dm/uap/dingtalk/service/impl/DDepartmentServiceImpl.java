@@ -56,6 +56,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 	@Override
 	@Transactional
 	public void syncToUap() {
+		dDepartmentRepository.deleteAllInBatch();
 		dDepartmentService.fetchDDepartments();
 		// TODO Auto-generated method stub
 

@@ -14,7 +14,7 @@ public class DDepartmentControlller {
 
 	@PostMapping("sync")
 	public void sync() {
-
+		dDepartmentService.syncToUap();
 	}
 
 }
