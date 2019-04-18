@@ -14,13 +14,13 @@
             :props="departmentTreeProps"
             :data="departmentTree"
             @node-click="({id})=> currentNode=id">
-            <span class="custom-tree-node" slot-scope="{ node, data }">
-              <span>{{ node.label }}</span>
-              <span>
-                <a @click="editDepartment(data)">编辑</a>
-                <a @click="deleteDepartment(data)">删除</a>
-              </span>
-            </span>
+            <!--            <span class="custom-tree-node" slot-scope="{ node, data }">-->
+            <!--              <span>{{ node.label }}</span>-->
+            <!--              <span>-->
+            <!--                <a @click="editDepartment(data)">编辑</a>-->
+            <!--                <a @click="deleteDepartment(data)">删除</a>-->
+            <!--              </span>-->
+            <!--            </span>-->
           </el-tree>
         </el-tab-pane>
         <el-tab-pane label="角色" name="role">

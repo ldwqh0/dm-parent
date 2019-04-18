@@ -13,6 +13,9 @@ import com.dm.dingding.model.DingClientConfig;
 import com.dm.dingding.model.UserInfo;
 import com.dm.dingding.model.response.AccessTokenResponse;
 import com.dm.dingding.model.response.OapiDepartmentListResponse;
+import com.dm.dingding.model.response.OapiRoleListResponse;
+import com.dm.dingding.model.response.OapiRoleListResponse.OpenRoleGroup;
+import com.dm.dingding.model.response.TaobaoResponse;
 import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
 import com.dm.dingding.service.DingTalkService;
 
@@ -103,5 +106,19 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		OapiDepartmentListResponse response = restTemplate.getForObject(url, OapiDepartmentListResponse.class,
 				getAccessToken().getAccessToken());
 		return response.getDepartment();
+	}
+
+	private void checkResponse(TaobaoResponse response) {
+//		if (!""  response.getCode()!==0) {
+//			
+//		}
+	}
+
+	@Override
+	public List<OpenRoleGroup> fetchRoleGroups() {
+		String url = SERVER + "/topapi/role/list?access_token={0}";
+		OapiRoleListResponse response = restTemplate.getForObject(url, OapiRoleListResponse.class,
+				getAccessToken().getAccessToken());
+		return response.getResult().getList();
 	}
 }

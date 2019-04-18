@@ -57,7 +57,7 @@ public class UapAutoConfiguration {
 	}
 
 	private void initRole() {
-		Optional<RoleGroup> defaultGroupOptional = roleGroupService.findByName("默认");
+		Optional<RoleGroup> defaultGroupOptional = roleGroupService.findByName("内置分组");
 		RoleGroup defaultGroup = defaultGroupOptional.get();
 		RoleGroupDto drg = new RoleGroupDto();
 		drg.setId(defaultGroup.getId());
@@ -115,7 +115,7 @@ public class UapAutoConfiguration {
 	private void initRoleGroup() {
 		if (!roleGroupService.exist()) {
 			RoleGroupDto roleGroup = new RoleGroupDto();
-			roleGroup.setName("默认");
+			roleGroup.setName("内置分组");
 			roleGroup.setDescription("系统默认角色分组");
 			roleGroupService.save(roleGroup);
 		}

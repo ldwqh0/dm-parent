@@ -13,7 +13,7 @@ public class DingClientConfig extends HashMap<String, String> {
 	}
 
 	public String getAppkey() {
-		return get("appKey");
+		return get("appkey");
 	}
 
 	public String getAppsecret() {
@@ -21,7 +21,7 @@ public class DingClientConfig extends HashMap<String, String> {
 	}
 
 	public void setAppkey(String appKey) {
-		put("appKey", appKey);
+		put("appkey", appKey);
 	}
 
 	public void setAppsecret(String appsecret) {

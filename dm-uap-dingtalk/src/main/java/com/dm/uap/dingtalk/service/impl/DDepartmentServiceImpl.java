@@ -2,6 +2,7 @@ package com.dm.uap.dingtalk.service.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,6 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 	@Autowired
 	private DDepartmentRepository dDepartmentRepository;
 
-	@Autowired
-	private DDepartmentService dDepartmentService;
-
 	@Override
 	@Transactional
 	public DDepartment save(Department dDepartment) {
@@ -45,20 +43,53 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 		return dDepartments.stream().map(this::save).collect(Collectors.toList());
 	}
 
-	@Transactional
-	@Override
-	public void fetchDDepartments() {
+	private List<DDepartment> fetchDDepartments() {
 		List<Department> departments = dingTalkService.fetchDepartments();
-		dDepartmentService.save(departments);
+		// 删除原有列表中，不存在于本次同步抓取到的部门列表中的数据
+		// 如果原有数据中 有部门 [1,2,3],本次抓取的部门有 [2,3,6]
+		// 需要先删除原有部门中不存在于本次抓取部门[2,3,6]中的部门[1]
+		List<Long> exists = departments.stream().map(Department::getId).collect(Collectors.toList());
+		dDepartmentRepository.deleteByIdNotIn(exists);
+
+		// 将抓取到的数据映射为实体
+		List<DDepartment> dDepartments_ = departments.stream().map(_department -> {
+			DDepartment dDepartment_ = dDepartmentRepository.existsById(_department.getId())
+					? dDepartmentRepository.getOne(_department.getId())
+					: new DDepartment();
+			dDepartmentConverter.copyProperties(dDepartment_, _department);
+			return dDepartment_;
+		}).collect(Collectors.toList());
+		return dDepartmentRepository.saveAll(dDepartments_);
+	}
+
+	/**
+	 * 同步钉钉机构数据库到系统机构数据库 该同步会修改想要的部门数据信息 <br>
+	 * 但不会删除已经存在的部门信息
+	 */
+	private void syncLocalToUap(List<DDepartment> dDepartments) {
+		dDepartments.forEach(dDep -> {
+			com.dm.uap.entity.Department department = dDep.getDepartment();
+			if (Objects.isNull(department)) {
+				department = new com.dm.uap.entity.Department();
+			}
+			dDepartmentConverter.copyProperties(department, dDep);
+			dDep.setDepartment(department);
+		});
+		// 构建系统组织机构的层级关系
+		dDepartments.forEach(dDep -> {
+			if (!Objects.isNull(dDep.getParentid())) {
+				DDepartment dParent = dDepartmentRepository.getOne(dDep.getParentid());
+				dDep.getDepartment().setParent(dParent.getDepartment());
+			}
+		});
 	}
 
 	@Async
 	@Override
 	@Transactional
 	public void syncToUap() {
-		dDepartmentRepository.deleteAllInBatch();
-		dDepartmentService.fetchDDepartments();
-		// TODO Auto-generated method stub
-
+		// 抓取数据到本地库
+//		fetchDDepartments();
+		syncLocalToUap(fetchDDepartments());
 	}
 }

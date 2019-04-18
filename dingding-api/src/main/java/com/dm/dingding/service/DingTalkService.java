@@ -5,6 +5,7 @@ import java.util.List;
 import com.dm.dingding.model.UserInfo;
 import com.dm.dingding.model.response.AccessTokenResponse;
 import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
+import com.dm.dingding.model.response.OapiRoleListResponse.OpenRoleGroup;
 
 public interface DingTalkService {
 	/**
@@ -28,4 +29,6 @@ public interface DingTalkService {
 	 * @return
 	 */
 	public List<Department> fetchDepartments();
+
+	public List<OpenRoleGroup> fetchRoleGroups();
 }

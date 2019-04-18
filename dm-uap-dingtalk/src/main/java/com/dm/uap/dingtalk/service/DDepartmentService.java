@@ -27,9 +27,4 @@ public interface DDepartmentService {
 	 */
 	public void syncToUap();
 
-	/**
-	 * 从网络抓取用户到本地库
-	 */
-	public void fetchDDepartments();
-
 }

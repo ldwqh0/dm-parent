@@ -17,7 +17,7 @@ public class DDepartmentConverter {
 		entity.setSourceIdentifier(department.getSourceIdentifier());
 	}
 
-	public void copyProperties(com.dm.uap.entity.Department uDepartment, Department dep) {
+	public void copyProperties(com.dm.uap.entity.Department uDepartment, DDepartment dep) {
 		// uDepartment.setDescription();
 		uDepartment.setFullname(dep.getName());
 		// uDepartment.setOrder(order);

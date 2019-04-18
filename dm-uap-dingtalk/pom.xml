@@ -9,6 +9,7 @@
 	</parent>
 	<artifactId>dm-uap-dingtalk</artifactId>
 	<dependencies>
+
 		<dependency>
 			<groupId>com.dm</groupId>
 			<artifactId>dm-common</artifactId>
@@ -23,5 +24,14 @@
 			<groupId>com.dm</groupId>
 			<artifactId>dingding-api</artifactId>
 		</dependency>
+
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>

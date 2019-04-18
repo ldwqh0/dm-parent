@@ -5,18 +5,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.uap.dingtalk.service.DDepartmentService;
+import com.dm.dingding.service.DingTalkService;
+import com.dm.uap.dingtalk.service.DRoleGroupService;
 
 @RestController
-@RequestMapping("dDepartments")
-public class DDepartmentControlller {
+@RequestMapping("dRoleGroups")
+public class DRoleGroupController {
 
 	@Autowired
-	private DDepartmentService dDepartmentService;
+	private DRoleGroupService dRoleGroupService;
 
 	@PostMapping("sync")
 	public void sync() {
-		dDepartmentService.syncToUap();
+		dRoleGroupService.syncToUap();
 	}
 
 }

@@ -13,7 +13,9 @@ import com.dm.uap.entity.Department;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "d_department_")
+import static javax.persistence.CascadeType.*;
+
+@Entity(name = "dd_department_")
 @Getter
 @Setter
 public class DDepartment implements Serializable {
@@ -52,7 +54,7 @@ public class DDepartment implements Serializable {
 	/**
 	 * 一个钉钉部门对应的系统部门
 	 */
-	@OneToOne
+	@OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
 	@JoinColumn(name = "dm_department_id_")
 	public Department department;
 }
