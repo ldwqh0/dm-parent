@@ -17,7 +17,7 @@ public class DingServiceTest {
 
 	@Test
 	public void listDepartment() {
-		System.out.println(dingService.listDepartment());
+		System.out.println(dingService.fetchDepartments());
 	}
 
 }

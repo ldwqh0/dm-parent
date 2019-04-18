@@ -22,5 +22,10 @@ public interface DingTalkService {
 	 */
 	public UserInfo getUserInfoByUserid(String userid);
 
-	public List<Department> listDepartment();
+	/**
+	 * 获取部门列表信息
+	 * 
+	 * @return
+	 */
+	public List<Department> fetchDepartments();
 }

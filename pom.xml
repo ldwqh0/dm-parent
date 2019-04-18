@@ -160,6 +160,12 @@
 
 			<dependency>
 				<groupId>com.dm</groupId>
+				<artifactId>dm-uap-dingtalk</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.dm</groupId>
 				<artifactId>dm-autoconfigure</artifactId>
 				<version>${project.version}</version>
 			</dependency>

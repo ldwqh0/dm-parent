@@ -98,7 +98,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	}
 
 	@Override
-	public List<Department> listDepartment() {
+	public List<Department> fetchDepartments() {
 		String url = SERVER + "/department/list?access_token={0}";
 		OapiDepartmentListResponse response = restTemplate.getForObject(url, OapiDepartmentListResponse.class,
 				getAccessToken().getAccessToken());
