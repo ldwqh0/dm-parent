@@ -116,4 +116,10 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
 	public void syncToUap() {
 		syncLocalToUap(fetchRoleGroup());
 	}
+
+	@Override
+	@Transactional
+	public void deleteById(Long id) {
+		dRoleGroupRepository.deleteById(id);
+	}
 }

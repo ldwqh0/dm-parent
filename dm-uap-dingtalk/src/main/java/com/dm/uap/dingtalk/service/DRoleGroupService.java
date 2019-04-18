@@ -2,6 +2,8 @@ package com.dm.uap.dingtalk.service;
 
 public interface DRoleGroupService {
 
-	void syncToUap();
+	public void syncToUap();
+
+	public void deleteById(Long id);
 
 }
