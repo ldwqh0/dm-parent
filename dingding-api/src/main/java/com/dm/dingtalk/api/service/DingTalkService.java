@@ -1,10 +1,10 @@
-package com.dm.dingding.service;
+package com.dm.dingtalk.api.service;
 
 import java.util.List;
 
-import com.dm.dingding.model.UserInfo;
-import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
-import com.dm.dingding.model.response.OapiRoleListResponse.OpenRoleGroup;
+import com.dm.dingtalk.api.model.UserInfo;
+import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
+import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 
 public interface DingTalkService {
 	/**

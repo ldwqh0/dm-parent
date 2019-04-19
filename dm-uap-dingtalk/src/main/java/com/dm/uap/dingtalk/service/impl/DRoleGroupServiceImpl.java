@@ -11,9 +11,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dm.dingding.model.response.OapiRoleListResponse.OpenRole;
-import com.dm.dingding.model.response.OapiRoleListResponse.OpenRoleGroup;
-import com.dm.dingding.service.DingTalkService;
+import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRole;
+import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
+import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.uap.dingtalk.converter.DRoleConverter;
 import com.dm.uap.dingtalk.converter.DRoleGroupConverter;
 import com.dm.uap.dingtalk.entity.DRole;

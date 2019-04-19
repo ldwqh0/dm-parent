@@ -2,7 +2,7 @@ package com.dm.uap.dingtalk.service;
 
 import java.util.Collection;
 
-import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
+import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.uap.dingtalk.entity.DDepartment;
 
 public interface DDepartmentService {

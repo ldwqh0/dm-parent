@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
-import com.dm.dingding.service.DingTalkService;
+import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
+import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.uap.dingtalk.converter.DDepartmentConverter;
 import com.dm.uap.dingtalk.entity.DDepartment;
 import com.dm.uap.dingtalk.repository.DDepartmentRepository;

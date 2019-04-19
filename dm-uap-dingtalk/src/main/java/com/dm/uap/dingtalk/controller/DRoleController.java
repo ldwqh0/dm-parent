@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.dingding.service.DingTalkService;
+import com.dm.dingtalk.api.service.DingTalkService;
 
 @RestController
 @RequestMapping("dRoles")

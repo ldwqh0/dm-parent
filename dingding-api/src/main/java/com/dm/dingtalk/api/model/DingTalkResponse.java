@@ -1,4 +1,4 @@
-package com.dm.dingding.model;
+package com.dm.dingtalk.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

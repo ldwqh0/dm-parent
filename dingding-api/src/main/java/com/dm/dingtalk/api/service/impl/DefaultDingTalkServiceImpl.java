@@ -1,4 +1,4 @@
-package com.dm.dingding.service.impl;
+package com.dm.dingtalk.api.service.impl;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -9,15 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import com.dm.dingding.model.DingClientConfig;
-import com.dm.dingding.model.UserInfo;
-import com.dm.dingding.model.response.AccessTokenResponse;
-import com.dm.dingding.model.response.OapiDepartmentListResponse;
-import com.dm.dingding.model.response.OapiRoleListResponse;
-import com.dm.dingding.model.response.TaobaoResponse;
-import com.dm.dingding.model.response.OapiRoleListResponse.OpenRoleGroup;
-import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
-import com.dm.dingding.service.DingTalkService;
+import com.dm.dingtalk.api.model.DingClientConfig;
+import com.dm.dingtalk.api.model.UserInfo;
+import com.dm.dingtalk.api.response.AccessTokenResponse;
+import com.dm.dingtalk.api.response.OapiDepartmentListResponse;
+import com.dm.dingtalk.api.response.OapiRoleListResponse;
+import com.dm.dingtalk.api.response.TaobaoResponse;
+import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
+import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
+import com.dm.dingtalk.api.service.DingTalkService;
 
 public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
 	private RestTemplate restTemplate;

@@ -1,4 +1,4 @@
-package com.dm.dingding.model.response;
+package com.dm.dingtalk.api.response;
 
 import java.time.ZonedDateTime;
 import java.util.Objects;

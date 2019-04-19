@@ -10,9 +10,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.dm.dingding.model.DingClientConfig;
-import com.dm.dingding.service.DingTalkService;
-import com.dm.dingding.service.impl.DefaultDingTalkServiceImpl;
+import com.dm.dingtalk.api.model.DingClientConfig;
+import com.dm.dingtalk.api.service.DingTalkService;
+import com.dm.dingtalk.api.service.impl.DefaultDingTalkServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
