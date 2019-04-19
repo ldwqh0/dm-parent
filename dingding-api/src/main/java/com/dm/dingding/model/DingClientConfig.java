@@ -3,7 +3,7 @@ package com.dm.dingding.model;
 import java.util.HashMap;
 
 public class DingClientConfig extends HashMap<String, String> {
-	
+
 	private static final long serialVersionUID = -3492304173521281382L;
 
 	public DingClientConfig(String appkey, String appsecret) {

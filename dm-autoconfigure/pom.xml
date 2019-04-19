@@ -39,5 +39,10 @@
 			<artifactId>dm-authority-common</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dingding-api</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>
