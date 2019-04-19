@@ -3,6 +3,7 @@ package com.dm.dingtalk.api.request;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * TOP DingTalk-API: dingtalk.oapi.user.create request
@@ -28,7 +29,7 @@ public class OapiUserCreateRequest implements Serializable {
 	/**
 	 * 数组类型，数组里面值为整型，成员所属部门id列表
 	 */
-	private String department;
+	private List<Long> department;
 
 	/**
 	 * 在对应的部门中的排序, Map结构的json字符串, key是部门的Id, value是人员在这个部门的排序值

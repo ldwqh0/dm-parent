@@ -14,6 +14,11 @@ public abstract class TaobaoResponse implements Serializable {
 
 	private String code;
 
+	/**
+	 * errmsg
+	 */
+	private String errmsg;
+
 	private String message;
 
 	private String errorCode;
@@ -159,5 +164,13 @@ public abstract class TaobaoResponse implements Serializable {
 
 	public void setSubMessage(String subMessage) {
 		this.subMessage = subMessage;
+	}
+
+	public void setErrmsg(String errmsg) {
+		this.errmsg = errmsg;
+	}
+
+	public String getErrmsg() {
+		return this.errmsg;
 	}
 }

@@ -11,12 +11,16 @@ import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.model.UserInfo;
+import com.dm.dingtalk.api.request.OapiUserCreateRequest;
+import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.AccessTokenResponse;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse;
 import com.dm.dingtalk.api.response.OapiRoleListResponse;
 import com.dm.dingtalk.api.response.TaobaoResponse;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
+import com.dm.dingtalk.api.response.OapiUserCreateResponse;
+import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 import com.dm.dingtalk.api.service.DingTalkService;
 
 public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
@@ -117,7 +121,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	 */
 	private void checkResponse(TaobaoResponse response) {
 		if (!response.isSuccess()) {
-			throw new RuntimeException(response.getMessage());
+			throw new RuntimeException(response.getErrmsg());
 		}
 	}
 
@@ -128,5 +132,23 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 			this.restTemplate = new RestTemplate();
 		}
 		Assert.notNull(clientConfig, "The clientConfig can not be null");
+	}
+
+	@Override
+	public OapiUserCreateResponse createUser(OapiUserCreateRequest request) {
+		String url = SERVER + "/user/create?access_token={0}";
+		OapiUserCreateResponse response = restTemplate.postForObject(url, request, OapiUserCreateResponse.class,
+				getAccessToken());
+		checkResponse(response);
+		return response;
+	}
+
+	@Override
+	public OapiUserUpdateResponse updateUser(OapiUserUpdateRequest request) {
+		String url = SERVER + "/user/update?access_token={0}";
+		OapiUserUpdateResponse response = restTemplate.postForObject(url, request, OapiUserUpdateResponse.class,
+				getAccessToken());
+		checkResponse(response);
+		return response;
 	}
 }

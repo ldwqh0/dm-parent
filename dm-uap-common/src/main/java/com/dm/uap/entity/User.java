@@ -36,7 +36,6 @@ public class User extends AbstractEntity {
 	private String username;
 
 	@Column(name = "password_", length = 100)
-	@NotNull
 	private String password;
 
 	@Column(name = "expired_", nullable = false)
