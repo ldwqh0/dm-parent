@@ -24,8 +24,8 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 	@Autowired
 	private RoleConverter roleConverter;
 
-	@Autowired
-	private DepartmentConverter departmentConverter;
+//	@Autowired
+//	private DepartmentConverter departmentConverter;
 
 	public UserDetailsDto toUserDetailsDto(Optional<User> user) {
 		UserDetailsDto dto = null;
@@ -63,7 +63,6 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		dto.setScenicName(user.getScenicName());
 		dto.setRegionCode(user.getRegionCode());
 		Map<Department, String> _posts = user.getPosts();
-		// TODO 这里要解决职务模型问题
 		if (MapUtils.isNotEmpty(_posts)) {
 			Map<Long, String> posts = new HashMap<>();
 			_posts.entrySet().forEach(a -> {
