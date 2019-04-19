@@ -469,6 +469,7 @@ public class OapiUserGetResponse extends TaobaoResponse {
 		return this.workPlace;
 	}
 
+	@Override
 	public boolean isSuccess() {
 		return getErrcode() == null || getErrcode().equals(0L);
 	}

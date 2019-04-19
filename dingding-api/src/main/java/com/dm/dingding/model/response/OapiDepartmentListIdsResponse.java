@@ -42,6 +42,7 @@ public class OapiDepartmentListIdsResponse extends TaobaoResponse {
 		return this.subDeptIdList;
 	}
 
+	@Override
 	public boolean isSuccess() {
 		return getErrcode() == null || getErrcode().equals(0L);
 	}

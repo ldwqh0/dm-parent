@@ -14,8 +14,8 @@ import com.dm.dingding.model.UserInfo;
 import com.dm.dingding.model.response.AccessTokenResponse;
 import com.dm.dingding.model.response.OapiDepartmentListResponse;
 import com.dm.dingding.model.response.OapiRoleListResponse;
-import com.dm.dingding.model.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingding.model.response.TaobaoResponse;
+import com.dm.dingding.model.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingding.model.response.OapiDepartmentListResponse.Department;
 import com.dm.dingding.service.DingTalkService;
 
@@ -52,7 +52,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	 * @return
 	 */
 	@Override
-	public AccessTokenResponse getAccessToken() {
+	public String getAccessToken() {
 		if (!validateAccessToken(this.existToken)) {
 			synchronized (tokenLock) {
 				if (!validateAccessToken(existToken)) {
@@ -60,22 +60,13 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 				}
 			}
 		}
-		return existToken;
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		// 配置一个默认的restTemplate
-		if (Objects.isNull(restTemplate)) {
-			this.restTemplate = new RestTemplate();
-		}
-		Assert.notNull(clientConfig, "The clientConfig can not be null");
+		return existToken.getAccessToken();
 	}
 
 	@Override
 	public UserInfo getUserInfoByUserid(String userid) {
 		String url = SERVER + "/user/get?access_token={0}&userid={1}";
-		return restTemplate.getForObject(url, UserInfo.class, getAccessToken().getAccessToken(), userid);
+		return restTemplate.getForObject(url, UserInfo.class, getAccessToken(), userid);
 	}
 
 	/**
@@ -104,21 +95,38 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	public List<Department> fetchDepartments() {
 		String url = SERVER + "/department/list?access_token={0}";
 		OapiDepartmentListResponse response = restTemplate.getForObject(url, OapiDepartmentListResponse.class,
-				getAccessToken().getAccessToken());
+				getAccessToken());
+		checkResponse(response);
 		return response.getDepartment();
-	}
-
-	private void checkResponse(TaobaoResponse response) {
-//		if (!""  response.getCode()!==0) {
-//			
-//		}
 	}
 
 	@Override
 	public List<OpenRoleGroup> fetchRoleGroups() {
 		String url = SERVER + "/topapi/role/list?access_token={0}";
 		OapiRoleListResponse response = restTemplate.getForObject(url, OapiRoleListResponse.class,
-				getAccessToken().getAccessToken());
+				getAccessToken());
+		checkResponse(response);
 		return response.getResult().getList();
+	}
+
+	/**
+	 * 校验响应是否正确
+	 * 
+	 * 
+	 * @param response
+	 */
+	private void checkResponse(TaobaoResponse response) {
+		if (!response.isSuccess()) {
+			throw new RuntimeException(response.getMessage());
+		}
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// 配置一个默认的restTemplate
+		if (Objects.isNull(restTemplate)) {
+			this.restTemplate = new RestTemplate();
+		}
+		Assert.notNull(clientConfig, "The clientConfig can not be null");
 	}
 }

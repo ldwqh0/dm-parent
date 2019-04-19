@@ -52,6 +52,7 @@ public class OapiDepartmentListResponse extends TaobaoResponse {
 		return this.errmsg;
 	}
 
+	@Override
 	public boolean isSuccess() {
 		return getErrcode() == null || getErrcode().equals(0L);
 	}

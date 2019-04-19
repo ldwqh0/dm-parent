@@ -3,8 +3,6 @@ package com.dm.dingding.model.response;
 import java.io.Serializable;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * TOP DingTalk-API: dingtalk.oapi.role.list response.
  * 
@@ -54,6 +52,7 @@ public class OapiRoleListResponse extends TaobaoResponse {
 		return this.result;
 	}
 
+	@Override
 	public boolean isSuccess() {
 		return getErrcode() == null || getErrcode().equals(0L);
 	}
