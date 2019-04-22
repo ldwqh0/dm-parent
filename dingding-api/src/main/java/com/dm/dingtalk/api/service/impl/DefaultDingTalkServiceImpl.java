@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -140,7 +141,11 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		String url = SERVER + "/user/create?access_token={0}";
 		OapiUserCreateResponse response = restTemplate.postForObject(url, request, OapiUserCreateResponse.class,
 				getAccessToken());
-		checkResponse(response);
+		// 创建用户，如果用户已经存在于钉钉系统中了,不会做任何修改，但会返回返回已经存在的用户的userid
+		if (StringUtils.isNotEmpty(response.getUserid())) {
+		} else {
+			checkResponse(response);
+		}
 		return response;
 	}
 
