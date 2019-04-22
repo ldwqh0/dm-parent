@@ -2,7 +2,6 @@ package com.dm.dingtalk.api.service;
 
 import java.util.List;
 
-import com.dm.dingtalk.api.model.UserInfo;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
@@ -25,7 +24,7 @@ public interface DingTalkService {
 	 * @param userid
 	 * @return
 	 */
-	public UserInfo getUserInfoByUserid(String userid);
+//	public UserInfo getUserInfoByUserid(String userid);
 
 	/**
 	 * 获取部门列表信息

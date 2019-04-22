@@ -11,7 +11,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingtalk.api.model.DingClientConfig;
-import com.dm.dingtalk.api.model.UserInfo;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.AccessTokenResponse;
@@ -69,11 +68,11 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		return existToken.getAccessToken();
 	}
 
-	@Override
-	public UserInfo getUserInfoByUserid(String userid) {
-		String url = SERVER + "/user/get?access_token={0}&userid={1}";
-		return restTemplate.getForObject(url, UserInfo.class, getAccessToken(), userid);
-	}
+//	@Override
+//	public UserInfo getUserInfoByUserid(String userid) {
+//		String url = SERVER + "/user/get?access_token={0}&userid={1}";
+//		return restTemplate.getForObject(url, UserInfo.class, getAccessToken(), userid);
+//	}
 
 	/**
 	 * 从服务器获取AccessToken
