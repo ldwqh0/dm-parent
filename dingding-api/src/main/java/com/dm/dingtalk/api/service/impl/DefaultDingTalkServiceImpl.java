@@ -20,6 +20,7 @@ import com.dm.dingtalk.api.response.TaobaoResponse;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.response.OapiUserCreateResponse;
+import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 import com.dm.dingtalk.api.service.DingTalkService;
 
@@ -148,6 +149,15 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		String url = SERVER + "/user/update?access_token={0}";
 		OapiUserUpdateResponse response = restTemplate.postForObject(url, request, OapiUserUpdateResponse.class,
 				getAccessToken());
+		checkResponse(response);
+		return response;
+	}
+
+	@Override
+	public OapiUserGetuserinfoResponse getUserByAuthCode(String authCode) {
+		String url = SERVER + "/user/getuserinfo?access_token={0}&code={1}";
+		OapiUserGetuserinfoResponse response = restTemplate.getForObject(url, OapiUserGetuserinfoResponse.class,
+				getAccessToken(), authCode);
 		checkResponse(response);
 		return response;
 	}

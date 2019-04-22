@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DingTalkAuthcodeAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-	protected DingTalkAuthcodeAuthenticationProcessingFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+	public DingTalkAuthcodeAuthenticationProcessingFilter() {
 		super(new AntPathRequestMatcher("/login/dingtalk", "POST"));
 	}
 

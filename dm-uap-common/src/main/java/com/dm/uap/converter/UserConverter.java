@@ -27,7 +27,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 //	@Autowired
 //	private DepartmentConverter departmentConverter;
 
-	public UserDetailsDto toUserDetailsDto(Optional<User> user) {
+	public <T extends User> UserDetailsDto toUserDetailsDto(Optional<T> user) {
 		UserDetailsDto dto = null;
 		if (user.isPresent()) {
 			User user_ = user.get();
