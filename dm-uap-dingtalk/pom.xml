@@ -22,7 +22,7 @@
 
 		<dependency>
 			<groupId>com.dm</groupId>
-			<artifactId>dingding-api</artifactId>
+			<artifactId>dm-dingding-api</artifactId>
 		</dependency>
 
 	</dependencies>

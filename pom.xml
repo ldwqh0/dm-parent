@@ -34,10 +34,10 @@
 		<!-- 自动配置工具 -->
 		<module>dm-autoconfigure</module>
 		<!-- 钉钉API模块 -->
-		<module>dingding-api</module>
+		<module>dm-dingding-api</module>
 		<!-- 钉钉API和用户鉴权模块 -->
 		<module>dm-uap-dingtalk</module>
-		
+
 		<module>dm-resource-server-spring-boot-starter</module>
 		<module>dm-security-spring-boot-starter</module>
 	</modules>
@@ -150,7 +150,7 @@
 
 			<dependency>
 				<groupId>com.dm</groupId>
-				<artifactId>dingding-api</artifactId>
+				<artifactId>dm-dingding-api</artifactId>
 				<version>${dm.version}</version>
 			</dependency>
 
