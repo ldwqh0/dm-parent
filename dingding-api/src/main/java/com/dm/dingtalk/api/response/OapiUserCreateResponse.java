@@ -36,6 +36,7 @@ public class OapiUserCreateResponse extends TaobaoResponse {
 		return this.userid;
 	}
 
+	@Override
 	public boolean isSuccess() {
 		return getErrcode() == null || getErrcode().equals(0L);
 	}

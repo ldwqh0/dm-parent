@@ -24,6 +24,7 @@ public class OapiUserUpdateResponse extends TaobaoResponse {
 		return this.errcode;
 	}
 
+	@Override
 	public boolean isSuccess() {
 		return getErrcode() == null || getErrcode().equals(0L);
 	}

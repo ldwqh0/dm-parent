@@ -44,10 +44,12 @@ public class OapiDepartmentListResponse extends TaobaoResponse {
 		return this.errcode;
 	}
 
+	@Override
 	public void setErrmsg(String errmsg) {
 		this.errmsg = errmsg;
 	}
 
+	@Override
 	public String getErrmsg() {
 		return this.errmsg;
 	}
