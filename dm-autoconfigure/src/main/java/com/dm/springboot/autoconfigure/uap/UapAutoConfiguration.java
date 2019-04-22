@@ -31,6 +31,7 @@ import com.dm.uap.service.UserService;
 @EnableConfigurationProperties({ DefaultUserProperties.class })
 public class UapAutoConfiguration {
 
+	
 	@Autowired
 	private DefaultUserProperties defaultUser;
 

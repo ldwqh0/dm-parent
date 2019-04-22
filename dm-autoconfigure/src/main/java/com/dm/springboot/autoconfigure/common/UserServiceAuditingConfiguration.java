@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnBean(UserService.class)
 public class UserServiceAuditingConfiguration {
 	@Bean
+	@ConditionalOnMissingBean(AuditorAware.class)
 	public AuditorAware<User> auditorAware(@Autowired UserService userService) {
 		log.info("create default auditorAware");
 		return new AuditorAware<User>() {
