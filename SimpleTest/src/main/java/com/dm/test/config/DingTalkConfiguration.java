@@ -4,9 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import com.dm.dingding.model.DingClientConfig;
-import com.dm.dingding.service.DingTalkService;
-import com.dm.dingding.service.impl.DefaultDingTalkServiceImpl;
+import com.dm.dingtalk.api.model.DingClientConfig;
+import com.dm.dingtalk.api.service.DingTalkService;
+import com.dm.dingtalk.api.service.impl.DefaultDingTalkServiceImpl;
 
 @Configuration
 public class DingTalkConfiguration {

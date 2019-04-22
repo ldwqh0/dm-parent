@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import com.dm.dingding.service.DingTalkService;
+import com.dm.dingtalk.api.service.DingTalkService;
 
 @SpringBootApplication
 @EntityScan
