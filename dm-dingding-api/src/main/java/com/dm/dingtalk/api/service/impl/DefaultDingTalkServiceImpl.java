@@ -20,6 +20,8 @@ import com.dm.dingtalk.api.response.TaobaoResponse;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.response.OapiUserCreateResponse;
+import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
+import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 import com.dm.dingtalk.api.service.DingTalkService;
@@ -162,6 +164,24 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		String url = SERVER + "/user/getuserinfo?access_token={0}&code={1}";
 		OapiUserGetuserinfoResponse response = restTemplate.getForObject(url, OapiUserGetuserinfoResponse.class,
 				getAccessToken(), authCode);
+		checkResponse(response);
+		return response;
+	}
+
+	@Override
+	public OapiUserGetDeptMemberResponse fetchUsers(Long depId) {
+		String url = SERVER + "/user/getDeptMember?access_token={0}&deptId={1}";
+		OapiUserGetDeptMemberResponse response = restTemplate.getForObject(url, OapiUserGetDeptMemberResponse.class,
+				getAccessToken(), depId);
+		checkResponse(response);
+		return response;
+	}
+
+	@Override
+	public OapiUserGetResponse fetchUserById(String userid) {
+		String url = SERVER + "/user/get?access_token={0}&userid={1}";
+		OapiUserGetResponse response = restTemplate.getForObject(url, OapiUserGetResponse.class, getAccessToken(),
+				userid);
 		checkResponse(response);
 		return response;
 	}

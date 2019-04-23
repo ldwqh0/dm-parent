@@ -7,6 +7,8 @@ import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.response.OapiUserCreateResponse;
+import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
+import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 
@@ -46,4 +48,9 @@ public interface DingTalkService {
 	 * @return
 	 */
 	public OapiUserGetuserinfoResponse getUserByAuthCode(String authCode);
+
+	public OapiUserGetDeptMemberResponse fetchUsers(Long depId);
+
+	public OapiUserGetResponse fetchUserById(String userid);
+
 }
