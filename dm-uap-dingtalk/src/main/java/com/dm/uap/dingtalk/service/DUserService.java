@@ -10,21 +10,6 @@ public interface DUserService {
 	public void sync();
 
 	/**
-	 * 创建一个用户，并将用户信息同步保存到钉钉服务器
-	 * 
-	 * @return
-	 */
-	public DUser createUser(DUser dUser);
-
-	/**
-	 * 更新一个钉钉用户，并将用户信息同步到钉钉服务器
-	 * 
-	 * @param dUser
-	 * @return
-	 */
-	public DUser updateUser(DUser dUser);
-
-	/**
 	 * 根据情况创建或跟新一个钉钉用户信息,<br>
 	 * 
 	 * 如果在系统中不存在相关的用户信息，则创建一条记录，如果已经存在，则更新已经存在的记录<br>
@@ -34,7 +19,7 @@ public interface DUserService {
 	 * @param dUser
 	 * @return
 	 */
-	public DUser createOrUpdate(DUser dUser);
+	public DUser save(DUser dUser);
 
 //	public Duser save();
 

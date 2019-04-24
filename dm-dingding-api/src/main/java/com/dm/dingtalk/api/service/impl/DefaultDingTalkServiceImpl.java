@@ -173,7 +173,8 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		String url = SERVER + "/user/getDeptMember?access_token={0}&deptId={1}";
 		OapiUserGetDeptMemberResponse response = restTemplate.getForObject(url, OapiUserGetDeptMemberResponse.class,
 				getAccessToken(), depId);
-		checkResponse(response);
+		// TODO 这里暂时不能检测响应结果
+//		checkResponse(response);
 		return response;
 	}
 

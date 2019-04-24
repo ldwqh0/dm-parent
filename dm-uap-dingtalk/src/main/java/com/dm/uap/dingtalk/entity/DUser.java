@@ -33,13 +33,12 @@ import static javax.persistence.CascadeType.*;
 public class DUser implements Serializable {
 
 	private static final long serialVersionUID = -6763998745823230765L;
-
-	@Column(name = "unionid_")
-	private String unionid;
-
 	@Id
 	@Column(name = "userid_")
 	private String userid;
+	
+	@Column(name = "unionid_")
+	private String unionid;
 
 	@Column(name = "name_")
 	private String name;

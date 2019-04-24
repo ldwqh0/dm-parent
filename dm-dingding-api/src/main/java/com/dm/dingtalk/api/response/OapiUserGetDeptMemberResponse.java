@@ -35,10 +35,12 @@ public class OapiUserGetDeptMemberResponse extends TaobaoResponse {
 		return this.errcode;
 	}
 
+	@Override
 	public void setErrmsg(String errmsg) {
 		this.errmsg = errmsg;
 	}
 
+	@Override
 	public String getErrmsg() {
 		return this.errmsg;
 	}
@@ -51,6 +53,7 @@ public class OapiUserGetDeptMemberResponse extends TaobaoResponse {
 		return this.userIds;
 	}
 
+	@Override
 	public boolean isSuccess() {
 		return getErrcode() == null || getErrcode().equals(0L);
 	}

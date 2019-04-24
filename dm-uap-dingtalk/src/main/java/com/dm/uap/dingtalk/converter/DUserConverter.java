@@ -11,6 +11,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
+import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.uap.dingtalk.entity.DDepartment;
 import com.dm.uap.dingtalk.entity.DUser;
@@ -24,17 +25,17 @@ public class DUserConverter {
 		dUser.setAdmin(rsp.getIsAdmin());
 		dUser.setAvatar(rsp.getAvatar());
 		dUser.setBoss(rsp.getIsBoss());
-//dUser.setDepartments(departments);
+		// dUser.setDepartments(departments);
 		dUser.setEmail(rsp.getEmail());
 		dUser.setHide(rsp.getIsHide());
 		if (!Objects.isNull(rsp.getHiredDate())) {
 			dUser.setHiredDate(ZonedDateTime.ofInstant(rsp.getHiredDate().toInstant(), ZoneId.systemDefault()));
 		}
-//		dUser.setIsLeaderInDepts(isLeaderInDepts);
+		// dUser.setIsLeaderInDepts(isLeaderInDepts);
 		dUser.setJobnumber(rsp.getJobnumber());
 		dUser.setMobile(rsp.getMobile());
 		dUser.setName(rsp.getName());
-//		dUser.setOrderInDepts();
+		// dUser.setOrderInDepts();
 		dUser.setOrgEmail(rsp.getOrgEmail());
 		dUser.setPosition(rsp.getPosition());
 		dUser.setRemark(rsp.getRemark());
@@ -51,21 +52,17 @@ public class DUserConverter {
 		user.setCredentialsExpired(Boolean.FALSE);
 		user.setDescription(dUser.getRemark());
 		user.setEmail(dUser.getEmail());
-
 		user.setEnabled(Boolean.FALSE);
 		user.setFullname(dUser.getName());
 		user.setLocked(Boolean.FALSE);
 		user.setMobile(dUser.getMobile());
-//		user.setOrders(orders);
-//		user.setPosts(posts);
 		user.setRegionCode(dUser.getStateCode());
-		// 将钉钉的userid映射为用户名
 		user.setUsername(dUser.getUserid());
 	}
 
 	public OapiUserCreateRequest toOapiUserCreateRequest(DUser dUser) {
 		OapiUserCreateRequest request = new OapiUserCreateRequest();
-		//TODO 这里仅仅设置用户的必要信息
+		// 这里仅仅设置用户的必要信息
 		request.setMobile(dUser.getMobile());
 		request.setName(dUser.getName());
 		request.setUserid(dUser.getUserid());
@@ -75,6 +72,12 @@ public class DUserConverter {
 			List<Long> departments = dDepartments.stream().map(DDepartment::getId).collect(Collectors.toList());
 			request.setDepartment(departments);
 		}
+		// TODO 还要设置orderindepts
 		return request;
+	}
+
+	public OapiUserUpdateRequest toOapiUserUpdateRequest(DUser duser) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
