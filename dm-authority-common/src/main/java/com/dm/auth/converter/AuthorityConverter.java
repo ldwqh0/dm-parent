@@ -28,7 +28,7 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
 	}
 
 	@Override
-	public void copyProperties(Authority model, AuthorityDto dto) {
+	public Authority copyProperties(Authority model, AuthorityDto dto) {
 		throw new NotImplementedException("该方法未实现");
 	}
 

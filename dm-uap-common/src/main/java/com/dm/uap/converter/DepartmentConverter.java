@@ -32,10 +32,12 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 	}
 
 	@Override
-	public void copyProperties(Department model, DepartmentDto dto) {
+	public Department copyProperties(Department model, DepartmentDto dto) {
 		model.setFullname(dto.getFullname());
 		model.setShortName(dto.getShortname());
 		model.setDescription(dto.getDescription());
+		return model;
+
 	}
 
 	/**

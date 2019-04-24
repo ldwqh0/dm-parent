@@ -34,7 +34,7 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 	}
 
 	@Override
-	public void copyProperties(Region model, RegionDto dto) {
+	public Region copyProperties(Region model, RegionDto dto) {
 		model.setCode(dto.getCode());
 		model.setName(dto.getName());
 		model.setLatitude(dto.getLatitude());
@@ -44,6 +44,7 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 			this.copyProperties(regionParent, dto.getParentCode());
 			model.setParentCode(regionParent);
 		}
+		return model;
 	}
 
 	public List<RegionTreeDto> toTreeDto(List<Region> regions) {

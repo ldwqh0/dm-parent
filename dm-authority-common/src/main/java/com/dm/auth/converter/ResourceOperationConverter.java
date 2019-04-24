@@ -26,11 +26,12 @@ public class ResourceOperationConverter extends AbstractConverter<ResourceOperat
 	}
 
 	@Override
-	public void copyProperties(ResourceOperation model, ResourceOperationDto dto) {
+	public ResourceOperation copyProperties(ResourceOperation model, ResourceOperationDto dto) {
 		model.setSaveable(dto.getSaveable());
 		model.setDeleteable(dto.getDeleteable());
 		model.setReadable(dto.getReadable());
 		model.setUpdateable(dto.getUpdateable());
+		return model;
 	}
 
 	public ResourceOperationDto toDto(Resource resource) {

@@ -68,6 +68,6 @@ public abstract class AbstractConverter<M, DTO> {
 	 * @param model
 	 * @param dto
 	 */
-	public abstract void copyProperties(M model, DTO dto);
+	public abstract M copyProperties(M model, DTO dto);
 
 }

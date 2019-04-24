@@ -34,18 +34,18 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
 		dto.setDescription(role.getDescription());
 		dto.setGroup(roleGroupConverter.toDto(role.getGroup()));
 		// 角色信息不包括用户信息
- 		// dto.setUsers(userConverter.toDto(role.getUsers()));
+		// dto.setUsers(userConverter.toDto(role.getUsers()));
 		return dto;
 	}
 
 	@Override
-	public void copyProperties(Role role, RoleDto roleDto) {
+	public Role copyProperties(Role role, RoleDto roleDto) {
 		if (role != null && roleDto != null) {
 			role.setName(roleDto.getName());
 			role.setDescription(roleDto.getDescription());
 			role.setState(roleDto.getState());
 		}
-
+		return role;
 	}
 
 	public List<? extends GrantedAuthorityDto> toGrantedAuthorityDto(List<Role> roles) {

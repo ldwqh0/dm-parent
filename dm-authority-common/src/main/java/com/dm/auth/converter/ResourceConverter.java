@@ -22,12 +22,13 @@ public class ResourceConverter extends AbstractConverter<Resource, ResourceDto> 
 	}
 
 	@Override
-	public void copyProperties(Resource model, ResourceDto dto) {
+	public Resource copyProperties(Resource model, ResourceDto dto) {
 		model.setMatcher(dto.getMatcher());
 		model.setDescription(dto.getDescription());
 		model.setName(dto.getName());
 		model.setMatchType(dto.getMatchType());
 		model.setScope(dto.getScope());
+		return model;
 	}
 
 }

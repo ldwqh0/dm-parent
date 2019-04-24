@@ -2,8 +2,10 @@ package com.dm.uap.dingtalk.entity;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -12,11 +14,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.dm.uap.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import static javax.persistence.CascadeType.*;
 
 @Entity(name = "dd_user_")
 @Getter
@@ -87,7 +96,7 @@ public class DUser implements Serializable {
 	}, inverseJoinColumns = {
 			@JoinColumn(name = "dd_department_id_")
 	})
-	private List<DDepartment> departments;
+	private Set<DDepartment> departments;
 
 	@Column(name = "position_")
 	private String position;
@@ -106,6 +115,40 @@ public class DUser implements Serializable {
 
 	@Column(name = "state_code_")
 	private String stateCode;
+
+	@ManyToMany
+	@JoinTable(name = "dd_role_user_", joinColumns = {
+			@JoinColumn(name = "dd_user_id_")
+	}, inverseJoinColumns = {
+			@JoinColumn(name = "dd_role_id_")
+	})
+	private Set<DRole> roles;
+
+	@OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
+	@JoinColumn(name = "dm_user_id_")
+	private User user;
+
+//	@Transient
+//	private String password;
+
+	/**
+	 * 这两个个字段仅仅在数据传输的过程中使用,用于{@link DUser}向{@link User}的传输，不会存储实体
+	 */
+	@Transient
+	private Map<DDepartment, String> posts;
+
+	public void setPosts(Map<DDepartment, String> posts) {
+		this.posts = posts;
+		Set<Entry<DDepartment, String>> postEntry = posts.entrySet();
+		String pos = null;
+		Set<DDepartment> departments = new HashSet<DDepartment>();
+		for (Entry<DDepartment, String> entry : postEntry) {
+			if (StringUtils.isBlank(pos)) {
+				pos = entry.getValue();
+			}
+			departments.add(entry.getKey());
+		}
+	}
 
 	public DUser() {
 		super();

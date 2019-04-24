@@ -10,10 +10,10 @@ import com.dm.uap.dingtalk.service.DUserService;
 @RestController
 @RequestMapping("dUsers")
 public class DUserController {
-	
+
 	@Autowired
 	private DUserService dUserService;
-	
+
 	@PostMapping("sync")
 	public void async() {
 		dUserService.sync();

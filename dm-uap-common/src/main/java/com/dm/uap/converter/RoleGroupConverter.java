@@ -19,9 +19,10 @@ public class RoleGroupConverter extends AbstractConverter<RoleGroup, RoleGroupDt
 	}
 
 	@Override
-	public void copyProperties(RoleGroup model, RoleGroupDto dto) {
+	public RoleGroup copyProperties(RoleGroup model, RoleGroupDto dto) {
 		model.setDescription(dto.getDescription());
 		model.setName(dto.getName());
+		return model;
 	}
 
 }

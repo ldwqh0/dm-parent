@@ -77,7 +77,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 	}
 
 	@Override
-	public void copyProperties(Menu model, MenuDto dto) {
+	public Menu copyProperties(Menu model, MenuDto dto) {
 		model.setName(dto.getName());
 		model.setTitle(dto.getTitle());
 		model.setEnabled(dto.getEnabled());
@@ -85,6 +85,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 		model.setIcon(dto.getIcon());
 		model.setDescription(dto.getDescription());
 		model.setType(dto.getType());
+		return model;
 	}
 
 }

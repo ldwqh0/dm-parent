@@ -78,7 +78,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 	}
 
 	@Override
-	public void copyProperties(User user, UserDto userDto) {
+	public User copyProperties(User user, UserDto userDto) {
 		if (!Objects.isNull(user) && !Objects.isNull(userDto)) {
 			user.setEnabled(userDto.getEnabled());
 			user.setUsername(userDto.getUsername());
@@ -89,6 +89,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			user.setScenicName(userDto.getScenicName());
 			user.setRegionCode(userDto.getRegionCode());
 		}
+		return user;
 	}
 
 }

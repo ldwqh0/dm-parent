@@ -2,12 +2,19 @@ package com.dm.uap.dingtalk.converter;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
+import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.response.OapiUserGetResponse;
+import com.dm.uap.dingtalk.entity.DDepartment;
 import com.dm.uap.dingtalk.entity.DUser;
+import com.dm.uap.entity.User;
 
 @Component
 public class DUserConverter {
@@ -37,5 +44,37 @@ public class DUserConverter {
 		dUser.setUnionid(rsp.getUnionid());
 		dUser.setUserid(rsp.getUserid());
 		dUser.setWorkPlace(rsp.getWorkPlace());
+	}
+
+	public void copyProperties(User user, DUser dUser) {
+		user.setAccountExpired(Boolean.FALSE);
+		user.setCredentialsExpired(Boolean.FALSE);
+		user.setDescription(dUser.getRemark());
+		user.setEmail(dUser.getEmail());
+
+		user.setEnabled(Boolean.FALSE);
+		user.setFullname(dUser.getName());
+		user.setLocked(Boolean.FALSE);
+		user.setMobile(dUser.getMobile());
+//		user.setOrders(orders);
+//		user.setPosts(posts);
+		user.setRegionCode(dUser.getStateCode());
+		// 将钉钉的userid映射为用户名
+		user.setUsername(dUser.getUserid());
+	}
+
+	public OapiUserCreateRequest toOapiUserCreateRequest(DUser dUser) {
+		OapiUserCreateRequest request = new OapiUserCreateRequest();
+		//TODO 这里仅仅设置用户的必要信息
+		request.setMobile(dUser.getMobile());
+		request.setName(dUser.getName());
+		request.setUserid(dUser.getUserid());
+		request.setPosition(dUser.getPosition());
+		Set<DDepartment> dDepartments = dUser.getDepartments();
+		if (CollectionUtils.isNotEmpty(dDepartments)) {
+			List<Long> departments = dDepartments.stream().map(DDepartment::getId).collect(Collectors.toList());
+			request.setDepartment(departments);
+		}
+		return request;
 	}
 }
