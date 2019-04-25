@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.omg.CORBA.Request;
 import org.springframework.stereotype.Component;
 
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
@@ -43,7 +44,7 @@ public class DUserConverter {
 		dUser.setStateCode(rsp.getStateCode());
 		dUser.setTel(rsp.getTel());
 		dUser.setUnionid(rsp.getUnionid());
-		dUser.setUserid(rsp.getUserid());
+
 		dUser.setWorkPlace(rsp.getWorkPlace());
 	}
 
@@ -67,6 +68,8 @@ public class DUserConverter {
 		request.setName(dUser.getName());
 		request.setUserid(dUser.getUserid());
 		request.setPosition(dUser.getPosition());
+		request.setEmail(dUser.getEmail());
+		request.setJobnumber(dUser.getJobnumber());
 		Set<DDepartment> dDepartments = dUser.getDepartments();
 		if (CollectionUtils.isNotEmpty(dDepartments)) {
 			List<Long> departments = dDepartments.stream().map(DDepartment::getId).collect(Collectors.toList());
@@ -76,8 +79,19 @@ public class DUserConverter {
 		return request;
 	}
 
-	public OapiUserUpdateRequest toOapiUserUpdateRequest(DUser duser) {
-		// TODO Auto-generated method stub
-		return null;
+	public OapiUserUpdateRequest toOapiUserUpdateRequest(DUser dUser) {
+		OapiUserUpdateRequest request = new OapiUserUpdateRequest(dUser.getUserid());
+		request.setMobile(dUser.getMobile());
+		request.setName(dUser.getName());
+		request.setPosition(dUser.getPosition());
+		request.setRemark(dUser.getRemark());
+		request.setEmail(dUser.getEmail());
+		request.setJobnumber(dUser.getJobnumber());
+		Set<DDepartment> dDepartments = dUser.getDepartments();
+		if (CollectionUtils.isNotEmpty(dDepartments)) {
+			List<Long> departments = dDepartments.stream().map(DDepartment::getId).collect(Collectors.toList());
+			request.setDepartment(departments);
+		}
+		return request;
 	}
 }

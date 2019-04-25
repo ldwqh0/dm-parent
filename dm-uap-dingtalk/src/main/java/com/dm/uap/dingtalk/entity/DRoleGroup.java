@@ -33,4 +33,18 @@ public class DRoleGroup {
 	@OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
 	@JoinColumn(name = "dm_group_id")
 	private RoleGroup group;
+
+	public DRoleGroup(Long id) {
+		super();
+		this.id = id;
+	}
+
+	public DRoleGroup() {
+		super();
+	}
+
+	void setId(Long id) {
+		this.id = id;
+	}
+
 }

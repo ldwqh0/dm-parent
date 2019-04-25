@@ -126,11 +126,14 @@ public class DUserServiceImpl implements DUserService {
 		dUserConverter.copyProperties(user, dUser);
 		// 设置部门顺序
 		Map<DDepartment, Long> _orders = dUser.getOrderInDepts();
-		Map<Department, Long> orders = new HashMap<>();
-		_orders.entrySet().forEach(e -> {
-			orders.put(e.getKey().getDepartment(), e.getValue());
-		});
-		user.setOrders(orders);
+		if (MapUtils.isNotEmpty(_orders)) {
+			Map<Department, Long> orders = new HashMap<>();
+			_orders.entrySet().forEach(e -> {
+				orders.put(e.getKey().getDepartment(), e.getValue());
+			});
+			user.setOrders(orders);
+		}
+	
 
 		// 设置职务信息
 		Map<Department, String> post = new HashMap<Department, String>();
@@ -160,10 +163,8 @@ public class DUserServiceImpl implements DUserService {
 				.collect(Collectors.toSet());
 		dUserRepository.deleteByIdNotIn(userIds); // 删除在本地数据库中存在，但不存在于钉钉服务器上的数据
 		List<DUser> users = userIds.stream()
-				// 根据本地数据中是否存在相关用户信息，决定是创建还是新增相关钉钉用户信息
-				.map(userId -> dUserRepository.existsById(userId) ? dUserRepository.getOne(userId) : new DUser(userId))
 				// 将从服务器上抓取的数据，复制到本地数据库中
-				.map(dUser -> copyProperties(dUser, dingTalkService.fetchUserById(dUser.getUserid())))
+				.map(userid -> copyProperties(new DUser(userid), dingTalkService.fetchUserById(userid)))
 				.collect(Collectors.toList());
 		// 保存所有用户信息
 		return dUserRepository.saveAll(users);

@@ -57,4 +57,17 @@ public class DDepartment implements Serializable {
 	@OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
 	@JoinColumn(name = "dm_department_id_")
 	public Department department;
+
+	public DDepartment() {
+		super();
+	}
+
+	public DDepartment(Long id) {
+		super();
+		this.id = id;
+	}
+
+	void setId(Long id) {
+		this.id = id;
+	}
 }

@@ -33,4 +33,17 @@ public class DRole {
 	@JoinColumn(name = "dd_group_id_")
 	private DRoleGroup group;
 
+	public DRole() {
+		super();
+	}
+
+	public DRole(Long id) {
+		super();
+		this.id = id;
+	}
+
+	void setId(Long id) {
+		this.id = id;
+	}
+
 }

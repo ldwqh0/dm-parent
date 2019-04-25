@@ -8,21 +8,22 @@ import com.dm.uap.dingtalk.entity.DDepartment;
 @Component
 public class DDepartmentConverter {
 
-	public void copyProperties(DDepartment entity, Department department) {
+	public DDepartment copyProperties(DDepartment entity, Department department) {
 		entity.setAutoAddUser(department.getAutoAddUser());
 		entity.setCreateDeptGroup(department.getCreateDeptGroup());
-		entity.setId(department.getId());
 		entity.setName(department.getName());
 		entity.setParentid(department.getParentid());
 		entity.setSourceIdentifier(department.getSourceIdentifier());
+		return entity;
 	}
 
-	public void copyProperties(com.dm.uap.entity.Department uDepartment, DDepartment dep) {
+	public com.dm.uap.entity.Department copyProperties(com.dm.uap.entity.Department uDepartment, DDepartment dep) {
 		// uDepartment.setDescription();
 		uDepartment.setFullname(dep.getName());
 		// uDepartment.setOrder(order);
 		// uDepartment.setParent();
 		uDepartment.setShortName(dep.getName());
+		return uDepartment;
 	}
 
 }

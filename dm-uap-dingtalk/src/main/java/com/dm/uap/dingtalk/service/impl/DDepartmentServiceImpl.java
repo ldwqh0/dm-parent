@@ -52,13 +52,10 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 		dDepartmentRepository.deleteByIdNotIn(exists);
 
 		// 将抓取到的数据映射为实体
-		List<DDepartment> dDepartments_ = departments.stream().map(_department -> {
-			DDepartment dDepartment_ = dDepartmentRepository.existsById(_department.getId())
-					? dDepartmentRepository.getOne(_department.getId())
-					: new DDepartment();
-			dDepartmentConverter.copyProperties(dDepartment_, _department);
-			return dDepartment_;
-		}).collect(Collectors.toList());
+		List<DDepartment> dDepartments_ = departments.stream()
+				.map(_department -> dDepartmentConverter.copyProperties(new DDepartment(_department.getId()),
+						_department))
+				.collect(Collectors.toList());
 		return dDepartmentRepository.saveAll(dDepartments_);
 	}
 

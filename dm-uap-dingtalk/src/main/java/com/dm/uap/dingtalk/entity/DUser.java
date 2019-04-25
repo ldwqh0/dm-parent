@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -36,7 +37,7 @@ public class DUser implements Serializable {
 	@Id
 	@Column(name = "userid_")
 	private String userid;
-	
+
 	@Column(name = "unionid_")
 	private String unionid;
 
@@ -147,6 +148,8 @@ public class DUser implements Serializable {
 			}
 			departments.add(entry.getKey());
 		}
+		this.position = pos;
+		this.departments = departments;
 	}
 
 	public DUser() {
@@ -156,6 +159,14 @@ public class DUser implements Serializable {
 	public DUser(String userid) {
 		super();
 		this.userid = userid;
+	}
+
+	public void setUserid(String userid) {
+		if (StringUtils.isBlank(this.userid)) {
+			this.userid = userid;
+		} else if (!Objects.equals(this.userid, userid)) {
+			throw new UnsupportedOperationException("you can not change the userid");
+		}
 	}
 
 }
