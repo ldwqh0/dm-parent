@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.omg.CORBA.Request;
 import org.springframework.stereotype.Component;
 
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
