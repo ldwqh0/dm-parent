@@ -1,7 +1,9 @@
 package com.dm.dingtalk.api.service;
 
+import java.util.Collection;
 import java.util.List;
 
+import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
@@ -12,6 +14,12 @@ import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 
+/**
+ * 钉钉服务器交互API
+ * 
+ * @author LiDong
+ *
+ */
 public interface DingTalkService {
 	/**
 	 * 获取accessToken
@@ -35,10 +43,27 @@ public interface DingTalkService {
 	 */
 	public List<Department> fetchDepartments();
 
+	/**
+	 * 获取角色组
+	 * 
+	 * @return
+	 */
 	public List<OpenRoleGroup> fetchRoleGroups();
 
+	/**
+	 * 创建一个钉钉用户
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public OapiUserCreateResponse createUser(OapiUserCreateRequest request);
 
+	/**
+	 * 更新一个钉钉用户
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public OapiUserUpdateResponse updateUser(OapiUserUpdateRequest request);
 
 	/**
@@ -49,8 +74,22 @@ public interface DingTalkService {
 	 */
 	public OapiUserGetuserinfoResponse getUserByAuthCode(String authCode);
 
+	/**
+	 * 获取一个部门的用户列表
+	 * 
+	 * @param depId
+	 * @return
+	 */
 	public OapiUserGetDeptMemberResponse fetchUsers(Long depId);
 
+	/**
+	 * 获取一个用户的信息
+	 * 
+	 * @param userid
+	 * @return
+	 */
 	public OapiUserGetResponse fetchUserById(String userid);
+
+	public OapiRoleAddrolesforempsResponse batchSetUserRole(Collection<String> userIds, Collection<Long> roleIds);
 
 }

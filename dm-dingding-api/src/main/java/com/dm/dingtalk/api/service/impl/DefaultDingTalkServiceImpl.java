@@ -1,6 +1,7 @@
 package com.dm.dingtalk.api.service.impl;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
+import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
 import com.dm.dingtalk.api.model.DingClientConfig;
+import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.AccessTokenResponse;
@@ -184,6 +187,16 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 				userid);
 		// TODO 这里暂时不能检测响应结果
 //		checkResponse(response);
+		return response;
+	}
+
+	@Override
+	public OapiRoleAddrolesforempsResponse batchSetUserRole(Collection<String> userIds, Collection<Long> roleIds) {
+		String url = SERVER + "/topapi/role/addrolesforemps?access_token={0}";
+		OapiRoleAddrolesforempsRequest request = new OapiRoleAddrolesforempsRequest(userIds, roleIds);
+		OapiRoleAddrolesforempsResponse response = restTemplate.postForObject(url, request,
+				OapiRoleAddrolesforempsResponse.class, getAccessToken());
+		checkResponse(response);
 		return response;
 	}
 }

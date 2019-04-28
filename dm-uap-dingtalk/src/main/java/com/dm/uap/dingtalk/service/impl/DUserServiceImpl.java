@@ -1,5 +1,6 @@
 package com.dm.uap.dingtalk.service.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -290,6 +291,9 @@ public class DUserServiceImpl implements DUserService {
 		OapiUserCreateRequest request = dUserConverter.toOapiUserCreateRequest(dUser);
 		OapiUserCreateResponse rsp = dingTalkService.createUser(request);
 		dUser.setUserid(rsp.getUserid());
+		// 将角色信息更新到钉钉服务器
+		Set<Long> roleIds = dUser.getRoles().stream().map(DRole::getId).collect(Collectors.toSet());
+		dingTalkService.batchSetUserRole(Collections.singleton(dUser.getUserid()), roleIds);
 		return dUser;
 	}
 
@@ -302,6 +306,8 @@ public class DUserServiceImpl implements DUserService {
 	private DUser updateToDingTalk(DUser dUser) {
 		OapiUserUpdateRequest request = dUserConverter.toOapiUserUpdateRequest(dUser);
 		dingTalkService.updateUser(request);
+		Set<Long> roleIds = dUser.getRoles().stream().map(DRole::getId).collect(Collectors.toSet());
+		dingTalkService.batchSetUserRole(Collections.singleton(dUser.getUserid()), roleIds);
 		return dUser;
 	}
 
