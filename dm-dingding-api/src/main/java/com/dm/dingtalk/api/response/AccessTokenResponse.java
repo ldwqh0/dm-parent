@@ -28,7 +28,8 @@ public class AccessTokenResponse extends TaobaoResponse {
 	public void setExpiresIn(Long expirseIn) {
 		this.expiresIn = expirseIn;
 		if (!Objects.isNull(expirseIn)) {
-			setExpireDate(ZonedDateTime.now().plusSeconds(expirseIn));
+			// 这里修正一下token过期时间
+			setExpireDate(ZonedDateTime.now().plusSeconds(expirseIn - 60));
 		}
 	}
 
