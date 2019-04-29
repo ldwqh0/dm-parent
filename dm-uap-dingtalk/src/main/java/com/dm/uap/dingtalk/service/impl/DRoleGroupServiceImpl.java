@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,7 +104,7 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
 	}
 
 	@Override
-	@Async
+//	@Async
 	@Transactional
 	public void syncToUap() {
 		syncLocalToUap(fetchRoleGroup());

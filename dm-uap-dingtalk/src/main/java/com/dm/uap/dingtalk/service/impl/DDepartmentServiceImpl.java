@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,12 +80,10 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 		});
 	}
 
-	@Async
+//	@Async
 	@Override
 	@Transactional
 	public void syncToUap() {
-		// 抓取数据到本地库
-//		fetchDDepartments();
 		syncLocalToUap(fetchDDepartments());
 	}
 }
