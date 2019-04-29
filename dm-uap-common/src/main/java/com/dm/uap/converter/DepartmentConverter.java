@@ -22,7 +22,7 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 		DepartmentDto result = new DepartmentDto();
 		result.setId(model.getId());
 		result.setFullname(model.getFullname());
-		result.setShortname(model.getShortName());
+		result.setShortname(model.getShortname());
 		result.setDescription(model.getDescription());
 		Department parent = model.getParent();
 		if (!Objects.isNull(parent)) {
@@ -34,7 +34,7 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 	@Override
 	public Department copyProperties(Department model, DepartmentDto dto) {
 		model.setFullname(dto.getFullname());
-		model.setShortName(dto.getShortname());
+		model.setShortname(dto.getShortname());
 		model.setDescription(dto.getDescription());
 		return model;
 

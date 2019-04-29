@@ -74,7 +74,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			return departmentRepository.findAll(pageable);
 		} else {
 			BooleanExpression query = qDepartment.fullname.containsIgnoreCase(key)
-					.or(qDepartment.shortName.containsIgnoreCase(key))
+					.or(qDepartment.shortname.containsIgnoreCase(key))
 					.or(qDepartment.description.containsIgnoreCase(key));
 			return departmentRepository.findAll(query, pageable);
 		}

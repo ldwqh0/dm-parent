@@ -13,10 +13,14 @@ import lombok.Getter;
 import lombok.Setter;
 import static javax.persistence.CascadeType.*;
 
+import java.io.Serializable;
+
 @Entity(name = "dd_role_")
 @Getter
 @Setter
-public class DRole {
+public class DRole implements Serializable {
+
+	private static final long serialVersionUID = -8441406771526246885L;
 
 	@Id
 	@Column(name = "id_")

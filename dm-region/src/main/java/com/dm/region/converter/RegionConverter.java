@@ -16,6 +16,8 @@ import com.dm.region.dto.RegionDto;
 import com.dm.region.dto.RegionTreeDto;
 import com.dm.region.entity.Region;
 
+import static java.lang.Integer.*;
+
 @Component
 public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 
@@ -62,7 +64,7 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 		});
 		List<RegionTreeDto> result = new ArrayList<RegionTreeDto>(regionTrees);
 		result.sort((v1, v2) -> {
-			return Integer.valueOf(v1.getCode()) - Integer.valueOf(v2.getCode());
+			return parseInt(v1.getCode()) - parseInt(v2.getCode());
 		});
 		return result.stream().filter(item -> StringUtils.isEmpty(item.getParentCode())).collect(Collectors.toList());
 	}

@@ -1,5 +1,6 @@
 package com.dm.uap.dingtalk.entity;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,7 +19,9 @@ import static javax.persistence.CascadeType.*;
 @Entity(name = "dd_role_group_")
 @Getter
 @Setter
-public class DRoleGroup {
+public class DRoleGroup implements Serializable {
+
+	private static final long serialVersionUID = -4172275539106446430L;
 
 	@Id
 	private Long id;

@@ -22,7 +22,7 @@ public class DDepartmentConverter {
 		uDepartment.setFullname(dep.getName());
 		// uDepartment.setOrder(order);
 		// uDepartment.setParent();
-		uDepartment.setShortName(dep.getName());
+		uDepartment.setShortname(dep.getName());
 		return uDepartment;
 	}
 

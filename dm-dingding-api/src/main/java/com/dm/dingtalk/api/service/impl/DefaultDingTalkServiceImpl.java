@@ -2,12 +2,15 @@ package com.dm.dingtalk.api.service.impl;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
@@ -86,7 +89,6 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	 */
 	private AccessTokenResponse getAccessTokenFromServer() {
 		String url = SERVER + "/gettoken?appkey={appkey}&appsecret={appsecret}";
-		clientConfig.getAppsecret();
 		return restTemplate.getForObject(url, AccessTokenResponse.class, clientConfig);
 	}
 
@@ -107,7 +109,11 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		OapiDepartmentListResponse response = restTemplate.getForObject(url, OapiDepartmentListResponse.class,
 				getAccessToken());
 		checkResponse(response);
-		return response.getDepartment();
+		if (Objects.isNull(response) || CollectionUtils.isEmpty(response.getDepartment())) {
+			return Collections.emptyList();
+		} else {
+			return response.getDepartment();
+		}
 	}
 
 	@Override
@@ -116,7 +122,13 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		OapiRoleListResponse response = restTemplate.getForObject(url, OapiRoleListResponse.class,
 				getAccessToken());
 		checkResponse(response);
-		return response.getResult().getList();
+		if (!Objects.isNull(response) && !Objects.isNull(response.getResult())
+				&& CollectionUtils.isNotEmpty(response.getResult().getList())) {
+			return response.getResult().getList();
+		} else {
+			return Collections.emptyList();
+		}
+
 	}
 
 	/**
@@ -126,9 +138,12 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	 * @param response
 	 */
 	private void checkResponse(TaobaoResponse response) {
-		if (!response.isSuccess()) {
+		if (Objects.isNull(response)) {
+			throw new RuntimeException("the response is null");
+		} else if (!response.isSuccess()) {
 			throw new RuntimeException(response.getErrmsg());
 		}
+
 	}
 
 	@Override
@@ -146,7 +161,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		OapiUserCreateResponse response = restTemplate.postForObject(url, request, OapiUserCreateResponse.class,
 				getAccessToken());
 		// 创建用户，如果用户已经存在于钉钉系统中了,不会做任何修改，但会返回返回已经存在的用户的userid
-		if (StringUtils.isNotEmpty(response.getUserid())) {
+		if (!Objects.isNull(response) && StringUtils.isNotEmpty(response.getUserid())) {
 		} else {
 			checkResponse(response);
 		}

@@ -57,7 +57,7 @@ public class OapiUserUpdateRequest implements Serializable {
 	/**
 	 * 主管
 	 */
-	private String managerUserid;
+	private String managerUserId;
 
 	/**
 	 * 手机号

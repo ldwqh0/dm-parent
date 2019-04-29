@@ -1,11 +1,13 @@
 package com.dm.dingtalk.api.response;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.Data;
 
 @Data
-public class PageVo<T> {
+public class PageVo<T> implements Serializable {
+	private static final long serialVersionUID = 8962659967141421912L;
 	/**
 	 * hasMore
 	 */

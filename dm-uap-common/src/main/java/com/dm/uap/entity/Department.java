@@ -23,7 +23,7 @@ public class Department extends AbstractEntity {
 	private String fullname;
 
 	@Column(name = "short_name_", length = 100)
-	private String shortName;
+	private String shortname;
 
 	/**
 	 * 上级部门

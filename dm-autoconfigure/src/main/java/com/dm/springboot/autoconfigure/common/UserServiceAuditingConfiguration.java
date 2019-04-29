@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceAuditingConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(AuditorAware.class)
-	public AuditorAware<User> auditorAware(@Autowired UserService userService) {
+	public AuditorAware<User> auditorAware(@Autowired final UserService userService) {
 		log.info("create default auditorAware");
 		return new AuditorAware<User>() {
 			@Override
