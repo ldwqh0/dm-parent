@@ -32,6 +32,8 @@ import com.dm.uap.dingtalk.entity.DUser;
 import com.dm.uap.dingtalk.repository.DDepartmentRepository;
 import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.repository.DUserRepository;
+import com.dm.uap.dingtalk.service.DDepartmentService;
+import com.dm.uap.dingtalk.service.DRoleGroupService;
 import com.dm.uap.dingtalk.service.DUserService;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.Role;
@@ -62,9 +64,17 @@ public class DUserServiceImpl implements DUserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private DDepartmentService dDepartmentService;
+
+	@Autowired
+	private DRoleGroupService dRoleGroupService;
+
 	@Transactional
 	@Override
-	public void sync() {
+	public void syncToUap() {
+		dDepartmentService.syncToUap();
+		dRoleGroupService.syncToUap();
 		syncToUap(fetch());
 	}
 
@@ -160,7 +170,11 @@ public class DUserServiceImpl implements DUserService {
 		return user;
 	}
 
-	// 从服务器拉取钉钉用户信息
+	/**
+	 * 从服务器拉取钉钉用户信息，并将信息保存到本地
+	 * 
+	 * @return
+	 */
 	private List<DUser> fetch() {
 		List<DDepartment> dDepartments = dDepartmentRepository.findAll();
 		// 遍历所有部门

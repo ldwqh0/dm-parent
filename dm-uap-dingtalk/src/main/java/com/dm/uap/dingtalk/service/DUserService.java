@@ -5,9 +5,10 @@ import com.dm.uap.dingtalk.entity.DUser;
 public interface DUserService {
 
 	/**
-	 * 同步用户信息到本地系统
+	 * 同步用户信息到本地系统<br>
+	 * 在同步用户之前，会先同步组织机构信息和角色信息
 	 */
-	public void sync();
+	public void syncToUap();
 
 	/**
 	 * 根据情况创建或跟新一个钉钉用户信息,<br>
@@ -20,7 +21,5 @@ public interface DUserService {
 	 * @return
 	 */
 	public DUser save(DUser dUser);
-
-//	public Duser save();
 
 }

@@ -15,8 +15,8 @@ public class DUserController {
 	private DUserService dUserService;
 
 	@PostMapping("sync")
-	public void async() {
-		dUserService.sync();
+	public void sync() {
+		dUserService.syncToUap();
 	}
 
 }

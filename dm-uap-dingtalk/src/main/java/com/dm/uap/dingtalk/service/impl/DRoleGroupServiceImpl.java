@@ -59,13 +59,21 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
 		dRoleRepository.deleteByIdNotIn(roleIds);
 		dRoleGroupRepository.deleteByIdNotIn(roleGroupIds);
 
-		List<DRoleGroup> result = roleGroups.stream().map(oGroup -> {
-			Long groupId = oGroup.getGroupId();
-			final DRoleGroup dRoleGroup = dRoleGroupConverter.copyProperties(new DRoleGroup(groupId), oGroup);
-			List<OpenRole> oRoles = oGroup.getRoles();
+		List<DRoleGroup> result = roleGroups.stream().map(originalGroup -> {
+			Long groupId = originalGroup.getGroupId();
+			final DRoleGroup dRoleGroup = dRoleGroupRepository.existsById(groupId)
+					? dRoleGroupRepository.getOne(groupId)
+					: new DRoleGroup(groupId);
+			dRoleGroupConverter.copyProperties(dRoleGroup, originalGroup);
+			List<OpenRole> oRoles = originalGroup.getRoles();
 			if (CollectionUtils.isNotEmpty(oRoles)) {
 				Set<DRole> dRoles = oRoles.stream()
-						.map(oRole -> dRoleConverter.copyProperties(new DRole(oRole.getId()), oRole))
+						.map(oRole -> {
+							Long oRoleId = oRole.getId();
+							DRole dRole = dRoleRepository.existsById(oRoleId) ? dRoleRepository.getOne(oRoleId)
+									: new DRole(oRoleId);
+							return dRoleConverter.copyProperties(dRole, oRole);
+						})
 						.collect(Collectors.toSet());
 				dRoleGroup.setRoles(dRoles);
 			}

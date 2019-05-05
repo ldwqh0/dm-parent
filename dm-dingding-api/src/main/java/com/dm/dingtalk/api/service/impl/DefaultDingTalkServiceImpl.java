@@ -10,11 +10,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
+import com.dm.dingtalk.api.exception.DUserNotFoundException;
 import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
@@ -37,7 +37,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	private DingClientConfig clientConfig;
 	private static final String SERVER = "https://oapi.dingtalk.com";
 	private final Object tokenLock = new Object();
-
+	private static final Long USER_NOT_FOUND_CODE = 60121L;
 	/**
 	 * 已经存在的token,不要再代码中直接使用该token <br>
 	 * 请使用 getAccessToken 方法获取可用的token
@@ -131,30 +131,6 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
 	}
 
-	/**
-	 * 校验响应是否正确
-	 * 
-	 * 
-	 * @param response
-	 */
-	private void checkResponse(TaobaoResponse response) {
-		if (Objects.isNull(response)) {
-			throw new RuntimeException("the response is null");
-		} else if (!response.isSuccess()) {
-			throw new RuntimeException(response.getErrmsg());
-		}
-
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		// 配置一个默认的restTemplate
-		if (Objects.isNull(restTemplate)) {
-			this.restTemplate = new RestTemplate();
-		}
-		Assert.notNull(clientConfig, "The clientConfig can not be null");
-	}
-
 	@Override
 	public OapiUserCreateResponse createUser(OapiUserCreateRequest request) {
 		String url = SERVER + "/user/create?access_token={0}";
@@ -200,9 +176,14 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		String url = SERVER + "/user/get?access_token={0}&userid={1}";
 		OapiUserGetResponse response = restTemplate.getForObject(url, OapiUserGetResponse.class, getAccessToken(),
 				userid);
-		// TODO 这里暂时不能检测响应结果
-//		checkResponse(response);
-		return response;
+		// checkResponse(response);
+		if (Objects.isNull(response)) {
+			throw new RuntimeException("the response is null");
+		} else if (Objects.equals(USER_NOT_FOUND_CODE, response.getErrcode())) {
+			return response;
+		} else {
+			return response;
+		}
 	}
 
 	@Override
@@ -214,4 +195,29 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		checkResponse(response);
 		return response;
 	}
+
+	/**
+	 * 校验响应是否正确
+	 * 
+	 * 
+	 * @param response
+	 */
+	private void checkResponse(TaobaoResponse response) {
+		if (Objects.isNull(response)) {
+			throw new RuntimeException("the response is null");
+		} else if (!response.isSuccess()) {
+			throw new RuntimeException(response.getErrmsg());
+		}
+
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// 配置一个默认的restTemplate
+		if (Objects.isNull(restTemplate)) {
+			this.restTemplate = new RestTemplate();
+		}
+		Assert.notNull(clientConfig, "The clientConfig can not be null");
+	}
+
 }
