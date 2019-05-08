@@ -55,6 +55,10 @@ public interface TableResult<T> extends Serializable {
 		return result;
 	}
 
+	public static <DTO> TableResult<DTO> success(Long draw, Page<DTO> data) {
+		return success(draw, data, d -> d);
+	}
+
 	/**
 	 * 返回一个表格错误信息<br />
 	 * 
