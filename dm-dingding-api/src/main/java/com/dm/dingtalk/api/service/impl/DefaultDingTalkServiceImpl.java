@@ -14,7 +14,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
-import com.dm.dingtalk.api.exception.DUserNotFoundException;
 import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
@@ -43,7 +42,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	 * 请使用 getAccessToken 方法获取可用的token
 	 * 
 	 */
-	private AccessTokenResponse existToken;
+	private volatile AccessTokenResponse existToken;
 
 	public DefaultDingTalkServiceImpl() {
 		super();
