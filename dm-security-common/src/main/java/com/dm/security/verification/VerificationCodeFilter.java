@@ -10,6 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.GenericFilterBean;
@@ -48,13 +49,13 @@ public class VerificationCodeFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
-
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		if (requiresValidation(request)) {
 			String verifyId = req.getParameter(verifyIdParameterName);
 			String verifyCode = req.getParameter(verifyCodeParameterName);
 			if (storage.validate(verifyId, verifyCode)) {
+				storage.remove(verifyId);
 				chain.doFilter(req, res);
 			} else {
 				// 给出错误的提示信息
@@ -76,12 +77,16 @@ public class VerificationCodeFilter extends GenericFilterBean {
 	 * @return
 	 */
 	private boolean requiresValidation(HttpServletRequest request) {
-		for (RequestMatcher matcher : requestMathcers) {
-			if (matcher.matches(request)) {
-				return true;
+		if (CollectionUtils.isEmpty(requestMathcers)) {
+			return true;
+		} else {
+			for (RequestMatcher matcher : requestMathcers) {
+				if (matcher.matches(request)) {
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 }

@@ -18,10 +18,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.Base64;
 
-import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 
 @RestController
@@ -66,8 +67,17 @@ public class VerificationCodeController {
 			"image/*"
 	})
 	public ResponseEntity<InputStreamResource> generate2() {
-		// TODO 暂时没有实现
-		return null;
+		VerificationCode code = validateCodeGenerator.generate(6);
+		code.setId(null);
+		BufferedImage img = generateImage(code.getCode());
+		try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+			ImageIO.write(img, "png", os);
+			InputStream is = new ByteArrayInputStream(os.toByteArray());
+			codeStorage.save(code);
+			return ResponseEntity.ok(new InputStreamResource(is));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private BufferedImage generateImage(String code) {
@@ -82,12 +92,10 @@ public class VerificationCodeController {
 	}
 
 	@GetMapping("validation")
-	public boolean checkCode(@RequestParam("id") String verifyId, @RequestParam("code") String verifyCode) {
+	public boolean checkCode(
+			@RequestParam(value = "id", required = false) String verifyId,
+			@RequestParam("code") String verifyCode) {
 		return codeStorage.validate(verifyId, verifyCode);
 	}
 
-	@PostConstruct
-	public void dd() {
-		System.out.println("dagasd");
-	}
 }
