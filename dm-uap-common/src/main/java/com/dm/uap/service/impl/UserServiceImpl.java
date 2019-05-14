@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.RoleDto;
@@ -26,7 +27,6 @@ import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
-import com.dm.uap.exception.DataConflictException;
 import com.dm.uap.repository.DepartmentRepository;
 import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
 			throw new RuntimeException("The username can not be empty");
 		}
 		if (userRepository.exists(builder.getValue())) {
-			throw new DataConflictException("用户名已被占用");
+			throw new DataValidateException("用户名已被占用");
 		}
 	}
 

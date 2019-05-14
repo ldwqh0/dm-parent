@@ -21,7 +21,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.time.ZonedDateTime;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -92,10 +96,22 @@ public class VerificationCodeController {
 	}
 
 	@GetMapping("validation")
-	public boolean checkCode(
+	public Map<String, Object> checkCode(
 			@RequestParam(value = "id", required = false) String verifyId,
 			@RequestParam("code") String verifyCode) {
-		return codeStorage.validate(verifyId, verifyCode);
+		Map<String, Object> result = new HashMap<>();
+		VerificationCode code = codeStorage.get(verifyId);
+		if (Objects.isNull(code) || ZonedDateTime.now().isAfter(code.getInvalidateTime())) {
+			result.put("result", false);
+			result.put("message", "验证码已经失效");
+		} else if (codeStorage.validate(verifyId, verifyCode)) {
+			result.put("result", Boolean.TRUE);
+		} else {
+			result.put("result", Boolean.FALSE);
+			result.put("message", "验证码错误");
+		}
+		return result;
+
 	}
 
 }

@@ -2,6 +2,8 @@ package com.dm.uap.controller;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,13 +24,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dm.common.dto.TableResult;
+import com.dm.common.exception.DataValidateException;
 import com.dm.security.annotation.CurrentUser;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
+import com.dm.uap.dto.UpdatePasswordDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.User;
-import com.dm.uap.exception.ValidOldPasswordFailureException;
-import com.dm.uap.exception.ValidRePasswordFailureException;
 import com.dm.uap.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -56,7 +58,7 @@ public class UserController {
 
 	@ApiOperation("新增保存用户")
 	@PostMapping
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
 	@ResponseStatus(CREATED)
 	public UserDto save(@RequestBody UserDto userDto) {
 		User user = userService.save(userDto);
@@ -66,7 +68,7 @@ public class UserController {
 
 	@ApiOperation("删除用户")
 	@DeleteMapping("{id}")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
 	@ResponseStatus(NO_CONTENT)
 	public void delete(@PathVariable("id") Long id) {
 		userService.delete(id);
@@ -74,7 +76,7 @@ public class UserController {
 
 	@ApiOperation("重置用户密码")
 	@PatchMapping(value = { "{id}/password" }, params = { "!oldPassword" })
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
 	@ResponseStatus(CREATED)
 	public UserDto resetPassword(
 			@PathVariable("id") Long id,
@@ -84,6 +86,16 @@ public class UserController {
 		return userConverter.toDto(userService.repassword(id, password));
 	}
 
+	/**
+	 * 这个API已经过时
+	 * 
+	 * @param id
+	 * @param oldPassword
+	 * @param password
+	 * @param rePassword
+	 * @return
+	 */
+	@Deprecated
 	@ApiOperation("修改用户密码")
 	@PatchMapping(value = { "{id}/password" }, params = { "oldPassword" })
 	@ResponseStatus(CREATED)
@@ -94,14 +106,28 @@ public class UserController {
 			@RequestParam("rePassword") String rePassword) {
 		validRePassword(password, rePassword);
 		if (!userService.checkPassword(id, oldPassword)) {
-			throw new ValidOldPasswordFailureException("原始密码校验错误");
+			throw new DataValidateException("原始密码校验错误");
 		}
 		return userConverter.toDto(userService.repassword(id, password));
 	}
 
+	@ApiOperation("修改当前用户密码")
+	@PatchMapping("current/password")
+	@ResponseStatus(CREATED)
+	public UserDto changePassword(
+			@CurrentUser UserDetailsDto user,
+			@Valid @RequestBody UpdatePasswordDto data) {
+		Long id = user.getId();
+		validRePassword(data.getPassword(), data.getRepassword());
+		if (!userService.checkPassword(id, data.getOldPassword())) {
+			throw new DataValidateException("原始密码校验错误");
+		}
+		return userConverter.toDto(userService.repassword(id, data.getPassword()));
+	}
+
 	@ApiOperation("更新用户")
 	@PutMapping("{id}")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
 	@ResponseStatus(CREATED)
 	public UserDto update(@PathVariable("id") long id, @RequestBody UserDto userDto) {
 		User user = userService.update(id, userDto);
@@ -135,7 +161,7 @@ public class UserController {
 
 	private void validRePassword(String password, String rePassword) {
 		if (!StringUtils.equals(password, rePassword)) {
-			throw new ValidRePasswordFailureException("两次密码输入不一致");
+			throw new DataValidateException("两次密码输入不一致");
 		}
 	}
 }

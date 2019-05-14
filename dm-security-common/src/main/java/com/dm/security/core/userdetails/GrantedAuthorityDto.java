@@ -42,4 +42,9 @@ public class GrantedAuthorityDto implements GrantedAuthority {
 		this.authority = authority;
 	}
 
+	@Override
+	public String toString() {
+		return "GrantedAuthorityDto [authority=" + authority + ", id=" + id + "]";
+	}
+
 }

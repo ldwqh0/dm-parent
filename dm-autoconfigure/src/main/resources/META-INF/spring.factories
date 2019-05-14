@@ -5,4 +5,5 @@ com.dm.springboot.autoconfigure.common.AuditingAutoConfiguration,\
 com.dm.springboot.autoconfigure.region.RegionConfiguration,\
 com.dm.springboot.autoconfigure.security.SecurityConfiguration,\
 com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration,\
-com.dm.springboot.autoconfigure.security.VerificationCodeConfiguration
+com.dm.springboot.autoconfigure.security.VerificationCodeConfiguration,\
+com.dm.springboot.autoconfigure.common.WebControllerAdvice
