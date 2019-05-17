@@ -59,14 +59,18 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 		regionTrees.forEach(region -> {
 			String parentCode = region.getParentCode();
 			if (StringUtils.isNotBlank(parentCode)) {
-				regionTreeMap.get(parentCode).addChildren(region);
+				RegionTreeDto parentNode = regionTreeMap.get(parentCode);
+				if (!Objects.isNull(parentNode)) {
+					parentNode.addChildren(region);
+				}
 			}
 		});
 		List<RegionTreeDto> result = new ArrayList<RegionTreeDto>(regionTrees);
 		result.sort((v1, v2) -> {
 			return parseInt(v1.getCode()) - parseInt(v2.getCode());
 		});
-		return result.stream().filter(item -> StringUtils.isEmpty(item.getParentCode())).collect(Collectors.toList());
+		return result.stream().filter(item -> StringUtils.isEmpty(item.getParentCode())
+				|| Objects.isNull(regionTreeMap.get(item.getParentCode()))).collect(Collectors.toList());
 	}
 
 	private RegionTreeDto toRegionTreeDto(Region region) {
@@ -80,5 +84,15 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 			treeDto.setParentCode(parent.getCode());
 		}
 		return treeDto;
+	}
+
+	public List<String> toRegionCodeList(Region region) {
+		List<String> result = new ArrayList<String>();
+		Region current = region;
+		while (!Objects.isNull(current)) {
+			result.add(0, current.getCode());
+			current = region.getParentCode();
+		}
+		return result;
 	}
 }

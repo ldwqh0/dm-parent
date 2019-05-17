@@ -35,4 +35,12 @@ public interface RegionService {
 	List<Region> save(List<RegionDto> regions);
 
 	public boolean existAny();
+
+	/**
+	 * 获取指定节点的所有子代
+	 * 
+	 * @param parentCode
+	 * @return
+	 */
+	public List<Region> findAllChildren(String code);
 }

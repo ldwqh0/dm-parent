@@ -3,6 +3,7 @@ package com.dm.region.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +39,14 @@ public class RegionController {
 	}
 
 	@GetMapping(params = "type=tree")
-	public List<RegionTreeDto> getTree() {
-		List<Region> regions = regionService.findAll();
+	public List<RegionTreeDto> getTree(
+			@RequestParam(value = "parentCode", required = false) String parentCode) {
+		List<Region> regions = null;
+		if (StringUtils.isNotEmpty(parentCode)) {
+			regions = regionService.findAllChildren(parentCode);
+		} else {
+			regions = regionService.findAll();
+		}
 		return regionConverter.toTreeDto(regions);
 	}
 
