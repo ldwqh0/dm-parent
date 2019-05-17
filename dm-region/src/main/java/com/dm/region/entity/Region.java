@@ -1,5 +1,7 @@
 package com.dm.region.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +15,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "dm_region_")
-public class Region {
+public class Region implements Serializable {
+	private static final long serialVersionUID = 2116833927883554195L;
 
 	public Region() {
 	}
