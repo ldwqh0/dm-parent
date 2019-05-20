@@ -91,7 +91,7 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 		Region current = region;
 		while (!Objects.isNull(current)) {
 			result.add(0, current.getCode());
-			current = region.getParentCode();
+			current = current.getParentCode();
 		}
 		return result;
 	}
