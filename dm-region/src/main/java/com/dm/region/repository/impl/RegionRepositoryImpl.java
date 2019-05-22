@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dm.region.entity.QRegion;
@@ -25,7 +26,7 @@ public class RegionRepositoryImpl {
 		query.select(qRegion).from(qRegion)
 				.where(qRegion.parentCode.code.eq(code));
 		tmp = query.fetch();
-		while (tmp.size() > 0) {
+		while (CollectionUtils.isNotEmpty(tmp)) {
 			result.addAll(tmp);
 			tmp = findAllChildren(tmp);
 		}
