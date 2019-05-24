@@ -31,7 +31,7 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 	}
 
 	@Override
-	public void copyProperties(ClientInfo model, ClientInfoDto dto) {
+	public ClientInfo copyProperties(ClientInfo model, ClientInfoDto dto) {
 		model.setAccessTokenValiditySeconds(dto.getAccessTokenValiditySeconds());
 		model.setAuthorizedGrantTypes(dto.getAuthorizedGrantTypes());
 		model.setRefreshTokenValiditySeconds(dto.getRefreshTokenValiditySeconds());
@@ -40,6 +40,7 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 		model.setScope(dto.getScope());
 		model.setAutoApprove(Objects.isNull(dto.getAutoApprove()) ? false : dto.getAutoApprove());
 		model.setName(dto.getName());
+		return model;
 	}
 
 	public ClientDetailsDto toClientDetails(ClientInfo model) {

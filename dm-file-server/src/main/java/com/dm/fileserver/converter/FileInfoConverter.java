@@ -22,10 +22,11 @@ public class FileInfoConverter extends AbstractConverter<FileInfo, FileInfoDto> 
 	}
 
 	@Override
-	public void copyProperties(FileInfo dest, FileInfoDto src) {
+	public FileInfo copyProperties(FileInfo dest, FileInfoDto src) {
 		dest.setFilename(src.getFilename());
 		dest.setPath(src.getPath());
 		dest.setSize(src.getSize());
+		return dest;
 	}
 
 }

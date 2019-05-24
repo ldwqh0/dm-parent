@@ -22,12 +22,13 @@ public class UserApprovalConverter extends AbstractConverter<UserApproval, Appro
 	}
 
 	@Override
-	public void copyProperties(UserApproval model, Approval dto) {
+	public UserApproval copyProperties(UserApproval model, Approval dto) {
 		model.setClientId(dto.getClientId());
 		model.setUserId(dto.getUserId());
 		model.setExpiresAt(dto.getExpiresAt());
 		model.setScope(dto.getScope());
 		model.setStatus(dto.getStatus());
+		return model;
 	}
 
 }
