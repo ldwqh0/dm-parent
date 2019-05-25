@@ -1,0 +1,9 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.dm.springboot.autoconfigure.uap.UapAutoConfiguration,\
+com.dm.springboot.autoconfigure.authority.AuthAutoConfiguration,\
+com.dm.springboot.autoconfigure.common.AuditingAutoConfiguration,\
+com.dm.springboot.autoconfigure.region.RegionConfiguration,\
+com.dm.springboot.autoconfigure.security.SecurityConfiguration,\
+com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration,\
+com.dm.springboot.autoconfigure.security.VerificationCodeConfiguration,\
+com.dm.springboot.autoconfigure.common.WebControllerAdvice

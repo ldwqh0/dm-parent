@@ -1,0 +1,9 @@
+{"properties": [{
+  "name": "system.default.su",
+  "type": "com.dm.springboot.autoconfigure.uap.DefaultUserProperties",
+  "sourceType": "com.dm.springboot.autoconfigure.uap.DefaultUserProperties"
+},{
+  "name": "dingtalk",
+  "type": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration.DingClientConfigCongiguration",
+  "sourceType": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration.DingClientConfigCongiguration"
+}]}

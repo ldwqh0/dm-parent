@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: '@datasource.url@'
+    username: '@datasource.username@'
+    driver-class-name: '@datasource.driver@'
+    password: '@datasource.password@'
+    hikari:
+      connection-test-query: select 1
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    database-platform: '@datasource.platform@'
+    hibernate:
+      use-new-id-generator-mappings: true
+server:
+  servlet:
+    session:
+      cookie:
+        name: SSID
+security:
+  oauth2:
+    resource:
+      user-info-uri: null
+      service-id: null
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include:
+        - info

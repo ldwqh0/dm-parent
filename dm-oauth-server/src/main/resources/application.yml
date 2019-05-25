@@ -1,0 +1,36 @@
+server:
+  port: 8887
+  servlet:
+    session:
+      cookie:
+        name: OAUTHSESSION
+spring:
+  datasource:
+    url: '@datasource.url@'
+    username: '@datasource.username@'
+    driver-class-name: '@datasource.driver@'
+    password: '@datasource.password@'
+    hikari:
+      connection-test-query: select 1
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    database-platform: '@datasource.platform@'
+    hibernate:
+      use-new-id-generator-mappings: true
+      ddl-auto: update
+  main:
+    allow-bean-definition-overriding: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include:
+        - info

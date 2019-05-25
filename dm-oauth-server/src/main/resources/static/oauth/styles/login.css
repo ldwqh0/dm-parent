@@ -1,0 +1,57 @@
+ body,html{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #2d3a4b;
+      }
+      .wrapper{
+        margin: 0 auto;
+        padding-top: 15%;
+        width: 450px;
+      }
+      .userlogin{
+        width: 100%;
+        font-size: 25px;
+        color: white;
+        text-align: center;
+      }
+      .error{
+        width: 100%;
+        font-size: 20px;
+        color: white;
+        text-align: left;
+      }
+      .form{
+        width: 100%
+      }
+      .user, .password{
+        display: inline-block;
+        margin-top: 25px;
+        width: 27%;
+        height: 35px;
+        line-height: 35px;
+        text-align: center;
+        font-size: 16px;
+        color: white;
+      }
+      .input{
+        display: inline-block;
+        margin-top: 25px;
+        width: 70%;
+        height: 30px;
+        border-radius: 5px;
+        border: none;
+      }
+    .login{
+      float: right;
+      display: inline-block;
+      width: 70px;
+      height: 32px;
+      text-align: center;
+      line-height: 32px;
+      color: white;
+      border-radius: 3px;
+      border: none;
+      background:#409EFF;
+    }

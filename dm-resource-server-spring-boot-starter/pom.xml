@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.dm</groupId>
+		<artifactId>dm-parent</artifactId>
+		<version>0.2.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>dm-resource-server-spring-boot-starter</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-security</artifactId>
+		</dependency>
+		<!-- spring-cloud-starter-security 2.1.0.RC3 需要单独添加这个依赖 -->
+		<dependency>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-security-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-autoconfigure</artifactId>
+		</dependency>
+	</dependencies>
+</project>

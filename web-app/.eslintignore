@@ -1,0 +1,6 @@
+/build/
+/config/
+/dist/
+/*.js
+!/src/module/datamanage-module/component/SubTourismRevenue.vue
+!/src/module/data-module/component/travelRelatedEnterpriseManagement/travelAgentField/Index.vue
