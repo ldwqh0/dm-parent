@@ -10,10 +10,11 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<spring.cloud.version>Greenwich.SR1</spring.cloud.version>
-		<springboot.version>2.1.4.RELEASE</springboot.version>
+		<springboot.version>2.1.5.RELEASE</springboot.version>
+		<spring.security.oauth2.version>2.3.5.RELEASE</spring.security.oauth2.version>
 		<springfox.version>2.9.2</springfox.version>
 		<hibernate.version>5.4.2.Final</hibernate.version>
-		<commons-lang3.version>3.8.1</commons-lang3.version>
+		<commons-lang3.version>3.9</commons-lang3.version>
 		<commons-io.version>2.6</commons-io.version>
 		<resource.delimiter>@</resource.delimiter>
 		<commons-collections4.version>4.3</commons-collections4.version>
@@ -63,7 +64,7 @@
 			<dependency>
 				<groupId>org.springframework.security.oauth</groupId>
 				<artifactId>spring-security-oauth2</artifactId>
-				<version>2.3.4.RELEASE</version>
+				<version>${spring.security.oauth2.version}</version>
 			</dependency>
 
 			<dependency>
@@ -214,7 +215,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
+					<version>3.8.1</version>
 					<configuration>
 						<source>${java.version}</source>
 						<target>${java.version}</target>
