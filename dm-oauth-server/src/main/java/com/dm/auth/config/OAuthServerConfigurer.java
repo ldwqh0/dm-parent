@@ -18,13 +18,11 @@ import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserAp
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
-import com.dm.auth.provider.token.OwnerDefaultTokenService;
 import com.dm.auth.service.UserApprovalService;
 import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
 
@@ -90,7 +88,6 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		super.configure(endpoints);
-//		endpoints.tokenServices(tokenService());
 		endpoints.userApprovalHandler(userApprovalHandler()); // 用户授权处理逻辑
 
 		// 如果使用自定义的tokenService,以下的配置都不可用，需要在tokenService中重新配置
@@ -135,16 +132,6 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 	@Bean
 	public TokenStore tokenStore() {
 		return new RedisTokenStore(connectionFactory);
-	}
-
-//	@Bean
-	public AuthorizationServerTokenServices tokenService() {
-		OwnerDefaultTokenService tokenService = new OwnerDefaultTokenService();
-		tokenService.setTokenStore(tokenStore());
-		tokenService.setClientDetailsService(clientDetailsService);
-		tokenService.setSupportRefreshToken(true);
-		tokenService.setReuseRefreshToken(false); // 不允许
-		return tokenService;
 	}
 
 }
