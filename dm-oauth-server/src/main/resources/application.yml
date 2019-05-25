@@ -19,8 +19,6 @@ spring:
     hibernate:
       use-new-id-generator-mappings: true
       ddl-auto: update
-  main:
-    allow-bean-definition-overriding: true
   redis:
     host: 127.0.0.1
     port: 6379
