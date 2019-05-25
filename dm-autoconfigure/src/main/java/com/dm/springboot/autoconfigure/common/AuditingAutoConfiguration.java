@@ -1,8 +1,6 @@
 package com.dm.springboot.autoconfigure.common;
 
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
@@ -12,10 +10,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.auditing.AuditingHandler;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import com.dm.common.exception.DataValidateException;
 
 /**
  * 实体审计相关的配置项目
