@@ -21,6 +21,7 @@ public class OAuthResourceConfigurer extends ResourceServerConfigurerAdapter {
 						"/regions**/**",
 						"/user**/**",
 						"/roles**/**",
+						"/roleGroups**/**",
 						"/clients**/**",
 						"/tokens**/**");
 	}

@@ -72,7 +72,7 @@ public class AuthAutoConfiguration {
 			Long roleId = 1L;
 			MenuAuthorityDto menuAuthority = new MenuAuthorityDto();
 			menuAuthority.setRoleId(roleId);
-			menuAuthority.setRoleName("ROLE_ADMIN");
+			menuAuthority.setRoleName("内置分组_ROLE_ADMIN");
 			List<MenuDto> menus_ = menus.stream().map(m -> {
 				MenuDto md = new MenuDto();
 				md.setId(m.getId());
@@ -96,7 +96,7 @@ public class AuthAutoConfiguration {
 				// 将知道的授权组装为一个授权对象
 				ResourceAuthorityDto resourceAuthority = new ResourceAuthorityDto();
 				resourceAuthority.setRoleId(roleId);
-				resourceAuthority.setRoleName("ROLE_ADMIN");
+				resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
 				resourceAuthority.setResourceAuthorities(Collections.singletonList(resourceOperation));
 				authorityService.save(resourceAuthority);
 			}

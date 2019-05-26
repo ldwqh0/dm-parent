@@ -58,6 +58,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 		DepartmentDto parent = data.getParent();
 		if (!Objects.isNull(parent)) {
 			department.setParent(departmentRepository.getOne(parent.getId()));
+		} else {
+			department.setParent(null);
 		}
 		return departmentRepository.save(department);
 	}

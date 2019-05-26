@@ -24,6 +24,7 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 		result.setFullname(model.getFullname());
 		result.setShortname(model.getShortname());
 		result.setDescription(model.getDescription());
+		result.setType(model.getType());
 		Department parent = model.getParent();
 		if (!Objects.isNull(parent)) {
 			result.setParent(toDtoActual(model.getParent()));
@@ -36,8 +37,8 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 		model.setFullname(dto.getFullname());
 		model.setShortname(dto.getShortname());
 		model.setDescription(dto.getDescription());
+		model.setType(dto.getType());
 		return model;
-
 	}
 
 	/**
@@ -67,6 +68,7 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
 		tree.setId(department.getId());
 		tree.setName(department.getFullname());
 		tree.setDescription(department.getDescription());
+		tree.setType(department.getType());
 		Department parent = department.getParent();
 		if (!Objects.isNull(parent)) {
 			tree.setParentId(parent.getId());

@@ -70,7 +70,7 @@
 				<datasource.username>lidong</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
 				<datasource.platform>org.hibernate.dialect.MariaDB103Dialect</datasource.platform>
-				<user.info.url>http://localhost:8887/oauth/check_token</user.info.url>
+				<token.info.url>http://localhost:8887/oauth/check_token</token.info.url>
 			</properties>
 		</profile>
 	</profiles>

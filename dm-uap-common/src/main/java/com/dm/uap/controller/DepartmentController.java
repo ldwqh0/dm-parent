@@ -45,9 +45,9 @@ public class DepartmentController {
 		return departmentConverter.toDto(departmentService.findById(id));
 	}
 
-	@PutMapping
+	@PutMapping("{id}")
 	@ResponseStatus(CREATED)
-	public DepartmentDto update(@PathVariable("id") Long id, DepartmentDto data) {
+	public DepartmentDto update(@PathVariable("id") Long id, @RequestBody DepartmentDto data) {
 		return departmentConverter.toDto(departmentService.update(id, data));
 	}
 
@@ -57,16 +57,13 @@ public class DepartmentController {
 	}
 
 	@GetMapping(params = { "draw" })
-	public TableResult<DepartmentDto> search(
-			@RequestParam("draw") Long draw,
-			@RequestParam(value = "keywords", required = false) String key,
-			@PageableDefault Pageable pageable) {
+	public TableResult<DepartmentDto> search(@RequestParam("draw") Long draw,
+			@RequestParam(value = "keywords", required = false) String key, @PageableDefault Pageable pageable) {
 		return TableResult.success(draw, departmentService.find(key, pageable), departmentConverter::toDto);
 	}
 
 	@GetMapping(params = "type=tree")
-	public List<DepartmentTreeDto> tree(
-			@PageableDefault(size = 10000) Pageable pageable) {
+	public List<DepartmentTreeDto> tree(@PageableDefault(size = 10000) Pageable pageable) {
 		return departmentConverter.toTree(departmentService.findAll());
 	}
 }

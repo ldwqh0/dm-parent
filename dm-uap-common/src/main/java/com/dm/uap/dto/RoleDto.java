@@ -28,14 +28,14 @@ public class RoleDto implements Serializable {
 	private String description;
 	private Status state;
 	private RoleGroupDto group;
-	
- 	@JsonProperty(access = Access.WRITE_ONLY)
- 	@JsonIgnore
- 	private  List<UserDto> users;
 
- 	@JsonIgnoreProperties({ "password", "roles" })
- 	public List<UserDto> getUsers() {
- 		return users;
- 	}
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@JsonIgnore
+	private List<UserDto> users;
+
+	@JsonIgnoreProperties({ "password", "roles" })
+	public List<UserDto> getUsers() {
+		return users;
+	}
 
 }
