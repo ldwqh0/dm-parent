@@ -1,7 +1,6 @@
 server:
   port: 8880
-spring:  main:    allow-bean-definition-overriding: true
-  datasource:
+spring:  datasource:
     url: '@datasource.url@'
     username: '@datasource.username@'
     driver-class-name: '@datasource.driver@'
