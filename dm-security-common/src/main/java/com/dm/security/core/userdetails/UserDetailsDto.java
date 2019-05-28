@@ -2,8 +2,10 @@ package com.dm.security.core.userdetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -48,9 +50,14 @@ public class UserDetailsDto implements UserDetails {
 	}
 
 	public Collection<GrantedAuthorityDto> getRoles() {
-		List<GrantedAuthorityDto> result = new ArrayList<GrantedAuthorityDto>();
-		result.addAll(grantedAuthority);
-		return result;
+		if (CollectionUtils.isNotEmpty(grantedAuthority)) {
+			List<GrantedAuthorityDto> result = new ArrayList<GrantedAuthorityDto>();
+			result.addAll(grantedAuthority);
+			return result;
+		} else {
+			return Collections.emptyList();
+		}
+
 	}
 
 	@Override

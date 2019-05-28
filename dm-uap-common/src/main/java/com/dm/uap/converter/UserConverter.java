@@ -1,5 +1,6 @@
 package com.dm.uap.converter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,8 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 			List<Role> roles = user_.getRoles();
 			if (CollectionUtils.isNotEmpty(roles)) {
 				dto.setGrantedAuthority(roleConverter.toGrantedAuthorityDto(user_.getRoles()));
+			} else {
+				dto.setGrantedAuthority(Collections.emptyList());
 			}
 		}
 		return dto;

@@ -72,12 +72,10 @@ public class MenuServcieImpl implements MenuService {
 		preCheck(menuDto);
 		Menu menu = menuRepository.getOne(id);
 		menuConverter.copyProperties(menu, menuDto);
-		Long parentId = null;
-		if (menuDto.getParent() != null) {
-			parentId = menuDto.getParent().getId();
-		}
-		if (!Objects.isNull(parentId)) {
-			menu.setParent(menuRepository.getOne(parentId));
+		if (!Objects.isNull(menuDto.getParent()) && !Objects.isNull(menuDto.getParent().getId())) {
+			menu.setParent(menuRepository.getOne(menuDto.getParent().getId()));
+		} else {
+			menu.setParent(null);
 		}
 		menuRepository.save(menu);
 		return menu;

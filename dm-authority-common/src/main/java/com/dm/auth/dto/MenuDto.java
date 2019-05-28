@@ -1,6 +1,9 @@
 package com.dm.auth.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import com.dm.auth.entity.Menu.MenuType;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,4 +30,14 @@ public class MenuDto implements Serializable {
 	private String description;
 	private MenuType type;
 	private MenuDto parent;
+
+	public List<Long> getParents() {
+		List<Long> results = new ArrayList<>();
+		MenuDto current = this.parent;
+		while (!Objects.isNull(current)) {
+			results.add(0, current.getId());
+			current = current.getParent();
+		}
+		return results;
+	}
 }
