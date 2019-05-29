@@ -56,6 +56,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 		dto.setHref(menu.getUrl());
 		dto.setDescription(menu.getDescription());
 		dto.setType(menu.getType());
+		dto.setOpenInNewWindow(menu.getOpenInNewWindow());
 		return dto;
 	}
 
@@ -68,6 +69,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 		menuDto.setEnabled(model.isEnabled());
 		menuDto.setUrl(model.getUrl());
 		menuDto.setIcon(model.getIcon());
+		menuDto.setOpenInNewWindow(model.getOpenInNewWindow());
 		if (!Objects.isNull(model.getParent())) {
 			menuDto.setParent(toDto(model.getParent()));
 		}
@@ -85,6 +87,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 		model.setIcon(dto.getIcon());
 		model.setDescription(dto.getDescription());
 		model.setType(dto.getType());
+		model.setOpenInNewWindow(dto.getOpenInNewWindow());
 		return model;
 	}
 

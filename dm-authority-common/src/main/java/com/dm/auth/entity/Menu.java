@@ -90,4 +90,10 @@ public class Menu extends AbstractEntity {
 	@Enumerated(EnumType.STRING)
 	private MenuType type = MenuType.COMPONENT;
 
+	/**
+	 * 是否在新窗口种打开链接
+	 */
+	@Column(name = "open_in_new_window_")
+	private Boolean openInNewWindow;
+
 }

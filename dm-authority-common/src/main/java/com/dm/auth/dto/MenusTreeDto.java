@@ -27,6 +27,7 @@ public class MenusTreeDto implements Serializable {
 	private String href;
 	private String description;
 	private MenuType type;
+	private Boolean openInNewWindow;
 	private List<MenusTreeDto> submenus;
 
 	public MenusTreeDto() {

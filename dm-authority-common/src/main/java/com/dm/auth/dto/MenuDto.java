@@ -31,6 +31,8 @@ public class MenuDto implements Serializable {
 	private MenuType type;
 	private MenuDto parent;
 
+	private Boolean openInNewWindow;
+
 	public List<Long> getParents() {
 		List<Long> results = new ArrayList<>();
 		MenuDto current = this.parent;
