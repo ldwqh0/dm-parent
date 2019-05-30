@@ -30,7 +30,6 @@ public class RegionRepositoryImpl {
 			result.addAll(tmp);
 			tmp = findAllChildren(tmp);
 		}
-		result.addAll(query.fetch());
 		return result;
 	}
 
