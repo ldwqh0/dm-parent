@@ -1,7 +1,7 @@
 package com.dm.uap.converter;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.dm.common.converter.AbstractConverter;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
@@ -25,8 +26,8 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 	@Autowired
 	private RoleConverter roleConverter;
 
-//	@Autowired
-//	private DepartmentConverter departmentConverter;
+	@Autowired
+	private DepartmentConverter departmentConverter;
 
 	public <T extends User> UserDetailsDto toUserDetailsDto(Optional<T> user) {
 		UserDetailsDto dto = null;
@@ -67,9 +68,9 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		dto.setRegionCode(user.getRegionCode());
 		Map<Department, String> _posts = user.getPosts();
 		if (MapUtils.isNotEmpty(_posts)) {
-			Map<Long, String> posts = new HashMap<>();
+			List<UserPostDto> posts = new ArrayList<>();
 			_posts.entrySet().forEach(a -> {
-				posts.put(a.getKey().getId(), a.getValue());
+				posts.add(new UserPostDto(departmentConverter.toDto(a.getKey()), a.getValue()));
 			});
 			dto.setPosts(posts);
 		}

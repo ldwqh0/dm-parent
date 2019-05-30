@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dm.common.dto.TableResult;
 import com.dm.uap.converter.DepartmentConverter;
 import com.dm.uap.dto.DepartmentDto;
-import com.dm.uap.dto.DepartmentTreeDto;
 import com.dm.uap.service.DepartmentService;
 
 import static org.springframework.http.HttpStatus.*;
@@ -62,8 +61,8 @@ public class DepartmentController {
 		return TableResult.success(draw, departmentService.find(key, pageable), departmentConverter::toDto);
 	}
 
-	@GetMapping(params = "type=tree")
-	public List<DepartmentTreeDto> tree(@PageableDefault(size = 10000) Pageable pageable) {
-		return departmentConverter.toTree(departmentService.findAll());
+	@GetMapping(params = "!draw")
+	public List<DepartmentDto> tree(@PageableDefault(size = 10000) Pageable pageable) {
+		return departmentConverter.toDto(departmentService.findAll());
 	}
 }

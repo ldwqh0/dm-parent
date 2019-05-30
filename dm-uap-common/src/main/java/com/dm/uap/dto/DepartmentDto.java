@@ -24,19 +24,29 @@ public class DepartmentDto implements Serializable {
 	private String shortname;
 
 	private String description;
-	
+
 	private Types type;
 
-	@JsonIgnoreProperties(value = { "parent", "description" })
+	public DepartmentDto() {
+		super();
+	}
+
+	public DepartmentDto(Long id) {
+		super();
+		this.id = id;
+	}
+
+	@JsonIgnoreProperties({ "parent", "description", "parents" })
 	private DepartmentDto parent;
 
 	public List<Long> getParents() {
-		List<Long> results = new ArrayList<Long>();
+		List<Long> parents = new ArrayList<Long>();
 		DepartmentDto current = parent;
 		while (!Objects.isNull(current)) {
-			results.add(0, current.getId());
+			parents.add(0, current.getId());
 			current = current.getParent();
 		}
-		return results;
+		return parents;
 	}
+
 }

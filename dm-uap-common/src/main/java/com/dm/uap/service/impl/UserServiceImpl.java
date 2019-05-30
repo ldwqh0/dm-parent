@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +22,7 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
 import com.dm.uap.entity.Role;
@@ -182,12 +182,12 @@ public class UserServiceImpl implements UserService {
 
 	// 添加用户的职务和角色信息
 	private void addPostsAndRoles(User model, UserDto dto) {
-		Map<Long, String> posts = dto.getPosts();
+		List<UserPostDto> posts = dto.getPosts();
 		List<RoleDto> _roles = dto.getRoles();
-		if (MapUtils.isNotEmpty(posts)) {
+		if (CollectionUtils.isNotEmpty(posts)) {
 			Map<Department, String> posts_ = new HashMap<>();
-			posts.entrySet().forEach(entry -> {
-				posts_.put(departmentRepository.getOne(entry.getKey()), entry.getValue());
+			posts.forEach(entry -> {
+				posts_.put(departmentRepository.getOne(entry.getDepartment().getId()), entry.getPost());
 			});
 			model.setPosts(posts_);
 		}

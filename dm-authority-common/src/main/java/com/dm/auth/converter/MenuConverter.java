@@ -90,5 +90,4 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
 		model.setOpenInNewWindow(dto.getOpenInNewWindow());
 		return model;
 	}
-
 }
