@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dm.region.converter.RegionConverter;
 import com.dm.region.dto.RegionDto;
-import com.dm.region.dto.RegionTreeDto;
 import com.dm.region.entity.Region;
 import com.dm.region.service.RegionService;
 
@@ -32,23 +31,29 @@ public class RegionController {
 	@Autowired
 	private RegionConverter regionConverter;
 
-	@GetMapping(params = "!type")
-	public List<RegionDto> findAll() {
-		List<Region> regions = regionService.findAll();
-		return regions.stream().map(regionConverter::toDto).collect(Collectors.toList());
+	@GetMapping
+	public List<RegionDto> findAll(
+			@RequestParam(value = "parent", required = false) String parent) {
+		List<Region> regions;
+		if (StringUtils.isEmpty(parent)) {
+			regions = regionService.findAll();
+		} else {
+			regions = regionService.findAllChildren(parent);
+		}
+		return regionConverter.toDto(regions);
 	}
 
-	@GetMapping(params = "type=tree")
-	public List<RegionTreeDto> getTree(
-			@RequestParam(value = "parentCode", required = false) String parentCode) {
-		List<Region> regions = null;
-		if (StringUtils.isNotEmpty(parentCode)) {
-			regions = regionService.findAllChildren(parentCode);
-		} else {
-			regions = regionService.findAll();
-		}
-		return regionConverter.toTreeDto(regions);
-	}
+//	@GetMapping(params = "type=tree")
+//	public List<RegionTreeDto> getTree(
+//			@RequestParam(value = "parentCode", required = false) String parentCode) {
+//		List<Region> regions = null;
+//		if (StringUtils.isNotEmpty(parentCode)) {
+//			regions = regionService.findAllChildren(parentCode);
+//		} else {
+//			regions = regionService.findAll();
+//		}
+//		return regionConverter.toTreeDto(regions);
+//	}
 
 	@GetMapping(value = "provinces")
 	public List<RegionDto> findProvincial() {

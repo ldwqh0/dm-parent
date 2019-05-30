@@ -66,7 +66,7 @@ public class RegionConfiguration {
 						if (StringUtils.isNotBlank(parentCode)) {
 							RegionDto parent = new RegionDto();
 							parent.setCode(parentCode);
-							region.setParentCode(parent);
+							region.setParent(parent);
 						}
 						if (StringUtils.isBlank(region.getCode())) {
 							System.out.println(region);
