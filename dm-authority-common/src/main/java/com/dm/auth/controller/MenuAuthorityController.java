@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dm.auth.converter.AuthorityConverter;
 import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
-import com.dm.auth.dto.MenusTreeDto;
+import com.dm.auth.dto.MenuDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.AuthorityService;
@@ -81,14 +81,14 @@ public class MenuAuthorityController {
 	 * @return
 	 */
 	@ApiOperation("获取当前用户的可用菜单项")
-	@GetMapping("menus")
-	public List<MenusTreeDto> systemMenu(@CurrentUser UserDetailsDto userDto) {
+	@GetMapping("current")
+	public List<MenuDto> systemMenu(@CurrentUser UserDetailsDto userDto) {
 		Collection<GrantedAuthorityDto> authorities = userDto.getRoles();
 		if (CollectionUtils.isNotEmpty(authorities)) {
 			List<String> authorityNames = authorities.stream().map(GrantedAuthorityDto::getAuthority)
 					.collect(Collectors.toList());
 			List<Menu> menus = authorityService.listMenuByAuthorities(authorityNames);
-			return menuConverter.toAuthorityMenusDto(menus);
+			return menuConverter.toDto(menus);
 		} else {
 			return Collections.emptyList();
 		}
