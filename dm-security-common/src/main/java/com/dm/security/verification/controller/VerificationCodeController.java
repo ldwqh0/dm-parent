@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeGenerator;
 import com.dm.security.verification.VerificationCodeStorage;
+import com.google.code.kaptcha.Producer;
 
 import static org.springframework.http.MediaType.*;
 
@@ -32,6 +33,9 @@ import javax.imageio.ImageIO;
 @RestController
 @RequestMapping("verificationCode")
 public class VerificationCodeController {
+
+	@Autowired
+	private Producer producer;
 
 	@Autowired
 	private VerificationCodeGenerator validateCodeGenerator;
@@ -85,14 +89,15 @@ public class VerificationCodeController {
 	}
 
 	private BufferedImage generateImage(String code) {
-		BufferedImage img = new BufferedImage(120, 40, BufferedImage.TYPE_INT_RGB);
-		Font font = new Font("Fixedsys", Font.BOLD, 30);
-		Graphics gd = img.getGraphics();
-		gd.setColor(Color.RED);
-		gd.setFont(font);
-		gd.drawString(code, 10, 30);
-		gd.dispose();
-		return img;
+		return producer.createImage(code);
+//		BufferedImage img = new BufferedImage(140, 40, BufferedImage.TYPE_INT_RGB);
+//		Font font = new Font("Fixedsys", Font.BOLD, 30);
+//		Graphics gd = img.getGraphics();
+//		gd.setColor(Color.RED);
+//		gd.setFont(font);
+//		gd.drawString(code, 10, 30);
+//		gd.dispose();
+//		return img;
 	}
 
 	@GetMapping("validation")
