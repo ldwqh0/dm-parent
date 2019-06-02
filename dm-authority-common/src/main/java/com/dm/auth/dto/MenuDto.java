@@ -35,6 +35,11 @@ public class MenuDto implements Serializable {
 
 	private Boolean openInNewWindow;
 
+	/**
+	 * 为el-cascade准备的数据结构，在el 2.9中不需要该属性了，后期移除
+	 * @return
+	 */
+	@Deprecated
 	public List<Long> getParents() {
 		List<Long> results = new ArrayList<>();
 		MenuDto current = this.parent;

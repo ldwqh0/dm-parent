@@ -39,6 +39,12 @@ public class DepartmentDto implements Serializable {
 	@JsonIgnoreProperties({ "parent", "description", "parents" })
 	private DepartmentDto parent;
 
+	/**
+	 * 为el-cascade准备的数据结构，在el 2.9中不需要该属性了，后期移除
+	 * 
+	 * @return
+	 */
+	@Deprecated
 	public List<Long> getParents() {
 		List<Long> parents = new ArrayList<Long>();
 		DepartmentDto current = parent;

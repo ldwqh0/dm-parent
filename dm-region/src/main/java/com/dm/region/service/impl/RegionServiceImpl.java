@@ -1,6 +1,7 @@
 package com.dm.region.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,10 @@ public class RegionServiceImpl implements RegionService {
 	@Override
 	public List<Region> findAllChildren(String code) {
 		return regionRepository.findAllChildren(code);
+	}
+
+	@Override
+	public Optional<Region> findByCode(String parent) {
+		return regionRepository.findById(parent);
 	}
 }

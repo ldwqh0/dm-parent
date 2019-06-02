@@ -36,10 +36,13 @@ public class UserPostDto implements Serializable {
 	}
 
 	/**
-	 * 为el-cacade 准备的数据结构
+	 * 为el-cacade 准备的数据结构,<br >
+	 * 
+	 * 在element-2.9中，已经不需要如此处理了
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	public List<Long> getDepartments() {
 		List<Long> departments = new ArrayList<Long>();
 		if (!Objects.isNull(department)) {

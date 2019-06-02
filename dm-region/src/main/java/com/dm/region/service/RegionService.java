@@ -1,6 +1,7 @@
 package com.dm.region.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.Region;
@@ -43,4 +44,6 @@ public interface RegionService {
 	 * @return
 	 */
 	public List<Region> findAllChildren(String code);
+
+	public Optional<Region> findByCode(String parent);
 }

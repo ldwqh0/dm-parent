@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
@@ -30,13 +31,14 @@ import com.dm.security.access.RequestAuthoritiesFilterInvocationSecurityMetadata
 import com.dm.security.oauth2.provider.token.TokenStoreResourceServerTokenServices;
 
 /**
- * 当请求中携带了access_token之后，
+ * 当请求中携带了access_token之后， 进行oauth认证
  * 
  * @author LiDong
  *
  */
 @EnableResourceServer
 @EnableWebSecurity
+@Order(99)
 public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 
 	@Autowired
@@ -51,6 +53,9 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 		super.configure(http);
 		// 增加自定义的资源授权过滤器
 		http.addFilterBefore(interceptor(), FilterSecurityInterceptor.class);
+
+		// 仅仅将携带了token的资源，定义为资源服务器的资源，走oauth认证
+		// ，其它的资源都走普通的session认证
 		http.requestMatcher(new BearerTokenRequestMatcher());
 	}
 

@@ -1,6 +1,7 @@
 package com.dm.region.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,27 +34,22 @@ public class RegionController {
 
 	@GetMapping
 	public List<RegionDto> findAll(
-			@RequestParam(value = "parent", required = false) String parent) {
+			@RequestParam(value = "parent", required = false) String parent,
+			@RequestParam(value = "includeSelf", required = false, defaultValue = "true") Boolean includeSelf) {
 		List<Region> regions;
 		if (StringUtils.isEmpty(parent)) {
 			regions = regionService.findAll();
 		} else {
 			regions = regionService.findAllChildren(parent);
 		}
+		if (includeSelf && StringUtils.isNoneBlank(parent)) {
+			Optional<Region> self = regionService.findByCode(parent);
+			if (self.isPresent()) {
+				regions.add(self.get());
+			}
+		}
 		return regionConverter.toDto(regions);
 	}
-
-//	@GetMapping(params = "type=tree")
-//	public List<RegionTreeDto> getTree(
-//			@RequestParam(value = "parentCode", required = false) String parentCode) {
-//		List<Region> regions = null;
-//		if (StringUtils.isNotEmpty(parentCode)) {
-//			regions = regionService.findAllChildren(parentCode);
-//		} else {
-//			regions = regionService.findAll();
-//		}
-//		return regionConverter.toTreeDto(regions);
-//	}
 
 	@GetMapping(value = "provinces")
 	public List<RegionDto> findProvincial() {
