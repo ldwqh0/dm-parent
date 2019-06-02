@@ -18,6 +18,7 @@ public class FishEyeGimpy implements GimpyEngine
 	 * @param baseImage the base image
 	 * @return the distorted image
 	 */
+	@Override
 	public BufferedImage getDistortedImage(BufferedImage baseImage)
 	{
 
@@ -84,9 +85,9 @@ public class FishEyeGimpy implements GimpyEngine
 				{
 
 					int j2 = widthMiddle
-							+ (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (double) (x - widthMiddle));
+							+ (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (x - widthMiddle));
 					int k2 = heightMiddle
-							+ (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (double) (y - heightMiddle));
+							+ (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (y - heightMiddle));
 					baseImage.setRGB(x, y, pix[j2 * imageHeight + k2]);
 				}
 			}
@@ -104,7 +105,7 @@ public class FishEyeGimpy implements GimpyEngine
 	private int ranInt(int i, int j)
 	{
 		double d = Math.random();
-		return (int) ((double) i + (double) ((j - i) + 1) * d);
+		return (int) (i + ((j - i) + 1) * d);
 	}
 
 	/**

@@ -31,6 +31,7 @@ public class DefaultKaptcha extends Configurable implements Producer
 	 *            the distorted characters
 	 * @return image with the text
 	 */
+	@Override
 	public BufferedImage createImage(String text)
 	{
 		WordRenderer wordRenderer = getConfig().getWordRendererImpl();
@@ -60,7 +61,7 @@ public class DefaultKaptcha extends Configurable implements Producer
 
 		if (borderThickness != 1)
 		{
-			BasicStroke stroke = new BasicStroke((float) borderThickness);
+			BasicStroke stroke = new BasicStroke(borderThickness);
 			graphics.setStroke(stroke);
 		}
 
@@ -77,6 +78,7 @@ public class DefaultKaptcha extends Configurable implements Producer
 	/**
 	 * @return the text to be drawn
 	 */
+	@Override
 	public String createText()
 	{
 		return getConfig().getTextProducerImpl().getText();

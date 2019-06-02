@@ -21,6 +21,7 @@ public class DefaultBackground extends Configurable implements BackgroundProduce
 	 * @param baseImage the base image
 	 * @return an image with a gradient background added to the base image.
 	 */
+	@Override
 	public BufferedImage addBackground(BufferedImage baseImage)
 	{
 		Color colorFrom = getConfig().getBackgroundColorFrom();

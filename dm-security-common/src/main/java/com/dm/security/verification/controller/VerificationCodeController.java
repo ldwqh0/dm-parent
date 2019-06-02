@@ -15,9 +15,6 @@ import com.google.code.kaptcha.Producer;
 
 import static org.springframework.http.MediaType.*;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

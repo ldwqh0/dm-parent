@@ -17,6 +17,7 @@ public class ChineseTextProducer implements TextProducer
 	/**
 	 * @return random Chinese text
 	 */
+	@Override
 	public String getText()
 	{
 		return simplifiedChineseTexts[new Random().nextInt(simplifiedChineseTexts.length)];

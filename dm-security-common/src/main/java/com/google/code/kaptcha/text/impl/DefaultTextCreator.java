@@ -14,6 +14,7 @@ public class DefaultTextCreator extends Configurable implements TextProducer
 	/**
 	 * @return the random text
 	 */
+	@Override
 	public String getText()
 	{
 		int length = getConfig().getTextProducerCharLength();

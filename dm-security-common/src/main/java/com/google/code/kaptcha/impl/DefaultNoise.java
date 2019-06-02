@@ -30,6 +30,7 @@ public class DefaultNoise extends Configurable implements NoiseProducer
 	 * @param factorThree
 	 * @param factorFour
 	 */
+	@Override
 	public void makeNoise(BufferedImage image, float factorOne,
 			float factorTwo, float factorThree, float factorFour)
 	{

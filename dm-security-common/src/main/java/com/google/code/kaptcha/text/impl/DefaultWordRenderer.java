@@ -29,6 +29,7 @@ public class DefaultWordRenderer extends Configurable implements WordRenderer
 	 *            The height of the image to be created.
 	 * @return The BufferedImage created from the word.
 	 */
+	@Override
 	public BufferedImage renderWord(String word, int width, int height)
 	{
 		int fontSize = getConfig().getTextProducerFontSize();
@@ -80,7 +81,7 @@ public class DefaultWordRenderer extends Configurable implements WordRenderer
 				wordChars[i]
 			};
 			g2D.drawChars(charToDraw, 0, charToDraw.length, startPosX, startPosY);
-			startPosX = startPosX + (int) charWidths[i] + charSpace;
+			startPosX = startPosX + charWidths[i] + charSpace;
 		}
 
 		return image;
