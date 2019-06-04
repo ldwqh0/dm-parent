@@ -1,5 +1,6 @@
 package com.dm.uap.service.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,8 @@ public class UserServiceImpl implements UserService {
 		String password = userDto.getPassword();
 		if (StringUtils.isNotBlank(password)) {
 			user.setPassword(passwordEncoder.encode(password));
+		} else {
+			user.setPassword(null);
 		}
 		addPostsAndRoles(user, userDto);
 		user = userRepository.save(user);
@@ -190,11 +193,15 @@ public class UserServiceImpl implements UserService {
 				posts_.put(departmentRepository.getOne(entry.getDepartment().getId()), entry.getPost());
 			});
 			model.setPosts(posts_);
+		} else {
+			model.setPosts(Collections.emptyMap());
 		}
 		if (CollectionUtils.isNotEmpty(_roles)) {
 			List<Role> roles = _roles.stream().map(RoleDto::getId).map(roleRepository::getOne)
 					.collect(Collectors.toList());
 			model.setRoles(roles);
+		} else {
+			model.setRoles(Collections.emptyList());
 		}
 	}
 }

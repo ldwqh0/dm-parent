@@ -36,9 +36,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 		Department department = new Department();
 		departmentConverter.copyProperties(department, data);
 		DepartmentDto parent = data.getParent();
-		if (!Objects.isNull(parent)) {
+		if (Objects.isNull(parent)) {
+			department.setParent(null);
+		} else {
 			department.setParent(departmentRepository.getOne(parent.getId()));
 		}
+
 		Department dep = departmentRepository.save(department);
 		// 设置部门的顺序
 		dep.setOrder(dep.getId());

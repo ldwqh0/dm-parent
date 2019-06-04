@@ -130,7 +130,9 @@ public class RoleServiceImpl implements RoleService {
 		roleConverter.copyProperties(data, dto);
 		data.setUsers(getUsersFromDto(dto.getUsers()));
 		RoleGroupDto _group = dto.getGroup();
-		if (!Objects.isNull(_group)) {
+		if (Objects.isNull(_group)) {
+			data.setGroup(null);
+		} else {
 			Long groupId = _group.getId();
 			String groupName = _group.getName();
 			if (!Objects.isNull(groupId)) {
@@ -139,6 +141,7 @@ public class RoleServiceImpl implements RoleService {
 				RoleGroup group = new RoleGroup(groupName);
 				data.setGroup(roleGroupRepository.save(group));
 			}
+
 		}
 	}
 }

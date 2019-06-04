@@ -9,10 +9,10 @@ public class ModifyAudit implements Audit {
 	private static final long serialVersionUID = 5546618897219690297L;
 
 	@Column(name = "last_modify_user_id_")
-	private Long lastModifiedUserId;
+	private Long userid;
 
 	@Column(name = "last_modify_user_name_")
-	private String lastModifiedUserName;
+	private String username;
 
 	public ModifyAudit() {
 		super();
@@ -20,24 +20,24 @@ public class ModifyAudit implements Audit {
 
 	public ModifyAudit(Long lastModifiedUserId, String lastModifiedUserName) {
 		super();
-		this.lastModifiedUserId = lastModifiedUserId;
-		this.lastModifiedUserName = lastModifiedUserName;
+		this.userid = lastModifiedUserId;
+		this.username = lastModifiedUserName;
 	}
 
 	public ModifyAudit(Audit audit) {
 		super();
-		this.lastModifiedUserId = audit.getUserid();
-		this.lastModifiedUserName = audit.getUsername();
+		this.userid = audit.getUserid();
+		this.username = audit.getUsername();
 	}
 
 	@Override
 	public Long getUserid() {
-		return this.lastModifiedUserId;
+		return this.userid;
 	}
 
 	@Override
 	public String getUsername() {
-		return this.lastModifiedUserName;
+		return this.username;
 	}
 
 }

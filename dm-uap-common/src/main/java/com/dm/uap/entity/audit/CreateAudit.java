@@ -9,25 +9,25 @@ public class CreateAudit implements Audit {
 	private static final long serialVersionUID = 379407708683930698L;
 
 	@Column(name = "create_user_id_")
-	private Long createUserId;
+	private Long userid;
 
 	@Column(name = "create_user_name_")
-	private String createUserName;
+	private String username;
 
 	@Override
 	public String getUsername() {
-		return createUserName;
+		return username;
 	}
 
 	@Override
 	public Long getUserid() {
-		return createUserId;
+		return userid;
 	}
 
 	public CreateAudit(Long createUserId, String createUserName) {
 		super();
-		this.createUserId = createUserId;
-		this.createUserName = createUserName;
+		this.userid = createUserId;
+		this.username = createUserName;
 	}
 
 	public CreateAudit() {
@@ -35,8 +35,8 @@ public class CreateAudit implements Audit {
 	}
 
 	public CreateAudit(Audit audit) {
-		this.createUserId = audit.getUserid();
-		this.createUserName = audit.getUsername();
+		this.userid = audit.getUserid();
+		this.username = audit.getUsername();
 	}
 
 }
