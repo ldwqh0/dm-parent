@@ -10,13 +10,19 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.dm.security.core.userdetails.UserDetailsDto;
+import com.dm.uap.dto.AuditDto;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.RoleGroupDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
+import com.dm.uap.entity.audit.Audit;
 import com.dm.uap.entity.Role.Status;
 import com.dm.uap.entity.RoleGroup;
 import com.dm.uap.service.RoleGroupService;
@@ -31,7 +37,6 @@ import com.dm.uap.service.UserService;
 @EnableConfigurationProperties({ DefaultUserProperties.class })
 public class UapAutoConfiguration {
 
-	
 	@Autowired
 	private DefaultUserProperties defaultUser;
 
@@ -120,6 +125,23 @@ public class UapAutoConfiguration {
 			roleGroup.setDescription("系统默认角色分组");
 			roleGroupService.save(roleGroup);
 		}
+	}
+
+	public static class SimpleAuditorAware implements AuditorAware<Audit> {
+
+		@Override
+		public Optional<Audit> getCurrentAuditor() {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication != null) {
+				Object principal = authentication.getPrincipal();
+				if (principal instanceof UserDetailsDto) {
+					UserDetailsDto ud = (UserDetailsDto) principal;
+					return Optional.ofNullable(new AuditDto(ud.getId(), ud.getUsername()));
+				}
+			}
+			return Optional.empty();
+		}
+
 	}
 
 }

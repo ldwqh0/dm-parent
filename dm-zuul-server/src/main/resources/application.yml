@@ -1,6 +1,7 @@
 server:
   port: 8880
-spring:  datasource:
+spring:
+  main:    allow-bean-definition-overriding: true  datasource:
     url: '@datasource.url@'
     username: '@datasource.username@'
     driver-class-name: '@datasource.driver@'
@@ -34,10 +35,13 @@ logging:
 zuul:
   add-host-header: true
   ## 默认情况下，zuul 会将 authorization cookie set-cookie 这三个敏感的header不作为转发对象
-  ## 在这里重新定义
+  ## 在这里重新定义,
+  ## 当zuul和security oauth2 sso一起使用时，zuul不会转发authorization到下游服务器，导致到下游的所有请求均没有authorization.
+  ## 必须在这里重新配置 
   sensitive-headers: 
   - cookie
   - set-cookie  
+#  - authorization
   include-debug-header: true
   routes: 
     data: ## 数据中心的代理

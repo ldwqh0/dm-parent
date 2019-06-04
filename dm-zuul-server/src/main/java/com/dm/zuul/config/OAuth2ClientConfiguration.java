@@ -6,18 +6,25 @@ import java.util.Arrays;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.token.AccessTokenProvider;
 import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
+import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.implicit.ImplicitAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
@@ -33,6 +40,10 @@ public class OAuth2ClientConfiguration {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Resource
+	@Qualifier("accessTokenRequest")
+	private AccessTokenRequest accessTokenRequest;
 
 	@Autowired
 	private OAuth2ClientContextFilter oAuth2ClientContextFilter;
@@ -69,5 +80,11 @@ public class OAuth2ClientConfiguration {
 				template.setAccessTokenProvider(provicerChain);
 			}
 		};
+	}
+
+	@Bean
+	@Scope(proxyMode = ScopedProxyMode.INTERFACES)
+	public OAuth2ClientContext oauth2ClientContext() {
+		return new DefaultOAuth2ClientContext(accessTokenRequest);
 	}
 }
