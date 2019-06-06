@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.constraints.NotEmpty;
+
+import com.dm.common.validation.groups.ReferenceGroup;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Data;
 
 @Data
@@ -20,11 +22,14 @@ public class RegionDto implements Serializable {
 	/**
 	 * 编码
 	 */
+	@NotEmpty
+	@NotEmpty(groups = ReferenceGroup.class)
 	private String code;
 
 	/**
 	 * 名称
 	 */
+	@NotEmpty
 	private String name;
 
 	private Double longitude;
