@@ -1,9 +1,6 @@
 package com.dm.uap.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 import lombok.Data;
 
@@ -33,23 +30,6 @@ public class UserPostDto implements Serializable {
 
 	public UserPostDto() {
 		super();
-	}
-
-	/**
-	 * 为el-cacade 准备的数据结构,<br >
-	 * 
-	 * 在element-2.9中，已经不需要如此处理了
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	public List<Long> getDepartments() {
-		List<Long> departments = new ArrayList<Long>();
-		if (!Objects.isNull(department)) {
-			departments.addAll(department.getParents());
-			departments.add(department.getId());
-		}
-		return departments;
 	}
 
 }

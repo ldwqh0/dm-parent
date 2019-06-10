@@ -1,9 +1,6 @@
 package com.dm.uap.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 import com.dm.uap.entity.Department.Types;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,21 +35,5 @@ public class DepartmentDto implements Serializable {
 
 	@JsonIgnoreProperties({ "parent", "description", "parents" })
 	private DepartmentDto parent;
-
-	/**
-	 * 为el-cascade准备的数据结构，在el 2.9中不需要该属性了，后期移除
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	public List<Long> getParents() {
-		List<Long> parents = new ArrayList<Long>();
-		DepartmentDto current = parent;
-		while (!Objects.isNull(current)) {
-			parents.add(0, current.getId());
-			current = current.getParent();
-		}
-		return parents;
-	}
 
 }
