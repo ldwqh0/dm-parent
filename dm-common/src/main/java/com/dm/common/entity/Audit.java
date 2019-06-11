@@ -1,9 +1,9 @@
-package com.dm.uap.entity.audit;
+package com.dm.common.entity;
 
 import java.io.Serializable;
 
 /**
- * 审计信息
+ * 审计信息对象模型，包含用户ID和用户姓名
  * 
  * @author LiDong
  *

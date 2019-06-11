@@ -15,16 +15,18 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.dm.common.entity.Audit;
+import com.dm.common.entity.CreateAudit;
+import com.dm.common.entity.ModifyAudit;
+
 @Entity(name = "dm_file_")
 @EntityListeners(AuditingEntityListener.class)
-public class FileInfo implements Auditable<String, UUID, ZonedDateTime>, Serializable {
+public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializable {
 	private static final long serialVersionUID = -914974010332311193L;
 
 	@Id
@@ -33,17 +35,13 @@ public class FileInfo implements Auditable<String, UUID, ZonedDateTime>, Seriali
 	@Column(name = "id_", length = 36)
 	private @Nullable UUID id;
 
-	@CreatedBy
-	@Column(name = "create_by_", length = 50)
-	private String createBy;
+	private CreateAudit createBy;
 
 	@Column(name = "created_date_")
 	@CreatedDate
 	private ZonedDateTime createdDate;
 
-	@LastModifiedBy
-	@Column(name = "last_modified_by", length = 50)
-	private String lastModifiedBy;
+	private ModifyAudit lastModifiedBy;
 
 	@Column(name = "last_modified_date_")
 	@LastModifiedDate
@@ -69,23 +67,23 @@ public class FileInfo implements Auditable<String, UUID, ZonedDateTime>, Seriali
 	private Long size;
 
 	@Override
-	public Optional<String> getCreatedBy() {
+	public Optional<Audit> getCreatedBy() {
 		return Optional.ofNullable(this.createBy);
 	}
 
 	@Override
-	public Optional<String> getLastModifiedBy() {
+	public Optional<Audit> getLastModifiedBy() {
 		return Optional.ofNullable(this.lastModifiedBy);
 	}
 
 	@Override
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
+	public void setLastModifiedBy(Audit lastModifiedBy) {
+		this.lastModifiedBy = new ModifyAudit(lastModifiedBy);
 	}
 
 	@Override
-	public void setCreatedBy(String createdBy) {
-		this.createBy = createdBy;
+	public void setCreatedBy(Audit createdBy) {
+		this.createBy = new CreateAudit(createBy);
 	}
 
 	@Override

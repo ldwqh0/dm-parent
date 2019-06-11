@@ -1,4 +1,4 @@
-package com.dm.uap.entity.audit;
+package com.dm.common.entity;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -36,7 +36,6 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 	private ZonedDateTime lastModifiedDate;
 
 	@Override
-
 	public Optional<Audit> getCreatedBy() {
 		return Optional.ofNullable(this.createBy);
 	}
@@ -55,7 +54,6 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 	@Override
 	public void setCreatedDate(ZonedDateTime creationDate) {
 		this.createDate = creationDate;
-
 	}
 
 	@Override

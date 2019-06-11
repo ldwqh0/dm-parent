@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.dm.common.entity.Audit;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.AuditDto;
 import com.dm.uap.dto.RoleDto;
@@ -23,7 +24,6 @@ import com.dm.uap.dto.RoleGroupDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
-import com.dm.uap.entity.audit.Audit;
 import com.dm.uap.entity.Role.Status;
 import com.dm.uap.entity.RoleGroup;
 import com.dm.uap.service.RoleGroupService;

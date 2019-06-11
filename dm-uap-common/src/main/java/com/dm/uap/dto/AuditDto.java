@@ -1,6 +1,6 @@
 package com.dm.uap.dto;
 
-import com.dm.uap.entity.audit.Audit;
+import com.dm.common.entity.Audit;
 
 import lombok.Data;
 

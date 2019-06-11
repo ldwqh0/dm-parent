@@ -1,4 +1,4 @@
-package com.dm.uap.entity.audit;
+package com.dm.common.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

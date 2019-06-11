@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import com.dm.common.entity.Audit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -25,7 +26,7 @@ public class FileInfoDto implements Serializable {
 
 	private Long size;
 
-	private  String createUser;
+	private Audit createUser;
 
-	private  ZonedDateTime createTime;
+	private ZonedDateTime createTime;
 }
