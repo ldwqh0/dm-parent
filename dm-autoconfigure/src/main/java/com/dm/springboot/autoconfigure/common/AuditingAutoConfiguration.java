@@ -7,8 +7,16 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.AuditingHandler;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.dm.common.dto.AuditDto;
+import com.dm.common.entity.Audit;
+import com.dm.security.core.userdetails.UserDetailsDto;
 
 /**
  * 实体审计相关的配置项目
@@ -29,6 +37,23 @@ public class AuditingAutoConfiguration {
 	@PostConstruct
 	public void configAuditingHandler() {
 		handler.setDateTimeProvider(() -> Optional.of(ZonedDateTime.now()));
+	}
+
+	@Configuration
+	@ConditionalOnMissingBean(AuditorAware.class)
+	public static class SimpleAuditorAware implements AuditorAware<Audit> {
+		@Override
+		public Optional<Audit> getCurrentAuditor() {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication != null) {
+				Object principal = authentication.getPrincipal();
+				if (principal instanceof UserDetailsDto) {
+					UserDetailsDto ud = (UserDetailsDto) principal;
+					return Optional.ofNullable(new AuditDto(ud.getId(), ud.getUsername()));
+				}
+			}
+			return Optional.empty();
+		}
 	}
 
 }

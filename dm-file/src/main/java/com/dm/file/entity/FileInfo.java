@@ -79,7 +79,7 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
 	}
 
 	@Override
-	public void setCreatedBy(Audit createdBy) {
+	public void setCreatedBy(Audit createBy) {
 		this.createBy = new CreateAudit(createBy);
 	}
 

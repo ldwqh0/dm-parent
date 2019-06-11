@@ -1,4 +1,4 @@
-package com.dm.uap.dto;
+package com.dm.common.dto;
 
 import com.dm.common.entity.Audit;
 

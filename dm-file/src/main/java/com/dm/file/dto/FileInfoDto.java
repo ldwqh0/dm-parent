@@ -28,5 +28,7 @@ public class FileInfoDto implements Serializable {
 
 	private Audit createUser;
 
+	private Audit lastModifiedBy;
+
 	private ZonedDateTime createTime;
 }

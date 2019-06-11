@@ -6,19 +6,11 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import com.dm.common.entity.Audit;
-import com.dm.security.core.userdetails.UserDetailsDto;
-import com.dm.uap.dto.AuditDto;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.RoleGroupDto;
 import com.dm.uap.dto.UserDto;
@@ -128,20 +120,4 @@ public class UapAutoConfiguration {
 		}
 	}
 
-	@Configuration
-	@ConditionalOnMissingBean(AuditorAware.class)
-	public static class SimpleAuditorAware implements AuditorAware<Audit> {
-		@Override
-		public Optional<Audit> getCurrentAuditor() {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			if (authentication != null) {
-				Object principal = authentication.getPrincipal();
-				if (principal instanceof UserDetailsDto) {
-					UserDetailsDto ud = (UserDetailsDto) principal;
-					return Optional.ofNullable(new AuditDto(ud.getId(), ud.getUsername()));
-				}
-			}
-			return Optional.empty();
-		}
-	}
 }
