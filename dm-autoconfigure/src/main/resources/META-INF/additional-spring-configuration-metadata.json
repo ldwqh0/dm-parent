@@ -6,4 +6,8 @@
   "name": "dingtalk",
   "type": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration.DingClientConfigCongiguration",
   "sourceType": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration.DingClientConfigCongiguration"
+},{
+  "name": "dm.fileserver",
+  "type": "com.dm.file.config.FileConfig",
+  "sourceType": "com.dm.file.config.FileConfig"
 }]}
