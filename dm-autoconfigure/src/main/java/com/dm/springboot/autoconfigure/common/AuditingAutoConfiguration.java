@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.auditing.AuditingHandler;
 
 /**
@@ -19,7 +18,6 @@ import org.springframework.data.auditing.AuditingHandler;
  */
 @Configuration
 @ConditionalOnBean(AuditingHandler.class)
-@Import(UserServiceAuditingConfiguration.class)
 public class AuditingAutoConfiguration {
 
 	@Autowired

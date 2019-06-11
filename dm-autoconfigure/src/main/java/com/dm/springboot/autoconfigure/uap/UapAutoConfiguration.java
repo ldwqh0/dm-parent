@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -127,8 +128,9 @@ public class UapAutoConfiguration {
 		}
 	}
 
+	@Configuration
+	@ConditionalOnMissingBean(AuditorAware.class)
 	public static class SimpleAuditorAware implements AuditorAware<Audit> {
-
 		@Override
 		public Optional<Audit> getCurrentAuditor() {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -141,7 +143,5 @@ public class UapAutoConfiguration {
 			}
 			return Optional.empty();
 		}
-
 	}
-
 }

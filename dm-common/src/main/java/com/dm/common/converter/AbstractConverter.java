@@ -70,5 +70,4 @@ public abstract class AbstractConverter<M, DTO> {
 	 */
 	public abstract M copyProperties(M model, DTO dto);
 
-
 }
