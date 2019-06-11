@@ -1,4 +1,4 @@
-package com.dm.fileserver.dto;
+package com.dm.file.dto;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;

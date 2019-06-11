@@ -38,9 +38,13 @@
 		<module>dm-dingding-api</module>
 		<!-- 钉钉API和用户鉴权模块 -->
 		<module>dm-uap-dingtalk</module>
+		<!-- 文件模块 -->
+		<module>dm-file</module>
 
 		<module>dm-resource-server-spring-boot-starter</module>
 		<module>dm-security-spring-boot-starter</module>
+
+		<module>dm-file-spring-boot-starter</module>
 	</modules>
 	<packaging>pom</packaging>
 
@@ -151,6 +155,11 @@
 
 			<dependency>
 				<groupId>com.dm</groupId>
+				<artifactId>dm-file</artifactId>
+				<version>${dm.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dm</groupId>
 				<artifactId>dm-dingding-api</artifactId>
 				<version>${dm.version}</version>
 			</dependency>
@@ -182,6 +191,12 @@
 			<dependency>
 				<groupId>com.dm</groupId>
 				<artifactId>dm-security-spring-boot-starter</artifactId>
+				<version>${dm.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.dm</groupId>
+				<artifactId>dm-file-spring-boot-starter</artifactId>
 				<version>${dm.version}</version>
 			</dependency>
 		</dependencies>

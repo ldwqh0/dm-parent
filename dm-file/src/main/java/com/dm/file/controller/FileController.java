@@ -1,4 +1,4 @@
-package com.dm.fileserver.controller;
+package com.dm.file.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,14 +36,14 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.dm.fileserver.config.FileConfig;
-import com.dm.fileserver.converter.FileInfoConverter;
-import com.dm.fileserver.dto.FileInfoDto;
-import com.dm.fileserver.entity.FileInfo;
-import com.dm.fileserver.service.FileInfoService;
-import com.dm.fileserver.service.FileStorageService;
-import com.dm.fileserver.service.ThumbnailService;
-import com.dm.fileserver.util.DmFileUtils;
+import com.dm.file.config.FileConfig;
+import com.dm.file.converter.FileInfoConverter;
+import com.dm.file.dto.FileInfoDto;
+import com.dm.file.entity.FileInfo;
+import com.dm.file.service.FileInfoService;
+import com.dm.file.service.FileStorageService;
+import com.dm.file.service.ThumbnailService;
+import com.dm.file.util.DmFileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -49,5 +49,10 @@
 			<artifactId>dm-dingding-api</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-file</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>

@@ -1,13 +1,13 @@
-package com.dm.fileserver.config;
+package com.dm.file.config;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections4.MapUtils;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+//import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "file")
+//@ConfigurationProperties(prefix = "file")
 public class FileConfig {
 	private String path;
 	private Map<String, String> mime;

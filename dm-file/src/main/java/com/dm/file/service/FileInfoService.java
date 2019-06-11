@@ -1,4 +1,4 @@
-package com.dm.fileserver.service;
+package com.dm.file.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.dm.fileserver.dto.FileInfoDto;
-import com.dm.fileserver.entity.FileInfo;
+import com.dm.file.dto.FileInfoDto;
+import com.dm.file.entity.FileInfo;
 
 public interface FileInfoService {
 	/**

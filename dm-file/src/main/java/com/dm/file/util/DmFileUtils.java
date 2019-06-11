@@ -1,4 +1,4 @@
-package com.dm.fileserver.util;
+package com.dm.file.util;
 
 import java.io.File;
 import java.io.FileOutputStream;

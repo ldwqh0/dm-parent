@@ -1,10 +1,10 @@
-package com.dm.fileserver.converter;
+package com.dm.file.converter;
 
 import org.springframework.stereotype.Component;
 
 import com.dm.common.converter.AbstractConverter;
-import com.dm.fileserver.dto.FileInfoDto;
-import com.dm.fileserver.entity.FileInfo;
+import com.dm.file.dto.FileInfoDto;
+import com.dm.file.entity.FileInfo;
 
 @Component
 public class FileInfoConverter extends AbstractConverter<FileInfo, FileInfoDto> {

@@ -1,4 +1,4 @@
-package com.dm.fileserver.entity;
+package com.dm.file.entity;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -6,13 +6,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
@@ -33,7 +31,7 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
 	@GeneratedValue
 	@Type(type = "uuid-char")
 	@Column(name = "id_", length = 36)
-	private @Nullable UUID id;
+	private UUID id;
 
 	private CreateAudit createBy;
 
@@ -50,7 +48,6 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
 	/**
 	 * 文件名
 	 */
-	@NotNull
 	@Column(name = "file_name_", length = 255, nullable = false)
 	private String filename;
 

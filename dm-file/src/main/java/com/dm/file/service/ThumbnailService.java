@@ -1,4 +1,4 @@
-package com.dm.fileserver.service;
+package com.dm.file.service;
 
 import java.io.IOException;
 import java.io.InputStream;
