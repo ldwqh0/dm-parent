@@ -25,7 +25,8 @@ public class LoginFailureHandler implements AuthenticationFailureHandler, Initia
 			AuthenticationException exception) throws IOException, ServletException {
 		String result = objectMapper.writeValueAsString(exception.getMessage());
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());
-		response.getWriter().write(result);
+		String encoding = response.getCharacterEncoding();
+		response.getWriter().write(new String(result.getBytes("UTF-8"), encoding));
 	}
 
 	@Override
