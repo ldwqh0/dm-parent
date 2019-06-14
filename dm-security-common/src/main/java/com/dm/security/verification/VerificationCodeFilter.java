@@ -77,16 +77,14 @@ public class VerificationCodeFilter extends GenericFilterBean {
 	 * @return
 	 */
 	private boolean requiresValidation(HttpServletRequest request) {
-		if (CollectionUtils.isEmpty(requestMathcers)) {
-			return true;
-		} else {
+		if (CollectionUtils.isNotEmpty(requestMathcers)) {
 			for (RequestMatcher matcher : requestMathcers) {
 				if (matcher.matches(request)) {
 					return true;
 				}
 			}
-			return false;
 		}
+		return false;
 	}
 
 }
