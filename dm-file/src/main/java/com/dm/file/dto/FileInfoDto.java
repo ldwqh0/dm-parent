@@ -7,6 +7,8 @@ import java.util.UUID;
 import com.dm.common.entity.Audit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
@@ -25,9 +27,11 @@ public class FileInfoDto implements Serializable {
 	private String path;
 
 	private Long size;
-
+	
+	@JsonProperty(access = Access.READ_ONLY)
 	private Audit createUser;
-
+	
+	@JsonProperty(access = Access.READ_ONLY)
 	private Audit lastModifiedBy;
 
 	private ZonedDateTime createTime;
