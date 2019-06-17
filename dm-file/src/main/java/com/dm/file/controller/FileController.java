@@ -68,7 +68,10 @@ public class FileController {
 	@Autowired
 	private FileStorageService fileStorageService;
 
-	@GetMapping(value = "{id}")
+	@GetMapping(value = "{id}", produces = {
+			MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE,
+	})
 	public FileInfoDto get(@PathVariable("id") UUID id) {
 		return fileInfoConverter.toDto(fileService.get(id));
 	}
@@ -148,7 +151,9 @@ public class FileController {
 			MediaType.IMAGE_GIF_VALUE,
 			MediaType.IMAGE_JPEG_VALUE,
 			MediaType.IMAGE_PNG_VALUE,
-			"image/*" })
+			"image/webp",
+			"image/*",
+			"*/*" })
 	public ResponseEntity<InputStreamResource> preview(@PathVariable("id") UUID id, WebRequest request) {
 
 		try {
