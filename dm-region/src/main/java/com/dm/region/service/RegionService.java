@@ -3,6 +3,9 @@ package com.dm.region.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.Region;
 
@@ -46,4 +49,6 @@ public interface RegionService {
 	public List<Region> findAllChildren(String code);
 
 	public Optional<Region> findByCode(String parent);
+
+	public Page<Region> find(String keywords, Pageable pageable);
 }

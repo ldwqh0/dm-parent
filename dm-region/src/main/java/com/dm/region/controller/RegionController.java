@@ -6,11 +6,14 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dm.common.dto.TableResult;
 import com.dm.region.converter.RegionConverter;
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.Region;
@@ -55,6 +58,19 @@ public class RegionController {
 	public List<RegionDto> findProvincial() {
 		List<Region> regions = regionService.findProvincials();
 		return regions.stream().map(regionConverter::toDto).collect(Collectors.toList());
+	}
+
+	@GetMapping(params = { "draw" })
+	public TableResult<RegionDto> find(
+			@RequestParam("draw") Long draw,
+			@RequestParam(value = "keywords", required = false) String keywords,
+			@PageableDefault(page = 0, size = 10) Pageable pageable) {
+		try {
+			return TableResult.failure(draw, pageable, "ddadsg");
+//			return TableResult.success(draw, regionService.find(keywords, pageable), regionConverter::toDto);
+		} catch (Exception e) {
+			return TableResult.failure(draw, pageable, e.getMessage());
+		}
 	}
 
 	@GetMapping(value = "children")

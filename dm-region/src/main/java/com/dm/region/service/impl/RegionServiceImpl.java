@@ -4,15 +4,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dm.region.converter.RegionConverter;
 import com.dm.region.dto.RegionDto;
+import com.dm.region.entity.QRegion;
 import com.dm.region.entity.Region;
 import com.dm.region.repository.RegionRepository;
 import com.dm.region.service.RegionService;
+import com.querydsl.core.BooleanBuilder;
 
 @Service
 public class RegionServiceImpl implements RegionService {
@@ -22,6 +27,8 @@ public class RegionServiceImpl implements RegionService {
 
 	@Autowired
 	private RegionConverter regionConverter;
+
+	private final QRegion qRegion = QRegion.region;
 
 	@Override
 	public List<Region> findAll() {
@@ -62,5 +69,14 @@ public class RegionServiceImpl implements RegionService {
 	@Override
 	public Optional<Region> findByCode(String parent) {
 		return regionRepository.findById(parent);
+	}
+
+	@Override
+	public Page<Region> find(String keywords, Pageable pageable) {
+		BooleanBuilder query = new BooleanBuilder();
+		if (StringUtils.isNoneBlank(keywords)) {
+			query.and(qRegion.name.containsIgnoreCase(keywords).or(qRegion.code.containsIgnoreCase(keywords)));
+		}
+		return regionRepository.findAll(query, pageable);
 	}
 }
