@@ -7,4 +7,5 @@ com.dm.springboot.autoconfigure.security.SecurityConfiguration,\
 com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration,\
 com.dm.springboot.autoconfigure.security.VerificationCodeConfiguration,\
 com.dm.springboot.autoconfigure.common.WebControllerAdvice,\
-com.dm.springboot.autoconfigure.file.FileConfiguration
+com.dm.springboot.autoconfigure.file.FileConfiguration,\
+com.dm.springboot.autoconfigure.common.QueryDslConfiguration
