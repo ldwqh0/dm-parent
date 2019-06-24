@@ -28,6 +28,10 @@ public interface TableResult<T> extends Serializable {
 
 	public String getError();
 
+	public default String getMessage() {
+		return getError();
+	}
+
 	public boolean isSuccess();
 
 	/**

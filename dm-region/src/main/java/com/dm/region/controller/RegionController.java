@@ -36,8 +36,7 @@ public class RegionController {
 	private RegionConverter regionConverter;
 
 	@GetMapping
-	public List<RegionDto> findAll(
-			@RequestParam(value = "parent", required = false) String parent,
+	public List<RegionDto> findAll(@RequestParam(value = "parent", required = false) String parent,
 			@RequestParam(value = "includeSelf", required = false, defaultValue = "true") Boolean includeSelf) {
 		List<Region> regions;
 		if (StringUtils.isEmpty(parent)) {
@@ -61,21 +60,18 @@ public class RegionController {
 	}
 
 	@GetMapping(params = { "draw" })
-	public TableResult<RegionDto> find(
-			@RequestParam("draw") Long draw,
+	public TableResult<RegionDto> find(@RequestParam("draw") Long draw,
 			@RequestParam(value = "keywords", required = false) String keywords,
 			@PageableDefault(page = 0, size = 10) Pageable pageable) {
 		try {
-			return TableResult.failure(draw, pageable, "ddadsg");
-//			return TableResult.success(draw, regionService.find(keywords, pageable), regionConverter::toDto);
+			return TableResult.success(draw, regionService.find(keywords, pageable), regionConverter::toDto);
 		} catch (Exception e) {
 			return TableResult.failure(draw, pageable, e.getMessage());
 		}
 	}
 
 	@GetMapping(value = "children")
-	public List<RegionDto> findChildren(
-			@RequestParam(required = true, value = "code") String code) {
+	public List<RegionDto> findChildren(@RequestParam(required = true, value = "code") String code) {
 		List<Region> regions = regionService.findChildren(code);
 		return regions.stream().map(regionConverter::toDto).collect(Collectors.toList());
 	}
