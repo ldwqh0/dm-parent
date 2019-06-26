@@ -52,7 +52,9 @@ public class DUserConverter {
 		user.setCredentialsExpired(Boolean.FALSE);
 		user.setDescription(dUser.getRemark());
 		user.setEmail(dUser.getEmail());
-		user.setEnabled(Boolean.TRUE);
+		if (user.isNew()) {
+			user.setEnabled(Boolean.TRUE);
+		}
 		user.setFullname(dUser.getName());
 		user.setLocked(Boolean.FALSE);
 		user.setMobile(dUser.getMobile());
