@@ -11,7 +11,7 @@ public interface DUserService {
 	public void syncToUap();
 
 	/**
-	 * 根据情况创建或跟新一个钉钉用户信息,<br>
+	 * 根据情况创建或更新一个钉钉用户信息,<br>
 	 * 
 	 * 如果在系统中不存在相关的用户信息，则创建一条记录，如果已经存在，则更新已经存在的记录<br>
 	 * 
