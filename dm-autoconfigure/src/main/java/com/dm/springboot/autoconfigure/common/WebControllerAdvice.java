@@ -24,7 +24,7 @@ public class WebControllerAdvice {
 
 	@ExceptionHandler(DmRuntimeException.class)
 	@ResponseBody
-	public Map<String, Object> DmRuntimeExceptionHandler(DmRuntimeException e, HttpServletRequest request,
+	public Map<String, Object> dmRuntimeExceptionHandler(DmRuntimeException e, HttpServletRequest request,
 			HttpServletResponse response) {
 		ResponseStatus status = AnnotatedElementUtils.findMergedAnnotation(e.getClass(), ResponseStatus.class);
 		if (!Objects.isNull(status)) {
