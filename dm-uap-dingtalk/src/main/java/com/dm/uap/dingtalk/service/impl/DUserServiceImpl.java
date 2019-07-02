@@ -70,6 +70,9 @@ public class DUserServiceImpl implements DUserService {
 	@Autowired
 	private DRoleGroupService dRoleGroupService;
 
+	/**
+	 * 采用批处理同步的模式
+	 */
 	@Transactional
 	@Override
 	public void syncToUap() {
