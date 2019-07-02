@@ -6,6 +6,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.dm.common.entity.AbstractEntity;
 
@@ -15,6 +17,7 @@ import lombok.Setter;
 @Entity(name = "dm_department_")
 @Getter
 @Setter
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "parent_id_", "full_name_" }) })
 public class Department extends AbstractEntity {
 	private static final long serialVersionUID = -6824250546678747271L;
 
@@ -42,7 +45,7 @@ public class Department extends AbstractEntity {
 	/**
 	 * 部门名称
 	 */
-	@Column(name = "full_name_", length = 100, nullable = false, unique = true)
+	@Column(name = "full_name_", length = 100)
 	private String fullname;
 
 	/**

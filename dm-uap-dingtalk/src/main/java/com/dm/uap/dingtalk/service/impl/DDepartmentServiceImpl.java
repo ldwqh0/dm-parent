@@ -15,6 +15,7 @@ import com.dm.uap.dingtalk.converter.DDepartmentConverter;
 import com.dm.uap.dingtalk.entity.DDepartment;
 import com.dm.uap.dingtalk.repository.DDepartmentRepository;
 import com.dm.uap.dingtalk.service.DDepartmentService;
+import com.dm.uap.repository.DepartmentRepository;
 
 @Service
 public class DDepartmentServiceImpl implements DDepartmentService {
@@ -27,6 +28,9 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 
 	@Autowired
 	private DDepartmentRepository dDepartmentRepository;
+
+	@Autowired
+	private DepartmentRepository departmentRepository;
 
 	@Override
 	@Transactional
@@ -55,7 +59,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 				.map(_department -> {
 					DDepartment result = dDepartmentRepository.existsById(_department.getId())
 							? dDepartmentRepository.getOne(_department.getId())
-							: new DDepartment(_department.getId());
+							: dDepartmentRepository.save(new DDepartment(_department.getId()));
 					return dDepartmentConverter.copyProperties(result, _department);
 				})
 				.collect(Collectors.toList());
@@ -72,8 +76,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 			if (Objects.isNull(department)) {
 				department = new com.dm.uap.entity.Department();
 			}
-			dDepartmentConverter.copyProperties(department, dDep);
-			dDep.setDepartment(department);
+			dDep.setDepartment(departmentRepository.save(dDepartmentConverter.copyProperties(department, dDep)));
 		});
 		// 构建系统组织机构的层级关系
 		dDepartments.forEach(dDep -> {
@@ -84,7 +87,6 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 		});
 	}
 
-//	@Async
 	@Override
 	@Transactional
 	public void syncToUap() {

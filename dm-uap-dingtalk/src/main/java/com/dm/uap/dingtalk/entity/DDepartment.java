@@ -41,6 +41,7 @@ public class DDepartment implements Serializable {
 	/**
 	 * name
 	 */
+	@Column(name = "name_")
 	private String name;
 	/**
 	 * parentid

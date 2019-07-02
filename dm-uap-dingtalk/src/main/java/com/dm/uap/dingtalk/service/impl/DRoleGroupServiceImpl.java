@@ -112,7 +112,6 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
 	}
 
 	@Override
-//	@Async
 	@Transactional
 	public void syncToUap() {
 		syncLocalToUap(fetchRoleGroup());
