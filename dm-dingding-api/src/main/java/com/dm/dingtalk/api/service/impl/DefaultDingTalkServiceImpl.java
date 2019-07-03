@@ -187,12 +187,16 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
 	@Override
 	public OapiRoleAddrolesforempsResponse batchSetUserRole(Collection<String> userIds, Collection<Long> roleIds) {
-		String url = SERVER + "/topapi/role/addrolesforemps?access_token={0}";
-		OapiRoleAddrolesforempsRequest request = new OapiRoleAddrolesforempsRequest(userIds, roleIds);
-		OapiRoleAddrolesforempsResponse response = restTemplate.postForObject(url, request,
-				OapiRoleAddrolesforempsResponse.class, getAccessToken());
-		checkResponse(response);
-		return response;
+		if (CollectionUtils.isNotEmpty(roleIds)) {
+			String url = SERVER + "/topapi/role/addrolesforemps?access_token={0}";
+			OapiRoleAddrolesforempsRequest request = new OapiRoleAddrolesforempsRequest(userIds, roleIds);
+			OapiRoleAddrolesforempsResponse response = restTemplate.postForObject(url, request,
+					OapiRoleAddrolesforempsResponse.class, getAccessToken());
+			checkResponse(response);
+			return response;
+		} else {
+			return null;
+		}
 	}
 
 	/**
