@@ -20,7 +20,7 @@ public interface DepartmentService {
 	public void deleteById(Long id);
 
 	public Page<Department> find(String key, Pageable pageable);
-	
+
 	public List<Department> findAll();
 
 }

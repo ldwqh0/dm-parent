@@ -128,9 +128,6 @@ public class DUser implements Serializable {
 	@JoinColumn(name = "dm_user_id_")
 	private User user;
 
-//	@Transient
-//	private String password;
-
 	/**
 	 * 这两个个字段仅仅在数据传输的过程中使用,用于{@link DUser}向{@link User}的传输，不会存储实体
 	 */
