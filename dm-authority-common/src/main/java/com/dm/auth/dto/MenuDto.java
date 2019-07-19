@@ -1,12 +1,8 @@
 package com.dm.auth.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 import com.dm.auth.entity.Menu.MenuType;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -30,23 +26,8 @@ public class MenuDto implements Serializable {
 	private String icon;
 	private String description;
 	private MenuType type;
-	@JsonIgnoreProperties("parents")
 	private MenuDto parent;
 
 	private Boolean openInNewWindow;
 
-	/**
-	 * 为el-cascade准备的数据结构，在el 2.9中不需要该属性了，后期移除
-	 * @return
-	 */
-	@Deprecated
-	public List<Long> getParents() {
-		List<Long> results = new ArrayList<>();
-		MenuDto current = this.parent;
-		while (!Objects.isNull(current)) {
-			results.add(0, current.getId());
-			current = current.getParent();
-		}
-		return results;
-	}
 }
