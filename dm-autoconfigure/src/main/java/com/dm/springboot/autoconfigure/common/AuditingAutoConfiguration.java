@@ -55,5 +55,4 @@ public class AuditingAutoConfiguration {
 			return Optional.empty();
 		}
 	}
-
 }
