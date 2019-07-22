@@ -68,7 +68,7 @@
 				<datasource.username>lidong</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
 				<datasource.platform>org.hibernate.dialect.MariaDB103Dialect</datasource.platform>
-				<token.info.url>http://10.10.0.101:8887/oauth/check_token</token.info.url>
+				<token.info.url>http://127.0.0.1:8887/oauth/check_token</token.info.url>
 			</properties>
 		</profile>
 	</profiles>

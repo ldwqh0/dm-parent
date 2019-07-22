@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpStatus;
@@ -83,8 +84,27 @@ public class OAuth2ClientConfiguration {
 	}
 
 	@Bean
-	@Scope(proxyMode = ScopedProxyMode.INTERFACES)
+	@Primary
+	@Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
 	public OAuth2ClientContext oauth2ClientContext() {
 		return new DefaultOAuth2ClientContext(accessTokenRequest);
 	}
+
+//	@Bean
+//	@Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
+//	public OAuth2ClientContext sessionScopeOauth2ClientContext() {
+//		return new DefaultOAuth2ClientContext(accessTokenRequest);
+//	}
+
+//	@Bean
+//	@Primary
+//	public OAuth2ClientContext oauth2ClientContext() {
+//		return new RoutedOAuth2ClientContext() {
+//			@Override
+//			protected OAuth2ClientContext determineTargetContext() {
+//				return sessionScopeOauth2ClientContext();
+//			}
+//		};
+//	}
+
 }

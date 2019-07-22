@@ -4,7 +4,8 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
-public class RoutedOAuth2ClientContext implements OAuth2ClientContext {
+//TODO 这个有什么用都搞忘了
+public abstract class RoutedOAuth2ClientContext implements OAuth2ClientContext {
 
 	@Override
 	public OAuth2AccessToken getAccessToken() {
@@ -31,8 +32,6 @@ public class RoutedOAuth2ClientContext implements OAuth2ClientContext {
 		return determineTargetContext().removePreservedState(stateKey);
 	}
 
-	private OAuth2ClientContext determineTargetContext() {
-		return null;
-	};
+	protected abstract OAuth2ClientContext determineTargetContext();
 
 }

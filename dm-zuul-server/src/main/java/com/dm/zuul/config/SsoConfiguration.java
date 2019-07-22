@@ -3,6 +3,7 @@ package com.dm.zuul.config;
 import java.security.Principal;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration;
@@ -41,6 +42,7 @@ import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
 @Configuration
 @EnableConfigurationProperties(OAuth2SsoProperties.class)
 @Import({ ResourceServerTokenServicesConfiguration.class })
+@EnableOAuth2Sso
 public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired

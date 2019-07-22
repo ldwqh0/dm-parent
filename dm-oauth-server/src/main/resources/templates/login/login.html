@@ -8,13 +8,13 @@
   <body>
     <div class="wrapper">
 	    <div class="userlogin">用户登录</div>
-	    <p th:if="${loginError}" class="error">用户名或密码错误</p>
 	    <form action="login" method="post" class="form">
 	      <label for="username" class="user">用户名：</label>
 	      <input type="text" id="username" name="username" autofocus="autofocus" class="input" /> <br />
 	      <label for="password" class="password">密码：</label>
 	      <input type="password" id="password" name="password" class="input" /> <br />
 	      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/><br />
+	      <p th:if="${param.error}" class="error" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></p>
 	      <input type="submit" value="登录" class="login"/>
 	    </form>
     </div>
