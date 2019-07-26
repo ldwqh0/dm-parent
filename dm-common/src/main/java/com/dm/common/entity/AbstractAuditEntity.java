@@ -58,8 +58,8 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 	}
 
 	@Override
-	public void setCreatedDate(ZonedDateTime creationDate) {
-		this.createdDate = creationDate;
+	public void setCreatedDate(ZonedDateTime createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	@Override

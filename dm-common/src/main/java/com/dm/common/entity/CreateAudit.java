@@ -10,10 +10,10 @@ public class CreateAudit implements Audit {
 
 	private static final long serialVersionUID = 379407708683930698L;
 
-	@Column(name = "create_user_id_")
+	@Column(name = "created_user_id_")
 	private Long userid;
 
-	@Column(name = "create_user_name_")
+	@Column(name = "created_user_name_")
 	private String username;
 
 	@Override
