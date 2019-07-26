@@ -16,6 +16,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.dm.common.entity.AbstractEntity;
 import com.dm.common.entity.Audit;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -23,16 +25,20 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 
 	private static final long serialVersionUID = -3422581450045291219L;
 
+	@JsonProperty(access = Access.READ_ONLY)
 	private CreateAudit createdBy;
 
+	@JsonProperty(access = Access.READ_ONLY)
 	private ModifyAudit lastModifiedBy;
 
 	@CreatedDate
-	@Column(name = "create_date_")
-	private ZonedDateTime createDate;
+	@Column(name = "created_date_")
+	@JsonProperty(access = Access.READ_ONLY)
+	private ZonedDateTime createdDate;
 
 	@LastModifiedDate
 	@Column(name = "last_modified_date_")
+	@JsonProperty(access = Access.READ_ONLY)
 	private ZonedDateTime lastModifiedDate;
 
 	@Override
@@ -48,12 +54,12 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 
 	@Override
 	public Optional<ZonedDateTime> getCreatedDate() {
-		return Optional.ofNullable(this.createDate);
+		return Optional.ofNullable(this.createdDate);
 	}
 
 	@Override
 	public void setCreatedDate(ZonedDateTime creationDate) {
-		this.createDate = creationDate;
+		this.createdDate = creationDate;
 	}
 
 	@Override

@@ -89,8 +89,8 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
 	}
 
 	@Override
-	public void setCreatedDate(ZonedDateTime createDate) {
-		this.createdDate = createDate;
+	public void setCreatedDate(ZonedDateTime createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	@Override

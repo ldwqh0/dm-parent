@@ -36,7 +36,8 @@ public abstract class AbstractEntity implements Persistable<Long>, Serializable 
 	@Override
 	@Transient
 	public boolean isNew() {
-		return Objects.isNull(id);
+		// 子类可能复写id,所以通过判断 getId()能否获取到数据决定是否新对象，而不是通过本类中的id属性判断是否新对象
+		return Objects.isNull(getId());
 	}
 
 	@Override
