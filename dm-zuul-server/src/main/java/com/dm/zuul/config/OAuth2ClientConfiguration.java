@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
@@ -29,9 +30,12 @@ import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.implicit.ImplicitAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.RedirectStrategy;
+import org.springframework.web.context.request.WebRequest;
 
+import com.dm.oauth2.RoutedOAuth2ClientContext;
 import com.dm.zuul.client.token.grant.code.AddAuthorizationCodeAccessTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -84,27 +88,45 @@ public class OAuth2ClientConfiguration {
 	}
 
 	@Bean
-	@Primary
 	@Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
-	public OAuth2ClientContext oauth2ClientContext() {
+	public OAuth2ClientContext sessionScopeOauth2ClientContext() {
 		return new DefaultOAuth2ClientContext(accessTokenRequest);
 	}
 
-//	@Bean
-//	@Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
-//	public OAuth2ClientContext sessionScopeOauth2ClientContext() {
-//		return new DefaultOAuth2ClientContext(accessTokenRequest);
-//	}
+	/**
+	 * 定义一个请求级别的OAuth2ClientContext
+	 * 
+	 * @return
+	 */
+	@Bean
+	@Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
+	public OAuth2ClientContext requestScopeOauth2ClientContext() {
+		return new DefaultOAuth2ClientContext(accessTokenRequest);
+	}
 
-//	@Bean
-//	@Primary
-//	public OAuth2ClientContext oauth2ClientContext() {
-//		return new RoutedOAuth2ClientContext() {
-//			@Override
-//			protected OAuth2ClientContext determineTargetContext() {
-//				return sessionScopeOauth2ClientContext();
-//			}
-//		};
-//	}
+	@Configuration
+	@Primary
+	static class RoutedOAuth2ClientContextImpl extends RoutedOAuth2ClientContext {
+
+		@Autowired
+		private WebRequest request;
+
+		@Qualifier("sessionScopeOauth2ClientContext")
+		private OAuth2ClientContext sessionScopeOauth2ClientContext;
+
+		@Qualifier("requestScopeOauth2ClientContext")
+		private OAuth2ClientContext requestScopeOauth2ClientContext;
+
+		@Override
+		protected OAuth2ClientContext determineTargetContext() {
+			String h = request.getHeader("Authorization");
+			String b = request.getParameter(OAuth2AccessToken.ACCESS_TOKEN);
+			if (StringUtils.isNotBlank(h) || StringUtils.isNoneBlank(b)) {
+				return requestScopeOauth2ClientContext;
+			} else {
+				return sessionScopeOauth2ClientContext;
+			}
+		}
+	}
 
 }
