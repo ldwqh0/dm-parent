@@ -23,7 +23,7 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 
 	private static final long serialVersionUID = -3422581450045291219L;
 
-	private CreateAudit createBy;
+	private CreateAudit createdBy;
 
 	private ModifyAudit lastModifiedBy;
 
@@ -37,13 +37,13 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 
 	@Override
 	public Optional<Audit> getCreatedBy() {
-		return Optional.ofNullable(this.createBy);
+		return Optional.ofNullable(this.createdBy);
 	}
 
 	@Override
 	@CreatedBy
 	public void setCreatedBy(Audit createdBy) {
-		this.createBy = new CreateAudit(createdBy);
+		this.createdBy = new CreateAudit(createdBy);
 	}
 
 	@Override
