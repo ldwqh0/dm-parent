@@ -111,9 +111,11 @@ public class OAuth2ClientConfiguration {
 		@Autowired
 		private WebRequest request;
 
+		@Autowired
 		@Qualifier("sessionScopeOauth2ClientContext")
 		private OAuth2ClientContext sessionScopeOauth2ClientContext;
 
+		@Autowired
 		@Qualifier("requestScopeOauth2ClientContext")
 		private OAuth2ClientContext requestScopeOauth2ClientContext;
 
