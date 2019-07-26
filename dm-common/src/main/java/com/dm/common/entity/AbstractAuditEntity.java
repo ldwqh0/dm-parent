@@ -25,14 +25,20 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 
 	private static final long serialVersionUID = -3422581450045291219L;
 
+	/**
+	 * 增加几个JSON忽略属性，主要在于不使用DTO的时候，
+	 */
 	@JsonProperty(access = Access.READ_ONLY)
 	private CreateAudit createdBy;
 
 	@JsonProperty(access = Access.READ_ONLY)
 	private ModifyAudit lastModifiedBy;
 
+	/**
+	 * 创建时间字段不能被更新
+	 */
 	@CreatedDate
-	@Column(name = "created_date_")
+	@Column(name = "created_date_", updatable = false)
 	@JsonProperty(access = Access.READ_ONLY)
 	private ZonedDateTime createdDate;
 

@@ -21,7 +21,7 @@ public abstract class AbstractEntity implements Persistable<Long>, Serializable 
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGenerator")
 	@TableGenerator(name = "tableGenerator", pkColumnName = "table_name_", table = "auto_pk_support_", valueColumnName = "next_id_", allocationSize = 50)
 	@Id
-	@Column(name = "id_")
+	@Column(name = "id_", updatable = false)
 	private Long id;
 
 	@Override
