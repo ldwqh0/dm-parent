@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 //import org.springframework.boot.context.properties.ConfigurationProperties;
 
 //@ConfigurationProperties(prefix = "file")
@@ -39,8 +40,9 @@ public class FileConfig {
 		this.path = path;
 	}
 
-	public Map<String, String> getMime() {
-		return mime;
+	public String getMime(String ext) {
+		String result = this.mime.get(ext);
+		return StringUtils.isEmpty(result) ? "application/octet-stream" : result;
 	}
 
 	public String getTempPath() {

@@ -155,7 +155,6 @@ public class FileController {
 			"image/*",
 			"*/*" })
 	public ResponseEntity<InputStreamResource> preview(@PathVariable("id") UUID id, WebRequest request) {
-
 		try {
 			FileInfo file = fileService.get(id).get();
 			Optional<ZonedDateTime> lastModify = file.getLastModifiedDate();
@@ -166,7 +165,7 @@ public class FileController {
 				String ext = StringUtils.substringAfterLast(fileName, ".").toLowerCase();
 				return ResponseEntity.ok().lastModified(lastModify.get())
 						.cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
-						.contentType(MediaType.valueOf(config.getMime().get(ext)))
+						.contentType(MediaType.valueOf(config.getMime(ext)))
 						.body(new InputStreamResource(fileStorageService.getInputStream(file.getPath())));
 			}
 		} catch (Exception e) {
@@ -209,4 +208,6 @@ public class FileController {
 			return ResponseEntity.notFound().build();
 		}
 	}
+
+	// TODO 增加下载
 }
