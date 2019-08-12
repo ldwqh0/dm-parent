@@ -52,7 +52,7 @@ public class RequestAuthoritiesAccessDecisionVoter implements AccessDecisionVote
 				// 二是修改保存在持久层中，默认匿名角色的角色名，使之适配“ROLE_ANONYMOUS”
 				// 这里使用第二种方案
 				// 因此，我们需要一种机制来实现配置保存的角色组名和Spring Security运行过程中的默认的匿名用户的“Authority”进行一个映射
-				authStr = StringUtils.replace("内置分组_ROLE_ANONYMOUS", "内置分组_ROLE_ANONYMOUS", "ROLE_ANONYMOUS");
+				authStr = StringUtils.replace(authStr, "内置分组_ROLE_ANONYMOUS", "ROLE_ANONYMOUS");
 				if (Objects.equals(authority.getAuthority(), authStr)) {
 					Boolean accessable = attribute.getAccessable();
 					if (!Objects.isNull(accessable)) {
