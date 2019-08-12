@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
@@ -44,7 +45,15 @@ public class RequestAuthoritiesAccessDecisionVoter implements AccessDecisionVote
 		for (ConfigAttribute _attribute : rAttributes) {
 			RequestAuthorityAttribute attribute = (RequestAuthorityAttribute) _attribute;
 			for (GrantedAuthority authority : authorities) {
-				if (Objects.equals(authority.getAuthority(), attribute.getAuthority())) {
+				String authStr = attribute.getAuthority();
+				// 因为系统增加了ROLE_GROUP功能，在处理匿名用户的时候，匿名用户的角色组，在系统运行的过程中会被创建为"ROLE_ANONYMOUS"
+				// 而我们在系统中配置的匿名角色组对应的Authority为"内置分组_ROLE_ANONYMOUS"
+				// 我们可以有几种方式来解决冲突，一个是修改AnonymousAuthenticationFilter,使的运行的匿名用户的"Authority"自动附加上"内置分组_"前缀
+				// 二是修改保存在持久层中，默认匿名角色的角色名，使之适配“ROLE_ANONYMOUS”
+				// 这里使用第二种方案
+				// 因此，我们需要一种机制来实现配置保存的角色组名和Spring Security运行过程中的默认的匿名用户的“Authority”进行一个映射
+				authStr = StringUtils.replace("内置分组_ROLE_ANONYMOUS", "内置分组_ROLE_ANONYMOUS", "ROLE_ANONYMOUS");
+				if (Objects.equals(authority.getAuthority(), authStr)) {
 					Boolean accessable = attribute.getAccessable();
 					if (!Objects.isNull(accessable)) {
 						if (accessable && validScope(attribute, authentication)) {
