@@ -187,7 +187,9 @@ public class DUserServiceImpl implements DUserService {
 				.map(OapiUserGetDeptMemberResponse::getUserIds)
 				.flatMap(List::stream)// 获取所有的用户列表
 				.collect(Collectors.toSet());
-		dUserRepository.deleteByIdNotIn(userIds); // 删除在本地数据库中存在，但不存在于钉钉服务器上的数据
+		
+		// 不删除现有数据，关联太多
+		// dUserRepository.deleteByIdNotIn(userIds); // 删除在本地数据库中存在，但不存在于钉钉服务器上的数据
 		List<DUser> users = userIds.stream()
 				// 将从服务器上抓取的数据，复制到本地数据库中
 				.map(userid -> copyProperties(new DUser(userid), dingTalkService.fetchUserById(userid)))
