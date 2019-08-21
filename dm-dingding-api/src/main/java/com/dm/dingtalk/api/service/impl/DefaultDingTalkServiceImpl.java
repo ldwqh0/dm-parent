@@ -166,6 +166,12 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	@Override
 	// 只能单线程获取用户
 	public synchronized OapiUserGetDeptMemberResponse fetchUsers(Long depId) {
+		try {
+			// 每次进程进来的时候，延迟200毫秒
+			Thread.sleep(200); // 因为钉钉对同时并发的请求数量有限制
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		log.info("获取部门的用户信息在线程{" + Thread.currentThread().getId() + "}");
 		String url = SERVER + "/user/getDeptMember?access_token={0}&deptId={1}";
 		OapiUserGetDeptMemberResponse response = restTemplate.getForObject(url, OapiUserGetDeptMemberResponse.class,
