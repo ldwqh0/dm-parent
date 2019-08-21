@@ -31,6 +31,9 @@ import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 import com.dm.dingtalk.api.service.DingTalkService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
 	private RestTemplate restTemplate;
 	private DingClientConfig clientConfig;
@@ -118,8 +121,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	@Override
 	public List<OpenRoleGroup> fetchRoleGroups() {
 		String url = SERVER + "/topapi/role/list?access_token={0}";
-		OapiRoleListResponse response = restTemplate.getForObject(url, OapiRoleListResponse.class,
-				getAccessToken());
+		OapiRoleListResponse response = restTemplate.getForObject(url, OapiRoleListResponse.class, getAccessToken());
 		checkResponse(response);
 		if (!Objects.isNull(response) && !Objects.isNull(response.getResult())
 				&& CollectionUtils.isNotEmpty(response.getResult().getList())) {
@@ -209,6 +211,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		if (Objects.isNull(response)) {
 			throw new RuntimeException("the response is null");
 		} else if (!response.isSuccess()) {
+			log.error("响应校验错误，{" + response.getMessage() + "}");
 			throw new RuntimeException(response.getErrmsg());
 		}
 
