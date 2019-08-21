@@ -164,7 +164,9 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 	}
 
 	@Override
-	public OapiUserGetDeptMemberResponse fetchUsers(Long depId) {
+	// 只能单线程获取用户
+	public synchronized OapiUserGetDeptMemberResponse fetchUsers(Long depId) {
+		log.info("获取部门的用户信息在线程{" + Thread.currentThread().getId() + "}");
 		String url = SERVER + "/user/getDeptMember?access_token={0}&deptId={1}";
 		OapiUserGetDeptMemberResponse response = restTemplate.getForObject(url, OapiUserGetDeptMemberResponse.class,
 				getAccessToken(), depId);
@@ -211,7 +213,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 		if (Objects.isNull(response)) {
 			throw new RuntimeException("the response is null");
 		} else if (!response.isSuccess()) {
-			log.error("响应校验错误，{" + response.getMessage() + "}");
+			log.error("响应校验错误，{" + response.getErrmsg() + "}");
 			throw new RuntimeException(response.getErrmsg());
 		}
 
