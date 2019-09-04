@@ -59,7 +59,7 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 		// 也就是通过http请求头的 Authorization传递，具体的请参考http basic
 		// 或者http://client_id:client_secret@server/oauth/token的模式传递的
 		// 当启用这个配置之后，server可以从表单参数中获取相应的client_id和client_secret信息
-		// 默认情况下，checkToken的验证时denyAll的，需要手动开启
+		// 默认情况下，checkToken的验证是denyAll的，需要手动开启
 		security.checkTokenAccess("isAuthenticated()");
 		security.allowFormAuthenticationForClients();
 	}

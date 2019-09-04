@@ -3,8 +3,10 @@ server:
   servlet:
     session:
       cookie:
-        name: OAUTHSESSION
+        name: OAUTHSESSION   
 spring:
+  security: 
+    default-success-url: '/a/b/c.html' 
   datasource:
     url: '@datasource.url@'
     username: '@datasource.username@'
@@ -22,5 +24,6 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
+    database: 9
   thymeleaf:
     cache: false

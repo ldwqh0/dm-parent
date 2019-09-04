@@ -69,7 +69,7 @@ public class RegionConfiguration {
 							region.setParent(parent);
 						}
 						if (StringUtils.isBlank(region.getCode())) {
-							System.out.println(region);
+//							System.out.println(region);
 						}
 						return region;
 					}).collect(Collectors.toList());
