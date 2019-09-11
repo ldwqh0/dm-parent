@@ -14,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.dm.common.entity.AbstractEntity;
@@ -72,6 +73,8 @@ public class User extends AbstractEntity {
 			@JoinColumn(name = "role_", referencedColumnName = "id_")
 	}, indexes = {
 			@Index(columnList = "user_", name = "IDX_dm_user_role_user_")
+	}, uniqueConstraints = {
+			@UniqueConstraint(columnNames = { "user_", "role_" })
 	})
 	private List<Role> roles;
 
@@ -81,6 +84,8 @@ public class User extends AbstractEntity {
 	@ElementCollection
 	@JoinTable(name = "dm_user_post_", joinColumns = {
 			@JoinColumn(name = "user_id_")
+	}, uniqueConstraints = {
+			@UniqueConstraint(columnNames = { "user_id_", "department_id_", "post_" })
 	})
 	@MapKeyJoinColumn(name = "department_id_")
 	@Column(name = "post_", length = 50)

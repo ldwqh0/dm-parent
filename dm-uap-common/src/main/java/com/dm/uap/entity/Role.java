@@ -63,6 +63,8 @@ public class Role extends AbstractEntity {
 			@JoinColumn(name = "user_", referencedColumnName = "id_")
 	}, indexes = {
 			@Index(columnList = "role_", name = "IDX_dm_user_role_role_")
+	}, uniqueConstraints = {
+			@UniqueConstraint(columnNames = { "user_", "role_" })
 	})
 	private List<User> users;
 
