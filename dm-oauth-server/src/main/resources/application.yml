@@ -3,10 +3,10 @@ server:
   servlet:
     session:
       cookie:
-        name: OAUTHSESSION   
+        name: OAUTHSESSION
 spring:
   security: 
-    default-success-url: '/a/b/c.html' 
+    default-success-url: '/a/b/c.html'
   datasource:
     url: '@datasource.url@'
     username: '@datasource.username@'

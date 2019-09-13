@@ -1,7 +1,6 @@
-server:
-  port: 8880
-spring:
-  main:    allow-bean-definition-overriding: true  datasource:
+server: 
+  port: 8880  
+spring:   datasource: 
     url: '@datasource.url@'
     username: '@datasource.username@'
     driver-class-name: '@datasource.driver@'
@@ -19,7 +18,7 @@ spring:
 security:
   oauth2:
     client:      client-id: zuul
-      client-secret: 123456
+      client-secret: 123456      
       access-token-uri: http://localhost:8887/oauth/token
       user-authorization-uri: http://localhost:8887/oauth/authorize
       client-authentication-scheme: form
@@ -27,8 +26,6 @@ security:
       pre-established-redirect-uri: /login
     resource:      
       token-info-uri: '@token.info.url@'
-#      user-info-uri: '@user.info.url@'     #    sso:
-      ## 这个地址是sso校验auth_code的地址#      login-path: '/a/login'
 logging: 
   level: 
     com.netflix: DEBUG
@@ -56,5 +53,3 @@ zuul:
       path: '/u/**'
       strip-prefix: true
       url: 'http://127.0.0.1:8887/'
-
-    
