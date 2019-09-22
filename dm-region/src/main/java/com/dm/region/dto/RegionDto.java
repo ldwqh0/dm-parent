@@ -1,9 +1,6 @@
 package com.dm.region.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -59,16 +56,6 @@ public class RegionDto implements Serializable {
 	public RegionDto(String code, String name) {
 		this.code = code;
 		this.name = name;
-	}
-
-	public List<String> getParents() {
-		List<String> results = new ArrayList<String>();
-		RegionDto parent = this.parent;
-		while (!Objects.isNull(parent)) {
-			results.add(0, parent.getCode());
-			parent = parent.getParent();
-		}
-		return results;
 	}
 
 }
