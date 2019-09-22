@@ -44,6 +44,7 @@
 		<module>dm-resource-server-spring-boot-starter</module>
 		<module>dm-security-spring-boot-starter</module>
 		<module>dm-file-spring-boot-starter</module>
+		<module>dm-code</module>
 	</modules>
 	<packaging>pom</packaging>
 

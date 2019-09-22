@@ -8,6 +8,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.dm.common.entity.AbstractEntity;
@@ -18,7 +19,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "dm_menu_")
-@Table(indexes = { @Index(columnList = "parent_", name = "IDX_bf_menu_parent_") })
+@Table(indexes = { @Index(columnList = "parent_", name = "IDX_bf_menu_parent_") }, uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "name_", "parent_" })
+})
 public class Menu extends AbstractEntity {
 
 	private static final long serialVersionUID = -5469864417544946812L;
@@ -43,7 +46,7 @@ public class Menu extends AbstractEntity {
 	/**
 	 * 菜单名称
 	 */
-	@Column(name = "name_", length = 50, nullable = false, unique = true)
+	@Column(name = "name_", length = 50, nullable = false)
 	@NotNull
 	private String name;
 
