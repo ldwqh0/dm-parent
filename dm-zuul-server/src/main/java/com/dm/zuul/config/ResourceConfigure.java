@@ -44,7 +44,6 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		// 指定所有的资源都要被保护
 		super.configure(http);
-		// TODO 这里待处理优化
 		http.authorizeRequests().accessDecisionManager(accessDecisionManager());
 		http.authorizeRequests().withObjectPostProcessor(
 				new ObjectPostProcessor<FilterSecurityInterceptor>() {
@@ -68,7 +67,7 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 	public AccessDecisionManager accessDecisionManager() {
 		List<AccessDecisionVoter<?>> voters = new ArrayList<>(2);
 		voters.add(new RequestAuthoritiesAccessDecisionVoter());
-		// 使用oauth2认证的时候，会默认的生成一条Webexpression,必须让 accessDecisionManager中的投票器能处理相关规则
+		// 使用oauth2认证的时候，会默认的生成一条Webexpression,必须让accessDecisionManager中的投票器能处理相关规则
 		// 否则在启动的时候会报错 参见 AccessDecisionManager.supports
 		// 但在实际的授权过程中，FilterInvocationSecurityMetadataSource已经被替换了，事实上不需要处理WebExpression了
 		voters.add(new WebExpressionVoter());
