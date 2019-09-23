@@ -1,6 +1,6 @@
 package com.dm.zuul.config;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,12 +11,14 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -42,24 +44,45 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		// 指定所有的资源都要被保护
 		super.configure(http);
-		// 增加自定义的资源授权过滤器
-		http.addFilterBefore(interceptor(), FilterSecurityInterceptor.class);
-
+		// TODO 这里待处理优化
+		http.authorizeRequests().accessDecisionManager(accessDecisionManager());
+		http.authorizeRequests().withObjectPostProcessor(
+				new ObjectPostProcessor<FilterSecurityInterceptor>() {
+					@Override
+					public <O extends FilterSecurityInterceptor> O postProcess(O interceptor) {
+						interceptor.setSecurityMetadataSource(securityMetadataSource());
+						return interceptor;
+					}
+				});
 		// 仅仅将携带了token的资源，定义为资源服务器的资源，走oauth认证
 		// ，其它的资源都走普通的session认证
 		http.requestMatcher(new BearerTokenRequestMatcher());
+
+		// 需要重新配置匿名认证的模式，匿名认证的时候，返回一个默认的匿名用户？
+		// 资源服务器要如何处理匿名访问？是单独配置？还是通过token的方式传递用户信息到上游服务器
+		// 决定 ，网关暂时不做匿名的处理
+		// 暂时不做匿名处理
 	}
 
 	@Bean
-	public FilterSecurityInterceptor interceptor() {
-		FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
-		List<AccessDecisionVoter<?>> voters = Collections.singletonList(new RequestAuthoritiesAccessDecisionVoter());
+	public AccessDecisionManager accessDecisionManager() {
+		List<AccessDecisionVoter<?>> voters = new ArrayList<>(2);
+		voters.add(new RequestAuthoritiesAccessDecisionVoter());
+		// 使用oauth2认证的时候，会默认的生成一条Webexpression,必须让 accessDecisionManager中的投票器能处理相关规则
+		// 否则在启动的时候会报错 参见 AccessDecisionManager.supports
+		// 但在实际的授权过程中，FilterInvocationSecurityMetadataSource已经被替换了，事实上不需要处理WebExpression了
+		voters.add(new WebExpressionVoter());
 		AccessDecisionManager accessDecisionManager = new AffirmativeBased(voters);
-		interceptor.setAccessDecisionManager(accessDecisionManager);
-		interceptor.setSecurityMetadataSource(securityMetadataSource());
-		return interceptor;
+		return accessDecisionManager;
 	}
 
+	/**
+	 * 定义一个FilterInvocationSecurityMetadataSource <br>
+	 * 
+	 * 可以从数据库读取授权信息
+	 * 
+	 * @return
+	 */
 	@Bean
 	public FilterInvocationSecurityMetadataSource securityMetadataSource() {
 		return new RequestAuthoritiesFilterInvocationSecurityMetadataSource();
@@ -106,4 +129,5 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
 			return StringUtils.isNotBlank(request.getParameter(OAuth2AccessToken.ACCESS_TOKEN));
 		}
 	}
+
 }

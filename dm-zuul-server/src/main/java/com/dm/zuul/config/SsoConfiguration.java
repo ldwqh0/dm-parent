@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,6 +25,7 @@ import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConv
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -46,7 +49,7 @@ import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
 public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	private FilterSecurityInterceptor filterSecurityInterceptor;
+	private FilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource;
 
 	@Autowired
 	private RemoteTokenServices remoteTokenServices;
@@ -56,15 +59,25 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserInfoRestTemplateFactory restTemplateFactory;
-	
+
 	@Autowired
 	private AuthenticationSuccessHandler loginSuccessHandler;
 
+	@Autowired
+	private AccessDecisionManager accessDecisionManager;
+
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.antMatcher("/**").authorizeRequests().anyRequest().authenticated();
+		http.antMatcher("/**").authorizeRequests().anyRequest().authenticated()
+				.accessDecisionManager(accessDecisionManager)
+				.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+					@Override
+					public <O extends FilterSecurityInterceptor> O postProcess(O interceptor) {
+						interceptor.setSecurityMetadataSource(filterInvocationSecurityMetadataSource);
+						return interceptor;
+					}
+				});
 		// 指定相关资源的权限校验过滤器
-		http.addFilterBefore(filterSecurityInterceptor, FilterSecurityInterceptor.class);
 		http.csrf().disable();
 		http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
