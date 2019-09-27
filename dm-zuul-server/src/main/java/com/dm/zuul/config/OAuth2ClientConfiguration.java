@@ -60,7 +60,7 @@ public class OAuth2ClientConfiguration {
 			public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url)
 					throws IOException {
 				// 重新配置oauth2Context的重定向策略，不进行重定向，而是将重定向信息交由前端处理
-				response.setStatus(HttpStatus.SEE_OTHER.value());
+				response.setStatus(HttpStatus.PERMANENT_REDIRECT.value());
 				TreeMap<String, String> parameterMap = new TreeMap<>();
 				parameterMap.put("redirect_url", url);
 				try (PrintWriter writer = response.getWriter()) {
