@@ -8,14 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 import com.dm.uap.entity.LoginLog;
 import com.dm.uap.service.LoginLogService;
 
-public class SavedRequestAwareAuthenticationAndLoggingSuccessHandler
-		extends SavedRequestAwareAuthenticationSuccessHandler {
+public class SimpleUrlAuthenticationLoginLogFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
 	@Autowired
 	private LoginLogService loginLogService;
@@ -25,16 +24,16 @@ public class SavedRequestAwareAuthenticationAndLoggingSuccessHandler
 	}
 
 	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws ServletException, IOException {
-		super.onAuthenticationSuccess(request, response, authentication);
-		// 记录登录成功日志
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException exception) throws IOException, ServletException {
+		super.onAuthenticationFailure(request, response, exception);
+		// 记录失败的登录日志
 		LoginLog log = new LoginLog();
 		String remote = request.getRemoteHost();
 		String loginName = request.getParameter("username");
 		log.setLoginName(loginName);
 		log.setIp(remote);
-		log.setResult("SUCCESS");
+		log.setResult("FAILURE");
 		log.setTime(ZonedDateTime.now());
 		log.setType("LOGIN");
 		loginLogService.save(log);

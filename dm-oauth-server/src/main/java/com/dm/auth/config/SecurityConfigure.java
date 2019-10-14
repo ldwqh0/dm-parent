@@ -10,9 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.dm.auth.security.SavedRequestAwareAuthenticationAndLoggingSuccessHandler;
+import com.dm.auth.security.SimpleUrlAuthenticationLoginLogFailureHandler;
 import com.dm.uap.service.LoginLogService;
 
 @Configuration
@@ -35,12 +37,20 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()
 				.and().formLogin()
 				.loginPage("/oauth/login.html").loginProcessingUrl("/oauth/login").permitAll()
-				.successHandler(successHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
+				.failureHandler(authenticationFailureHandler())
+				.successHandler(authenticationSuccessHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
 				.and().httpBasic().disable();
 //		http.sessionManagement().maximumSessions(maximumSessions);
 	}
 
-	private AuthenticationSuccessHandler successHandler() {
+	private AuthenticationFailureHandler authenticationFailureHandler() {
+		SimpleUrlAuthenticationLoginLogFailureHandler failureHandler = new SimpleUrlAuthenticationLoginLogFailureHandler();
+		failureHandler.setDefaultFailureUrl("/oauth/login.html?error");
+		failureHandler.setLoginLogService(loginLogService);
+		return failureHandler;
+	}
+
+	private AuthenticationSuccessHandler authenticationSuccessHandler() {
 		SavedRequestAwareAuthenticationAndLoggingSuccessHandler handler = new SavedRequestAwareAuthenticationAndLoggingSuccessHandler();
 		handler.setDefaultTargetUrl(defaultSuccessUrl);
 		handler.setAlwaysUseDefaultTargetUrl(false);
