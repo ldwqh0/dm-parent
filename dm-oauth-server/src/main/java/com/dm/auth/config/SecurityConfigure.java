@@ -33,14 +33,16 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/styles/**", "/oauth/styles/**", "/favicon.ico").permitAll()
+				// 如果不使用默认的failureHandler，需要手动指定登录失败页面，也就是login.html?error的权限为跳过
+				// 默认的跳过页面由 AbstractAuthenticationFilterConfigurer.updateAccessDefaults 设置跳过页面
+				// 设置逻辑可以参考相应源码
+				.antMatchers("/oauth/login.html**", "/styles/**", "/oauth/styles/**", "/favicon.ico").permitAll()
 				.anyRequest().authenticated()
 				.and().formLogin()
 				.loginPage("/oauth/login.html").loginProcessingUrl("/oauth/login").permitAll()
 				.failureHandler(authenticationFailureHandler())
 				.successHandler(authenticationSuccessHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
 				.and().httpBasic().disable();
-//		http.sessionManagement().maximumSessions(maximumSessions);
 	}
 
 	private AuthenticationFailureHandler authenticationFailureHandler() {
