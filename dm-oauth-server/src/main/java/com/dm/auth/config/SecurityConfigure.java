@@ -10,6 +10,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import com.dm.auth.security.SavedRequestAwareAuthenticationAndLoggingSuccessHandler;
+import com.dm.uap.service.LoginLogService;
 
 @Configuration
 @EnableWebSecurity
@@ -21,15 +25,27 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 	@Value(value = "${spring.security.default-success-url:/oauth/index.html}")
 	private String defaultSuccessUrl;
 
+	@Autowired
+	private LoginLogService loginLogService;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/styles/**", "/oauth/styles/**", "/favicon.ico").permitAll()
 				.anyRequest().authenticated()
-				.and().formLogin().loginPage("/oauth/login.html").loginProcessingUrl("/oauth/login").permitAll()
-				.defaultSuccessUrl(defaultSuccessUrl)
+				.and().formLogin()
+				.loginPage("/oauth/login.html").loginProcessingUrl("/oauth/login").permitAll()
+				.successHandler(successHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
 				.and().httpBasic().disable();
+//		http.sessionManagement().maximumSessions(maximumSessions);
+	}
+
+	private AuthenticationSuccessHandler successHandler() {
+		SavedRequestAwareAuthenticationAndLoggingSuccessHandler handler = new SavedRequestAwareAuthenticationAndLoggingSuccessHandler();
+		handler.setDefaultTargetUrl(defaultSuccessUrl);
+		handler.setAlwaysUseDefaultTargetUrl(false);
+		handler.setLoginLogService(loginLogService);
+		return handler;
 	}
 
 	@Override

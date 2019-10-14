@@ -92,17 +92,19 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>mariadb@local</id>
+			<id>mysql@local</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
-				<profiles.active>localhost-mariadb</profiles.active>
-				<datasource.url>jdbc:mariadb://localhost:3306/oauth?createDatabaseIfNotExist=true</datasource.url>
-				<datasource.driver>org.mariadb.jdbc.Driver</datasource.driver>
+				<profiles.active>mysql-local</profiles.active>
+				<datasource.url>jdbc:mysql://localhost:3306/oauth?serverTimezone=Asia/Shanghai&amp;createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;allowPublicKeyRetrieval=true
+				</datasource.url>
+				<datasource.driver>com.mysql.cj.jdbc.Driver</datasource.driver>
 				<datasource.username>lidong</datasource.username>
 				<datasource.password>admin123456!@#</datasource.password>
-				<datasource.platform>org.hibernate.dialect.MariaDB103Dialect</datasource.platform>
+				<datasource.platform>org.hibernate.dialect.MySQL8Dialect
+				</datasource.platform>
 			</properties>
 		</profile>
 		<profile>
@@ -112,11 +114,13 @@
 			</activation>
 			<properties>
 				<profiles.active>mysql-dm</profiles.active>
-				<datasource.url>jdbc:mysql://192.168.2.127:3306/oauth?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true</datasource.url>
+				<datasource.url>jdbc:mysql://192.168.2.127:3306/oauth?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true
+				</datasource.url>
 				<datasource.driver>com.mysql.jdbc.Driver</datasource.driver>
 				<datasource.username>root</datasource.username>
 				<datasource.password>damei2018</datasource.password>
-				<datasource.platform>org.hibernate.dialect.MySQL57Dialect</datasource.platform>
+				<datasource.platform>org.hibernate.dialect.MySQL57Dialect
+				</datasource.platform>
 			</properties>
 		</profile>
 	</profiles>
