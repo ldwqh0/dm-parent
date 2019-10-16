@@ -41,13 +41,13 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
 
 	@Column(name = "created_date_")
 	@CreatedDate
-	private ZonedDateTime createdDate;
+	private ZonedDateTime createdDate = ZonedDateTime.now();
 
 	private ModifyAudit lastModifiedBy;
 
 	@Column(name = "last_modified_date_")
 	@LastModifiedDate
-	private ZonedDateTime lastModifiedDate;
+	private ZonedDateTime lastModifiedDate = ZonedDateTime.now();
 
 	/**
 	 * 文件名
