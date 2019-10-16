@@ -34,6 +34,7 @@ import lombok.Data;
 class TableResultDto<T> implements TableResult<T> {
 	private static final long serialVersionUID = -7642770441688089769L;
 
+	private Long maxId;
 	private Long draw;
 	private Long page;
 	private Long size;

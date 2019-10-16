@@ -3,6 +3,7 @@ package com.dm.common.dto;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,31 @@ public interface TableResult<T> extends Serializable {
 		result.setPage((long) pageable.getPageNumber());
 		result.setSize((long) pageable.getPageSize());
 		result.setSuccess(false);
+		return result;
+	}
+
+	public static <DTO, M> TableResult<DTO> success(TableRequest request, RangePage<M> data,
+			Function<M, DTO> converter) {
+		TableResultDto<DTO> result = new TableResultDto<DTO>();
+		result.setDraw(request.getDraw());
+		// 如果请求中有maxId,将maxId原样返回
+		if (!Objects.isNull(request.getMaxId())) {
+			result.setMaxId(request.getMaxId());
+		} else {
+			// 否则将查询出来的maxId返回
+			result.setMaxId(data.getMax());
+		}
+		Pageable pageable = data.getPageable();
+		result.setRecordsTotal(data.getTotalElements());
+		result.setSuccess(Boolean.TRUE);
+		result.setPage((long) pageable.getPageNumber());
+		result.setSize((long) pageable.getPageSize());
+		List<M> contents = data.getContent();
+		if (CollectionUtils.isNotEmpty(contents)) {
+			result.setData(contents.stream().map(converter).collect(Collectors.toList()));
+		} else {
+			result.setData(Collections.emptyList());
+		}
 		return result;
 	}
 }
