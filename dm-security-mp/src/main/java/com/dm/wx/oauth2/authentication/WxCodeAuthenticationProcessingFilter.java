@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.dm.wx.oauth2.provider.WxOAuth2CodeAuthentication;
 
@@ -19,14 +20,22 @@ import com.dm.wx.oauth2.provider.WxOAuth2CodeAuthentication;
  */
 public class WxCodeAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-	public WxCodeAuthenticationProcessingFilter() {
-		super("/login/wx");
-	}
+    public WxCodeAuthenticationProcessingFilter() {
+        super("/login/wx");
+    }
 
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException, IOException, ServletException {
-		String code = request.getParameter("code");
-		return this.getAuthenticationManager().authenticate(new WxOAuth2CodeAuthentication(code));
+    public WxCodeAuthenticationProcessingFilter (String defaultFilterProcessesUrl) {
+	    super(defaultFilterProcessesUrl);
 	}
+    
+    public WxCodeAuthenticationProcessingFilter (RequestMatcher matcher) {
+        super(matcher);
+    }
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException, IOException, ServletException {
+        String code = request.getParameter("code");
+        return this.getAuthenticationManager().authenticate(new WxOAuth2CodeAuthentication(code));
+    }
 }
