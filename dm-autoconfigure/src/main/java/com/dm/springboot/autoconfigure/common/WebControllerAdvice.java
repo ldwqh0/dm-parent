@@ -22,25 +22,25 @@ import com.dm.common.exception.DmRuntimeException;
 @ControllerAdvice
 public class WebControllerAdvice {
 
-	@ExceptionHandler(DmRuntimeException.class)
-	@ResponseBody
-	public Map<String, Object> dmRuntimeExceptionHandler(DmRuntimeException e, HttpServletRequest request,
-			HttpServletResponse response) {
-		ResponseStatus status = AnnotatedElementUtils.findMergedAnnotation(e.getClass(), ResponseStatus.class);
-		if (!Objects.isNull(status)) {
-			int code = status.code().value();
-			String reason = status.reason();
-			response.setStatus(code);
-			Map<String, Object> result = new HashMap<String, Object>();
-			result.put("path", request.getRequestURI());
-			result.put("error", HttpStatus.valueOf(code).getReasonPhrase());
-			result.put("reason", reason);
-			result.put("message", e.getMessage());
-			result.put("status", code);
-			result.put("timestamp", ZonedDateTime.now());
-			return result;
-		} else {
-			return null;
-		}
-	}
+    @ExceptionHandler(DmRuntimeException.class)
+    @ResponseBody
+    public Map<String, Object> dmRuntimeExceptionHandler(DmRuntimeException e, HttpServletRequest request,
+            HttpServletResponse response) {
+        ResponseStatus status = AnnotatedElementUtils.findMergedAnnotation(e.getClass(), ResponseStatus.class);
+        if (!Objects.isNull(status)) {
+            int code = status.code().value();
+//            String reason = status.reason();
+            response.setStatus(code);
+            Map<String, Object> result = new HashMap<String, Object>();
+            result.put("path", request.getRequestURI());
+            result.put("error", HttpStatus.valueOf(code).getReasonPhrase());
+//			result.put("reason", reason);
+            result.put("message", e.getMessage());
+            result.put("status", code);
+            result.put("timestamp", ZonedDateTime.now());
+            return result;
+        } else {
+            return null;
+        }
+    }
 }
