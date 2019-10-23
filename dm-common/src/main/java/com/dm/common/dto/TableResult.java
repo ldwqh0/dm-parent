@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
+ * 在下个版本中过时， 使用{@link Page} 代替<br>
+ * 
  * 用于表格请求的响应<br>
  * 一个正确的完整的表格响应需要包括：<br/>
  * success: <b>必须</b>，查询是否成功的标记<br/>
@@ -31,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @param <T> 列表的数据类型
  */
 @JsonInclude(Include.NON_NULL)
+@Deprecated
 public interface TableResult<T> extends Serializable {
 
     public Long getDraw();
