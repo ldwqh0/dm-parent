@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.common.dto.TableResult;
 import com.dm.auth.converter.ResourceConverter;
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.entity.Resource;
@@ -30,48 +29,48 @@ import java.util.Optional;
 @RequestMapping({ "resources", "p/resources" })
 public class ResourceController {
 
-	@Autowired
-	private ResourceService resourceService;
+    @Autowired
+    private ResourceService resourceService;
 
-	@Autowired
-	private ResourceConverter resourceConverter;
+    @Autowired
+    private ResourceConverter resourceConverter;
 
-	@PostMapping
-	@ResponseStatus(value = CREATED)
-	public ResourceDto save(@RequestBody ResourceDto resource) {
-		Resource resource_ = resourceService.save(resource);
-		return resourceConverter.toDto(resource_);
-	}
+    @PostMapping
+    @ResponseStatus(value = CREATED)
+    public ResourceDto save(@RequestBody ResourceDto resource) {
+        Resource resource_ = resourceService.save(resource);
+        return resourceConverter.toDto(resource_);
+    }
 
-	@DeleteMapping("{id}")
-	public void delete(@PathVariable("id") Long id) {
-		resourceService.deleteById(id);
-	}
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable("id") Long id) {
+        resourceService.deleteById(id);
+    }
 
-	@PutMapping("{id}")
-	@ResponseStatus(value = CREATED)
-	public ResourceDto update(@PathVariable("id") Long id, @RequestBody ResourceDto _resource) {
-		Resource resource_ = resourceService.update(id, _resource);
-		return resourceConverter.toDto(resource_);
-	}
+    @PutMapping("{id}")
+    @ResponseStatus(value = CREATED)
+    public ResourceDto update(@PathVariable("id") Long id, @RequestBody ResourceDto _resource) {
+        Resource resource_ = resourceService.update(id, _resource);
+        return resourceConverter.toDto(resource_);
+    }
 
-	@GetMapping("{id}")
-	public ResourceDto get(@PathVariable("id") Long id) {
-		Optional<Resource> resource_ = resourceService.findById(id);
-		return resourceConverter.toDto(resource_);
-	}
+    @GetMapping("{id}")
+    public ResourceDto get(@PathVariable("id") Long id) {
+        Optional<Resource> resource_ = resourceService.findById(id);
+        return resourceConverter.toDto(resource_);
+    }
 
-	@GetMapping(params = { "draw" })
-	public TableResult<ResourceDto> search(@RequestParam("draw") Long draw,
-			@PageableDefault Pageable pageable,
-			@RequestParam(value = "search", required = false) String keywords) {
-		Page<Resource> resources = resourceService.search(keywords, pageable);
-		return TableResult.success(draw, resources, resourceConverter::toDto);
-	}
+    @GetMapping(params = { "draw" })
+    public Page<ResourceDto> search(@RequestParam("draw") Long draw,
+            @PageableDefault Pageable pageable,
+            @RequestParam(value = "search", required = false) String keywords) {
+        Page<Resource> resources = resourceService.search(keywords, pageable);
+        return resources.map(resourceConverter::toDto);
+    }
 
-	@GetMapping
-	public List<ResourceDto> listAll() {
-		List<Resource> resources = resourceService.listAll();
-		return resourceConverter.toDto(resources);
-	}
+    @GetMapping
+    public List<ResourceDto> listAll() {
+        List<Resource> resources = resourceService.listAll();
+        return resourceConverter.toDto(resources);
+    }
 }

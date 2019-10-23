@@ -17,7 +17,6 @@ import com.dm.auth.dto.ClientInfoDto;
 import com.dm.auth.entity.ClientInfo;
 import com.dm.auth.service.AccessTokenService;
 import com.dm.auth.service.ClientInfoService;
-import com.dm.common.dto.TableResult;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -32,66 +31,63 @@ import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 @RequestMapping("clients")
 public class ClientInfoController {
 
-	@Autowired
-	private ClientInfoService clientService;
+    @Autowired
+    private ClientInfoService clientService;
 
-	@Autowired
-	private ClientInfoConverter clientInfoConverter;
+    @Autowired
+    private ClientInfoConverter clientInfoConverter;
 
-	@Autowired
-	private AccessTokenService tokenService;
+    @Autowired
+    private AccessTokenService tokenService;
 
-	@Autowired
-	private ConsumerTokenServices consumerTokenServices;
+    @Autowired
+    private ConsumerTokenServices consumerTokenServices;
 
-	@DeleteMapping("{clientId}")
-	@ResponseStatus(NO_CONTENT)
-	public void delete(@PathVariable("clientId") String clientId) {
-		clientService.delete(clientId);
-	}
+    @DeleteMapping("{clientId}")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable("clientId") String clientId) {
+        clientService.delete(clientId);
+    }
 
-	@GetMapping("{id}")
-	public ClientInfoDto get(@PathVariable("id") String id) {
-		Optional<ClientInfo> info = clientService.findById(id);
-		return clientInfoConverter.toDto(info);
-	}
+    @GetMapping("{id}")
+    public ClientInfoDto get(@PathVariable("id") String id) {
+        Optional<ClientInfo> info = clientService.findById(id);
+        return clientInfoConverter.toDto(info);
+    }
 
-	@PostMapping
-	@ResponseStatus(CREATED)
-	public ClientInfoDto save(@RequestBody ClientInfoDto client) {
-		ClientInfo client_ = clientService.save(client);
-		return clientInfoConverter.toDto(client_);
-	}
+    @PostMapping
+    @ResponseStatus(CREATED)
+    public ClientInfoDto save(@RequestBody ClientInfoDto client) {
+        ClientInfo client_ = clientService.save(client);
+        return clientInfoConverter.toDto(client_);
+    }
 
-	@PutMapping("{id}")
-	@ResponseStatus(CREATED)
-	public ClientInfoDto update(@PathVariable("id") String id, @RequestBody ClientInfoDto client) {
-		ClientInfo client_ = clientService.update(id, client);
-		return clientInfoConverter.toDto(client_);
-	}
+    @PutMapping("{id}")
+    @ResponseStatus(CREATED)
+    public ClientInfoDto update(@PathVariable("id") String id, @RequestBody ClientInfoDto client) {
+        ClientInfo client_ = clientService.update(id, client);
+        return clientInfoConverter.toDto(client_);
+    }
 
-	@GetMapping(params = { "draw" })
-	public TableResult<ClientInfoDto> search(
-			@RequestParam(value = "draw", defaultValue = "1") Long draw,
-			@RequestParam(value = "search", required = false) String key,
-			@PageableDefault(page = 0, size = 10) Pageable pageable) {
-		Page<ClientInfo> clients = clientService.find(key, pageable);
-		return TableResult.success(draw, clients, clientInfoConverter::toDto);
-	}
+    @GetMapping(params = { "draw" })
+    public Page<ClientInfoDto> search(
+            @RequestParam(value = "search", required = false) String key,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        Page<ClientInfo> clients = clientService.find(key, pageable);
+        return clients.map(clientInfoConverter::toDto);
+    }
 
-	@GetMapping(value = "{client}/tokens", params = { "draw" })
-	public TableResult<AccessTokenInfoDto> tokens(
-			@RequestParam("draw") Long draw,
-			@RequestParam(value = "search", required = false) String key,
-			@PageableDefault Pageable pageable,
-			@PathVariable("client") String client) {
-		Page<AccessTokenInfoDto> tokens = tokenService.listTokensByClient(client, pageable);
-		return TableResult.success(draw, tokens, token -> token);
-	}
+    @GetMapping(value = "{client}/tokens", params = { "draw" })
+    public Page<AccessTokenInfoDto> tokens(
+            @RequestParam(value = "search", required = false) String key,
+            @PageableDefault Pageable pageable,
+            @PathVariable("client") String client) {
+        return tokenService.listTokensByClient(client, pageable);
+    }
 
-	@DeleteMapping("/tokens/{token}")
-	@ResponseStatus(NO_CONTENT)
-	public void revokeToken(@PathVariable("token") String token) {
-		consumerTokenServices.revokeToken(token);
-	}
+    @DeleteMapping("/tokens/{token}")
+    @ResponseStatus(NO_CONTENT)
+    public void revokeToken(@PathVariable("token") String token) {
+        consumerTokenServices.revokeToken(token);
+    }
 }

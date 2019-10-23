@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.common.dto.TableResult;
 import com.dm.common.exception.DataValidateException;
 import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.dto.RoleDto;
@@ -36,73 +35,67 @@ import java.util.Optional;
 @Slf4j
 public class RoleController {
 
-	@Autowired
-	private RoleService roleService;
+    @Autowired
+    private RoleService roleService;
 
-	@Autowired
-	private RoleConverter roleConverter;
+    @Autowired
+    private RoleConverter roleConverter;
 
-	@ApiOperation("保存角色")
-	@PostMapping
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-	@ResponseStatus(CREATED)
-	public RoleDto save(@RequestBody RoleDto roleDto) {
-		if (roleService.nameExist(null, roleDto.getName())) {
-			throw new DataValidateException("角色名称被占用");
-		} else {
-			Role role = roleService.save(roleDto);
-			return roleConverter.toDto(role);
-		}
-	}
+    @ApiOperation("保存角色")
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @ResponseStatus(CREATED)
+    public RoleDto save(@RequestBody RoleDto roleDto) {
+        if (roleService.nameExist(null, roleDto.getName())) {
+            throw new DataValidateException("角色名称被占用");
+        } else {
+            Role role = roleService.save(roleDto);
+            return roleConverter.toDto(role);
+        }
+    }
 
-	@ApiOperation("更新角色")
-	@PutMapping("{id}")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-	@ResponseStatus(CREATED)
-	public RoleDto update(@PathVariable("id") long id, @RequestBody RoleDto roleDto) {
-		if (roleService.nameExist(id, roleDto.getName())) {
-			throw new DataValidateException("角色名称被占用");
-		} else {
-			Role role = roleService.update(id, roleDto);
-			return roleConverter.toDto(role);
-		}
-	}
+    @ApiOperation("更新角色")
+    @PutMapping("{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @ResponseStatus(CREATED)
+    public RoleDto update(@PathVariable("id") long id, @RequestBody RoleDto roleDto) {
+        if (roleService.nameExist(id, roleDto.getName())) {
+            throw new DataValidateException("角色名称被占用");
+        } else {
+            Role role = roleService.update(id, roleDto);
+            return roleConverter.toDto(role);
+        }
+    }
 
-	@ApiOperation("获取角色信息")
-	@GetMapping("{id}")
-	public RoleDto get(@PathVariable("id") long id) {
-		Optional<Role> role = roleService.get(id);
-		return roleConverter.toDto(role);
-	}
+    @ApiOperation("获取角色信息")
+    @GetMapping("{id}")
+    public RoleDto get(@PathVariable("id") long id) {
+        Optional<Role> role = roleService.get(id);
+        return roleConverter.toDto(role);
+    }
 
-	@ApiOperation("删除角色")
-	@DeleteMapping("{id}")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-	@ResponseStatus(NO_CONTENT)
-	public void delete(@PathVariable("id") long id) {
-		roleService.delete(id);
-	}
+    @ApiOperation("删除角色")
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable("id") long id) {
+        roleService.delete(id);
+    }
 
-	@ApiOperation("查询角色")
-	@GetMapping(params = { "draw" })
-	public TableResult<?> list(
-			@RequestParam(value = "groupId", required = false) Long groupId,
-			@RequestParam(value = "search", required = false) String key,
-			@RequestParam(value = "draw", required = false) Long draw,
-			@PageableDefault(page = 0, size = 10) Pageable pageable) {
-		try {
-			Page<Role> result = roleService.search(groupId, key, pageable);
-			return TableResult.success(draw, result, roleConverter::toDto);
-		} catch (Exception e) {
-			log.error("查询角色时发生错误", e);
-			return TableResult.failure(draw, pageable, e.getMessage());
-		}
-	}
+    @ApiOperation("查询角色")
+    @GetMapping(params = { "draw" })
+    public Page<?> list(
+            @RequestParam(value = "groupId", required = false) Long groupId,
+            @RequestParam(value = "search", required = false) String key,
+            @RequestParam(value = "draw", required = false) Long draw,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return roleService.search(groupId, key, pageable).map(roleConverter::toDto);
+    }
 
-	@ApiOperation("获取所有启用角色")
-	@GetMapping
-	public List<RoleDto> listEnabled() {
-		List<Role> roles = roleService.listAllEnabled();
-		return roleConverter.toDto(roles);
-	}
+    @ApiOperation("获取所有启用角色")
+    @GetMapping
+    public List<RoleDto> listEnabled() {
+        List<Role> roles = roleService.listAllEnabled();
+        return roleConverter.toDto(roles);
+    }
 }
