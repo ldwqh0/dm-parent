@@ -11,28 +11,29 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 @Order(99)
 @EnableWebSecurity
 public class OAuthResourceConfigurer extends ResourceServerConfigurerAdapter {
-	@Override
-	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().authenticated();
-		// 仅仅将部分路径认定为资源
-		http.requestMatchers()
-				.antMatchers(
-						"/departments**/**",
-						"/regions**/**",
-						"/users**/**",
-						"/roles**/**",
-						"/roleGroups**/**",
-						"/clients**/**",
-						"/tokens**/**");
-	}
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().anyRequest().authenticated();
+        // 仅仅将部分路径认定为资源
+        http.requestMatchers()
+                .antMatchers(
+                        "/departments**/**",
+                        "/regions**/**",
+                        "/users**/**",
+                        "/roles**/**",
+                        "/roleGroups**/**",
+                        "/clients**/**",
+                        "/tokens**/**",
+                        "/oauth/users**/**");
+    }
 
-	@Override
-	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-		super.configure(resources);
-		// 指定资源服务器的资源ID
-		// 如果给某个授权指定了可也访问的资源ID，则仅能访问指定的资源，如果不给某个授权指定指定访问的资源ID，则代表可以访问所有资源
-		resources.resourceId("USERS");
-		resources.stateless(true); // 指定服务是无状态的
-	}
+    @Override
+    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+        super.configure(resources);
+        // 指定资源服务器的资源ID
+        // 如果给某个授权指定了可也访问的资源ID，则仅能访问指定的资源，如果不给某个授权指定指定访问的资源ID，则代表可以访问所有资源
+        resources.resourceId("USERS");
+        resources.stateless(true); // 指定服务是无状态的
+    }
 
 }
