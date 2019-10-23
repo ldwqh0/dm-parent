@@ -33,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @param <T> 列表的数据类型
  */
 @JsonInclude(Include.NON_NULL)
-@Deprecated
 public interface TableResult<T> extends Serializable {
 
     public Long getDraw();
