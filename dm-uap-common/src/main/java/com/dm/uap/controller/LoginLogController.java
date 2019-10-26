@@ -2,9 +2,7 @@ package com.dm.uap.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +25,7 @@ public class LoginLogController {
     public TableResult<LoginLogDto> search(
             @RequestParam("draw") Long draw,
             Pageable pageable,
-            @RequestParam("key") String query) {
+            @RequestParam(value = "key", required = false) String query) {
         return TableResult.success(draw, loginLogService.list(query, pageable), loginLogConverter::toDto);
     }
 }

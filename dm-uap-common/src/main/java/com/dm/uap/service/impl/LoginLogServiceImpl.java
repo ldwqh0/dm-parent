@@ -62,7 +62,7 @@ public class LoginLogServiceImpl implements LoginLogService {
     @Override
     public Page<LoginLog> list(String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
-        if (!StringUtils.isNotBlank(key)) {
+        if (StringUtils.isNotBlank(key)) {
             query.and(qLoginLog.ip.containsIgnoreCase(key)
                     .or(qLoginLog.loginName.containsIgnoreCase(key)));
         }
