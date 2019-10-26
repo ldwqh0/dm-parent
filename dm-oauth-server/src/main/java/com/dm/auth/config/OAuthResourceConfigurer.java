@@ -15,16 +15,16 @@ public class OAuthResourceConfigurer extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().authenticated();
         // 仅仅将部分路径认定为资源
-        http.requestMatchers()
-                .antMatchers(
-                        "/departments**/**",
-                        "/regions**/**",
-                        "/users**/**",
-                        "/roles**/**",
-                        "/roleGroups**/**",
-                        "/clients**/**",
-                        "/tokens**/**",
-                        "/oauth/users**/**");
+        http.requestMatchers().antMatchers(
+                "/departments**/**",
+                "/regions**/**",
+                "/users**/**",
+                "/roles**/**",
+                "/roleGroups**/**",
+                "/clients**/**",
+                "/tokens**/**",
+                "/loginLogs**/**",
+                "/oauth/users**/**");
     }
 
     @Override
