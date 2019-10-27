@@ -12,7 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 
 import com.dm.common.entity.AbstractEntity;
-import com.dm.security.access.RequestAuthorityAttribute.MatchType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +28,23 @@ import lombok.Setter;
 public class Resource extends AbstractEntity {
 	private static final long serialVersionUID = 8273786895229540103L;
 
+	/**
+     * 资源的匹配模式
+     * 
+     * @author LiDong
+     *
+     */
+    public enum MatchType {
+        /**
+         * 路径匹配
+         */
+        ANT_PATH,
+        /**
+         * 正则表达式匹配
+         */
+        REGEXP,
+    }
+	
 	/**
 	 * 资源名称
 	 */

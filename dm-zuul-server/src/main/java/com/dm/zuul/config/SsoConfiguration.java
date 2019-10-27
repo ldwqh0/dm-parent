@@ -71,7 +71,7 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
                 "/p/users/current",
                 "/p/menuAuthorities/current").access("isAnonymous() || isAuthenticated()")
                 // 指定相关资源的权限校验过滤器
-                .anyRequest().access("@authorityServiceImpl.access(authentication,request)");
+                .anyRequest().access("@authorityChecker.check(authentication,request)");
         // 设定匿名用户的用户实体
         UserDetailsDto ud = new UserDetailsDto();
         List<GrantedAuthority> authorities = Collections.singletonList(new GrantedAuthorityDto("内置分组_ROLE_ANONYMOUS"));

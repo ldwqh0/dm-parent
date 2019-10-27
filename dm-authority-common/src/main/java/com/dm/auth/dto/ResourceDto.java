@@ -3,7 +3,7 @@ package com.dm.auth.dto;
 import java.io.Serializable;
 import java.util.Set;
 
-import com.dm.security.access.RequestAuthorityAttribute.MatchType;
+import com.dm.auth.entity.Resource.MatchType;
 
 import lombok.Data;
 

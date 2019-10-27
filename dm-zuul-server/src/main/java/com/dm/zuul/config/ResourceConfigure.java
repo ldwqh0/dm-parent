@@ -16,6 +16,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.dm.security.oauth2.access.AuthorityChecker;
+import com.dm.security.oauth2.access.RequestAuthorityService;
+
 /**
  * 当请求中携带了access_token之后， 进行oauth认证
  * 
@@ -38,7 +41,7 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
                 HttpMethod.GET,
                 "/p/users/current",
                 "/p/menuAuthorities/current").access("isAnonymous() || isAuthenticated()")
-                .anyRequest().access("@authorityService.access(authentication,request)");
+                .anyRequest().access("@authorityChecker.check(authentication,request)");
         // 仅仅将携带了token的资源，定义为资源服务器的资源，走oauth认证
         // ，其它的资源都走普通的session认证
         http.requestMatcher(new BearerTokenRequestMatcher());
@@ -83,6 +86,19 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
     @Bean
     public OAuth2WebSecurityExpressionHandler expressionHandler() {
         return new OAuth2WebSecurityExpressionHandler();
+    }
+
+    /**
+     * 权限校验器
+     * 
+     * @param authorityService
+     * @return
+     */
+    @Bean
+    public AuthorityChecker authorityChecker(RequestAuthorityService authorityService) {
+        AuthorityChecker authorityChecker = new AuthorityChecker();
+        authorityChecker.setAuthorityService(authorityService);
+        return authorityChecker;
     }
 
 }
