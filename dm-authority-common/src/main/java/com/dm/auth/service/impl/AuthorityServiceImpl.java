@@ -33,7 +33,7 @@ import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.service.AuthorityService;
 import com.dm.security.access.RequestAuthorityAttribute;
 
-@Service
+@Service("authorityService")
 public class AuthorityServiceImpl implements AuthorityService {
 
     @Autowired
@@ -68,8 +68,11 @@ public class AuthorityServiceImpl implements AuthorityService {
         return authority;
     }
 
+    /**
+     * 获取指定角色列表的菜单项目，这个事务是只读的
+     */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Menu> listMenuByAuthorities(List<String> ids) {
         // 添加所有菜单项
         // 所有菜单的父级菜单
