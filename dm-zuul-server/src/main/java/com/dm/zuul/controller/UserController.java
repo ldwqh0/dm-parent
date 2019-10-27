@@ -14,7 +14,7 @@ import com.dm.security.core.userdetails.UserDetailsDto;
  *
  */
 @RestController
-@RequestMapping({ "/p/users" })
+@RequestMapping({ "users", "/p/users" })
 public class UserController {
 
     /**

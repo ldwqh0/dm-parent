@@ -68,6 +68,8 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers(
                 HttpMethod.GET,
+                "/users/current",
+                "/menuAuthorities/current",
                 "/p/users/current",
                 "/p/menuAuthorities/current").access("isAuthenticated()")
                 // 指定相关资源的权限校验过滤器

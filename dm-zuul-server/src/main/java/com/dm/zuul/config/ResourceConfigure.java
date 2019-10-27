@@ -36,7 +36,13 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // 指定所有的资源都要被保护
-        http.authorizeRequests().anyRequest().access("@authorityChecker.check(authentication,request)");
+        http.authorizeRequests().antMatchers(
+                HttpMethod.GET,
+                "/users/current",
+                "/menuAuthorities/current",
+                "/p/users/current",
+                "/p/menuAuthorities/current").access("isAuthenticated()")
+                .anyRequest().access("@authorityChecker.check(authentication,request)");
         // 仅仅将携带了token的资源，定义为资源服务器的资源，走oauth认证
         // ，其它的资源都走普通的session认证
         http.requestMatcher(new BearerTokenRequestMatcher());
