@@ -69,7 +69,7 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(
                 HttpMethod.GET,
                 "/p/users/current",
-                "/p/menuAuthorities/current").access("isAnonymous() || isAuthenticated()")
+                "/p/menuAuthorities/current").access("isAuthenticated()")
                 // 指定相关资源的权限校验过滤器
                 .anyRequest().access("@authorityChecker.check(authentication,request)");
         // 设定匿名用户的用户实体
