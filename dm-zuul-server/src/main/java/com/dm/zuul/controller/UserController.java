@@ -14,17 +14,17 @@ import com.dm.security.core.userdetails.UserDetailsDto;
  *
  */
 @RestController
-@RequestMapping("users")
+@RequestMapping({ "/p/users" })
 public class UserController {
 
-	/**
-	 * 获取当前用
-	 * 
-	 * @param user
-	 * @return
-	 */
-	@GetMapping("current")
-	public UserDetailsDto current(@CurrentUser UserDetailsDto user) {
-		return user;
-	}
+    /**
+     * 获取当前用
+     * 
+     * @param user
+     * @return
+     */
+    @GetMapping("current")
+    public UserDetailsDto current(@CurrentUser UserDetailsDto user) {
+        return user;
+    }
 }
