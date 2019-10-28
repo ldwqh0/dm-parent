@@ -71,7 +71,7 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
                 "/users/current",
                 "/menuAuthorities/current",
                 "/p/users/current",
-                "/p/menuAuthorities/current").access("isAuthenticated()")
+                "/p/menuAuthorities/current").authenticated()
                 .anyRequest().access("@authorityChecker.check(authentication,request)");
         // 设定匿名用户的用户实体
         UserDetailsDto ud = new UserDetailsDto();

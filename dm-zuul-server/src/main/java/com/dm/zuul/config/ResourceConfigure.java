@@ -22,7 +22,7 @@ import com.dm.security.oauth2.access.RequestAuthorityService;
 /**
  * 当请求中携带了access_token之后， 进行oauth认证
  * 
- * @author LiDong
+ * @author ldwqh0@outlook.con
  *
  */
 @EnableResourceServer
@@ -41,7 +41,7 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
                 "/users/current",
                 "/menuAuthorities/current",
                 "/p/users/current",
-                "/p/menuAuthorities/current").access("isAuthenticated()")
+                "/p/menuAuthorities/current").authenticated()
                 .anyRequest().access("@authorityChecker.check(authentication,request)");
         // 仅仅将携带了token的资源，定义为资源服务器的资源，走oauth认证
         // ，其它的资源都走普通的session认证
@@ -59,6 +59,7 @@ public class ResourceConfigure extends ResourceServerConfigurerAdapter {
         // 默认的OAuth2WebSecurityExpressionHandler是在ResourceServerSecurityConfigurer中实例化的。
         // 没有applicationContext,不能解析需要bean对象的表达式
         resources.expressionHandler(expressionHandler());
+//        resources.tokenStore(tokenStore);
     }
 
     static class BearerTokenRequestMatcher implements RequestMatcher {

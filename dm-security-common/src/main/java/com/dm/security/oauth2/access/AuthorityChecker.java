@@ -12,6 +12,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
+/**
+ * 一个权限校验器，提供一个简易的，遍历式的权限校验方法
+ * 
+ * @author ldwqh0@outlook.com
+ * 
+ * @since 0.2.1
+ * 
+ */
 public class AuthorityChecker {
 
     private RequestAuthorityService authorityService;
@@ -20,6 +28,15 @@ public class AuthorityChecker {
         this.authorityService = authorityService;
     }
 
+    /**
+     * 判断指定的授权对象是否可以访问指定的请求<br>
+     * 如果经过计算返回为true,表示可以访问<br>
+     * 如果返回false表示拒绝访问
+     * 
+     * @param authentication 授权对象
+     * @param request        要访问的请求
+     * @return
+     */
     public boolean check(Authentication authentication, HttpServletRequest request) {
         // 获取所有的授权对象
         List<RequestAuthorityAttribute> attributes = authorityService.listAllAuthorityAttribute();
@@ -33,7 +50,9 @@ public class AuthorityChecker {
         // 投票表决
         int grantCount = 0;
         for (RequestAuthorityAttribute attribute : a) {
+            // 如果当前配置为允许访问
             if (attribute.isAccess()) {
+                // 如果Scope验证通过，投票+1
                 if (validScope(attribute, authentication)) {
                     grantCount++;
                 }
@@ -46,10 +65,10 @@ public class AuthorityChecker {
     }
 
     /**
-     * 验证Scope
+     * 验证当前的授权对象是否允许访问指定资源scope的权限
      * 
-     * @param attribute
-     * @param request
+     * @param attribute      要验证的对象
+     * @param authentication 当前对象
      * @return
      */
     private boolean validScope(RequestAuthorityAttribute attribute, Authentication authentication) {
