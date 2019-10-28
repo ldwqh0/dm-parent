@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -21,7 +20,7 @@ import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
 import com.dm.auth.service.UserApprovalService;
 import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
@@ -39,9 +38,6 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 
     @Autowired
     private UserApprovalService userApprovalService;
-
-    @Autowired
-    private RedisConnectionFactory connectionFactory;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -127,10 +123,19 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
         return new DefaultOAuth2RequestFactory(clientDetailsService);
     }
 
+    // 如果使用redis来配置tokenStore,需要启动这个bean
+//    @Bean
+//    public TokenStore tokenStore() {
+//        RedisTokenStore tokenStore = new RedisTokenStore(connectionFactory);
+//        return tokenStore;
+//    }
+
+    // 项目中用到了token管理，需要直接操作tokensotre
+    // 而默认的oauth2配置中，tokenStore不是一个bean,不能被我们的代码获取到
+    // 因此这里重新配置一个bean,以便让我们的应用可用控制tokenStore
     @Bean
     public TokenStore tokenStore() {
-        RedisTokenStore tokenStore = new RedisTokenStore(connectionFactory);
-        return tokenStore;
+        return new InMemoryTokenStore();
     }
 
 }
