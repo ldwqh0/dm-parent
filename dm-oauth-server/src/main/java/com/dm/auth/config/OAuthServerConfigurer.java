@@ -89,11 +89,9 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         super.configure(endpoints);
         endpoints.userApprovalHandler(userApprovalHandler()); // 用户授权处理逻辑
-
         // 如果使用自定义的tokenService,以下的配置都不可用，需要在tokenService中重新配置
         endpoints.tokenStore(tokenStore());
         endpoints.accessTokenConverter(accessTokenConverter());
-//		endpoints
         // 指定是否可以重用refreshToken
         endpoints.reuseRefreshTokens(false);
         // 如果要使用RefreshToken可用，必须指定UserDetailsService
