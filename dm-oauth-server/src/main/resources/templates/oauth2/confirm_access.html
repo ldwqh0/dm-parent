@@ -10,7 +10,7 @@
 <p>  
   是否允许应用地址为： <span th:text="${authorizationRequest.redirectUri}"></span> <br />
   应用ID为：<span th:text="${authorizationRequest.clientId}"></span> <br />
-  的第三方应用获取你的下列信息
+  的应用获取你的下列信息
 </p>
 <form id="confirmationForm" name="confirmationForm" action="authorize" method="post">
   <input name="user_oauth_approval" value="true" type="hidden">
