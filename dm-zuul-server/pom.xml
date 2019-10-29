@@ -60,7 +60,7 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			<id>mariadb@local</id>
+			<id>mysql@local</id>
 			<properties>
 				<profiles.active>localhost-mariadb</profiles.active>
 				<datasource.url>jdbc:mariadb://localhost:3306/zuul?createDatabaseIfNotExist=true</datasource.url>

@@ -1,25 +1,4 @@
-server:
-  port: 8886
 spring:
-  datasource:
-    url: '@datasource.url@'
-    username: '@datasource.username@'
-    driver-class-name: '@datasource.driver@'
-    password: '@datasource.password@'
-    hikari:
-      connection-test-query: select 1
-  jpa:
-    show-sql: true
-    generate-ddl: true
-    database-platform: '@datasource.platform@'
-    hibernate:
-      use-new-id-generator-mappings: true
-      ddl-auto: update
-  servlet:
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
-security:
-  oauth2:
-    resource:
-      user-info-uri: '@user.info.url@'
+  profiles:
+    active:
+    - lidong

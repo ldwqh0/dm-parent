@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -29,10 +30,6 @@
 			<groupId>org.springframework.security.oauth.boot</groupId>
 			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -51,8 +48,7 @@
 			<groupId>com.dm</groupId>
 			<artifactId>dm-autoconfigure</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>com.dm</groupId> <artifactId>dm-security-common</artifactId> 
-			</dependency> -->
+		<!-- <dependency> <groupId>com.dm</groupId> <artifactId>dm-security-common</artifactId> </dependency> -->
 		<dependency>
 			<groupId>com.dm</groupId>
 			<artifactId>dm-uap-common</artifactId>
@@ -90,38 +86,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>mysql@local</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<profiles.active>mysql-local</profiles.active>
-				<datasource.url>jdbc:mysql://localhost:3306/oauth?serverTimezone=Asia/Shanghai&amp;createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;allowPublicKeyRetrieval=true
-				</datasource.url>
-				<datasource.driver>com.mysql.cj.jdbc.Driver</datasource.driver>
-				<datasource.username>lidong</datasource.username>
-				<datasource.password>admin123456!@#</datasource.password>
-				<datasource.platform>org.hibernate.dialect.MySQL8Dialect
-				</datasource.platform>
-			</properties>
-		</profile>
-		<profile>
-			<id>mysql@dm</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<profiles.active>mysql-dm</profiles.active>
-				<datasource.url>jdbc:mysql://192.168.2.127:3306/oauth?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true
-				</datasource.url>
-				<datasource.driver>com.mysql.jdbc.Driver</datasource.driver>
-				<datasource.username>root</datasource.username>
-				<datasource.password>damei2018</datasource.password>
-				<datasource.platform>org.hibernate.dialect.MySQL57Dialect
-				</datasource.platform>
-			</properties>
-		</profile>
-	</profiles>
 </project>
