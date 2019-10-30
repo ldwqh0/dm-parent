@@ -215,7 +215,7 @@ public class DUserServiceImpl implements DUserService {
      */
     private DUser copyProperties(DUser dUser, OapiUserGetResponse rsp) {
         dUserConverter.copyProperties(dUser, rsp);
-        log.info("正在合并用户信息 userid=" + dUser.getUserid());
+        log.info("正在合并用户信息 userid={}", dUser.getUserid());
         // 合并是否部门领导信息
         try {
             Set<DDepartment> departments = rsp.getDepartment().stream().map(dDepartmentRepository::getOne)
