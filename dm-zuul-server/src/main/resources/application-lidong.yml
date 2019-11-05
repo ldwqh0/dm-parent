@@ -1,7 +1,7 @@
 server: 
   port: 8880  
 spring:   datasource: 
-    url: 'jdbc:mysql://192.168.1.2:3306/zuul?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=Asia/Shanghai'
+    url: 'jdbc:mysql://localhost/zuul?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=Asia/Shanghai'
     username: 'root'
     driver-class-name: 'com.mysql.cj.jdbc.Driver'
     password: 'admin123456!@#'
@@ -19,16 +19,17 @@ security:
   oauth2:
     client:      client-id: zuul
       client-secret: 123456      
-      access-token-uri: http://localhost:8887/oauth/token
+      access-token-uri: 'http://ldwqh0.oicp.net:280/oauth/token'
       user-authorization-uri: http://localhost:8887/oauth/authorize
       client-authentication-scheme: form
       use-current-uri: false
       pre-established-redirect-uri: /login
     resource:      
-      token-info-uri: 'http://192.168.1.2:8887/oauth/check_token'
+      token-info-uri: 'http://ldwqh0.oicp.net:280/oauth/check_token'
 logging: 
   level: 
     com.netflix: DEBUG
+    'org.springframework.boot.web.servlet.FilterRegistrationBean': 'INFO'
 zuul:
   add-host-header: true
   ## 默认情况下，zuul 会将 authorization cookie set-cookie 这三个敏感的header不作为转发对象

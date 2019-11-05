@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration;
@@ -48,8 +47,7 @@ import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
  */
 @Configuration
 @EnableConfigurationProperties(OAuth2SsoProperties.class)
-@Import({ ResourceServerTokenServicesConfiguration.class })
-@EnableOAuth2Sso
+@Import({OAuth2ClientConfiguration.class, ResourceServerTokenServicesConfiguration.class })
 public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -83,6 +81,7 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
         // 此处配置oauth2单点登录配置
+        // 这个配置需要在所有的类初始化完成之后， 因为需要设置 setSessionAuthenticationStrategy
         http.apply(new OAuth2ClientAuthenticationConfigurer(oauth2SsoFilter()));
     }
 
@@ -141,7 +140,6 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
     private static class OAuth2ClientAuthenticationConfigurer
             extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-
         private OAuth2ClientAuthenticationProcessingFilter filter;
 
         OAuth2ClientAuthenticationConfigurer(
@@ -152,11 +150,8 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
             OAuth2ClientAuthenticationProcessingFilter ssoFilter = this.filter;
-            ssoFilter.setSessionAuthenticationStrategy(
-                    builder.getSharedObject(SessionAuthenticationStrategy.class));
-            builder.addFilterAfter(ssoFilter,
-                    AbstractPreAuthenticatedProcessingFilter.class);
+            ssoFilter.setSessionAuthenticationStrategy(builder.getSharedObject(SessionAuthenticationStrategy.class));
+            builder.addFilterAfter(ssoFilter, AbstractPreAuthenticatedProcessingFilter.class);
         }
-
     }
 }
