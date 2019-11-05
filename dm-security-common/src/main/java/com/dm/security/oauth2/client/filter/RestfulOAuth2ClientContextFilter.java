@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * @author ldwqh0@outlook.com
  * 
- * @since 0.2.2
+ * @since 0.2.1
  *
  */
 public class RestfulOAuth2ClientContextFilter implements Filter, InitializingBean {
