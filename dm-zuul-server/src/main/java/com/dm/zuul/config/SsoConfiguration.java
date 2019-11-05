@@ -47,7 +47,7 @@ import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
  */
 @Configuration
 @EnableConfigurationProperties(OAuth2SsoProperties.class)
-@Import({ ResourceServerTokenServicesConfiguration.class })
+@Import({OAuth2ClientConfiguration.class, ResourceServerTokenServicesConfiguration.class })
 public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
