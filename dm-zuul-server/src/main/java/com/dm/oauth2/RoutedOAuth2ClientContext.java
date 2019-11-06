@@ -5,7 +5,7 @@ import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 /**
- * 当我们将应用作为client接入Oauth时，会涉及到token复制问题<br >
+ * 当我们将应用作为client接入Oauth时，会涉及到token复制问题<br>
  * 参见{@link org.springframework.cloud.security.oauth2.client.AccessTokenContextRelay}<br>
  * 
  * 这个机制可以方便的向下游服务器发送请求<br>
@@ -21,31 +21,31 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
  */
 public abstract class RoutedOAuth2ClientContext implements OAuth2ClientContext {
 
-	@Override
-	public OAuth2AccessToken getAccessToken() {
-		return determineTargetContext().getAccessToken();
-	}
+    @Override
+    public final OAuth2AccessToken getAccessToken() {
+        return determineTargetContext().getAccessToken();
+    }
 
-	@Override
-	public void setAccessToken(OAuth2AccessToken accessToken) {
-		determineTargetContext().setAccessToken(accessToken);
-	}
+    @Override
+    public final void setAccessToken(OAuth2AccessToken accessToken) {
+        determineTargetContext().setAccessToken(accessToken);
+    }
 
-	@Override
-	public AccessTokenRequest getAccessTokenRequest() {
-		return determineTargetContext().getAccessTokenRequest();
-	}
+    @Override
+    public final AccessTokenRequest getAccessTokenRequest() {
+        return determineTargetContext().getAccessTokenRequest();
+    }
 
-	@Override
-	public void setPreservedState(String stateKey, Object preservedState) {
-		determineTargetContext().setPreservedState(stateKey, preservedState);
-	}
+    @Override
+    public final void setPreservedState(String stateKey, Object preservedState) {
+        determineTargetContext().setPreservedState(stateKey, preservedState);
+    }
 
-	@Override
-	public Object removePreservedState(String stateKey) {
-		return determineTargetContext().removePreservedState(stateKey);
-	}
+    @Override
+    public final Object removePreservedState(String stateKey) {
+        return determineTargetContext().removePreservedState(stateKey);
+    }
 
-	protected abstract OAuth2ClientContext determineTargetContext();
+    protected abstract OAuth2ClientContext determineTargetContext();
 
 }

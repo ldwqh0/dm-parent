@@ -47,7 +47,7 @@ import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
  */
 @Configuration
 @EnableConfigurationProperties(OAuth2SsoProperties.class)
-@Import({OAuth2ClientConfiguration.class, ResourceServerTokenServicesConfiguration.class })
+@Import({ OAuth2ClientConfiguration.class, ResourceServerTokenServicesConfiguration.class })
 public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -120,6 +120,11 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
         return new UserDetailsDtoPrincipalExtractor();
     }
 
+    /**
+     * 配置oauth2 filter
+     * 
+     * @return
+     */
     private OAuth2ClientAuthenticationProcessingFilter oauth2SsoFilter() {
         OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(
                 ssoProperties.getLoginPath());
