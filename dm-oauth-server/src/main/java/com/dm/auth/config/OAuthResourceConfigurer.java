@@ -31,7 +31,7 @@ public class OAuthResourceConfigurer extends ResourceServerConfigurerAdapter {
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         super.configure(resources);
         // 指定资源服务器的资源ID
-        // 如果给某个授权指定了可也访问的资源ID，则仅能访问指定的资源，如果不给某个授权指定指定访问的资源ID，则代表可以访问所有资源
+        // 如果给某个授权指定了可以访问的资源ID，则仅能访问指定的资源，如果不给某个授权指定指定访问的资源ID，则代表可以访问所有资源
         resources.resourceId("USERS");
         resources.stateless(true); // 指定服务是无状态的
     }

@@ -48,7 +48,7 @@ public class UserApprovalServiceImpl implements UserApprovalService {
 	}
 
 	/**
-	 * 报存授权信息
+	 * 保存存授权信息
 	 * 
 	 * @param approval
 	 * @return
