@@ -141,7 +141,7 @@ public class MenuServcieImpl implements MenuService {
             exp = qMenu.parent.eq(parent);
         }
         exp = exp.and(QMenu.menu.order.lt(order));
-        Sort sort = new Sort(Direction.DESC, "order");
+        Sort sort = Sort.by(Direction.DESC, "order");
         PageRequest request = PageRequest.of(0, 1, sort);
         Iterable<Menu> thats = menuRepository.findAll(exp, request);
         Iterator<Menu> iterator = thats.iterator();
@@ -166,7 +166,7 @@ public class MenuServcieImpl implements MenuService {
             expression = qMenu.parent.eq(parent);
         }
         expression = expression.and(QMenu.menu.order.gt(order));
-        Sort sort = new Sort(Direction.ASC, "order");
+        Sort sort = Sort.by(Direction.ASC, "order");
         PageRequest request = PageRequest.of(0, 1, sort);
         Iterator<Menu> thats = menuRepository.findAll(expression, request).iterator();
         if (thats.hasNext()) {
