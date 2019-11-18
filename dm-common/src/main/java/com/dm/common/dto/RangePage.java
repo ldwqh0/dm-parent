@@ -51,7 +51,8 @@ class RangePageImpl<T> extends PageImpl<T> implements RangePage<T> {
     }
 
     @Override
-    public <U> RangePage<U> map(Function<? super T, ? extends U> converter) {
-        return new RangePageImpl<U>(max, getConvertedContent(converter), getPageable(), getTotalElements());
+    public <R> RangePage<R> map(Function<? super T, ? extends R> converter) {
+        return new RangePageImpl<R>(max, getConvertedContent(converter), getPageable(), getTotalElements());
     }
+
 }

@@ -37,6 +37,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.dm.common.exception.DataNotExistException;
 import com.dm.file.config.FileConfig;
 import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.dto.FileInfoDto;
@@ -74,7 +75,7 @@ public class FileController {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
     })
     public FileInfoDto get(@PathVariable("id") UUID id) {
-        return fileInfoConverter.toDto(fileService.get(id));
+        return fileInfoConverter.toDto(fileService.get(id)).orElseThrow(DataNotExistException::new);
     }
 
     @PostMapping
@@ -139,7 +140,7 @@ public class FileController {
             fileInfo.setSize(target.length());
             FileInfo _result = fileService.save(src, fileInfo);
             FileUtils.forceDelete(target);
-            return fileInfoConverter.toDto(_result);
+            return fileInfoConverter.toDto(_result).get();
         } else {
             return null;
         }
