@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dm</groupId>
 	<artifactId>dm-parent</artifactId>
-	<version>0.2.2-SNAPSHOT</version>
+	<version>0.2.3-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -19,7 +19,7 @@
 		<resource.delimiter>@</resource.delimiter>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<querydsl.version>4.2.1</querydsl.version>
-		<dm.version>0.2.2-SNAPSHOT</dm.version>
+		<dm.version>0.2.3-SNAPSHOT</dm.version>
 	</properties>
 	<modules>
 		<!-- 平台公共模块 -->
