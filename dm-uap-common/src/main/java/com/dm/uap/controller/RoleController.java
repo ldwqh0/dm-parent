@@ -24,7 +24,6 @@ import com.dm.uap.entity.Role;
 import com.dm.uap.service.RoleService;
 
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 
 import static org.springframework.http.HttpStatus.*;
 
