@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.dm.security.web.authentication.RequestUtils.*;
 
 public class LoginSuccessHandler implements AuthenticationSuccessHandler, InitializingBean {
 
@@ -25,8 +26,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
             Authentication authentication) throws IOException, ServletException {
         // 是否重定向,如果参数中有redirect参数，系统会自动跳转到相应的地址
         String redirect = request.getParameter("redirect_uri");
-        String accept = request.getHeader("accept");
-        if (StringUtils.isNotEmpty(accept) && (StringUtils.containsIgnoreCase(accept, "application/json") || StringUtils.containsIgnoreCase(accept, "text/plain"))) {
+        if (isJsonRequest(request)) {
             Object principal = authentication.getPrincipal();
             if (!Objects.isNull(principal)) {
                 String result = objectMapper.writeValueAsString(principal);

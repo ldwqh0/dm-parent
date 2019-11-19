@@ -1,6 +1,7 @@
 package com.dm.security.web.authentication;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -16,6 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.dm.security.web.authentication.RequestUtils.*;
 
 public class LoginFailureHandler implements AuthenticationFailureHandler, InitializingBean {
 
@@ -25,11 +27,19 @@ public class LoginFailureHandler implements AuthenticationFailureHandler, Initia
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
-        Map<String, Object> result = new HashMap<>();
-        result.put("error", HttpStatus.UNAUTHORIZED.value());
-        result.put("message", exception.getMessage());
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write(objectMapper.writeValueAsString(result));
+        if (isJsonRequest(request)) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("path", request.getRequestURI());
+            result.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            result.put("message", exception.getMessage());
+            result.put("status", HttpStatus.UNAUTHORIZED.value());
+            result.put("timestamp", ZonedDateTime.now());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(result));
+        } else {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        }
     }
 
     @Override
