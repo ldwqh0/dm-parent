@@ -115,7 +115,7 @@ public class MenuServcieImpl implements MenuService {
 					.or(qMenu.url.containsIgnoreCase(key))
 					.or(qMenu.description.containsIgnoreCase(key)));
 		}
-		return menuRepository.findAll(builder.getValue(), pageable);
+		return menuRepository.findAll(builder, pageable);
 	}
 
 	@Override

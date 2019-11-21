@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 		} else {
 			throw new RuntimeException("The username can not be empty");
 		}
-		if (userRepository.exists(builder.getValue())) {
+		if (userRepository.exists(builder)) {
 			throw new DataValidateException("用户名已被占用");
 		}
 	}

@@ -78,7 +78,7 @@ public class RoleServiceImpl implements RoleService {
 			builder.and(qRole.id.ne(id));
 		}
 		builder.and(qRole.name.eq(name));
-		return roleRepository.exists(builder.getValue());
+		return roleRepository.exists(builder);
 	}
 
 	@Override
