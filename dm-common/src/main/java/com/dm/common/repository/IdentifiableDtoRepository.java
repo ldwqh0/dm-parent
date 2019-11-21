@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,35 +15,43 @@ import com.dm.common.dto.IdentifiableDto;
 
 public interface IdentifiableDtoRepository<T, ID extends Serializable> {
 
-    public default List<T> getById(List<ID> uuids) {
-        if (CollectionUtils.isEmpty(uuids)) {
+    public default List<T> getById(List<ID> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
         } else {
-            return uuids.stream().map(this::getOne).collect(Collectors.toList());
+            return ids.stream().map(this::getOne).collect(Collectors.toList());
         }
     }
 
-    public default Stream<T> getById(Stream<ID> uuids) {
-        return uuids.map(this::getOne);
+    public default Stream<T> getById(Stream<ID> ids) {
+        return ids.map(this::getOne);
     }
 
-    public default T getByDto(IdentifiableDto<ID> file) {
-        if (Objects.isNull(file)) {
+    public default T getByDto(IdentifiableDto<ID> element) {
+        if (Objects.isNull(element)) {
             return null;
         } else {
-            return getOne(file.getId());
+            return getOne(element.getId());
         }
     }
 
-    public default T getByDto(Optional<? extends IdentifiableDto<ID>> file) {
-        return file.map(IdentifiableDto::getId).map(this::getOne).orElse(null);
+    public default T getByDto(Optional<? extends IdentifiableDto<ID>> element) {
+        return element.map(IdentifiableDto::getId).map(this::getOne).orElse(null);
     }
 
-    public default List<T> getByDto(List<? extends IdentifiableDto<ID>> files) {
-        if (CollectionUtils.isEmpty(files)) {
+    public default List<T> getByDto(List<? extends IdentifiableDto<ID>> elements) {
+        if (CollectionUtils.isEmpty(elements)) {
             return Collections.emptyList();
         } else {
-            return files.stream().map(IdentifiableDto::getId).map(this::getOne).collect(Collectors.toList());
+            return elements.stream().map(IdentifiableDto::getId).map(this::getOne).collect(Collectors.toList());
+        }
+    }
+
+    public default Set<T> getByDto(Set<? extends IdentifiableDto<ID>> elements) {
+        if (CollectionUtils.isEmpty(elements)) {
+            return Collections.emptySet();
+        } else {
+            return elements.stream().map(IdentifiableDto::getId).map(this::getOne).collect(Collectors.toSet());
         }
     }
 
