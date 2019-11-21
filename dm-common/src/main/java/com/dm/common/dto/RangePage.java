@@ -22,6 +22,7 @@ public interface RangePage<T> extends Page<T> {
      */
     public long getMax();
 
+    @Override
     public <U> RangePage<U> map(Function<? super T, ? extends U> converter);
 
     public static <T> RangePage<T> of(long max, Page<T> page) {

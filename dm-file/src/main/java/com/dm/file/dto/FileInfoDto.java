@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.entity.Audit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,24 +16,24 @@ import lombok.Data;
 
 @Data
 @JsonInclude(value = Include.NON_EMPTY)
-public class FileInfoDto implements Serializable {
+public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
 
-	private static final long serialVersionUID = -6472426570089325611L;
+    private static final long serialVersionUID = -6472426570089325611L;
 
-	private UUID id;
+    private UUID id;
 
-	private String filename;
+    private String filename;
 
-	@JsonIgnore
-	private String path;
+    @JsonIgnore
+    private String path;
 
-	private Long size;
+    private Long size;
 
-	@JsonProperty(access = Access.READ_ONLY)
-	private Audit createUser;
+    @JsonProperty(access = Access.READ_ONLY)
+    private Audit createUser;
 
-	@JsonProperty(access = Access.READ_ONLY)
-	private Audit lastModifiedBy;
+    @JsonProperty(access = Access.READ_ONLY)
+    private Audit lastModifiedBy;
 
-	private ZonedDateTime createTime;
+    private ZonedDateTime createTime;
 }
