@@ -10,10 +10,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dm.common.dto.IdentifiableDto;
 
-public interface IdentifiableDtoRepository<T, ID extends Serializable> {
+public interface IdentifiableDtoRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
     public default List<T> getById(List<ID> ids) {
         if (CollectionUtils.isEmpty(ids)) {
@@ -55,5 +56,4 @@ public interface IdentifiableDtoRepository<T, ID extends Serializable> {
         }
     }
 
-    public T getOne(ID id);
 }
