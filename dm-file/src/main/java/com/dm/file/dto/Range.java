@@ -56,7 +56,7 @@ public class Range {
             String[] nums = StringUtils.split(str, "-");
             String num0 = StringUtils.trim(nums[0]);
             String num1 = StringUtils.trim(nums[1]);
-            if (NumberUtils.isCreatable(num0) && NumberUtils.isCreatable(num0)) {
+            if (NumberUtils.isCreatable(num0) && NumberUtils.isCreatable(num1)) {
                 long start = NumberUtils.toLong(num0);
                 long end = NumberUtils.toLong(num1);
                 if (end < start || end > count) {
