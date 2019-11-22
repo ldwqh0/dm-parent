@@ -31,7 +31,7 @@ public class FileServiceImpl implements FileInfoService {
 	private FileInfoRepository fileInfoRepository;
 
 	@Override
-	public Optional<FileInfo> get(UUID id) {
+	public Optional<FileInfo> findById(UUID id) {
 		return fileInfoRepository.findById(id);
 	}
 
