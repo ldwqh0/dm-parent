@@ -27,6 +27,7 @@
   <div class="login-wrapper">
     <h3>用户登录</h3>
     <form class="login" action="login" method="post"> 
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/><br />
       <div class="el-input el-input--prefix">
         <input name="username" type="text" autocomplete="off" placeholder="请输入用户名" class="el-input__inner">
         <span class="el-input__prefix">
@@ -39,7 +40,6 @@
           <img class="el-input__icon" src="./images/user.png">
         </span>
       </div>
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/><br />
       <div th:if="${param.error}" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}" class="error"></div>
       <input type="submit" value="登录" class="el-button el-button--primary"/>
     </form>
