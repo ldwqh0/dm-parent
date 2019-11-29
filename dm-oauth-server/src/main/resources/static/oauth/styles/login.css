@@ -1,6 +1,22 @@
 html,body{
     background-color:#070c41;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+ }
+.app {
+    height: 100%;
+    background-image:url("../images/bg.jpg");
+    background-size:cover;
 }
+.app .title{
+    position: absolute;
+    color: white;
+    top: 30px;
+    left: 30px;
+    font-size: 38px;	
+}
+
 .el-input{
     position:relative;
     font-size:14px;
@@ -80,7 +96,7 @@ html,body{
 }
 
 .login-wrapper h3 {
-    font-size: 38px;
+    font-size: 30px;
     color:rgba(255,255,255,1);
     text-align: center;
     margin: 10px 0px;
