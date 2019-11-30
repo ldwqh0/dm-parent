@@ -45,7 +45,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 				.loginPage("/oauth/login.html").loginProcessingUrl("/oauth/login").permitAll()
 				.failureHandler(authenticationFailureHandler())
 				.successHandler(authenticationSuccessHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
-				.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/oauth/logout"))
 				.and().httpBasic().disable();
 	}
 
