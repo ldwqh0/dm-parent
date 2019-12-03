@@ -22,8 +22,8 @@ public class InitDataConfigurer {
 
 	@PostConstruct
 	public void initData() {
-		Optional<ClientInfo> ownerapp = clientService.getOne("ownerapp");
-		Optional<ClientInfo> zuul = clientService.getOne("zuul");
+		Optional<ClientInfo> ownerapp = clientService.findById("ownerapp");
+		Optional<ClientInfo> zuul = clientService.findById("zuul");
 		if (!ownerapp.isPresent()) {
 			initOwnerApp();
 		}

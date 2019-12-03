@@ -43,21 +43,12 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
 		return model;
 	}
 
-	public ClientDetailsDto toClientDetails(ClientInfo model) {
-		if (model == null) {
-			return null;
-		} else {
-			return toClientDetailsActual(model);
-		}
+	public Optional<ClientDetailsDto> toClientDetails(ClientInfo model) {
+		return Optional.ofNullable(model).map(this::toClientDetailsActual);
 	}
 
-	public ClientDetails toClientDetails(Optional<ClientInfo> client) {
-		if (client.isPresent()) {
-			return toClientDetailsActual(client.get());
-		} else {
-			return null;
-		}
-
+	public Optional<ClientDetailsDto> toClientDetails(Optional<ClientInfo> model) {
+		return model.map(this::toClientDetailsActual);
 	}
 
 	private ClientDetailsDto toClientDetailsActual(ClientInfo model) {

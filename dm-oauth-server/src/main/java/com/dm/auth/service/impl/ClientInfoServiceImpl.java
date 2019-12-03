@@ -38,9 +38,10 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 	private UserApprovalRepository userApprovalRepository;
 
 	@Override
-	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
+	public ClientDetails loadClientByClientId(final String clientId) throws ClientRegistrationException {
 		Optional<ClientInfo> client = clientInfoRepository.findById(clientId);
-		return clientInfoConverter.toClientDetails(client);
+		return clientInfoConverter.toClientDetails(client).orElseThrow(
+				() -> new ClientRegistrationException("The client with id {" + clientId + "} is not exists"));
 	}
 
 	@Transactional
@@ -64,11 +65,14 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 		return clientInfoRepository.count() > 0;
 	}
 
+	/**
+	 * 删除一个client
+	 */
 	@Override
 	@Transactional
 	public void delete(String clientId) {
-		clientInfoRepository.deleteById(clientId);
 		userApprovalRepository.deleteByClientId(clientId);
+		clientInfoRepository.deleteById(clientId);
 	}
 
 	@Override
@@ -92,16 +96,6 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
 		clientInfoConverter.copyProperties(_client, client);
 		_client.setClientSecret(passwordEncoder.encode(client.getClientSecret()));
 		return _client;
-	}
-
-	@Override
-	public Optional<ClientInfo> findByName(String name) {
-		return clientInfoRepository.findByName(name);
-	}
-
-	@Override
-	public Optional<ClientInfo> getOne(String id) {
-		return clientInfoRepository.findById(id);
 	}
 
 }
