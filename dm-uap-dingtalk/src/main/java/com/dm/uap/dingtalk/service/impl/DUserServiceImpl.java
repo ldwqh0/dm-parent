@@ -192,7 +192,15 @@ public class DUserServiceImpl implements DUserService {
         // dUserRepository.deleteByIdNotIn(userIds); // 删除在本地数据库中存在，但不存在于钉钉服务器上的数据
         List<DUser> users = userIds.stream()
                 // 将从服务器上抓取的数据，复制到本地数据库中
-                .map(userid -> copyProperties(new DUser(userid), dingTalkService.fetchUserById(userid)))
+                .map(userid -> {
+                    try {
+                        return dingTalkService.fetchUserById(userid);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                })
+                .filter(item -> !Objects.isNull(item))
+                .map(item -> copyProperties(new DUser(item.getUserid()), item))
                 .collect(Collectors.toList());
         // 保存所有用户信息
         return dUserRepository.saveAll(users);
@@ -204,9 +212,10 @@ public class DUserServiceImpl implements DUserService {
      * @param dUser
      * @param rsp
      * @return
-     */
+     */    
     private DUser copyProperties(DUser dUser, OapiUserGetResponse rsp) {
         dUserConverter.copyProperties(dUser, rsp);
+        log.info("正在合并用户信息 userid={}", dUser.getUserid());
         // 合并是否部门领导信息
         try {
             Set<DDepartment> departments = rsp.getDepartment().stream().map(dDepartmentRepository::getOne)

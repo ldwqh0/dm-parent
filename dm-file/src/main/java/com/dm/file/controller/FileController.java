@@ -304,7 +304,7 @@ public class FileController {
 
     /**
      * 根据Range Header获取Range
-     * 
+     *
      * @param ranges
      * @param file
      * @return

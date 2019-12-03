@@ -21,42 +21,42 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DingTalkConfiguration {
 
-	@Bean
-	@ConditionalOnMissingBean(DingTalkService.class)
-	@ConditionalOnBean(DingClientConfig.class)
-	public DingTalkService dingTalkService(@Autowired DingClientConfig config) {
-		log.info("Init default dingclient with appkey[" + config.getAppkey() + "]");
-		return new DefaultDingTalkServiceImpl(config);
-	}
+    @Bean
+    @ConditionalOnMissingBean(DingTalkService.class)
+    @ConditionalOnBean(DingClientConfig.class)
+    public DingTalkService dingTalkService(@Autowired DingClientConfig config) {
+        log.info("Init default dingclient with appkey[{}]", config.getAppkey());
+        return new DefaultDingTalkServiceImpl(config);
+    }
 
-	@ConfigurationProperties(prefix = "dingtalk")
-	@Configuration
-	@ConditionalOnProperty(prefix = "dingtalk", name = { "appkey", "appsecret" })
-	@EnableConfigurationProperties(DingClientConfigCongiguration.class)
-	public static class DingClientConfigCongiguration {
-		private String appkey;
-		private String appsecret;
+    @ConfigurationProperties(prefix = "dingtalk")
+    @Configuration
+    @ConditionalOnProperty(prefix = "dingtalk", name = { "appkey", "appsecret" })
+    @EnableConfigurationProperties(DingClientConfigCongiguration.class)
+    public static class DingClientConfigCongiguration {
+        private String appkey;
+        private String appsecret;
 
-		public String getAppkey() {
-			return appkey;
-		}
+        public String getAppkey() {
+            return appkey;
+        }
 
-		public void setAppkey(String appkey) {
-			this.appkey = appkey;
-		}
+        public void setAppkey(String appkey) {
+            this.appkey = appkey;
+        }
 
-		public String getAppsecret() {
-			return appsecret;
-		}
+        public String getAppsecret() {
+            return appsecret;
+        }
 
-		public void setAppsecret(String appsecret) {
-			this.appsecret = appsecret;
-		}
+        public void setAppsecret(String appsecret) {
+            this.appsecret = appsecret;
+        }
 
-		@Bean
-		public DingClientConfig clientConfig() {
-			return new DingClientConfig(appkey, appsecret);
-		}
-	}
+        @Bean
+        public DingClientConfig clientConfig() {
+            return new DingClientConfig(appkey, appsecret);
+        }
+    }
 
 }

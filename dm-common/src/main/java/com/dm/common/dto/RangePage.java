@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
  */
 public interface RangePage<T> extends Page<T> {
     /**
-     * 范围的上线
+     * 范围的上限
      * 
      * @return
      */

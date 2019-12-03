@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration;
@@ -122,7 +123,7 @@ public class SsoConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
      * 配置oauth2 filter
-     * 
+     *
      * @return
      */
     private OAuth2ClientAuthenticationProcessingFilter oauth2SsoFilter() {
