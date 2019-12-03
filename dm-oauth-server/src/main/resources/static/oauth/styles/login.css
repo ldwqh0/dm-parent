@@ -1,6 +1,22 @@
 html,body{
     background-color:#070c41;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+ }
+.app {
+    height: 100%;
+    background-image:url("../images/bg.jpg");
+    background-size:cover;
 }
+.app .title{
+    position: absolute;
+    color: white;
+    top: 30px;
+    left: 30px;
+    font-size: 38px;	
+}
+
 .el-input{
     position:relative;
     font-size:14px;
@@ -68,23 +84,77 @@ html,body{
     border-radius: 4px;
 }
 
-.login-wrapper {
+.login-box {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     right: 50px;
-    width: 400px;
-    height: 400px;
-    padding: 50px;
+    width: 450px;
+    height: 450px;
+    box-sizing: border-box;
     border:2px solid rgba(0,184,255,0.1);
 }
 
 .login-wrapper h3 {
-    font-size: 38px;
+    font-size: 30px;
     color:rgba(255,255,255,1);
     text-align: center;
+    margin: 10px 0px;
 }
+
+.login-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.login-wrapper .login-context{
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+.login-wrapper .horn{
+    width: 30px;
+    height: 30px;    
+    position: absolute;
+}
+
+.login-wrapper .horn1{
+    left: 0;
+    top: 0;
+    border-left: solid 5px #00b8ff;
+    border-top: solid 5px #00b8ff;    
+}
+.login-wrapper .horn2{
+    right: 0;
+    top: 0;
+    border-right: solid 5px #00b8ff;
+    border-top: solid 5px #00b8ff;
+}
+.login-wrapper .horn3{
+    left: 0;
+    bottom: 0;
+    border-left: solid 5px #00b8ff; 
+    border-bottom: solid 5px #00b8ff;   
+}
+.login-wrapper .horn4{
+    right: 0;
+    bottom: 0;
+    border-right: solid 5px #00b8ff;
+    border-bottom: solid 5px #00b8ff;    
+}
+
 .error{
     color: red;
     margin-top: -30px;
+}
+
+form.login {
+    margin: auto;
+    width: 300px;
 }
