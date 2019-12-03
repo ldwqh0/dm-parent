@@ -74,7 +74,7 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
         // // 是否启用自动授权，如果用自动授权，则不会弹出要求用户授权的页面
         // .autoApprove(false).autoApprove("cas");
         // 使用数据库配置的client
-        log.info("use clientDetailsService" + clientDetailsService);
+        log.info("use clientDetailsService {}", clientDetailsService.toString());
         clients.withClientDetails(clientDetailsService);
     }
 
