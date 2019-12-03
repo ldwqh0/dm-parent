@@ -10,7 +10,6 @@
 		<java.version>11</java.version>
 		<spring.cloud.version>Hoxton.RELEASE</spring.cloud.version>
 		<springboot.version>2.2.1.RELEASE</springboot.version>
-		<!-- 暂时将spring-security-oauth2的版本锁定在2.3.6, 2.3.7版本的JdkSerializationStrategy会导致用户信息反序列化失败 -->
 		<spring.security.oauth2.version>2.4.0.RELEASE</spring.security.oauth2.version>
 		<springfox.version>2.9.2</springfox.version>
 		<hibernate.version>5.4.9.Final</hibernate.version>
