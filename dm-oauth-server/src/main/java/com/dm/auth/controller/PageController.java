@@ -23,8 +23,8 @@ public class PageController {
 		return new ModelAndView("oauth/confirm_access", model);
 	}
 
-	@GetMapping({ "/oauth/", "/oauth/index.html" })
+	@GetMapping({ "/", "/oauth/" })
 	public String index() {
-		return "forward:/index.html";
+		return "redirect:/oauth/index.html";
 	}
 }
