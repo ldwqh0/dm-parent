@@ -12,41 +12,39 @@ import com.dm.region.entity.Region;
 @Component
 public class RegionConverter extends AbstractConverter<Region, RegionDto> {
 
-	@Override
-	protected RegionDto toDtoActual(Region model) {
-		RegionDto dto = new RegionDto();
-		dto.setCode(model.getCode());
-		dto.setName(model.getName());
-		Region parentCode = model.getParentCode();
-		dto.setLatitude(model.getLatitude());
-		dto.setLongitude(model.getLongitude());
-		if (!Objects.isNull(parentCode)) {
-			dto.setParent(this.toDto(parentCode));
-		}
-		return dto;
-	}
+    @Override
+    protected RegionDto toDtoActual(Region model) {
+        RegionDto dto = new RegionDto();
+        dto.setCode(model.getCode());
+        dto.setName(model.getName());
+        Region parentCode = model.getParentCode();
+        dto.setLatitude(model.getLatitude());
+        dto.setLongitude(model.getLongitude());
+        dto.setParent(toDto(parentCode).orElse(null));
+        return dto;
+    }
 
-	@Override
-	public Region copyProperties(Region model, RegionDto dto) {
-		model.setCode(dto.getCode());
-		model.setName(dto.getName());
-		model.setLatitude(dto.getLatitude());
-		model.setLongitude(dto.getLongitude());
-		if (dto.getParent() != null) {
-			Region regionParent = new Region();
-			this.copyProperties(regionParent, dto.getParent());
-			model.setParentCode(regionParent);
-		}
-		return model;
-	}
+    @Override
+    public Region copyProperties(Region model, RegionDto dto) {
+        model.setCode(dto.getCode());
+        model.setName(dto.getName());
+        model.setLatitude(dto.getLatitude());
+        model.setLongitude(dto.getLongitude());
+        if (dto.getParent() != null) {
+            Region regionParent = new Region();
+            this.copyProperties(regionParent, dto.getParent());
+            model.setParentCode(regionParent);
+        }
+        return model;
+    }
 
-	public List<String> toRegionCodeList(Region region) {
-		List<String> result = new ArrayList<String>();
-		Region current = region;
-		while (!Objects.isNull(current)) {
-			result.add(0, current.getCode());
-			current = current.getParentCode();
-		}
-		return result;
-	}
+    public List<String> toRegionCodeList(Region region) {
+        List<String> result = new ArrayList<String>();
+        Region current = region;
+        while (!Objects.isNull(current)) {
+            result.add(0, current.getCode());
+            current = current.getParentCode();
+        }
+        return result;
+    }
 }

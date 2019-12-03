@@ -16,7 +16,7 @@ public interface FileInfoService {
 	 * @param id
 	 * @return
 	 */
-	public Optional<FileInfo> get(UUID id);
+	public Optional<FileInfo> findById(UUID id);
 
 	/**
 	 * 保存文件，并返回文件信息

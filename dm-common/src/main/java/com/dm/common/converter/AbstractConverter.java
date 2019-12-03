@@ -2,38 +2,14 @@ package com.dm.common.converter;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.IterableUtils;
 
-import com.dm.common.exception.DataNotExistException;
-
 public abstract class AbstractConverter<M, DTO> {
-    /**
-     * 将实体模型转换为DTO
-     * 
-     * @param model
-     * @return
-     */
-    public final DTO toDto(M model) {
-        if (Objects.isNull(model)) {
-            throw new DataNotExistException();
-        } else {
-            return toDtoActual(model);
-        }
-
-    }
-
-    public final DTO toDto(Optional<M> model) {
-        if (model.isPresent()) {
-            return toDtoActual(model.get());
-        } else {
-            throw new DataNotExistException();
-        }
-    }
 
     /**
      * 将实体安静的转换为Dto对象，<br>
@@ -43,7 +19,7 @@ public abstract class AbstractConverter<M, DTO> {
      * 
      * @return 转换后的dto对象
      */
-    public final Optional<DTO> toDtoQuiet(M model) {
+    public final Optional<DTO> toDto(M model) {
         return Optional.ofNullable(model).map(this::toDtoActual);
     }
 
@@ -55,8 +31,12 @@ public abstract class AbstractConverter<M, DTO> {
      * 
      * @return 转换后的dto对象
      */
-    public final Optional<DTO> toDtoQuiet(Optional<M> model) {
+    public final Optional<DTO> toDto(Optional<M> model) {
         return model.map(this::toDtoActual);
+    }
+
+    public final Optional<DTO> toDto(Supplier<Optional<M>> ms) {
+        return toDto(ms.get());
     }
 
     /**
@@ -79,7 +59,7 @@ public abstract class AbstractConverter<M, DTO> {
         if (IterableUtils.isEmpty(models)) {
             return Collections.emptyList();
         } else {
-            return StreamSupport.stream(models.spliterator(), false).map(this::toDto).collect(Collectors.toList());
+            return StreamSupport.stream(models.spliterator(), false).map(this::toDtoActual).collect(Collectors.toList());
         }
     }
 

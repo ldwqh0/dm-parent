@@ -22,4 +22,4 @@ spring:
 security:
   oauth2:
     resource:
-      user-info-uri: http://localhost:8887/oauth/users/current
+      user-info-uri: http://ldwqh0.kmdns.net:280/oauth/users/current

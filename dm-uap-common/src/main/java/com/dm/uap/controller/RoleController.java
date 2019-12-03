@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.dto.RoleDto;
@@ -23,16 +24,13 @@ import com.dm.uap.entity.Role;
 import com.dm.uap.service.RoleService;
 
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 
 import static org.springframework.http.HttpStatus.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("roles")
-@Slf4j
 public class RoleController {
 
     @Autowired
@@ -50,7 +48,7 @@ public class RoleController {
             throw new DataValidateException("角色名称被占用");
         } else {
             Role role = roleService.save(roleDto);
-            return roleConverter.toDto(role);
+            return roleConverter.toDto(role).get();
         }
     }
 
@@ -63,15 +61,14 @@ public class RoleController {
             throw new DataValidateException("角色名称被占用");
         } else {
             Role role = roleService.update(id, roleDto);
-            return roleConverter.toDto(role);
+            return roleConverter.toDto(role).get();
         }
     }
 
     @ApiOperation("获取角色信息")
     @GetMapping("{id}")
     public RoleDto get(@PathVariable("id") long id) {
-        Optional<Role> role = roleService.get(id);
-        return roleConverter.toDto(role);
+        return roleConverter.toDto(roleService.get(id)).orElseThrow(DataNotExistException::new);
     }
 
     @ApiOperation("删除角色")

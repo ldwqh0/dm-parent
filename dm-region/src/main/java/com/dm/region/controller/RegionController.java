@@ -2,7 +2,6 @@ package com.dm.region.controller;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,19 +55,19 @@ public class RegionController {
     @GetMapping(value = "provinces")
     public List<RegionDto> findProvincial() {
         List<Region> regions = regionService.findProvincials();
-        return regions.stream().map(regionConverter::toDto).collect(Collectors.toList());
+        return regionConverter.toDto(regions);
     }
 
     @GetMapping(params = { "draw" })
     public Page<RegionDto> find(@RequestParam("draw") Long draw,
             @RequestParam(value = "keywords", required = false) String keywords,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return regionService.find(keywords, pageable).map(regionConverter::toDto);
+        return regionService.find(keywords, pageable).map(regionConverter::toDto).map(Optional::get);
     }
 
     @GetMapping(value = "children")
     public List<RegionDto> findChildren(@RequestParam(required = true, value = "code") String code) {
         List<Region> regions = regionService.findChildren(code);
-        return regions.stream().map(regionConverter::toDto).collect(Collectors.toList());
+        return regionConverter.toDto(regions);
     }
 }

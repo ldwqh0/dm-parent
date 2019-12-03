@@ -11,32 +11,32 @@ import com.dm.common.converter.AbstractConverter;
 @Component
 public class ResourceOperationConverter extends AbstractConverter<ResourceOperation, ResourceOperationDto> {
 
-	@Autowired
-	private ResourceConverter resourceConverter;
+    @Autowired
+    private ResourceConverter resourceConverter;
 
-	@Override
-	protected ResourceOperationDto toDtoActual(ResourceOperation model) {
-		ResourceOperationDto dto = new ResourceOperationDto();
-		dto.setSaveable(model.getSaveable());
-		dto.setDeleteable(model.getDeleteable());
-		dto.setReadable(model.getReadable());
-		dto.setResource(resourceConverter.toDto(model.getResource()));
-		dto.setUpdateable(model.getUpdateable());
-		return dto;
-	}
+    @Override
+    protected ResourceOperationDto toDtoActual(ResourceOperation model) {
+        ResourceOperationDto dto = new ResourceOperationDto();
+        dto.setSaveable(model.getSaveable());
+        dto.setDeleteable(model.getDeleteable());
+        dto.setReadable(model.getReadable());
+        dto.setResource(resourceConverter.toDto(model.getResource()).orElse(null));
+        dto.setUpdateable(model.getUpdateable());
+        return dto;
+    }
 
-	@Override
-	public ResourceOperation copyProperties(ResourceOperation model, ResourceOperationDto dto) {
-		model.setSaveable(dto.getSaveable());
-		model.setDeleteable(dto.getDeleteable());
-		model.setReadable(dto.getReadable());
-		model.setUpdateable(dto.getUpdateable());
-		return model;
-	}
+    @Override
+    public ResourceOperation copyProperties(ResourceOperation model, ResourceOperationDto dto) {
+        model.setSaveable(dto.getSaveable());
+        model.setDeleteable(dto.getDeleteable());
+        model.setReadable(dto.getReadable());
+        model.setUpdateable(dto.getUpdateable());
+        return model;
+    }
 
-	public ResourceOperationDto toDto(Resource resource) {
-		ResourceOperationDto dto = new ResourceOperationDto();
-		dto.setResource(resourceConverter.toDto(resource));
-		return dto;
-	}
+    public ResourceOperationDto toDto(Resource resource) {
+        ResourceOperationDto dto = new ResourceOperationDto();
+        dto.setResource(resourceConverter.toDto(resource).orElse(null));
+        return dto;
+    }
 }

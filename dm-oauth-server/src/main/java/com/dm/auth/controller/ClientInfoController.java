@@ -17,6 +17,7 @@ import com.dm.auth.dto.ClientInfoDto;
 import com.dm.auth.entity.ClientInfo;
 import com.dm.auth.service.AccessTokenService;
 import com.dm.auth.service.ClientInfoService;
+import com.dm.common.exception.DataValidateException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -52,21 +53,21 @@ public class ClientInfoController {
     @GetMapping("{id}")
     public ClientInfoDto get(@PathVariable("id") String id) {
         Optional<ClientInfo> info = clientService.findById(id);
-        return clientInfoConverter.toDto(info);
+        return clientInfoConverter.toDto(info).orElseThrow(DataValidateException::new);
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
     public ClientInfoDto save(@RequestBody ClientInfoDto client) {
         ClientInfo client_ = clientService.save(client);
-        return clientInfoConverter.toDto(client_);
+        return clientInfoConverter.toDto(client_).get();
     }
 
     @PutMapping("{id}")
     @ResponseStatus(CREATED)
     public ClientInfoDto update(@PathVariable("id") String id, @RequestBody ClientInfoDto client) {
         ClientInfo client_ = clientService.update(id, client);
-        return clientInfoConverter.toDto(client_);
+        return clientInfoConverter.toDto(client_).get();
     }
 
     @GetMapping(params = { "draw" })
@@ -74,7 +75,7 @@ public class ClientInfoController {
             @RequestParam(value = "search", required = false) String key,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
         Page<ClientInfo> clients = clientService.find(key, pageable);
-        return clients.map(clientInfoConverter::toDto);
+        return clients.map(clientInfoConverter::toDto).map(Optional::get);
     }
 
     @GetMapping(value = "{client}/tokens", params = { "draw" })

@@ -1,8 +1,13 @@
 package com.dm.security.verification;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -12,79 +17,99 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class VerificationCodeFilter extends GenericFilterBean {
 
-	private final List<RequestMatcher> requestMathcers = new ArrayList<>();
+    private final List<RequestMatcher> requestMathcers = new ArrayList<>();
 
-	private VerificationCodeStorage storage;
+    private VerificationCodeStorage storage;
 
-	private String verifyIdParameterName = "verifyId";
+    private ObjectMapper om = new ObjectMapper();
 
-	private String verifyCodeParameterName = "verifyCode";
+    private String verifyIdParameterName = "verifyId";
 
-	public void requestMatcher(RequestMatcher requestMatcher) {
-		this.requestMathcers.add(requestMatcher);
-	}
+    private String verifyCodeParameterName = "verifyCode";
 
-	public void setVerifyCodeService(VerificationCodeStorage storage) {
-		this.storage = storage;
-	}
+    public void requestMatcher(RequestMatcher requestMatcher) {
+        this.requestMathcers.add(requestMatcher);
+    }
 
-	public void setVerifyCodeParameterName(String verifyCodeParameterName) {
-		this.verifyCodeParameterName = verifyCodeParameterName;
-	}
+    public void setVerifyCodeParameterName(String verifyCodeParameterName) {
+        this.verifyCodeParameterName = verifyCodeParameterName;
+    }
 
-	public void setVerifyIdParameterName(String verifyIdParameterName) {
-		this.verifyIdParameterName = verifyIdParameterName;
-	}
+    public void setVerifyIdParameterName(String verifyIdParameterName) {
+        this.verifyIdParameterName = verifyIdParameterName;
+    }
 
-	@Autowired
-	public void setStorage(VerificationCodeStorage storage) {
-		this.storage = storage;
-	}
+    @Autowired(required = false)
+    public void setObjectMapper(ObjectMapper om) {
+        this.om = om;
+    }
 
-	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) req;
-		HttpServletResponse response = (HttpServletResponse) res;
-		if (requiresValidation(request)) {
-			String verifyId = req.getParameter(verifyIdParameterName);
-			String verifyCode = req.getParameter(verifyCodeParameterName);
-			if (storage.validate(verifyId, verifyCode)) {
-				storage.remove(verifyId);
-				chain.doFilter(req, res);
-			} else {
-				// 给出错误的提示信息
-				response.setStatus(403);
-				response.getWriter().println("{\"error\":\"The parameter [" + verifyIdParameterName + "] and ["
-						+ verifyCodeParameterName + "] is invalidate\"}");
-			}
-		} else {
-			chain.doFilter(req, res);
-		}
+    @Autowired
+    public void setStorage(VerificationCodeStorage storage) {
+        this.storage = storage;
+    }
 
-	}
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
+        if (requiresValidation(request)) {
+            String verifyId = req.getParameter(verifyIdParameterName);
+            String verifyCode = req.getParameter(verifyCodeParameterName);
+            if (storage.validate(verifyId, verifyCode)) {
+                storage.remove(verifyId);
+                chain.doFilter(req, res);
+            } else {
+                Map<String, Object> result = new HashMap<String, Object>();
+                result.put("path", request.getRequestURI());
+                result.put("error", HttpStatus.FORBIDDEN.getReasonPhrase());
+                result.put("message", "验证码输入错误");
+                result.put("status", HttpStatus.FORBIDDEN.value());
+                result.put("timestamp", ZonedDateTime.now());
+                response.setStatus(403);
+                response.setContentType("application/json;charset=UTF-8");
+                // 给出错误的提示信息
+                response.getWriter().println(om.writeValueAsString(result));
+            }
+        } else {
+            chain.doFilter(req, res);
+        }
 
-	/**
-	 * 是否需要进行验证码校验
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	private boolean requiresValidation(HttpServletRequest request) {
-		if (CollectionUtils.isNotEmpty(requestMathcers)) {
-			for (RequestMatcher matcher : requestMathcers) {
-				if (matcher.matches(request)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    }
+
+    /**
+     * 是否需要进行验证码校验
+     * 
+     * @param request
+     * @param response
+     * @return
+     */
+    private boolean requiresValidation(HttpServletRequest request) {
+        if (CollectionUtils.isNotEmpty(requestMathcers)) {
+            for (RequestMatcher matcher : requestMathcers) {
+                if (matcher.matches(request)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws ServletException {
+        super.afterPropertiesSet();
+        if (Objects.isNull(om)) {
+            this.om = new ObjectMapper();
+        }
+    }
 
 }
