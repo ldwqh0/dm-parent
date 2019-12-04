@@ -93,7 +93,7 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 		endpoints.reuseRefreshTokens(false);
 		// 如果要使用RefreshToken可用，必须指定UserDetailsService
 		endpoints.userDetailsService(userDetailsService);
-		// 指定某个连接的redirectResolver
+		// 指定redirectResolver
 		endpoints.redirectResolver(new DmOauthRedirectResolver());
 		// 使用这个authenticationManager可以启用密码模式
 		endpoints.authenticationManager(authenticationManager);
