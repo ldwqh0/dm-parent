@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,6 +43,8 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 				.successHandler(authenticationSuccessHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
 				.and().httpBasic().disable();
 	}
+	
+	
 
 	private AuthenticationFailureHandler authenticationFailureHandler() {
 		SimpleUrlAuthenticationLoginLogFailureHandler failureHandler = new SimpleUrlAuthenticationLoginLogFailureHandler();

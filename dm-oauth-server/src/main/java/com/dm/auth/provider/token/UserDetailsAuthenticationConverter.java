@@ -1,4 +1,4 @@
-package com.dm.security.oauth2.provider.token;
+package com.dm.auth.provider.token;
 
 import java.util.Collection;
 import java.util.Map;
@@ -15,8 +15,8 @@ import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticat
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.util.StringUtils;
 
+import com.dm.auth.resource.UserDetailsDtoPrincipalExtractor;
 import com.dm.security.core.userdetails.UserDetailsDto;
-import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
 
 /**
  * 一个 {@link UserAuthenticationConverter}实现<br />

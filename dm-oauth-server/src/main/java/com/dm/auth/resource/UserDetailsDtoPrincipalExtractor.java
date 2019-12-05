@@ -1,4 +1,4 @@
-package com.dm.security.oauth2.resource;
+package com.dm.auth.resource;
 
 import java.util.List;
 import java.util.Map;
