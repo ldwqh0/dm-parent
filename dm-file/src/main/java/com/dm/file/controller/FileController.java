@@ -15,8 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.BoundedInputStream;
@@ -38,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 
 import com.dm.common.exception.DataNotExistException;
 import com.dm.file.config.FileConfig;
@@ -86,7 +84,7 @@ public class FileController {
 
     @PostMapping
     @ApiOperation("上传文件")
-    public List<FileInfoDto> upload(MultipartHttpServletRequest request) throws Exception {
+    public List<FileInfoDto> upload(MultipartRequest request) throws Exception {
         List<FileInfo> result = new ArrayList<FileInfo>();
         Iterator<String> filenames = request.getFileNames();
         while (filenames.hasNext()) {
@@ -125,8 +123,7 @@ public class FileController {
             @RequestHeader("file-id") String tempId,
             @RequestHeader("chunk-count") int chunkCount,
             @RequestParam("filename") String filename,
-            MultipartHttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            MultipartRequest request) throws Exception {
 
         Collection<MultipartFile> files = request.getFileMap().values();
         if (CollectionUtils.isNotEmpty(files)) {
@@ -269,7 +266,8 @@ public class FileController {
                 status = 206; // 将响应设置为206
                 Range r = ranges.get(0);
                 contentLength = r.getContentLength();
-                BoundedInputStream bis = new BoundedInputStream(fileStorageService.getInputStream(path), r.getEnd() + 1);
+                BoundedInputStream bis = new BoundedInputStream(fileStorageService.getInputStream(path),
+                        r.getEnd() + 1);
                 bis.skip(r.getStart());
                 contentRange = "bytes " + r.getStart() + "-" + r.getEnd() + "/" + fileSize;
                 body = new InputStreamResource(bis);

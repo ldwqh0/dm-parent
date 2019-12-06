@@ -23,8 +23,9 @@ import org.springframework.security.oauth2.provider.token.UserAuthenticationConv
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
 import com.dm.auth.provider.endpoint.DmOauthRedirectResolver;
+import com.dm.auth.provider.token.UserDetailsAuthenticationConverter;
 import com.dm.auth.service.UserApprovalService;
-import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
+//import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
 
 import lombok.extern.slf4j.Slf4j;
 
