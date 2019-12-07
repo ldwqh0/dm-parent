@@ -51,7 +51,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dm</groupId>
-			<artifactId>dm-file</artifactId>
+			<artifactId>dm-file-core</artifactId>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>

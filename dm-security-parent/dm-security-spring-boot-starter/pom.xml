@@ -4,14 +4,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.dm</groupId>
-		<artifactId>dm-parent</artifactId>
+		<artifactId>dm-security-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>dm-file-spring-boot-starter</artifactId>
+	<artifactId>dm-security-spring-boot-starter</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>com.dm</groupId>
-			<artifactId>dm-file</artifactId>
+			<artifactId>dm-security-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-uap-common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.dm</groupId>

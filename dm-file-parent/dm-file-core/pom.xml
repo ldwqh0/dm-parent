@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.dm</groupId>
-		<artifactId>dm-parent</artifactId>
+		<artifactId>dm-file-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>dm-file</artifactId>
+	<artifactId>dm-file-core</artifactId>
 	<description>文件上传下载相关代码</description>
 	<dependencies>
 		<dependency>
@@ -38,6 +38,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -48,10 +49,12 @@
 			<artifactId>springfox-swagger2</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>com.dm</groupId>
 			<artifactId>dm-common</artifactId>
 		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
