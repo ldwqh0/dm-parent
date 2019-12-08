@@ -10,11 +10,11 @@ import java.util.List;
  * @since 0.2.1
  *
  */
-public interface RequestAuthorityService {
+public interface ResourceAuthorityService {
     /**
      * 获取所有的资源权限配置
      * 
      * @return
      */
-    public List<RequestAuthorityAttribute> listAllAuthorityAttribute();
+    public List<ResourceAuthorityAttribute> listAllAuthorityAttribute();
 }

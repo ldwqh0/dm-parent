@@ -7,19 +7,20 @@
 		<artifactId>dm-security-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>dm-security-spring-boot-starter</artifactId>
+	<artifactId>dm-security-web</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>com.dm</groupId>
 			<artifactId>dm-security-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.dm</groupId>
-			<artifactId>dm-uap-common</artifactId>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.dm</groupId>
-			<artifactId>dm-autoconfigure</artifactId>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

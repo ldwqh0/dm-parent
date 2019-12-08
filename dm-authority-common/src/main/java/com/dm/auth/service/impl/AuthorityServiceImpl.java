@@ -15,9 +15,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+//import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+//import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+//import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +35,13 @@ import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.service.AuthorityService;
-import com.dm.security.oauth2.access.RequestAuthorityAttribute;
-import com.dm.security.oauth2.access.RequestAuthorityService;
+import com.dm.security.oauth2.access.ResourceAuthorityAttribute;
+import com.dm.security.oauth2.access.ResourceAuthorityService;
 
 import lombok.Data;
 
 @Service("authorityService")
-public class AuthorityServiceImpl implements AuthorityService, RequestAuthorityService {
+public class AuthorityServiceImpl implements AuthorityService, ResourceAuthorityService {
 
     @Autowired
     private MenuRepository menuRepository;
@@ -199,10 +199,10 @@ public class AuthorityServiceImpl implements AuthorityService, RequestAuthorityS
     @Transactional(readOnly = true)
     @Override
     @Cacheable(cacheNames = "AuthorityAttribute", key = "all", sync = true)
-    public List<RequestAuthorityAttribute> listAllAuthorityAttribute() {
+    public List<ResourceAuthorityAttribute> listAllAuthorityAttribute() {
         List<Authority> authorities = authorityRepository.findAll();
-        List<RequestAuthorityAttribute> attributes = new ArrayList<>();
-        RequestMatchHolder rmh = new RequestMatchHolder();
+        List<ResourceAuthorityAttribute> attributes = new ArrayList<>();
+//        RequestMatchHolder rmh = new RequestMatchHolder();
         for (Authority authority : authorities) {
             Set<ResourceOperation> operations = authority.getResourceOperations();
             for (ResourceOperation operation : operations) {
@@ -212,32 +212,32 @@ public class AuthorityServiceImpl implements AuthorityService, RequestAuthorityS
                 Boolean updateable = operation.getUpdateable();
                 Boolean deleteable = operation.getDeleteable();
 
-                if (!Objects.isNull(saveable)) {
-                    attributes.add(new RequestAuthorityAttribute(
-                            rmh.getRequestMatcher(r, HttpMethod.POST),
-                            authority.getRoleName(), r.getScope(),
-                            saveable));
-                }
-
-                if (!Objects.isNull(readable)) {
-                    attributes.add(new RequestAuthorityAttribute(
-                            rmh.getRequestMatcher(r, HttpMethod.GET),
-                            authority.getRoleName(), r.getScope(),
-                            readable));
-                }
-                if (!Objects.isNull(updateable)) {
-                    attributes.add(new RequestAuthorityAttribute(
-                            rmh.getRequestMatcher(r, HttpMethod.PUT),
-                            authority.getRoleName(), r.getScope(),
-                            updateable));
-                }
-                if (!Objects.isNull(deleteable)) {
-                    attributes.add(new RequestAuthorityAttribute(
-                            rmh.getRequestMatcher(r, HttpMethod.DELETE),
-                            authority.getRoleName(),
-                            r.getScope(),
-                            deleteable));
-                }
+//                if (!Objects.isNull(saveable)) {
+//                    attributes.add(new RequestAuthorityAttribute(
+//                            rmh.getRequestMatcher(r, HttpMethod.POST),
+//                            authority.getRoleName(), r.getScope(),
+//                            saveable));
+//                }
+//
+//                if (!Objects.isNull(readable)) {
+//                    attributes.add(new RequestAuthorityAttribute(
+//                            rmh.getRequestMatcher(r, HttpMethod.GET),
+//                            authority.getRoleName(), r.getScope(),
+//                            readable));
+//                }
+//                if (!Objects.isNull(updateable)) {
+//                    attributes.add(new RequestAuthorityAttribute(
+//                            rmh.getRequestMatcher(r, HttpMethod.PUT),
+//                            authority.getRoleName(), r.getScope(),
+//                            updateable));
+//                }
+//                if (!Objects.isNull(deleteable)) {
+//                    attributes.add(new RequestAuthorityAttribute(
+//                            rmh.getRequestMatcher(r, HttpMethod.DELETE),
+//                            authority.getRoleName(),
+//                            r.getScope(),
+//                            deleteable));
+//                }
             }
         }
 
@@ -261,42 +261,42 @@ public class AuthorityServiceImpl implements AuthorityService, RequestAuthorityS
 
 }
 
-class RequestMatchHolder {
-    private final ConcurrentHashMap<RescoureKey, RequestMatcher> cache = new ConcurrentHashMap<>();
-
-    /**
-     * 根据资源和请求类型，获取RequestMatcher
-     * 
-     * @param resource
-     * @param method
-     * @return
-     */
-    public RequestMatcher getRequestMatcher(Resource resource, HttpMethod method) {
-        RescoureKey key = new RescoureKey(resource, method);
-        RequestMatcher rm = null;
-        if (Objects.isNull(rm = cache.get(key))) {
-            rm = buildRequestMatcher(resource, method);
-            cache.put(key, rm);
-        }
-        return rm;
-    }
-
-    private RequestMatcher buildRequestMatcher(Resource resource, HttpMethod method) {
-        MatchType type = resource.getMatchType();
-        String path = resource.getMatcher();
-        switch (type) {
-        case ANT_PATH:
-            return new AntPathRequestMatcher(path, method.toString());
-        case REGEXP:
-            return new RegexRequestMatcher(path, method.toString());
-        default:
-            throw new RuntimeException("Un supported matchType");
-        }
-    }
-
-    @Data
-    static final class RescoureKey {
-        private final Resource resource;
-        private final HttpMethod method;
-    }
-}
+//class RequestMatchHolder {
+//    private final ConcurrentHashMap<RescoureKey, RequestMatcher> cache = new ConcurrentHashMap<>();
+//
+//    /**
+//     * 根据资源和请求类型，获取RequestMatcher
+//     * 
+//     * @param resource
+//     * @param method
+//     * @return
+//     */
+//    public RequestMatcher getRequestMatcher(Resource resource, HttpMethod method) {
+//        RescoureKey key = new RescoureKey(resource, method);
+//        RequestMatcher rm = null;
+//        if (Objects.isNull(rm = cache.get(key))) {
+//            rm = buildRequestMatcher(resource, method);
+//            cache.put(key, rm);
+//        }
+//        return rm;
+//    }
+//
+//    private RequestMatcher buildRequestMatcher(Resource resource, HttpMethod method) {
+//        MatchType type = resource.getMatchType();
+//        String path = resource.getMatcher();
+//        switch (type) {
+//        case ANT_PATH:
+//            return new AntPathRequestMatcher(path, method.toString());
+//        case REGEXP:
+//            return new RegexRequestMatcher(path, method.toString());
+//        default:
+//            throw new RuntimeException("Un supported matchType");
+//        }
+//    }
+//
+//    @Data
+//    static final class RescoureKey {
+//        private final Resource resource;
+//        private final HttpMethod method;
+//    }
+//}

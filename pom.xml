@@ -26,8 +26,6 @@
 	<modules>
 		<!-- 平台公共模块 -->
 		<module>dm-common</module>
-		<!-- 平台安全共功模块 -->
-		<module>dm-security-common</module>
 		<!-- 平台用户模块 -->
 		<module>dm-uap-common</module>
 		<!-- 平台权限模块 -->
@@ -44,10 +42,9 @@
 		<module>dm-security-mp</module>
 		<!-- 文件模块 -->
 		<module>dm-file-parent</module>
-<!-- 		<module>dm-resource-server-spring-boot-starter</module>
-		<module>dm-security-spring-boot-starter</module> -->
 		<module>dm-code</module>
 		<module>dm-security-parent</module>
+		<module>webflux-server</module>
 	</modules>
 	<packaging>pom</packaging>
 
@@ -181,10 +178,16 @@
 
 			<dependency>
 				<groupId>com.dm</groupId>
-				<artifactId>dm-security-common</artifactId>
+				<artifactId>dm-security-core</artifactId>
 				<version>${dm.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.dm</groupId>
+				<artifactId>dm-security-web</artifactId>
+				<version>${dm.version}</version>
+			</dependency>
+			
 			<dependency>
 				<groupId>com.dm</groupId>
 				<artifactId>dm-resource-server-spring-boot-starter</artifactId>

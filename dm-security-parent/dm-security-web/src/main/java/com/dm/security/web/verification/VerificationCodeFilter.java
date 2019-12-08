@@ -1,4 +1,4 @@
-package com.dm.security.verification;
+package com.dm.security.web.verification;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.dm.security.verification.VerificationCodeStorage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class VerificationCodeFilter extends GenericFilterBean {

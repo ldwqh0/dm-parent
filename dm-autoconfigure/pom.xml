@@ -16,7 +16,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dm</groupId>
-			<artifactId>dm-security-common</artifactId>
+			<artifactId>dm-security-web</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

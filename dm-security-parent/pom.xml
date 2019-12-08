@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
   <modules>
   	<module>dm-resource-server-spring-boot-starter</module>
-  	<module>dm-security-common</module>
+  	<module>dm-security-web</module>
   	<module>dm-security-mp</module>
   	<module>dm-security-spring-boot-starter</module>
   </modules>
