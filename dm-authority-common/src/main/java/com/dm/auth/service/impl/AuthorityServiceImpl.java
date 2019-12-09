@@ -35,8 +35,8 @@ import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.service.AuthorityService;
-import com.dm.security.oauth2.access.ResourceAuthorityAttribute;
-import com.dm.security.oauth2.access.ResourceAuthorityService;
+import com.dm.security.authentication.ResourceAuthorityAttribute;
+import com.dm.security.authentication.ResourceAuthorityService;
 
 import lombok.Data;
 
@@ -199,7 +199,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     @Transactional(readOnly = true)
     @Override
     @Cacheable(cacheNames = "AuthorityAttribute", key = "all", sync = true)
-    public List<ResourceAuthorityAttribute> listAllAuthorityAttribute() {
+    public List<ResourceAuthorityAttribute> listAll() {
         List<Authority> authorities = authorityRepository.findAll();
         List<ResourceAuthorityAttribute> attributes = new ArrayList<>();
 //        RequestMatchHolder rmh = new RequestMatchHolder();

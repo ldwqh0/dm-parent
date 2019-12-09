@@ -16,7 +16,7 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 //        TODO 这里干什么
-        http.authorizeExchange().anyExchange().denyAll();
+        http.authorizeExchange().anyExchange().access(manager).denyAll();
         http.formLogin();
         return http.build();
     }

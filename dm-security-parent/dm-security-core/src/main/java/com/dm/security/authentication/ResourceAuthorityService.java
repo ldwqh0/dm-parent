@@ -1,4 +1,4 @@
-package com.dm.security.oauth2.access;
+package com.dm.security.authentication;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ public interface ResourceAuthorityService {
      * 
      * @return
      */
-    public List<ResourceAuthorityAttribute> listAllAuthorityAttribute();
+    public List<ResourceAuthorityAttribute> listAll();
 }

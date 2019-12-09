@@ -1,8 +1,7 @@
-package com.dm.security.oauth2.access;
+package com.dm.security.authentication;
 
 import java.util.Set;
 
-import org.apache.commons.collections4.SetUtils;
 import org.springframework.security.core.Authentication;
 
 /**

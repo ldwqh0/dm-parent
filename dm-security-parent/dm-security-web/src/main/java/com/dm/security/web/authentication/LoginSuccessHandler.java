@@ -14,7 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.dm.security.web.authentication.RequestUtils.*;
+import static com.dm.security.web.RequestUtils.*;
 
 public class LoginSuccessHandler implements AuthenticationSuccessHandler, InitializingBean {
 

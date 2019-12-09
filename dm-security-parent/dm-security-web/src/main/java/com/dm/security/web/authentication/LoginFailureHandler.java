@@ -17,7 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.dm.security.web.authentication.RequestUtils.*;
+import static com.dm.security.web.RequestUtils.*;
 
 public class LoginFailureHandler implements AuthenticationFailureHandler, InitializingBean {
 

@@ -1,4 +1,4 @@
-package com.dm.security.oauth2.access;
+package com.dm.security.authentication;
 
 import java.io.Serializable;
 import java.util.Set;
