@@ -10,8 +10,28 @@
 	<artifactId>dm-security-spring-boot-starter</artifactId>
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.dm</groupId>
 			<artifactId>dm-security-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-security-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.dm</groupId>
@@ -21,5 +41,7 @@
 			<groupId>com.dm</groupId>
 			<artifactId>dm-autoconfigure</artifactId>
 		</dependency>
+
+
 	</dependencies>
 </project>

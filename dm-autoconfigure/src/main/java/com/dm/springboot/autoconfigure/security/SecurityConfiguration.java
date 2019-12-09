@@ -1,31 +1,46 @@
 package com.dm.springboot.autoconfigure.security;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.dm.security.core.userdetails.GrantedAuthorityDto;
+import com.dm.security.core.userdetails.UserDetailsDto;
+import com.dm.security.web.authentication.LoginFailureHandler;
+import com.dm.security.web.authentication.LoginSuccessHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-@Import(LoginHandlerConfiguration.class)
-@ConditionalOnClass(UsernamePasswordAuthenticationFilter.class)
-public class SecurityConfiguration {
+@ConditionalOnBean(name = { AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME })
+@ConditionalOnMissingBean(WebSecurityConfigurerAdapter.class)
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private ObjectMapper om;
 
-	@Bean
-	@ConditionalOnMissingBean(PasswordEncoder.class)
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	@ConditionalOnMissingBean(AuthenticationEntryPoint.class)
-	public AuthenticationEntryPoint entryPoint() {
-		return new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().anyRequest().authenticated()
+                .and().formLogin();
+        // 设置匿名用户的默认分组
+        UserDetailsDto ud = new UserDetailsDto();
+        List<GrantedAuthority> authorities = Collections
+                .singletonList(new GrantedAuthorityDto("内置分组_ROLE_ANONYMOUS"));
+        ud.setGrantedAuthority(authorities);
+        http.anonymous().authorities(authorities).principal(ud);
+        http.formLogin().successHandler(new LoginSuccessHandler(om)).failureHandler(new LoginFailureHandler(om));
+        http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+        http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+        http.csrf().disable();
+    }
 }

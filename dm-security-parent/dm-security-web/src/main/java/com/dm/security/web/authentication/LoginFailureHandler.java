@@ -24,6 +24,14 @@ public class LoginFailureHandler implements AuthenticationFailureHandler, Initia
     @Autowired(required = false)
     private ObjectMapper objectMapper;
 
+    public LoginFailureHandler() {
+        this(new ObjectMapper());
+    }
+
+    public LoginFailureHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {

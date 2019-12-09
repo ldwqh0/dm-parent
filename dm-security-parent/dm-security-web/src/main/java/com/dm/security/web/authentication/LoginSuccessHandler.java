@@ -21,6 +21,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
     @Autowired(required = false)
     private ObjectMapper objectMapper;
 
+    public LoginSuccessHandler() {
+        this(new ObjectMapper());
+    }
+
+    public LoginSuccessHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
@@ -34,6 +42,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
                 response.getWriter().write(result);
             }
         } else {
+            // TODO 重定向策略需要补充
             if (StringUtils.isNotBlank(redirect)) {
                 response.sendRedirect(redirect);
             } else {
