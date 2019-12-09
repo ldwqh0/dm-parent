@@ -24,7 +24,6 @@ import com.dm.common.exception.DataNotExistException;
 import static org.springframework.http.HttpStatus.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping({ "resources", "p/resources" })
@@ -39,7 +38,7 @@ public class ResourceController {
     @PostMapping
     @ResponseStatus(value = CREATED)
     public ResourceDto save(@RequestBody ResourceDto resource) {
-        return resourceConverter.toDto(resourceService.save(resource)).get();
+        return resourceConverter.toDto(resourceService.save(resource));
     }
 
     @DeleteMapping("{id}")
@@ -50,12 +49,12 @@ public class ResourceController {
     @PutMapping("{id}")
     @ResponseStatus(value = CREATED)
     public ResourceDto update(@PathVariable("id") Long id, @RequestBody ResourceDto _resource) {
-        return resourceConverter.toDto(resourceService.update(id, _resource)).get();
+        return resourceConverter.toDto(resourceService.update(id, _resource));
     }
 
     @GetMapping("{id}")
     public ResourceDto get(@PathVariable("id") Long id) {
-        return resourceConverter.toDto(resourceService.findById(id)).orElseThrow(DataNotExistException::new);
+        return resourceConverter.toDto(resourceService.findById(id).orElseThrow(DataNotExistException::new));
     }
 
     @GetMapping(params = { "draw" })
@@ -63,7 +62,7 @@ public class ResourceController {
             @PageableDefault Pageable pageable,
             @RequestParam(value = "search", required = false) String keywords) {
         Page<Resource> resources = resourceService.search(keywords, pageable);
-        return resources.map(resourceConverter::toDto).map(Optional::get);
+        return resources.map(resourceConverter::toDto);
     }
 
     @GetMapping

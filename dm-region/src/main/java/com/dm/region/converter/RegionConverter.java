@@ -20,7 +20,7 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
         Region parentCode = model.getParentCode();
         dto.setLatitude(model.getLatitude());
         dto.setLongitude(model.getLongitude());
-        dto.setParent(toDto(parentCode).orElse(null));
+        dto.setParent(toDto(parentCode));
         return dto;
     }
 

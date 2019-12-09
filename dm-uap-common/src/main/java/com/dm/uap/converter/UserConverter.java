@@ -71,7 +71,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
         if (MapUtils.isNotEmpty(_posts)) {
             List<UserPostDto> posts = new ArrayList<>();
             _posts.entrySet().forEach(a -> {
-                posts.add(new UserPostDto(departmentConverter.toDto(a.getKey()).orElse(null), a.getValue()));
+                posts.add(new UserPostDto(departmentConverter.toDto(a.getKey()), a.getValue()));
             });
             dto.setPosts(posts);
         }

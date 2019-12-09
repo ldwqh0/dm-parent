@@ -35,13 +35,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dm</groupId>
-			<artifactId>dm-uap-common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.dm</groupId>
 			<artifactId>dm-autoconfigure</artifactId>
 		</dependency>
-
-
 	</dependencies>
 </project>

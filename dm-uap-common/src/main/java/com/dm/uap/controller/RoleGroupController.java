@@ -40,7 +40,7 @@ public class RoleGroupController {
     @PostMapping
     @ResponseStatus(CREATED)
     public RoleGroupDto save(@RequestBody RoleGroupDto data) {
-        return roleGroupConverter.toDto(roleGroupService.save(data)).get();
+        return roleGroupConverter.toDto(roleGroupService.save(data));
     }
 
     @DeleteMapping("{id}")
@@ -54,11 +54,11 @@ public class RoleGroupController {
     public RoleGroupDto update(
             @PathVariable("id") Long id,
             @RequestBody RoleGroupDto data) {
-        return roleGroupConverter.toDto(roleGroupService.update(id, data)).get();
+        return roleGroupConverter.toDto(roleGroupService.update(id, data));
     }
 
     @GetMapping("{id}")
     public RoleGroupDto findById(@PathVariable("id") Long id) {
-        return roleGroupConverter.toDto(roleGroupService.findById(id)).orElseThrow(DataNotExistException::new);
+        return roleGroupConverter.toDto(roleGroupService.findById(id).orElseThrow(DataNotExistException::new));
     }
 }

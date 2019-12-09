@@ -1,7 +1,5 @@
 package com.dm.uap.controller;
 
-import java.util.Optional;
-
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +48,7 @@ public class UserController {
     @ApiOperation("根据ID获取用户")
     @GetMapping("{id}")
     public UserDto get(@PathVariable("id") Long id) {
-        return userConverter.toDto(userService.get(id)).orElseThrow(DataNotExistException::new);
+        return userConverter.toDto(userService.get(id).orElseThrow(DataNotExistException::new));
     }
 
     @ApiOperation("新增保存用户")
@@ -58,7 +56,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public UserDto save(@RequestBody UserDto userDto) {
-        return userConverter.toDto(userService.save(userDto)).get();
+        return userConverter.toDto(userService.save(userDto));
     }
 
     @ApiOperation("删除用户")
@@ -78,7 +76,7 @@ public class UserController {
             @RequestParam("password") String password,
             @RequestParam("rePassword") String rePassword) {
         validRePassword(password, rePassword);
-        return userConverter.toDto(userService.repassword(id, password)).get();
+        return userConverter.toDto(userService.repassword(id, password));
     }
 
     /**
@@ -103,7 +101,7 @@ public class UserController {
         if (!userService.checkPassword(id, oldPassword)) {
             throw new DataValidateException("原始密码校验错误");
         }
-        return userConverter.toDto(userService.repassword(id, password)).get();
+        return userConverter.toDto(userService.repassword(id, password));
     }
 
     @ApiOperation("修改当前用户密码")
@@ -117,7 +115,7 @@ public class UserController {
         if (!userService.checkPassword(id, data.getOldPassword())) {
             throw new DataValidateException("原始密码校验错误");
         }
-        return userConverter.toDto(userService.repassword(id, data.getPassword())).get();
+        return userConverter.toDto(userService.repassword(id, data.getPassword()));
     }
 
     @ApiOperation("更新用户")
@@ -126,7 +124,7 @@ public class UserController {
     @ResponseStatus(CREATED)
     public UserDto update(@PathVariable("id") long id, @RequestBody UserDto userDto) {
         User user = userService.update(id, userDto);
-        return userConverter.toDto(user).get();
+        return userConverter.toDto(user);
     }
 
     @ApiOperation("列表查询用户")
@@ -139,7 +137,7 @@ public class UserController {
             @RequestParam(value = "draw", required = false) Long draw,
             @PageableDefault(page = 0, size = 10, sort = { "order" }, direction = Direction.ASC) Pageable pageable) {
         Page<User> result = userService.search(department, role, roleGroup, key, pageable);
-        return result.map(userConverter::toDto).map(Optional::get);
+        return result.map(userConverter::toDto);
     }
 
     @GetMapping({ "current", "authorities/currentUser" })

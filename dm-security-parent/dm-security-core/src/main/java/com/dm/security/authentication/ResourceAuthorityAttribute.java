@@ -81,7 +81,7 @@ public class ResourceAuthorityAttribute {
     }
 
     /**
-     * 是否授权用户即可访问，不配置代表可以匿名访问
+     * 是否授权用户即可访问，配置为false表示可以匿名访问
      * 
      * @return
      */

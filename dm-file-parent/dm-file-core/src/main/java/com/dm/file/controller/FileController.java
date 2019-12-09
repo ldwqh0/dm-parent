@@ -79,7 +79,7 @@ public class FileController {
             MediaType.APPLICATION_JSON_VALUE
     })
     public FileInfoDto get(@PathVariable("id") UUID id) {
-        return fileInfoConverter.toDto(fileService.findById(id)).orElseThrow(DataNotExistException::new);
+        return fileInfoConverter.toDto(fileService.findById(id).orElseThrow(DataNotExistException::new));
     }
 
     @PostMapping
@@ -143,7 +143,7 @@ public class FileController {
             fileInfo.setSize(target.length());
             FileInfo _result = fileService.save(src, fileInfo);
             FileUtils.forceDelete(target);
-            return fileInfoConverter.toDto(_result).get();
+            return fileInfoConverter.toDto(_result);
         } else {
             return null;
         }

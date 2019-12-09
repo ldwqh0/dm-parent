@@ -20,7 +20,7 @@ public class ResourceOperationConverter extends AbstractConverter<ResourceOperat
         dto.setSaveable(model.getSaveable());
         dto.setDeleteable(model.getDeleteable());
         dto.setReadable(model.getReadable());
-        dto.setResource(resourceConverter.toDto(model.getResource()).orElse(null));
+        dto.setResource(resourceConverter.toDto(model.getResource()));
         dto.setUpdateable(model.getUpdateable());
         return dto;
     }
@@ -36,7 +36,7 @@ public class ResourceOperationConverter extends AbstractConverter<ResourceOperat
 
     public ResourceOperationDto toDto(Resource resource) {
         ResourceOperationDto dto = new ResourceOperationDto();
-        dto.setResource(resourceConverter.toDto(resource).orElse(null));
+        dto.setResource(resourceConverter.toDto(resource));
         return dto;
     }
 }

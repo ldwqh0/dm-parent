@@ -48,7 +48,7 @@ public class RoleController {
             throw new DataValidateException("角色名称被占用");
         } else {
             Role role = roleService.save(roleDto);
-            return roleConverter.toDto(role).get();
+            return roleConverter.toDto(role);
         }
     }
 
@@ -61,14 +61,14 @@ public class RoleController {
             throw new DataValidateException("角色名称被占用");
         } else {
             Role role = roleService.update(id, roleDto);
-            return roleConverter.toDto(role).get();
+            return roleConverter.toDto(role);
         }
     }
 
     @ApiOperation("获取角色信息")
     @GetMapping("{id}")
     public RoleDto get(@PathVariable("id") long id) {
-        return roleConverter.toDto(roleService.get(id)).orElseThrow(DataNotExistException::new);
+        return roleConverter.toDto(roleService.get(id).orElseThrow(DataNotExistException::new));
     }
 
     @ApiOperation("删除角色")

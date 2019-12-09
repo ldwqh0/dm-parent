@@ -19,7 +19,7 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
         menuDto.setUrl(model.getUrl());
         menuDto.setIcon(model.getIcon());
         menuDto.setOpenInNewWindow(model.getOpenInNewWindow());
-        menuDto.setParent(toDto(model.getParent()).orElse(null));
+        menuDto.setParent(toDto(model.getParent()));
         menuDto.setDescription(model.getDescription());
         menuDto.setType(model.getType());
         return menuDto;

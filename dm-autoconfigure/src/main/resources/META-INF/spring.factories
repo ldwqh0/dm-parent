@@ -5,7 +5,6 @@ com.dm.springboot.autoconfigure.common.AuditingAutoConfiguration,\
 com.dm.springboot.autoconfigure.region.RegionConfiguration,\
 com.dm.springboot.autoconfigure.security.SecurityConfiguration,\
 com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration,\
-com.dm.springboot.autoconfigure.security.ClassConditionVerificationCodeConfiguration,\
 com.dm.springboot.autoconfigure.common.WebControllerAdvice,\
 com.dm.springboot.autoconfigure.file.FileConfiguration,\
 com.dm.springboot.autoconfigure.common.QueryDslConfiguration

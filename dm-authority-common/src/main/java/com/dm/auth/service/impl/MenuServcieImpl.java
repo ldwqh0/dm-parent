@@ -1,6 +1,5 @@
 package com.dm.auth.service.impl;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -56,7 +55,7 @@ public class MenuServcieImpl implements MenuService {
             Menu parent = menuRepository.getOne(parentDto.getId());
             menu.setParent(parent);
             // 添加权限信息
-            List<Authority> authorities = authorityRepository.findByMenus(Collections.singleton(parent));
+            List<Authority> authorities = authorityRepository.findByMenu(parent);
             if (CollectionUtils.isNotEmpty(authorities)) {
                 authorities.stream().map(Authority::getMenus).forEach(menus -> menus.add(menu));
             }
@@ -90,7 +89,7 @@ public class MenuServcieImpl implements MenuService {
     @Transactional
     public void delete(Long id) {
         Menu menu = menuRepository.getOne(id);
-        List<Authority> authorities = authorityRepository.findByMenus(Collections.singleton(menu));
+        List<Authority> authorities = authorityRepository.findByMenu(menu);
         // 删除菜单之前，先移除相关的权限配置信息
         if (CollectionUtils.isNotEmpty(authorities)) {
             for (Authority authority : authorities) {

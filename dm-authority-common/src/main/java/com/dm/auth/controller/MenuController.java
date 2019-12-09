@@ -34,7 +34,6 @@ import static org.springframework.http.HttpStatus.*;
 import static com.dm.auth.dto.OrderDto.Position.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Api(tags = { "menu" })
 @RequestMapping({ "menus", "p/menus" })
@@ -52,7 +51,7 @@ public class MenuController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public MenuDto save(@RequestBody MenuDto menuDto) {
-        return menuConverter.toDto(menuService.save(menuDto)).get();
+        return menuConverter.toDto(menuService.save(menuDto));
     }
 
     @ApiOperation("更新菜单")
@@ -61,13 +60,13 @@ public class MenuController {
     @ResponseStatus(CREATED)
     public MenuDto update(@PathVariable("id") long id, @RequestBody MenuDto menuDto) {
         Menu menu = menuService.update(id, menuDto);
-        return menuConverter.toDto(menu).get();
+        return menuConverter.toDto(menu);
     }
 
     @ApiOperation("获取菜单")
     @GetMapping("{id}")
     public MenuDto get(@PathVariable("id") Long id) {
-        return menuConverter.toDto(menuService.get(id)).orElseThrow(DataNotExistException::new);
+        return menuConverter.toDto(menuService.get(id).orElseThrow(DataNotExistException::new));
     }
 
     @ApiOperation("删除菜单")
@@ -85,14 +84,14 @@ public class MenuController {
             @RequestParam(value = "search", required = false) String key,
             @RequestParam(value = "parentId", required = false) Long parentId) {
         Page<Menu> result = menuService.search(parentId, key, pageable);
-        return result.map(menuConverter::toDto).map(Optional::get);
+        return result.map(menuConverter::toDto);
     }
 
     @ApiOperation("更新菜单部分信息")
     @PatchMapping("{id}")
     public MenuDto patch(@PathVariable("id") long id, @RequestBody MenuDto _menu) {
         Menu menu = menuService.patch(id, _menu);
-        return menuConverter.toDto(menu).get();
+        return menuConverter.toDto(menu);
     }
 
     @ApiOperation("获取可用菜单树")
@@ -111,7 +110,7 @@ public class MenuController {
         } else if (DOWN.equals(order.getPosition())) {
             menu = menuService.moveDown(id);
         }
-        return menuConverter.toDto(menu).get();
+        return menuConverter.toDto(menu);
     }
 
 }

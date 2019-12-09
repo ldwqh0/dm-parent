@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -48,7 +49,6 @@ public class DefaultAuthenticaionDecisionMaker implements AuthenticaionDecisionM
         // 所有匹配到的资源
         List<ResourceAuthorityAttribute> allMatches = attributes.stream()
                 .filter(attribute -> matches(request, attribute))
-//                .filter(attribute -> authToCheck.contains(attribute.getAuthority()))
                 .collect(Collectors.toList());
         // 投票表决结果
         int grantCount = 0;
@@ -59,12 +59,13 @@ public class DefaultAuthenticaionDecisionMaker implements AuthenticaionDecisionM
                     && CollectionUtils.containsAny(currentAuthorities, attribute.getDenyAuthorities())) {
                 return false;
             }
-            // 如果某个资源是否用户登录即可访问。
-            // 如果是登录即可访问，
-            if (attribute.isAuthenticated() == authentication.isAuthenticated()) {
+
+            // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
+            if (attribute.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
                 grantCount++;
             }
 
+            // 匿名用户的可访问权限包含在显示的权限配置中
             if (CollectionUtils.isNotEmpty(currentAuthorities)
                     && CollectionUtils.isNotEmpty(attribute.getAccessAuthority())
                     && CollectionUtils.containsAny(currentAuthorities, attribute.getAccessAuthority())) {

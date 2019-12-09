@@ -23,7 +23,6 @@ import com.dm.uap.service.DepartmentService;
 import static org.springframework.http.HttpStatus.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("departments")
@@ -38,18 +37,18 @@ public class DepartmentController {
     @PostMapping
     @ResponseStatus(CREATED)
     public DepartmentDto save(@RequestBody DepartmentDto data) {
-        return departmentConverter.toDto(departmentService.save(data)).get();
+        return departmentConverter.toDto(departmentService.save(data));
     }
 
     @GetMapping("{id}")
     public DepartmentDto get(@PathVariable("id") Long id) {
-        return departmentConverter.toDto(departmentService.findById(id)).orElseThrow(DataNotExistException::new);
+        return departmentConverter.toDto(departmentService.findById(id).orElseThrow(DataNotExistException::new));
     }
 
     @PutMapping("{id}")
     @ResponseStatus(CREATED)
     public DepartmentDto update(@PathVariable("id") Long id, @RequestBody DepartmentDto data) {
-        return departmentConverter.toDto(departmentService.update(id, data)).get();
+        return departmentConverter.toDto(departmentService.update(id, data));
     }
 
     @DeleteMapping("{id}")
@@ -60,7 +59,7 @@ public class DepartmentController {
     @GetMapping(params = { "draw" })
     public Page<DepartmentDto> search(@RequestParam("draw") Long draw,
             @RequestParam(value = "keywords", required = false) String key, @PageableDefault Pageable pageable) {
-        return departmentService.find(key, pageable).map(departmentConverter::toDto).map(Optional::get);
+        return departmentService.find(key, pageable).map(departmentConverter::toDto);
     }
 
     @GetMapping(params = "!draw")

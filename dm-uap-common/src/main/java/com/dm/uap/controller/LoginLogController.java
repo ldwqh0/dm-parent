@@ -1,7 +1,5 @@
 package com.dm.uap.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +25,6 @@ public class LoginLogController {
     public Page<LoginLogDto> search(
             Pageable pageable,
             @RequestParam(value = "key", required = false) String query) {
-        return loginLogService.list(query, pageable).map(loginLogConverter::toDto).map(Optional::get);
+        return loginLogService.list(query, pageable).map(loginLogConverter::toDto) ;
     }
 }

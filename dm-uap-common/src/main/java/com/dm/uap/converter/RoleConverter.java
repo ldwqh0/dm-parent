@@ -32,7 +32,7 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
 		dto.setName(role.getName());
 		dto.setState(role.getState());
 		dto.setDescription(role.getDescription());
-		dto.setGroup(roleGroupConverter.toDto(role.getGroup()).orElse(null));
+		dto.setGroup(roleGroupConverter.toDto(role.getGroup()));
 		// 角色信息不包括用户信息
 		// dto.setUsers(userConverter.toDto(role.getUsers()));
 		return dto;
