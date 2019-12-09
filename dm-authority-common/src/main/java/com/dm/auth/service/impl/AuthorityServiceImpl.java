@@ -52,6 +52,9 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     @Autowired
     private ResourceRepository resourceReopsitory;
 
+    // 进行请求限定的请求类型
+    private final HttpMethod[] methods = { HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE };
+
     @Override
     @Transactional
     public Authority save(MenuAuthorityDto authorityDto) {
@@ -203,22 +206,8 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
         for (Authority authority : authorities) {
             Set<ResourceOperation> operations = authority.getResourceOperations();
             for (ResourceOperation operation : operations) {
-                Resource r = operation.getResource();
-                Boolean saveable = operation.getSaveable();
-                Boolean readable = operation.getReadable();
-                Boolean updateable = operation.getUpdateable();
-                Boolean deleteable = operation.getDeleteable();
-                if (!Objects.isNull(saveable)) {
-                    addAccessAuthority(resourceAuhtorityMap, HttpMethod.POST, r, authority.getRoleName());
-                }
-                if (!Objects.isNull(readable)) {
-                    addAccessAuthority(resourceAuhtorityMap, HttpMethod.GET, r, authority.getRoleName());
-                }
-                if (!Objects.isNull(updateable)) {
-                    addAccessAuthority(resourceAuhtorityMap, HttpMethod.PUT, r, authority.getRoleName());
-                }
-                if (!Objects.isNull(deleteable)) {
-                    addAccessAuthority(resourceAuhtorityMap, HttpMethod.DELETE, r, authority.getRoleName());
+                for (HttpMethod method : methods) {
+                    addAuthority(resourceAuhtorityMap, method, operation, authority.getRoleName());
                 }
             }
         }
@@ -239,24 +228,43 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
                 !Objects.isNull(op.getUpdateable());
     }
 
-    private void addAccessAuthority(Map<UriResource, ResourceAuthorityAttribute> map,
+    private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map,
             HttpMethod method,
-            Resource resource,
+            ResourceOperation operation,
             String authority) {
+        Resource resource = operation.getResource();
         UriResource ur = UriResource.of(method.toString(),
                 resource.getMatcher(),
                 resource.getMatchType(),
                 resource.getScope());
+        Boolean access = null;
+        switch (method) {
+        case POST:
+            access = operation.getSaveable();
+            break;
+        case PUT:
+            access = operation.getUpdateable();
+            break;
+        case GET:
+            access = operation.getReadable();
+            break;
+        case DELETE:
+            access = operation.getDeleteable();
+            break;
+        default:
+            break;
+        }
+
         ResourceAuthorityAttribute raa = map.get(ur);
         if (Objects.isNull(raa)) {
-            synchronized (map) {
-                raa = map.get(ur);
-                if (Objects.isNull(raa)) {
-                    raa = new ResourceAuthorityAttribute(ur);
-                    map.put(ur, raa);
-                }
-            }
+            raa = new ResourceAuthorityAttribute(ur);
+            map.put(ur, raa);
         }
-        raa.addAccessAuthority(authority);
+        if (Boolean.TRUE.equals(access)) {
+            raa.addAccessAuthority(authority);
+        }
+        if (Boolean.FALSE.equals(access)) {
+            raa.addDenyAuthority(authority);
+        }
     }
 }

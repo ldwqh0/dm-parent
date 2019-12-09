@@ -76,7 +76,7 @@ public class ResourceAuthorityAttribute {
         this.accessAuthorities.add(authority);
     }
 
-    public void addDenyAuthorities(String authroity) {
+    public void addDenyAuthority(String authroity) {
         this.denyAuthorities.add(authroity);
     }
 
