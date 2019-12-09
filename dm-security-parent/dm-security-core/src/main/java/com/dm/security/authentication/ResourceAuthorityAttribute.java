@@ -1,5 +1,6 @@
 package com.dm.security.authentication;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.security.core.Authentication;
@@ -45,6 +46,14 @@ public class ResourceAuthorityAttribute {
         this.denyAuthorities = denyAuthorities;
     }
 
+    public ResourceAuthorityAttribute(UriResource resource) {
+        super();
+        this.resource = resource;
+        this.authenticated = true;
+        this.accessAuthorities = new HashSet<String>();
+        this.denyAuthorities = new HashSet<String>();
+    }
+
     /**
      * 获取该组资源的授权信息
      * 
@@ -63,8 +72,16 @@ public class ResourceAuthorityAttribute {
         return this.accessAuthorities;
     }
 
+    public void addAccessAuthority(String authority) {
+        this.accessAuthorities.add(authority);
+    }
+
+    public void addDenyAuthorities(String authroity) {
+        this.denyAuthorities.add(authroity);
+    }
+
     /**
-     * 是否必须授权访问
+     * 是否授权用户即可访问，不配置代表可以匿名访问
      * 
      * @return
      */

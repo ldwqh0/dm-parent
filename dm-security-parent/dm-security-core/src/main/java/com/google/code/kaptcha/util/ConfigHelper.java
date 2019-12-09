@@ -96,7 +96,8 @@ public class ConfigHelper
 	}
 
 	/** */
-	public Object getClassInstance(String paramName, String paramValue,
+	@SuppressWarnings("deprecation")
+    public Object getClassInstance(String paramName, String paramValue,
 			Object defaultInstance, Config config)
 	{
 		Object instance;

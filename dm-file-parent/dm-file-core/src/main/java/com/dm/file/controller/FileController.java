@@ -75,8 +75,8 @@ public class FileController {
     private FileStorageService fileStorageService;
 
     @GetMapping(value = "{id}", produces = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_JSON_UTF8_VALUE,
+            MediaType.TEXT_PLAIN_VALUE,
+            MediaType.APPLICATION_JSON_VALUE
     })
     public FileInfoDto get(@PathVariable("id") UUID id) {
         return fileInfoConverter.toDto(fileService.findById(id)).orElseThrow(DataNotExistException::new);
@@ -186,7 +186,13 @@ public class FileController {
      * @param level    缩略图的级别
      * @param response
      */
-    @GetMapping(value = "thumbnails/{id}")
+    @GetMapping(value = "thumbnails/{id}", produces = {
+            MediaType.IMAGE_GIF_VALUE,
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.IMAGE_PNG_VALUE,
+            "image/webp",
+            "image/*",
+            "*/*" })
     public ResponseEntity<InputStreamResource> preview(
             @PathVariable("id") UUID id,
             @RequestParam(value = "level", defaultValue = "1") int level,

@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 
 import com.dm.common.entity.AbstractEntity;
+import com.dm.security.authentication.UriResource.MatchType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,58 +27,41 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Resource extends AbstractEntity {
-	private static final long serialVersionUID = 8273786895229540103L;
+    private static final long serialVersionUID = 8273786895229540103L;
 
-	/**
-     * 资源的匹配模式
-     * 
-     * @author LiDong
-     *
+    /**
+     * 资源名称
      */
-    public enum MatchType {
-        /**
-         * 路径匹配
-         */
-        ANT_PATH,
-        /**
-         * 正则表达式匹配
-         */
-        REGEXP,
-    }
-	
-	/**
-	 * 资源名称
-	 */
-	@Column(name = "name_", length = 100, unique = true)
-	private String name;
+    @Column(name = "name_", length = 100, unique = true)
+    private String name;
 
-	/**
-	 * 资源匹配路径
-	 */
-	@Column(name = "matcher_", length = 400, unique = true)
-	private String matcher;
+    /**
+     * 资源匹配路径
+     */
+    @Column(name = "matcher_", length = 400, unique = true)
+    private String matcher;
 
-	/**
-	 * 路径匹配类型
-	 */
-	@Column(name = "match_type_")
-	@Enumerated(EnumType.STRING)
-	private MatchType matchType = MatchType.ANT_PATH;
+    /**
+     * 路径匹配类型
+     */
+    @Column(name = "match_type_")
+    @Enumerated(EnumType.STRING)
+    private MatchType matchType = MatchType.ANT_PATH;
 
-	/**
-	 * 资源所属范围
-	 */
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Column(name = "scope_")
-	@CollectionTable(name = "dm_resource_scope_", joinColumns = {
-			@JoinColumn(name = "resource_")
-	})
-	private Set<String> scope;
+    /**
+     * 资源所属范围
+     */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "scope_")
+    @CollectionTable(name = "dm_resource_scope_", joinColumns = {
+            @JoinColumn(name = "resource_")
+    })
+    private Set<String> scope;
 
-	/**
-	 * 资源描述
-	 */
-	@Column(name = "description_", length = 800)
-	private String description;
+    /**
+     * 资源描述
+     */
+    @Column(name = "description_", length = 800)
+    private String description;
 
 }

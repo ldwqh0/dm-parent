@@ -22,10 +22,10 @@ import com.dm.auth.dto.ResourceOperationDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.Resource;
-import com.dm.auth.entity.Resource.MatchType;
 import com.dm.auth.service.AuthorityService;
 import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
+import com.dm.security.authentication.UriResource.MatchType;
 
 @ConditionalOnClass({ Authority.class })
 @EntityScan({ "com.dm.auth" })

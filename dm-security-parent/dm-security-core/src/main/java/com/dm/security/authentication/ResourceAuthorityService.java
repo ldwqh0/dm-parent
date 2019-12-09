@@ -1,6 +1,6 @@
 package com.dm.security.authentication;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * 资源请求权限配置接口
@@ -16,5 +16,5 @@ public interface ResourceAuthorityService {
      * 
      * @return
      */
-    public List<ResourceAuthorityAttribute> listAll();
+    public Collection<ResourceAuthorityAttribute> listAll();
 }

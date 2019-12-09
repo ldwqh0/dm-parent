@@ -7,8 +7,8 @@
 		<artifactId>dm-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<groupId>com.dm.webflux-server</groupId>
-	<artifactId>webflux-server</artifactId>
+	<groupId>com.dm</groupId>
+	<artifactId>webflux-server-test</artifactId>
 	<dependencies>
 
 		<dependency>

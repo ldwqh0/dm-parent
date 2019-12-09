@@ -38,13 +38,10 @@
 		<module>dm-dingding-api</module>
 		<!-- 钉钉API和用户鉴权模块 -->
 		<module>dm-uap-dingtalk</module>
-		<!-- 微信鉴权模块 -->
-		<module>dm-security-mp</module>
 		<!-- 文件模块 -->
 		<module>dm-file-parent</module>
 		<module>dm-code</module>
 		<module>dm-security-parent</module>
-		<module>webflux-server</module>
 	</modules>
 	<packaging>pom</packaging>
 
@@ -187,7 +184,7 @@
 				<artifactId>dm-security-web</artifactId>
 				<version>${dm.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.dm</groupId>
 				<artifactId>dm-resource-server-spring-boot-starter</artifactId>
