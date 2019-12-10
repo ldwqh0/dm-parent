@@ -2,19 +2,17 @@ package com.dm.springboot.autoconfigure.uap;
 
 import java.util.Collections;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.RoleGroupDto;
@@ -33,7 +31,8 @@ import com.dm.uap.service.UserService;
 @EnableJpaRepositories({ "com.dm.uap" })
 @ComponentScan({ "com.dm.uap" })
 @EnableConfigurationProperties({ DefaultUserProperties.class })
-public class UapAutoConfiguration {
+@Import(UapBeanConfiguration.class)
+public class UapAutoConfiguration implements InitializingBean {
 
     @Autowired
     private DefaultUserProperties defaultUser;
@@ -42,29 +41,11 @@ public class UapAutoConfiguration {
     private RoleService roleService;
 
     @Autowired
+    @Lazy
     private UserService userService;
 
     @Autowired
     private RoleGroupService roleGroupService;
-
-    @Bean
-    @ConditionalOnMissingBean(PasswordEncoder.class)
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    /**
-     * 初始化默认用户
-     */
-    @PostConstruct
-    public void initData() {
-        // 初始化角色组
-        initRoleGroup();
-        // 初始化角色
-        initRole();
-        // 初始化用户
-        initUser();
-    }
 
     private void initRole() {
         Optional<RoleGroup> defaultGroupOptional = roleGroupService.findByName("内置分组");
@@ -129,6 +110,19 @@ public class UapAutoConfiguration {
             roleGroup.setDescription("系统默认角色分组");
             roleGroupService.save(roleGroup);
         }
+    }
+
+    /**
+     * 初始化默认用户
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // 初始化角色组
+        initRoleGroup();
+        // 初始化角色
+        initRole();
+        // 初始化用户
+        initUser();
     }
 
 }

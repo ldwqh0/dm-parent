@@ -10,14 +10,9 @@
 	<artifactId>dm-autoconfigure</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>com.dm</groupId>
-			<artifactId>dm-uap-common</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.dm</groupId>
-			<artifactId>dm-security-web</artifactId>
-			<optional>true</optional>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -41,6 +36,16 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dm</groupId>
+			<artifactId>dm-uap-common</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>dm-security-web</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.dm</groupId>
 			<artifactId>dm-region</artifactId>
 			<optional>true</optional>
 		</dependency>
@@ -59,5 +64,6 @@
 			<artifactId>dm-file-core</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 	</dependencies>
 </project>

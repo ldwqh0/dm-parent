@@ -53,21 +53,21 @@ public class ClientInfoController {
     @GetMapping("{id}")
     public ClientInfoDto get(@PathVariable("id") String id) {
         Optional<ClientInfo> info = clientService.findById(id);
-        return clientInfoConverter.toDto(info).orElseThrow(DataValidateException::new);
+        return clientInfoConverter.toDto(info.orElseThrow(DataValidateException::new));
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
     public ClientInfoDto save(@RequestBody ClientInfoDto client) {
         ClientInfo client_ = clientService.save(client);
-        return clientInfoConverter.toDto(client_).get();
+        return clientInfoConverter.toDto(client_);
     }
 
     @PutMapping("{id}")
     @ResponseStatus(CREATED)
     public ClientInfoDto update(@PathVariable("id") String id, @RequestBody ClientInfoDto client) {
         ClientInfo client_ = clientService.update(id, client);
-        return clientInfoConverter.toDto(client_).get();
+        return clientInfoConverter.toDto(client_);
     }
 
     @GetMapping(params = { "draw" })
@@ -75,7 +75,7 @@ public class ClientInfoController {
             @RequestParam(value = "search", required = false) String key,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
         Page<ClientInfo> clients = clientService.find(key, pageable);
-        return clients.map(clientInfoConverter::toDto).map(Optional::get);
+        return clients.map(clientInfoConverter::toDto);
     }
 
     @GetMapping(value = "{client}/tokens", params = { "draw" })

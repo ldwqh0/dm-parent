@@ -3,7 +3,6 @@ package com.dm.auth.converter;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.stereotype.Component;
 
 import com.dm.auth.dto.ClientDetailsDto;

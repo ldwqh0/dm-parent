@@ -78,7 +78,7 @@ public class DmOauthRedirectResolver implements RedirectResolver {
 		for (String redirectUri : redirectUris) {
 			if (requestedRedirect != null && redirectMatches(requestedRedirect, redirectUri)) {
 				// Initialize with the registered redirect-uri
-				UriComponentsBuilder redirectUriBuilder = UriComponentsBuilder.fromUriString(redirectUri);
+//				UriComponentsBuilder redirectUriBuilder = UriComponentsBuilder.fromUriString(redirectUri);
 
 				UriComponents requestedRedirectUri = UriComponentsBuilder.fromUriString(requestedRedirect).build();
 
@@ -88,9 +88,9 @@ public class DmOauthRedirectResolver implements RedirectResolver {
 //				if (!this.matchPorts) {
 //					redirectUriBuilder.port(requestedRedirectUri.getPort());
 //				}
-				redirectUriBuilder.replaceQuery(requestedRedirectUri.getQuery()); // retain additional params (if any)
+//				redirectUriBuilder.replaceQuery(requestedRedirectUri.getQuery()); // retain additional params (if any)
 //				redirectUriBuilder.fragment(null);
-				return redirectUriBuilder.build().toUriString();
+				return requestedRedirectUri.toUriString();
 			}
 		}
 
