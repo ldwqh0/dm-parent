@@ -1,46 +1,34 @@
 package com.dm.fileserver.config;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 
-import com.dm.security.oauth2.resource.UserDetailsDtoPrincipalExtractor;
+import com.dm.security.oauth2.server.resource.introspection.UserInfoOpaqueTokenIntrospector;
 
-@EnableResourceServer
 @EnableWebSecurity
-public class ResourceServerConfigurer extends ResourceServerConfigurerAdapter {
+public class ResourceServerConfigurer extends WebSecurityConfigurerAdapter {
+
     @Autowired
-    private UserInfoTokenServices userInfoTokenServices;
+    private OAuth2ResourceServerProperties properties;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET).permitAll()
                 .anyRequest().authenticated();
+        http.oauth2ResourceServer()
+                .opaqueToken().introspector(opaqueTokenIntrospector());
     }
 
-    @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        super.configure(resources);
-        // 指定这是一个restful service,不会保存会话状态
-        resources.stateless(true);
-    }
-
-    @PostConstruct
-    public void config() {
-        /**
-         * 指定一个用户信息解码器，将从服务器获取过来的用户信息解码为本地UserDetails
-         * 
-         * @return
-         */
-        userInfoTokenServices.setPrincipalExtractor(new UserDetailsDtoPrincipalExtractor());
+    @Bean
+    public OpaqueTokenIntrospector opaqueTokenIntrospector() {
+        return new UserInfoOpaqueTokenIntrospector(properties.getOpaquetoken().getIntrospectionUri());
     }
 
 }

@@ -1,4 +1,5 @@
 spring:
   profiles:
     active:
-    - lidong
+    - lidong  security:    oauth2:      resourceserver:
+        opaquetoken:          introspection-uri: http://localhost:8887/users/current
