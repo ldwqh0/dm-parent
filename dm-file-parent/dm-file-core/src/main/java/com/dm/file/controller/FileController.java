@@ -5,12 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
+//import org.springframework.web.multipart.MultipartRequest;
 
 import com.dm.common.exception.DataNotExistException;
 import com.dm.file.config.FileConfig;
@@ -84,24 +80,16 @@ public class FileController {
 
     @PostMapping
     @ApiOperation("上传文件")
-    public List<FileInfoDto> upload(MultipartRequest request) throws Exception {
-        List<FileInfo> result = new ArrayList<FileInfo>();
-        Iterator<String> filenames = request.getFileNames();
-        while (filenames.hasNext()) {
-            MultipartFile file = request.getFile(filenames.next());
-            if (!Objects.isNull(file)) {
-                FileInfoDto infoDto = new FileInfoDto();
-                if (StringUtils.isNotBlank(file.getOriginalFilename())) {
-                    infoDto.setFilename(DmFileUtils.getOriginalFilename(file.getOriginalFilename()));
-                }
-                infoDto.setSize(file.getSize());
-                FileInfo file_ = fileService.save(file.getInputStream(), infoDto);
-                result.add(file_);
-                // 创建缩略图
-                thumbnailService.createThumbnail(file_.getPath());
-            }
+    public List<FileInfoDto> upload(@RequestParam("file") MultipartFile file) throws Exception {
+        String originalFilename = file.getOriginalFilename();
+        FileInfoDto infoDto = new FileInfoDto();
+        if (StringUtils.isNotBlank(originalFilename)) {
+            infoDto.setFilename(DmFileUtils.getOriginalFilename(originalFilename));
         }
-        return fileInfoConverter.toDto(result);
+        infoDto.setSize(file.getSize());
+        FileInfo file_ = fileService.save(file.getInputStream(), infoDto);
+        thumbnailService.createThumbnail(file_.getPath());
+        return Collections.singletonList(fileInfoConverter.toDto(file_));
     }
 
     /**
@@ -123,14 +111,14 @@ public class FileController {
             @RequestHeader("file-id") String tempId,
             @RequestHeader("chunk-count") int chunkCount,
             @RequestParam("filename") String filename,
-            MultipartRequest request) throws Exception {
+            MultipartFile mFile) throws Exception {
 
-        Collection<MultipartFile> files = request.getFileMap().values();
-        if (CollectionUtils.isNotEmpty(files)) {
-            MultipartFile mFile = files.iterator().next();
-            String tempName = config.getTempPath() + tempId + "." + chunkIndex;
-            mFile.transferTo(new File(tempName));
-        }
+//        Collection<MultipartFile> files = request.getFileMap().values();
+//        if (CollectionUtils.isNotEmpty(files)) {
+//            MultipartFile mFile = files.iterator().next();
+        String tempName = config.getTempPath() + tempId + "." + chunkIndex;
+        mFile.transferTo(new File(tempName));
+//        }
         // 这个标记代表块完成
         if (chunkIndex == chunkCount - 1) {
             File target = new File(config.getTempPath() + tempId + "." + StringUtils.substringAfter(filename, "."));

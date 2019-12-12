@@ -1,18 +1,19 @@
-package com.dm.webtest.controller;
+package com.dm.webflux.controller;
 
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileRequest {
-    
+
     private String name;
 
-    private MultipartFile file;
+    private FilePart file;
 
-    public MultipartFile getFile() {
+    public FilePart getFile() {
         return file;
     }
 
-    public void setFile(MultipartFile file) {
+    public void setFile(FilePart file) {
         this.file = file;
     }
 
@@ -23,6 +24,5 @@ public class FileRequest {
     public void setName(String name) {
         this.name = name;
     }
-    
 
 }

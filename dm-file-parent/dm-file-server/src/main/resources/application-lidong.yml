@@ -19,7 +19,8 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-security:
-  oauth2:
-    resource:
-      user-info-uri: http://ldwqh0.kmdns.net:280/oauth/users/current
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          introspection-uri: http://localhost:8887/users/current
