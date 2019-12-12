@@ -12,28 +12,28 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class AccessTokenResponse extends TaobaoResponse {
 
-	private static final long serialVersionUID = -866304342538258608L;
+    private static final long serialVersionUID = -866304342538258608L;
 
-	@JsonProperty(value = "expires_in")
-	private Long expiresIn;
+    @JsonProperty(value = "expires_in")
+    private Long expiresIn;
 
-	@JsonProperty("access_token")
-	private String accessToken;
+    @JsonProperty("access_token")
+    private String accessToken;
 
-	/**
-	 * token过期时间
-	 */
-	private ZonedDateTime expireDate;
+    /**
+     * token过期时间
+     */
+    private ZonedDateTime expireDate;
 
-	public void setExpiresIn(Long expirseIn) {
-		this.expiresIn = expirseIn;
-		if (!Objects.isNull(expirseIn)) {
-			// 这里修正一下token过期时间
-			setExpireDate(ZonedDateTime.now().plusSeconds(expirseIn - 60));
-		}
-	}
+    public void setExpiresIn(Long expirseIn) {
+        this.expiresIn = expirseIn;
+        if (!Objects.isNull(expirseIn)) {
+            // 这里修正一下token过期时间
+            setExpireDate(ZonedDateTime.now().plusSeconds(expirseIn - 60));
+        }
+    }
 
-	private void setExpireDate(ZonedDateTime expireDate) {
-		this.expireDate = expireDate;
-	}
+    private void setExpireDate(ZonedDateTime expireDate) {
+        this.expireDate = expireDate;
+    }
 }

@@ -7,6 +7,6 @@ import com.dm.auth.dto.AccessTokenInfoDto;
 
 public interface AccessTokenService {
 
-	public Page<AccessTokenInfoDto> listTokensByClient(String client, Pageable pageable);
+    public Page<AccessTokenInfoDto> listTokensByClient(String client, Pageable pageable);
 
 }

@@ -13,23 +13,23 @@ import lombok.Data;
  */
 public class UserPostDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1344418453725050901L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1344418453725050901L;
 
-	private DepartmentDto department;
+    private DepartmentDto department;
 
-	private String post;
+    private String post;
 
-	public UserPostDto(DepartmentDto department, String post) {
-		super();
-		this.department = department;
-		this.post = post;
-	}
+    public UserPostDto(DepartmentDto department, String post) {
+        super();
+        this.department = department;
+        this.post = post;
+    }
 
-	public UserPostDto() {
-		super();
-	}
+    public UserPostDto() {
+        super();
+    }
 
 }

@@ -15,16 +15,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 @ConditionalOnClass(JPAQueryFactory.class)
 public class QueryDslConfiguration {
 
-	/**
-	 * 可以在项目中直接注入JPAQueryFactory
-	 * 
-	 * @param em
-	 * @return
-	 */
-	@ConditionalOnMissingBean(JPAQueryFactory.class)
-	@Bean
-	@Lazy
-	public JPAQueryFactory queryFactory(@Autowired EntityManager em) {
-		return new JPAQueryFactory(em);
-	}
+    /**
+     * 可以在项目中直接注入JPAQueryFactory
+     * 
+     * @param em
+     * @return
+     */
+    @ConditionalOnMissingBean(JPAQueryFactory.class)
+    @Bean
+    @Lazy
+    public JPAQueryFactory queryFactory(@Autowired EntityManager em) {
+        return new JPAQueryFactory(em);
+    }
 }

@@ -28,31 +28,31 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 @ConditionalOnBean(AuditingHandler.class)
 public class AuditingAutoConfiguration {
 
-	@Autowired
-	private AuditingHandler handler;
+    @Autowired
+    private AuditingHandler handler;
 
-	/**
-	 * 修改AuditingHandler的DateTimeProvider使用，ZonedDateTime获取当前时间
-	 */
-	@PostConstruct
-	public void configAuditingHandler() {
-		handler.setDateTimeProvider(() -> Optional.of(ZonedDateTime.now()));
-	}
+    /**
+     * 修改AuditingHandler的DateTimeProvider使用，ZonedDateTime获取当前时间
+     */
+    @PostConstruct
+    public void configAuditingHandler() {
+        handler.setDateTimeProvider(() -> Optional.of(ZonedDateTime.now()));
+    }
 
-	@Configuration
-	@ConditionalOnMissingBean(AuditorAware.class)
-	public static class SimpleAuditorAware implements AuditorAware<Audit> {
-		@Override
-		public Optional<Audit> getCurrentAuditor() {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			if (authentication != null) {
-				Object principal = authentication.getPrincipal();
-				if (principal instanceof UserDetailsDto) {
-					UserDetailsDto ud = (UserDetailsDto) principal;
-					return Optional.ofNullable(new AuditDto(ud.getId(), ud.getUsername()));
-				}
-			}
-			return Optional.empty();
-		}
-	}
+    @Configuration
+    @ConditionalOnMissingBean(AuditorAware.class)
+    public static class SimpleAuditorAware implements AuditorAware<Audit> {
+        @Override
+        public Optional<Audit> getCurrentAuditor() {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                Object principal = authentication.getPrincipal();
+                if (principal instanceof UserDetailsDto) {
+                    UserDetailsDto ud = (UserDetailsDto) principal;
+                    return Optional.ofNullable(new AuditDto(ud.getId(), ud.getUsername()));
+                }
+            }
+            return Optional.empty();
+        }
+    }
 }

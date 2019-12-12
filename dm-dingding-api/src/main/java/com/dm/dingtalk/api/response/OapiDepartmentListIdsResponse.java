@@ -10,43 +10,43 @@ import java.util.List;
  */
 public class OapiDepartmentListIdsResponse extends TaobaoResponse {
 
-	private static final long serialVersionUID = 7369121852635438152L;
+    private static final long serialVersionUID = 7369121852635438152L;
 
-	private Long errcode;
+    private Long errcode;
 
-	private String errmsg;
+    private String errmsg;
 
-	private List<Long> subDeptIdList;
+    private List<Long> subDeptIdList;
 
-	public void setErrcode(Long errcode) {
-		this.errcode = errcode;
-	}
+    public void setErrcode(Long errcode) {
+        this.errcode = errcode;
+    }
 
-	public Long getErrcode() {
-		return this.errcode;
-	}
+    public Long getErrcode() {
+        return this.errcode;
+    }
 
-	@Override
-	public void setErrmsg(String errmsg) {
-		this.errmsg = errmsg;
-	}
+    @Override
+    public void setErrmsg(String errmsg) {
+        this.errmsg = errmsg;
+    }
 
-	@Override
-	public String getErrmsg() {
-		return this.errmsg;
-	}
+    @Override
+    public String getErrmsg() {
+        return this.errmsg;
+    }
 
-	public void setSubDeptIdList(List<Long> subDeptIdList) {
-		this.subDeptIdList = subDeptIdList;
-	}
+    public void setSubDeptIdList(List<Long> subDeptIdList) {
+        this.subDeptIdList = subDeptIdList;
+    }
 
-	public List<Long> getSubDeptIdList() {
-		return this.subDeptIdList;
-	}
+    public List<Long> getSubDeptIdList() {
+        return this.subDeptIdList;
+    }
 
-	@Override
-	public boolean isSuccess() {
-		return getErrcode() == null || getErrcode().equals(0L);
-	}
+    @Override
+    public boolean isSuccess() {
+        return getErrcode() == null || getErrcode().equals(0L);
+    }
 
 }

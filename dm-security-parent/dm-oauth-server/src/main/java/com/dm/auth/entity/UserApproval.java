@@ -24,31 +24,31 @@ import lombok.Setter;
 @IdClass(UserApprovalPK.class)
 @EntityListeners(AuditingEntityListener.class)
 public class UserApproval {
-	@Id
-	@Column(name = "user_id_", length = 50)
-	private String userId;
+    @Id
+    @Column(name = "user_id_", length = 50)
+    private String userId;
 
-	@Id
-	@Column(name = "client_id_", length = 50)
-	private String clientId;
+    @Id
+    @Column(name = "client_id_", length = 50)
+    private String clientId;
 
-	@Id
-	@Column(name = "scope_", length = 100)
-	private String scope;
+    @Id
+    @Column(name = "scope_", length = 100)
+    private String scope;
 
-	@Column(name = "status_")
-	@Enumerated(EnumType.STRING)
-	private ApprovalStatus status;
+    @Column(name = "status_")
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatus status;
 
-	@Column(name = "expires_at_")
-	private Date expiresAt;
+    @Column(name = "expires_at_")
+    private Date expiresAt;
 
-	@Column(name = "last_update_at_")
-	@LastModifiedDate
-	private ZonedDateTime lastUpdatedAt;
+    @Column(name = "last_update_at_")
+    @LastModifiedDate
+    private ZonedDateTime lastUpdatedAt;
 
-	protected void setLastUpdatedAt(ZonedDateTime date) {
-		this.lastUpdatedAt = date;
-	}
+    protected void setLastUpdatedAt(ZonedDateTime date) {
+        this.lastUpdatedAt = date;
+    }
 
 }

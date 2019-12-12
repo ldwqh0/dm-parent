@@ -11,27 +11,27 @@ import lombok.Data;
 
 @Data
 public class ClientInfoDto implements Serializable {
-	private static final long serialVersionUID = 2205256324488223495L;
+    private static final long serialVersionUID = 2205256324488223495L;
 
-	private String clientId;
+    private String clientId;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private String clientSecret;
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private String clientSecret;
 
-	private String name;
+    private String name;
 
-	private Set<String> scope = Collections.singleton("app");
+    private Set<String> scope = Collections.singleton("app");
 
-	private Set<String> authorizedGrantTypes = Collections.singleton("authorization_code");
+    private Set<String> authorizedGrantTypes = Collections.singleton("authorization_code");
 
-	private Set<String> registeredRedirectUri;
+    private Set<String> registeredRedirectUri;
 
-	private Set<String> resourceIds;
+    private Set<String> resourceIds;
 
-	private Integer accessTokenValiditySeconds;
+    private Integer accessTokenValiditySeconds;
 
-	private Integer refreshTokenValiditySeconds;
+    private Integer refreshTokenValiditySeconds;
 
-	private Boolean autoApprove;
+    private Boolean autoApprove;
 
 }

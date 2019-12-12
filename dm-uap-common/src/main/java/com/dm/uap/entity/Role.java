@@ -28,44 +28,44 @@ import lombok.Setter;
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "role_group_id_", "name_" }) })
 public class Role extends AbstractEntity {
 
-	public enum Status {
-		/**
-		 * 标识角色已启用
-		 */
-		ENABLED,
-		/**
-		 * 标识角色被禁用
-		 */
-		DISABLED
-	}
+    public enum Status {
+        /**
+         * 标识角色已启用
+         */
+        ENABLED,
+        /**
+         * 标识角色被禁用
+         */
+        DISABLED
+    }
 
-	private static final long serialVersionUID = -7562410173176807166L;
+    private static final long serialVersionUID = -7562410173176807166L;
 
-	@Column(name = "name_", length = 100, nullable = false)
-	@NotNull
-	private String name;
+    @Column(name = "name_", length = 100, nullable = false)
+    @NotNull
+    private String name;
 
-	@ManyToOne
-	@JoinColumn(name = "role_group_id_", nullable = false)
-	private RoleGroup group;
+    @ManyToOne
+    @JoinColumn(name = "role_group_id_", nullable = false)
+    private RoleGroup group;
 
-	@Column(name = "state_", length = 50)
-	@Enumerated(EnumType.STRING)
-	private Status state;
+    @Column(name = "state_", length = 50)
+    @Enumerated(EnumType.STRING)
+    private Status state;
 
-	@Column(name = "description_", length = 2000)
-	private String description;
+    @Column(name = "description_", length = 2000)
+    private String description;
 
-	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-	@JoinTable(name = "dm_user_role_", joinColumns = {
-			@JoinColumn(name = "role_", referencedColumnName = "id_")
-	}, inverseJoinColumns = {
-			@JoinColumn(name = "user_", referencedColumnName = "id_")
-	}, indexes = {
-			@Index(columnList = "role_", name = "IDX_dm_user_role_role_")
-	}, uniqueConstraints = {
-			@UniqueConstraint(columnNames = { "user_", "role_" })
-	})
-	private List<User> users;
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(name = "dm_user_role_", joinColumns = {
+            @JoinColumn(name = "role_", referencedColumnName = "id_")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "user_", referencedColumnName = "id_")
+    }, indexes = {
+            @Index(columnList = "role_", name = "IDX_dm_user_role_role_")
+    }, uniqueConstraints = {
+            @UniqueConstraint(columnNames = { "user_", "role_" })
+    })
+    private List<User> users;
 
 }

@@ -10,13 +10,13 @@ import com.dm.uap.dingtalk.entity.DRole;
 
 public interface DRoleRepository extends JpaRepository<DRole, Long>, QuerydslPredicateExecutor<DRole> {
 
-	/**
-	 * 删除ID不在列表中中的角色
-	 * 
-	 * @param ids
-	 */
-	public void deleteByIdNotIn(Collection<Long> ids);
+    /**
+     * 删除ID不在列表中中的角色
+     * 
+     * @param ids
+     */
+    public void deleteByIdNotIn(Collection<Long> ids);
 
-	public Optional<DRole> findByRoleId(Long roleID);
+    public Optional<DRole> findByRoleId(Long roleID);
 
 }

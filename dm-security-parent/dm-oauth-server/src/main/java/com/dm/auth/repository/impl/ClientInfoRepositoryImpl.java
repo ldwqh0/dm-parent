@@ -21,31 +21,31 @@ import com.querydsl.jpa.impl.JPAQuery;
 @Repository
 public class ClientInfoRepositoryImpl {
 
-	@Autowired
-	private EntityManager em;
+    @Autowired
+    private EntityManager em;
 
-	private final QClientInfo qClient = QClientInfo.clientInfo;
+    private final QClientInfo qClient = QClientInfo.clientInfo;
 
-	public Page<ClientInfo> find(String key, Pageable pageable) {
-		JPAQuery<ClientInfo> query = new JPAQuery<ClientInfo>(em);
-		query.from(qClient).where(qClient.name.containsIgnoreCase(key));
-		Long count = query.fetchCount();
-		long offset = pageable.getOffset();
-		long limit = pageable.getPageSize();
-		query.offset(offset).limit(limit);
-		return new PageImpl<ClientInfo>(query.fetch(), pageable, count);
-	}
+    public Page<ClientInfo> find(String key, Pageable pageable) {
+        JPAQuery<ClientInfo> query = new JPAQuery<ClientInfo>(em);
+        query.from(qClient).where(qClient.name.containsIgnoreCase(key));
+        Long count = query.fetchCount();
+        long offset = pageable.getOffset();
+        long limit = pageable.getPageSize();
+        query.offset(offset).limit(limit);
+        return new PageImpl<ClientInfo>(query.fetch(), pageable, count);
+    }
 
-	public Set<String> listScopes() {
-		JPAQuery<ClientInfo> query = new JPAQuery<>(em);
-		StringPath qScope = Expressions.stringPath("scope");
-		List<String> scopes = query
-				.select(qScope)
-				.from(qClient)
-				.join(qClient.scope, qScope)
-				.distinct()
-				.fetch();
-		return new HashSet<>(scopes);
-	}
+    public Set<String> listScopes() {
+        JPAQuery<ClientInfo> query = new JPAQuery<>(em);
+        StringPath qScope = Expressions.stringPath("scope");
+        List<String> scopes = query
+                .select(qScope)
+                .from(qClient)
+                .join(qClient.scope, qScope)
+                .distinct()
+                .fetch();
+        return new HashSet<>(scopes);
+    }
 
 }

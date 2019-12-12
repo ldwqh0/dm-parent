@@ -15,9 +15,9 @@ import lombok.Data;
 @Data
 public class ResourceAuthorityDto implements Serializable {
 
-	private static final long serialVersionUID = -5060713882698127082L;
+    private static final long serialVersionUID = -5060713882698127082L;
 
-	private Long roleId;
-	private String roleName;
-	private List<ResourceOperationDto> resourceAuthorities = new ArrayList<ResourceOperationDto>();
+    private Long roleId;
+    private String roleName;
+    private List<ResourceOperationDto> resourceAuthorities = new ArrayList<ResourceOperationDto>();
 }

@@ -212,7 +212,7 @@ public class DUserServiceImpl implements DUserService {
      * @param dUser
      * @param rsp
      * @return
-     */    
+     */
     private DUser copyProperties(DUser dUser, OapiUserGetResponse rsp) {
         dUserConverter.copyProperties(dUser, rsp);
         log.info("正在合并用户信息 userid={}", dUser.getUserid());

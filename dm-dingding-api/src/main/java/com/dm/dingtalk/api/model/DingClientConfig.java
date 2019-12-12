@@ -4,32 +4,32 @@ import java.util.HashMap;
 
 public class DingClientConfig extends HashMap<String, String> {
 
-	private static final long serialVersionUID = -3492304173521281382L;
+    private static final long serialVersionUID = -3492304173521281382L;
 
-	public DingClientConfig(String appkey, String appsecret) {
-		super();
-		super.put("appkey", appkey);
-		super.put("appsecret", appsecret);
-	}
+    public DingClientConfig(String appkey, String appsecret) {
+        super();
+        super.put("appkey", appkey);
+        super.put("appsecret", appsecret);
+    }
 
-	public String getAppkey() {
-		return get("appkey");
-	}
+    public String getAppkey() {
+        return get("appkey");
+    }
 
-	public String getAppsecret() {
-		return get("appsecret");
-	}
+    public String getAppsecret() {
+        return get("appsecret");
+    }
 
-	public void setAppkey(String appKey) {
-		put("appkey", appKey);
-	}
+    public void setAppkey(String appKey) {
+        put("appkey", appKey);
+    }
 
-	public void setAppsecret(String appsecret) {
-		put("appsecret", appsecret);
-	}
+    public void setAppsecret(String appsecret) {
+        put("appsecret", appsecret);
+    }
 
-	public DingClientConfig() {
-		super();
-	}
+    public DingClientConfig() {
+        super();
+    }
 
 }

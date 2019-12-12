@@ -11,12 +11,12 @@ import com.dm.uap.dingtalk.service.DDepartmentService;
 @RequestMapping("dDepartments")
 public class DDepartmentControlller {
 
-	@Autowired
-	private DDepartmentService dDepartmentService;
+    @Autowired
+    private DDepartmentService dDepartmentService;
 
-	@PostMapping("sync")
-	public void sync() {
-		dDepartmentService.syncToUap();
-	}
+    @PostMapping("sync")
+    public void sync() {
+        dDepartmentService.syncToUap();
+    }
 
 }

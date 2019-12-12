@@ -22,61 +22,61 @@ import com.querydsl.core.BooleanBuilder;
 @Service
 public class RegionServiceImpl implements RegionService {
 
-	@Autowired
-	private RegionRepository regionRepository;
+    @Autowired
+    private RegionRepository regionRepository;
 
-	@Autowired
-	private RegionConverter regionConverter;
+    @Autowired
+    private RegionConverter regionConverter;
 
-	private final QRegion qRegion = QRegion.region;
+    private final QRegion qRegion = QRegion.region;
 
-	@Override
-	public List<Region> findAll() {
-		return regionRepository.findAll();
-	}
+    @Override
+    public List<Region> findAll() {
+        return regionRepository.findAll();
+    }
 
-	@Override
-	public List<Region> findProvincials() {
-		return regionRepository.findAllByParentCode_CodeIsNull();
-	}
+    @Override
+    public List<Region> findProvincials() {
+        return regionRepository.findAllByParentCode_CodeIsNull();
+    }
 
-	@Override
-	public List<Region> findChildren(String code) {
-		return regionRepository.findAllByParentCode_Code(code);
-	}
+    @Override
+    public List<Region> findChildren(String code) {
+        return regionRepository.findAllByParentCode_Code(code);
+    }
 
-	@Override
-	@Transactional
-	public List<Region> save(List<RegionDto> regions) {
-		List<Region> re = regions.stream().map(region -> {
-			Region model = new Region();
-			regionConverter.copyProperties(model, region);
-			return model;
-		}).collect(Collectors.toList());
-		return regionRepository.saveAll(re);
-	}
+    @Override
+    @Transactional
+    public List<Region> save(List<RegionDto> regions) {
+        List<Region> re = regions.stream().map(region -> {
+            Region model = new Region();
+            regionConverter.copyProperties(model, region);
+            return model;
+        }).collect(Collectors.toList());
+        return regionRepository.saveAll(re);
+    }
 
-	@Override
-	public boolean existAny() {
-		return regionRepository.count() > 0;
-	}
+    @Override
+    public boolean existAny() {
+        return regionRepository.count() > 0;
+    }
 
-	@Override
-	public List<Region> findAllChildren(String code) {
-		return regionRepository.findAllChildren(code);
-	}
+    @Override
+    public List<Region> findAllChildren(String code) {
+        return regionRepository.findAllChildren(code);
+    }
 
-	@Override
-	public Optional<Region> findByCode(String parent) {
-		return regionRepository.findById(parent);
-	}
+    @Override
+    public Optional<Region> findByCode(String parent) {
+        return regionRepository.findById(parent);
+    }
 
-	@Override
-	public Page<Region> find(String keywords, Pageable pageable) {
-		BooleanBuilder query = new BooleanBuilder();
-		if (StringUtils.isNoneBlank(keywords)) {
-			query.and(qRegion.name.containsIgnoreCase(keywords).or(qRegion.code.containsIgnoreCase(keywords)));
-		}
-		return regionRepository.findAll(query, pageable);
-	}
+    @Override
+    public Page<Region> find(String keywords, Pageable pageable) {
+        BooleanBuilder query = new BooleanBuilder();
+        if (StringUtils.isNoneBlank(keywords)) {
+            query.and(qRegion.name.containsIgnoreCase(keywords).or(qRegion.code.containsIgnoreCase(keywords)));
+        }
+        return regionRepository.findAll(query, pageable);
+    }
 }

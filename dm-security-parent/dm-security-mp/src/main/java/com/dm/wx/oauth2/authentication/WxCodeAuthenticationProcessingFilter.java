@@ -24,11 +24,11 @@ public class WxCodeAuthenticationProcessingFilter extends AbstractAuthentication
         super("/login/wx");
     }
 
-    public WxCodeAuthenticationProcessingFilter (String defaultFilterProcessesUrl) {
-	    super(defaultFilterProcessesUrl);
-	}
-    
-    public WxCodeAuthenticationProcessingFilter (RequestMatcher matcher) {
+    public WxCodeAuthenticationProcessingFilter(String defaultFilterProcessesUrl) {
+        super(defaultFilterProcessesUrl);
+    }
+
+    public WxCodeAuthenticationProcessingFilter(RequestMatcher matcher) {
         super(matcher);
     }
 

@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RevokeTokenEndpoint {
 
-	@Autowired
-	private ConsumerTokenServices tokenService;
+    @Autowired
+    private ConsumerTokenServices tokenService;
 
-	@DeleteMapping("/oauth/logout")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void revokeToken(@RequestParam("access_token") String token) {
-		// 移除token
-		tokenService.revokeToken(token);
-	}
+    @DeleteMapping("/oauth/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void revokeToken(@RequestParam("access_token") String token) {
+        // 移除token
+        tokenService.revokeToken(token);
+    }
 
 }

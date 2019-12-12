@@ -8,9 +8,9 @@ import com.dm.uap.dingtalk.entity.DRole;
 @Component
 public class DRoleConverter {
 
-	public DRole copyProperties(DRole dRole, OpenRole oRole) {
-		dRole.setName(oRole.getName());
-		return dRole;
-	}
+    public DRole copyProperties(DRole dRole, OpenRole oRole) {
+        dRole.setName(oRole.getName());
+        return dRole;
+    }
 
 }

@@ -20,60 +20,60 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 @Service
 public class RoleGroupServiceImpl implements RoleGroupService {
 
-	@Autowired
-	private RoleGroupRepository roleGroupRepository;
+    @Autowired
+    private RoleGroupRepository roleGroupRepository;
 
-	@Autowired
-	private RoleGroupConverter roleGroupConverter;
+    @Autowired
+    private RoleGroupConverter roleGroupConverter;
 
-	private final QRoleGroup qRoleGroup = QRoleGroup.roleGroup;
+    private final QRoleGroup qRoleGroup = QRoleGroup.roleGroup;
 
-	@Override
-	public boolean exist() {
-		return roleGroupRepository.count() > 0;
-	}
+    @Override
+    public boolean exist() {
+        return roleGroupRepository.count() > 0;
+    }
 
-	@Override
-	@Transactional
-	public RoleGroup save(RoleGroupDto data) {
-		RoleGroup model = new RoleGroup();
-		roleGroupConverter.copyProperties(model, data);
-		return roleGroupRepository.save(model);
-	}
+    @Override
+    @Transactional
+    public RoleGroup save(RoleGroupDto data) {
+        RoleGroup model = new RoleGroup();
+        roleGroupConverter.copyProperties(model, data);
+        return roleGroupRepository.save(model);
+    }
 
-	@Override
-	public Optional<RoleGroup> findById(Long id) {
-		return roleGroupRepository.findById(id);
-	}
+    @Override
+    public Optional<RoleGroup> findById(Long id) {
+        return roleGroupRepository.findById(id);
+    }
 
-	@Override
-	@Transactional
-	public void deleteById(Long id) {
-		roleGroupRepository.deleteById(id);
-	}
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        roleGroupRepository.deleteById(id);
+    }
 
-	@Override
-	@Transactional
-	public RoleGroup update(Long id, RoleGroupDto data) {
-		RoleGroup model = new RoleGroup();
-		roleGroupConverter.copyProperties(model, data);
-		return roleGroupRepository.save(model);
-	}
+    @Override
+    @Transactional
+    public RoleGroup update(Long id, RoleGroupDto data) {
+        RoleGroup model = new RoleGroup();
+        roleGroupConverter.copyProperties(model, data);
+        return roleGroupRepository.save(model);
+    }
 
-	@Override
-	public Page<RoleGroup> search(String key, Pageable pageable) {
-		if (StringUtils.isNotBlank(key)) {
-			BooleanExpression query = qRoleGroup.name.containsIgnoreCase(key)
-					.or(qRoleGroup.description.containsIgnoreCase(key));
-			return roleGroupRepository.findAll(query, pageable);
-		} else {
-			return roleGroupRepository.findAll(pageable);
-		}
-	}
+    @Override
+    public Page<RoleGroup> search(String key, Pageable pageable) {
+        if (StringUtils.isNotBlank(key)) {
+            BooleanExpression query = qRoleGroup.name.containsIgnoreCase(key)
+                    .or(qRoleGroup.description.containsIgnoreCase(key));
+            return roleGroupRepository.findAll(query, pageable);
+        } else {
+            return roleGroupRepository.findAll(pageable);
+        }
+    }
 
-	@Override
-	public Optional<RoleGroup> findByName(String name) {
-		return roleGroupRepository.findByName(name);
-	}
+    @Override
+    public Optional<RoleGroup> findByName(String name) {
+        return roleGroupRepository.findByName(name);
+    }
 
 }

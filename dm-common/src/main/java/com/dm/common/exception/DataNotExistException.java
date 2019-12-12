@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "资源不存在")
 public class DataNotExistException extends RuntimeException {
 
-	private static final long serialVersionUID = 8462512150406664119L;
+    private static final long serialVersionUID = 8462512150406664119L;
 
-	public DataNotExistException(String message) {
-		super(message);
-	}
+    public DataNotExistException(String message) {
+        super(message);
+    }
 
-	public DataNotExistException() {
-		super("资源不存在");
-	}
+    public DataNotExistException() {
+        super("资源不存在");
+    }
 
 }

@@ -11,14 +11,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class DUserRepositoryImpl {
 
-	@Autowired
-	private EntityManager em;
+    @Autowired
+    private EntityManager em;
 
-	private final QDUser qDUser = QDUser.dUser;
+    private final QDUser qDUser = QDUser.dUser;
 
-	public long deleteByIdNotIn(Set<String> userIds) {
-		JPAQueryFactory fac = new JPAQueryFactory(em);
-		return fac.delete(qDUser).where(
-				qDUser.userid.notIn(userIds)).execute();
-	}
+    public long deleteByIdNotIn(Set<String> userIds) {
+        JPAQueryFactory fac = new JPAQueryFactory(em);
+        return fac.delete(qDUser).where(
+                qDUser.userid.notIn(userIds)).execute();
+    }
 }

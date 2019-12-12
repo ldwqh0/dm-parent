@@ -11,24 +11,24 @@ import com.dm.common.converter.AbstractConverter;
 @Component
 public class UserApprovalConverter extends AbstractConverter<UserApproval, Approval> {
 
-	@Override
-	protected Approval toDtoActual(UserApproval model) {
-		Approval approval = new Approval(model.getUserId(), model.getClientId(),
-				model.getScope(),
-				model.getExpiresAt(),
-				model.getStatus());
-		approval.setLastUpdatedAt(Date.from(model.getLastUpdatedAt().toInstant()));
-		return approval;
-	}
+    @Override
+    protected Approval toDtoActual(UserApproval model) {
+        Approval approval = new Approval(model.getUserId(), model.getClientId(),
+                model.getScope(),
+                model.getExpiresAt(),
+                model.getStatus());
+        approval.setLastUpdatedAt(Date.from(model.getLastUpdatedAt().toInstant()));
+        return approval;
+    }
 
-	@Override
-	public UserApproval copyProperties(UserApproval model, Approval dto) {
-		model.setClientId(dto.getClientId());
-		model.setUserId(dto.getUserId());
-		model.setExpiresAt(dto.getExpiresAt());
-		model.setScope(dto.getScope());
-		model.setStatus(dto.getStatus());
-		return model;
-	}
+    @Override
+    public UserApproval copyProperties(UserApproval model, Approval dto) {
+        model.setClientId(dto.getClientId());
+        model.setUserId(dto.getUserId());
+        model.setExpiresAt(dto.getExpiresAt());
+        model.setScope(dto.getScope());
+        model.setStatus(dto.getStatus());
+        return model;
+    }
 
 }

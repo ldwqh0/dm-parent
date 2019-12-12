@@ -11,44 +11,44 @@ import com.dm.region.entity.Region;
 
 public interface RegionService {
 
-	/**
-	 * 查询所有
-	 * 
-	 * @return
-	 */
-	List<Region> findAll();
+    /**
+     * 查询所有
+     * 
+     * @return
+     */
+    List<Region> findAll();
 
-	/**
-	 * 查询省会
-	 * 
-	 * @return
-	 */
-	List<Region> findProvincials();
+    /**
+     * 查询省会
+     * 
+     * @return
+     */
+    List<Region> findProvincials();
 
-	/**
-	 * 查询下级区县
-	 * 
-	 * @param code
-	 * @return
-	 */
-	List<Region> findChildren(String code);
+    /**
+     * 查询下级区县
+     * 
+     * @param code
+     * @return
+     */
+    List<Region> findChildren(String code);
 
-	/**
-	 * 批量保存区划数据
-	 */
-	List<Region> save(List<RegionDto> regions);
+    /**
+     * 批量保存区划数据
+     */
+    List<Region> save(List<RegionDto> regions);
 
-	public boolean existAny();
+    public boolean existAny();
 
-	/**
-	 * 获取指定节点的所有子代
-	 * 
-	 * @param parentCode
-	 * @return
-	 */
-	public List<Region> findAllChildren(String code);
+    /**
+     * 获取指定节点的所有子代
+     * 
+     * @param parentCode
+     * @return
+     */
+    public List<Region> findAllChildren(String code);
 
-	public Optional<Region> findByCode(String parent);
+    public Optional<Region> findByCode(String parent);
 
-	public Page<Region> find(String keywords, Pageable pageable);
+    public Page<Region> find(String keywords, Pageable pageable);
 }

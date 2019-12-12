@@ -12,28 +12,28 @@ import lombok.Data;
 @JsonInclude(value = Include.NON_EMPTY)
 public class DepartmentDto implements Serializable {
 
-	private static final long serialVersionUID = -4966481409754529111L;
+    private static final long serialVersionUID = -4966481409754529111L;
 
-	private Long id;
+    private Long id;
 
-	private String fullname;
+    private String fullname;
 
-	private String shortname;
+    private String shortname;
 
-	private String description;
+    private String description;
 
-	private Types type;
+    private Types type;
 
-	public DepartmentDto() {
-		super();
-	}
+    public DepartmentDto() {
+        super();
+    }
 
-	public DepartmentDto(Long id) {
-		super();
-		this.id = id;
-	}
+    public DepartmentDto(Long id) {
+        super();
+        this.id = id;
+    }
 
-	@JsonIgnoreProperties({ "parent", "description", "parents" })
-	private DepartmentDto parent;
+    @JsonIgnoreProperties({ "parent", "description", "parents" })
+    private DepartmentDto parent;
 
 }

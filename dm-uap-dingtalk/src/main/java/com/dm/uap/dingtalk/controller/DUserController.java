@@ -11,12 +11,12 @@ import com.dm.uap.dingtalk.service.DUserService;
 @RequestMapping("dUsers")
 public class DUserController {
 
-	@Autowired
-	private DUserService dUserService;
+    @Autowired
+    private DUserService dUserService;
 
-	@PostMapping("sync")
-	public void sync() {
-		dUserService.syncToUap();
-	}
+    @PostMapping("sync")
+    public void sync() {
+        dUserService.syncToUap();
+    }
 
 }

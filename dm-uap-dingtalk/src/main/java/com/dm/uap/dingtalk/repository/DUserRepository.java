@@ -9,6 +9,6 @@ import com.dm.uap.dingtalk.entity.DUser;
 
 public interface DUserRepository extends JpaRepository<DUser, String>, QuerydslPredicateExecutor<DUser> {
 
-	public long deleteByIdNotIn(Set<String> userIds);
+    public long deleteByIdNotIn(Set<String> userIds);
 
 }

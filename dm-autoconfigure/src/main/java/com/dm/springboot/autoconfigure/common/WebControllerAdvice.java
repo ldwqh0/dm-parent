@@ -21,23 +21,23 @@ import com.dm.common.exception.DmRuntimeException;
 @ControllerAdvice
 public class WebControllerAdvice {
 
-	@ExceptionHandler(DmRuntimeException.class)
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> dmRuntimeExceptionHandler(DmRuntimeException e, WebRequest request) {
-		ResponseStatus status = AnnotatedElementUtils.findMergedAnnotation(e.getClass(), ResponseStatus.class);
-		if (!Objects.isNull(status)) {
-			int code = status.code().value();
-			Map<String, Object> result = new HashMap<String, Object>();
-			// TODO 请求路径如何获取？
-			// result.put("path", request.getRequestURI());
-			result.put("error", HttpStatus.valueOf(code).getReasonPhrase());
-			result.put("message", e.getMessage());
-			result.put("status", code);
-			result.put("timestamp", ZonedDateTime.now());
-			return ResponseEntity.status(status.code()).body(result);
+    @ExceptionHandler(DmRuntimeException.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> dmRuntimeExceptionHandler(DmRuntimeException e, WebRequest request) {
+        ResponseStatus status = AnnotatedElementUtils.findMergedAnnotation(e.getClass(), ResponseStatus.class);
+        if (!Objects.isNull(status)) {
+            int code = status.code().value();
+            Map<String, Object> result = new HashMap<String, Object>();
+            // TODO 请求路径如何获取？
+            // result.put("path", request.getRequestURI());
+            result.put("error", HttpStatus.valueOf(code).getReasonPhrase());
+            result.put("message", e.getMessage());
+            result.put("status", code);
+            result.put("timestamp", ZonedDateTime.now());
+            return ResponseEntity.status(status.code()).body(result);
 
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
-	}
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

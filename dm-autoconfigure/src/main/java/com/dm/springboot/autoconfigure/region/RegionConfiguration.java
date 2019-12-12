@@ -35,49 +35,49 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnClass(Region.class)
 @Slf4j
 public class RegionConfiguration {
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	@Autowired
-	private RegionService regionService;
+    @Autowired
+    private RegionService regionService;
 
-	/**
-	 * 初始化区县数据
-	 * 
-	 * @throws Exception
-	 */
-	@PostConstruct
-	public void initRegion() {
-		if (!regionService.existAny()) {
-			try (InputStream iStream = this.getClass().getClassLoader().getResourceAsStream("regions.json")) {
-				MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class,
-						String.class);
-				CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class,
-						elementType);
-				List<Map<String, Object>> result = objectMapper.readValue(iStream, collectionType);
-				if (CollectionUtils.isNotEmpty(result)) {
-					List<RegionDto> regions = result.stream().map(r -> {
-						RegionDto region = new RegionDto();
-						region.setName((String) r.get("name"));
-						region.setCode((String) r.get("code"));
-						region.setLatitude(Double.valueOf(String.valueOf(r.get("lat"))));
-						region.setLongitude(Double.valueOf(String.valueOf(r.get("lng"))));
-						String parentCode = (String) r.get("parent");
-						if (StringUtils.isNotBlank(parentCode)) {
-							RegionDto parent = new RegionDto();
-							parent.setCode(parentCode);
-							region.setParent(parent);
-						}
-						if (StringUtils.isBlank(region.getCode())) {
+    /**
+     * 初始化区县数据
+     * 
+     * @throws Exception
+     */
+    @PostConstruct
+    public void initRegion() {
+        if (!regionService.existAny()) {
+            try (InputStream iStream = this.getClass().getClassLoader().getResourceAsStream("regions.json")) {
+                MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class,
+                        String.class);
+                CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class,
+                        elementType);
+                List<Map<String, Object>> result = objectMapper.readValue(iStream, collectionType);
+                if (CollectionUtils.isNotEmpty(result)) {
+                    List<RegionDto> regions = result.stream().map(r -> {
+                        RegionDto region = new RegionDto();
+                        region.setName((String) r.get("name"));
+                        region.setCode((String) r.get("code"));
+                        region.setLatitude(Double.valueOf(String.valueOf(r.get("lat"))));
+                        region.setLongitude(Double.valueOf(String.valueOf(r.get("lng"))));
+                        String parentCode = (String) r.get("parent");
+                        if (StringUtils.isNotBlank(parentCode)) {
+                            RegionDto parent = new RegionDto();
+                            parent.setCode(parentCode);
+                            region.setParent(parent);
+                        }
+                        if (StringUtils.isBlank(region.getCode())) {
 //							System.out.println(region);
-						}
-						return region;
-					}).collect(Collectors.toList());
-					regionService.save(regions);
-				}
-			} catch (IOException e) {
-				log.error("解析json文件时发生错误", e);
-			}
-		}
-	}
+                        }
+                        return region;
+                    }).collect(Collectors.toList());
+                    regionService.save(regions);
+                }
+            } catch (IOException e) {
+                log.error("解析json文件时发生错误", e);
+            }
+        }
+    }
 }

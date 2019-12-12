@@ -13,11 +13,11 @@ import javax.persistence.Id;
 @Entity(name = "dm_code_type_")
 public class CodeType {
 
-	@Id
-	@Column(name = "name_", length = 100, unique = true)
-	private String name;
+    @Id
+    @Column(name = "name_", length = 100, unique = true)
+    private String name;
 
-	@Column(name = "details", length = 4000)
-	private String details;
+    @Column(name = "details", length = 4000)
+    private String details;
 
 }

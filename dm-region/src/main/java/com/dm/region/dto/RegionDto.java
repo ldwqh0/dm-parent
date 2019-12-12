@@ -14,48 +14,48 @@ import lombok.Data;
 @JsonInclude(Include.NON_EMPTY)
 public class RegionDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 编码
-	 */
-	@NotEmpty
-	@NotEmpty(groups = ReferenceGroup.class)
-	private String code;
+    /**
+     * 编码
+     */
+    @NotEmpty
+    @NotEmpty(groups = ReferenceGroup.class)
+    private String code;
 
-	/**
-	 * 名称
-	 */
-	@NotEmpty
-	private String name;
+    /**
+     * 名称
+     */
+    @NotEmpty
+    private String name;
 
-	private Double longitude;
+    private Double longitude;
 
-	private Double latitude;
+    private Double latitude;
 
-	/**
-	 * 上级编码
-	 */
-	@JsonIgnoreProperties("parent")
-	private RegionDto parent;
+    /**
+     * 上级编码
+     */
+    @JsonIgnoreProperties("parent")
+    private RegionDto parent;
 
-	public RegionDto() {
+    public RegionDto() {
 
-	}
+    }
 
-	public RegionDto(String code, String name, RegionDto parentCode) {
-		this.code = code;
-		this.name = name;
-		this.parent = parentCode;
-	}
+    public RegionDto(String code, String name, RegionDto parentCode) {
+        this.code = code;
+        this.name = name;
+        this.parent = parentCode;
+    }
 
-	public RegionDto(String name) {
-		this.name = name;
-	}
+    public RegionDto(String name) {
+        this.name = name;
+    }
 
-	public RegionDto(String code, String name) {
-		this.code = code;
-		this.name = name;
-	}
+    public RegionDto(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
 
 }

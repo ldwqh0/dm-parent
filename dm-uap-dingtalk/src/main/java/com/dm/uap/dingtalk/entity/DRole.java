@@ -20,34 +20,34 @@ import java.io.Serializable;
 @Setter
 public class DRole implements Serializable {
 
-	private static final long serialVersionUID = -8441406771526246885L;
+    private static final long serialVersionUID = -8441406771526246885L;
 
-	@Id
-	@Column(name = "id_")
-	private Long id;
+    @Id
+    @Column(name = "id_")
+    private Long id;
 
-	@Column(name = "name_")
-	private String name;
+    @Column(name = "name_")
+    private String name;
 
-	@OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
-	@JoinColumn(name = "dm_role_id_")
-	private Role role;
+    @OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
+    @JoinColumn(name = "dm_role_id_")
+    private Role role;
 
-	@ManyToOne(cascade = REFRESH)
-	@JoinColumn(name = "dd_group_id_")
-	private DRoleGroup group;
+    @ManyToOne(cascade = REFRESH)
+    @JoinColumn(name = "dd_group_id_")
+    private DRoleGroup group;
 
-	public DRole() {
-		super();
-	}
+    public DRole() {
+        super();
+    }
 
-	public DRole(Long id) {
-		super();
-		this.id = id;
-	}
+    public DRole(Long id) {
+        super();
+        this.id = id;
+    }
 
-	void setId(Long id) {
-		this.id = id;
-	}
+    void setId(Long id) {
+        this.id = id;
+    }
 
 }

@@ -183,7 +183,8 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     @Override
     public OapiUserGetResponse fetchUserById(String userid) {
         String url = SERVER + "/user/get?access_token={0}&userid={1}";
-        OapiUserGetResponse response = restTemplate.getForObject(url, OapiUserGetResponse.class, getAccessToken(), userid);
+        OapiUserGetResponse response = restTemplate.getForObject(url, OapiUserGetResponse.class, getAccessToken(),
+                userid);
         checkResponse(response);
         if (Objects.isNull(response)) {
             throw new RuntimeException("the response is null");

@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public interface Audit extends Serializable {
 
-	public Long getUserid();
+    public Long getUserid();
 
-	public String getUsername();
+    public String getUsername();
 }

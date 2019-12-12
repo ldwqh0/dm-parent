@@ -10,8 +10,8 @@ import com.dm.uap.entity.Role;
 import com.dm.uap.entity.Role.Status;
 
 public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredicateExecutor<Role> {
-	public List<Role> findByState(Status enabled);
+    public List<Role> findByState(Status enabled);
 
-	public Optional<Role> findByName(String name);
+    public Optional<Role> findByName(String name);
 
 }

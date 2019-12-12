@@ -14,22 +14,22 @@ import lombok.Data;
 @JsonIgnoreProperties(allowSetters = true, value = { "password" })
 public class UserDto implements Serializable {
 
-	private static final long serialVersionUID = 3115204474399309007L;
+    private static final long serialVersionUID = 3115204474399309007L;
 
-	private Long id;
-	private String username;
-	private String fullname;
-	private String password;
-	private Boolean enabled;
-	private String email;
-	private String mobile;
-	private String description;
-	private List<RoleDto> roles;
-	private String scenicName;
-	private String regionCode;
+    private Long id;
+    private String username;
+    private String fullname;
+    private String password;
+    private Boolean enabled;
+    private String email;
+    private String mobile;
+    private String description;
+    private List<RoleDto> roles;
+    private String scenicName;
+    private String regionCode;
 
-	/**
-	 * 用户的职务信息
-	 */
-	private List<UserPostDto> posts;
+    /**
+     * 用户的职务信息
+     */
+    private List<UserPostDto> posts;
 }

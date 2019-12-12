@@ -15,18 +15,18 @@ import com.querydsl.jpa.impl.JPAQuery;
 @Repository
 public class ResourceRepositoryImpl {
 
-	@Autowired
-	private EntityManager em;
+    @Autowired
+    private EntityManager em;
 
-	private final QResource qResource = QResource.resource;
+    private final QResource qResource = QResource.resource;
 
-	public List<String> listScopes() {
-		JPAQuery<?> query = new JPAQuery<>(em);
-		StringPath scope = Expressions.stringPath("scopes");
-		return query.select(scope)
-				.from(qResource)
-				.join(qResource.scope, scope)
-				.distinct()
-				.fetch();
-	}
+    public List<String> listScopes() {
+        JPAQuery<?> query = new JPAQuery<>(em);
+        StringPath scope = Expressions.stringPath("scopes");
+        return query.select(scope)
+                .from(qResource)
+                .join(qResource.scope, scope)
+                .distinct()
+                .fetch();
+    }
 }

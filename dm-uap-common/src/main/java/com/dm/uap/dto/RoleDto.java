@@ -22,20 +22,20 @@ import lombok.Data;
 @Data
 @JsonInclude(value = Include.NON_EMPTY)
 public class RoleDto implements Serializable {
-	private static final long serialVersionUID = 4725729366179649819L;
-	private Long id;
-	private String name;
-	private String description;
-	private Status state;
-	private RoleGroupDto group;
+    private static final long serialVersionUID = 4725729366179649819L;
+    private Long id;
+    private String name;
+    private String description;
+    private Status state;
+    private RoleGroupDto group;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@JsonIgnore
-	private List<UserDto> users;
+    @JsonProperty(access = Access.WRITE_ONLY)
+    @JsonIgnore
+    private List<UserDto> users;
 
-	@JsonIgnoreProperties({ "password", "roles" })
-	public List<UserDto> getUsers() {
-		return users;
-	}
+    @JsonIgnoreProperties({ "password", "roles" })
+    public List<UserDto> getUsers() {
+        return users;
+    }
 
 }

@@ -10,14 +10,14 @@ import com.dm.uap.dingtalk.entity.QDRole;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class DRoleRepositoryImpl {
-	@Autowired
-	private EntityManager em;
+    @Autowired
+    private EntityManager em;
 
-	private final QDRole qDrole = QDRole.dRole;
+    private final QDRole qDrole = QDRole.dRole;
 
-	public void deleteByIdNotIn(Collection<Long> ids) {
-		JPAQueryFactory qf = new JPAQueryFactory(em);
-		qf.delete(qDrole).where(qDrole.id.notIn(ids)).execute();
-	}
+    public void deleteByIdNotIn(Collection<Long> ids) {
+        JPAQueryFactory qf = new JPAQueryFactory(em);
+        qf.delete(qDrole).where(qDrole.id.notIn(ids)).execute();
+    }
 
 }

@@ -18,38 +18,38 @@ import com.dm.security.verification.VerificationCodeStorage;
  */
 public class SessionScopeVerificationCodeStorage implements VerificationCodeStorage {
 
-	private VerificationCode storageCode;
+    private VerificationCode storageCode;
 
-	@Override
-	public VerificationCode get(String id) {
-		return storageCode;
-	}
+    @Override
+    public VerificationCode get(String id) {
+        return storageCode;
+    }
 
-	@Override
-	public VerificationCode get() {
-		return storageCode;
-	}
+    @Override
+    public VerificationCode get() {
+        return storageCode;
+    }
 
-	@Override
-	public void save(VerificationCode code) {
-		this.storageCode = code;
-	}
+    @Override
+    public void save(VerificationCode code) {
+        this.storageCode = code;
+    }
 
-	@Override
-	public VerificationCode remove(String id) {
-		VerificationCode temp = this.storageCode;
-		this.storageCode = null;
-		return temp;
-	}
+    @Override
+    public VerificationCode remove(String id) {
+        VerificationCode temp = this.storageCode;
+        this.storageCode = null;
+        return temp;
+    }
 
-	@Override
-	public boolean validate(String id, String code) {
-		if (Objects.isNull(this.storageCode)) {
-			return false;
-		} else {
-			return StringUtils.equals(code, storageCode.getCode()) &&
-					storageCode.getInvalidateTime().isAfter(ZonedDateTime.now());
-		}
-	}
+    @Override
+    public boolean validate(String id, String code) {
+        if (Objects.isNull(this.storageCode)) {
+            return false;
+        } else {
+            return StringUtils.equals(code, storageCode.getCode()) &&
+                    storageCode.getInvalidateTime().isAfter(ZonedDateTime.now());
+        }
+    }
 
 }

@@ -20,10 +20,10 @@ import com.dm.file.entity.FileInfo;
 @ComponentScan(basePackages = "com.dm.file")
 public class FileConfiguration {
 
-	@Bean
-	@ConfigurationProperties(prefix = "file")
-	public FileConfig fileConfig() {
-		return new FileConfig();
-	}
+    @Bean
+    @ConfigurationProperties(prefix = "file")
+    public FileConfig fileConfig() {
+        return new FileConfig();
+    }
 
 }

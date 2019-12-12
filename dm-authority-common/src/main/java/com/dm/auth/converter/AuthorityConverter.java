@@ -16,50 +16,50 @@ import com.dm.common.exception.DataNotExistException;
 @Component
 public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDto> {
 
-	@Autowired
-	private MenuConverter menuConverter;
+    @Autowired
+    private MenuConverter menuConverter;
 
-	@Autowired
-	private ResourceOperationConverter resourceOperationConverter;
+    @Autowired
+    private ResourceOperationConverter resourceOperationConverter;
 
-	@Override
-	protected AuthorityDto toDtoActual(Authority model) {
-		return null;
-	}
+    @Override
+    protected AuthorityDto toDtoActual(Authority model) {
+        return null;
+    }
 
-	@Override
-	public Authority copyProperties(Authority model, AuthorityDto dto) {
-		throw new NotImplementedException("该方法未实现");
-	}
+    @Override
+    public Authority copyProperties(Authority model, AuthorityDto dto) {
+        throw new NotImplementedException("该方法未实现");
+    }
 
-	public ResourceAuthorityDto toResourceAuthorityDto(Authority authority) {
-		ResourceAuthorityDto dto = new ResourceAuthorityDto();
-		dto.setRoleName(authority.getRoleName());
-		dto.setResourceAuthorities(resourceOperationConverter.toDto(authority.getResourceOperations()));
-		return dto;
-	}
+    public ResourceAuthorityDto toResourceAuthorityDto(Authority authority) {
+        ResourceAuthorityDto dto = new ResourceAuthorityDto();
+        dto.setRoleName(authority.getRoleName());
+        dto.setResourceAuthorities(resourceOperationConverter.toDto(authority.getResourceOperations()));
+        return dto;
+    }
 
-	public MenuAuthorityDto toMenuAuthorityDto(Authority menuAuthority) {
-		MenuAuthorityDto dto = new MenuAuthorityDto();
-		dto.setRoleName(menuAuthority.getRoleName());
-		dto.setAuthorityMenus(menuConverter.toDto(menuAuthority.getMenus()));
-		return dto;
-	}
+    public MenuAuthorityDto toMenuAuthorityDto(Authority menuAuthority) {
+        MenuAuthorityDto dto = new MenuAuthorityDto();
+        dto.setRoleName(menuAuthority.getRoleName());
+        dto.setAuthorityMenus(menuConverter.toDto(menuAuthority.getMenus()));
+        return dto;
+    }
 
-	public MenuAuthorityDto toMenuAuthorityDto(Optional<Authority> authority) {
-		if (authority.isPresent()) {
-			return toMenuAuthorityDto(authority.get());
-		} else {
-			throw new DataNotExistException();
-		}
-	}
+    public MenuAuthorityDto toMenuAuthorityDto(Optional<Authority> authority) {
+        if (authority.isPresent()) {
+            return toMenuAuthorityDto(authority.get());
+        } else {
+            throw new DataNotExistException();
+        }
+    }
 
-	public ResourceAuthorityDto toResourceAuthorityDto(Optional<Authority> authority) {
-		if (authority.isPresent()) {
-			return toResourceAuthorityDto(authority.get());
-		} else {
-			throw new DataNotExistException();
-		}
-	}
+    public ResourceAuthorityDto toResourceAuthorityDto(Optional<Authority> authority) {
+        if (authority.isPresent()) {
+            return toResourceAuthorityDto(authority.get());
+        } else {
+            throw new DataNotExistException();
+        }
+    }
 
 }

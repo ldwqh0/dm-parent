@@ -8,6 +8,6 @@ import com.dm.uap.dingtalk.entity.DRoleGroup;
 
 public interface DRoleGroupRepository extends JpaRepository<DRoleGroup, Long> {
 
-	public void deleteByIdNotIn(List<Long> collect);
+    public void deleteByIdNotIn(List<Long> collect);
 
 }

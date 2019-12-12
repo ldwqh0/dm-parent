@@ -10,9 +10,9 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 @RestController
 public class OauthEndpointController {
 
-	@GetMapping({ "/oauth/users/current" })
-	@ResponseBody
-	public UserDetailsDto getCurrentUser(@CurrentUser UserDetailsDto currentUser) {
-		return currentUser;
-	}
+    @GetMapping({ "/oauth/users/current" })
+    @ResponseBody
+    public UserDetailsDto getCurrentUser(@CurrentUser UserDetailsDto currentUser) {
+        return currentUser;
+    }
 }

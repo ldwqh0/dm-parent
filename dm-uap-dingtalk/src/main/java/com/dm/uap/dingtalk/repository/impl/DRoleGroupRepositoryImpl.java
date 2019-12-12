@@ -11,13 +11,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class DRoleGroupRepositoryImpl {
 
-	@Autowired
-	private EntityManager em;
+    @Autowired
+    private EntityManager em;
 
-	private final QDRoleGroup qDRoleGroup = QDRoleGroup.dRoleGroup;
+    private final QDRoleGroup qDRoleGroup = QDRoleGroup.dRoleGroup;
 
-	public void deleteByIdNotIn(List<Long> collect) {
-		JPAQueryFactory jf = new JPAQueryFactory(em);
-		jf.delete(qDRoleGroup).where(qDRoleGroup.id.notIn(collect)).execute();
-	}
+    public void deleteByIdNotIn(List<Long> collect) {
+        JPAQueryFactory jf = new JPAQueryFactory(em);
+        jf.delete(qDRoleGroup).where(qDRoleGroup.id.notIn(collect)).execute();
+    }
 }

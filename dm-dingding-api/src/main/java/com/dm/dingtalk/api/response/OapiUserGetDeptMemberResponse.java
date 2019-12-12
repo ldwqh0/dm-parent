@@ -10,52 +10,52 @@ import java.util.List;
  */
 public class OapiUserGetDeptMemberResponse extends TaobaoResponse {
 
-	private static final long serialVersionUID = 3349255888911547973L;
+    private static final long serialVersionUID = 3349255888911547973L;
 
-	/**
-	 * errcode
-	 */
-	private Long errcode;
+    /**
+     * errcode
+     */
+    private Long errcode;
 
-	/**
-	 * errmsg
-	 */
-	private String errmsg;
+    /**
+     * errmsg
+     */
+    private String errmsg;
 
-	/**
-	 * userIds
-	 */
-	private List<String> userIds;
+    /**
+     * userIds
+     */
+    private List<String> userIds;
 
-	public void setErrcode(Long errcode) {
-		this.errcode = errcode;
-	}
+    public void setErrcode(Long errcode) {
+        this.errcode = errcode;
+    }
 
-	public Long getErrcode() {
-		return this.errcode;
-	}
+    public Long getErrcode() {
+        return this.errcode;
+    }
 
-	@Override
-	public void setErrmsg(String errmsg) {
-		this.errmsg = errmsg;
-	}
+    @Override
+    public void setErrmsg(String errmsg) {
+        this.errmsg = errmsg;
+    }
 
-	@Override
-	public String getErrmsg() {
-		return this.errmsg;
-	}
+    @Override
+    public String getErrmsg() {
+        return this.errmsg;
+    }
 
-	public void setUserIds(List<String> userIds) {
-		this.userIds = userIds;
-	}
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
+    }
 
-	public List<String> getUserIds() {
-		return this.userIds;
-	}
+    public List<String> getUserIds() {
+        return this.userIds;
+    }
 
-	@Override
-	public boolean isSuccess() {
-		return getErrcode() == null || getErrcode().equals(0L);
-	}
+    @Override
+    public boolean isSuccess() {
+        return getErrcode() == null || getErrcode().equals(0L);
+    }
 
 }

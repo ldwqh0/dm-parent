@@ -11,14 +11,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 @Repository
 public class UserApprovalRepositoryImpl {
 
-	@Autowired
-	private EntityManager em;
+    @Autowired
+    private EntityManager em;
 
-	private QUserApproval qUserApproval = QUserApproval.userApproval;
+    private QUserApproval qUserApproval = QUserApproval.userApproval;
 
-	public void deleteByClientId(String clientId) {
-		JPAQueryFactory fac = new JPAQueryFactory(em);
-		fac.delete(qUserApproval).where(qUserApproval.clientId.eq(clientId)).execute();
-	}
+    public void deleteByClientId(String clientId) {
+        JPAQueryFactory fac = new JPAQueryFactory(em);
+        fac.delete(qUserApproval).where(qUserApproval.clientId.eq(clientId)).execute();
+    }
 
 }

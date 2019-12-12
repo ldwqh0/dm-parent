@@ -8,18 +8,18 @@ import lombok.Data;
 @Data
 public class LoginLogDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	private Long id;
+    private static final long serialVersionUID = 1L;
 
-	private String loginName;
+    private Long id;
 
-	private String ip;
+    private String loginName;
 
-	private String type;
+    private String ip;
 
-	private String result;
+    private String type;
 
-	private ZonedDateTime time;
+    private String result;
+
+    private ZonedDateTime time;
 
 }

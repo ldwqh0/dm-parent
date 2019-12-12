@@ -16,45 +16,45 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class UserRepositoryImpl {
 
-	@Autowired
-	private JPAQueryFactory queryFactory;
+    @Autowired
+    private JPAQueryFactory queryFactory;
 
-	private final QUser qUser = QUser.user;
+    private final QUser qUser = QUser.user;
 
-	private final QDepartment qDepartment = QDepartment.department;
+    private final QDepartment qDepartment = QDepartment.department;
 
-	public List<User> findByDepartment(Department department) {
-		return queryFactory.select(qUser).from(qUser).where(qUser.posts.containsKey(department)).fetch();
-	}
+    public List<User> findByDepartment(Department department) {
+        return queryFactory.select(qUser).from(qUser).where(qUser.posts.containsKey(department)).fetch();
+    }
 
-	/**
-	 * 查询某个部门的用户
-	 * 
-	 * @param dp        要查询的部门
-	 * @param recursive 是否递归查询子部门的用户
-	 * @return
-	 */
-	public List<User> findByDepartment(Department dp, boolean recursive) {
-		if (recursive) {
-			// 获取所有待查询的部门已经其子部门
-			List<User> result = new ArrayList<User>();
-			List<Department> deps = new ArrayList<Department>();
-			deps.add(dp);
-			List<Department> children = findChildren(Collections.singleton(dp));
-			while (CollectionUtils.isNotEmpty(children)) {
-				deps.addAll(children);
-				children = findChildren(children);
-			}
-			deps.forEach(dep -> {
-				result.addAll(findByDepartment(dep));
-			});
-			return result;
-		} else {
-			return findByDepartment(dp);
-		}
-	}
+    /**
+     * 查询某个部门的用户
+     * 
+     * @param dp        要查询的部门
+     * @param recursive 是否递归查询子部门的用户
+     * @return
+     */
+    public List<User> findByDepartment(Department dp, boolean recursive) {
+        if (recursive) {
+            // 获取所有待查询的部门已经其子部门
+            List<User> result = new ArrayList<User>();
+            List<Department> deps = new ArrayList<Department>();
+            deps.add(dp);
+            List<Department> children = findChildren(Collections.singleton(dp));
+            while (CollectionUtils.isNotEmpty(children)) {
+                deps.addAll(children);
+                children = findChildren(children);
+            }
+            deps.forEach(dep -> {
+                result.addAll(findByDepartment(dep));
+            });
+            return result;
+        } else {
+            return findByDepartment(dp);
+        }
+    }
 
-	private List<Department> findChildren(Collection<Department> parents) {
-		return queryFactory.select(qDepartment).from(qDepartment).where(qDepartment.parent.in(parents)).fetch();
-	}
+    private List<Department> findChildren(Collection<Department> parents) {
+        return queryFactory.select(qDepartment).from(qDepartment).where(qDepartment.parent.in(parents)).fetch();
+    }
 }

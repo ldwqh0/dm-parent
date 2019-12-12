@@ -38,170 +38,170 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private UserConverter userConverter;
+    @Autowired
+    private UserConverter userConverter;
 
-	@Autowired
-	private RoleRepository roleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private DepartmentRepository departmentRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
-	@Autowired
-	private DepartmentRepository dpr;
+    @Autowired
+    private DepartmentRepository dpr;
 
-	private final QUser qUser = QUser.user;
+    private final QUser qUser = QUser.user;
 
-	@Override
-	@Transactional
-	public UserDetailsDto loadUserByUsername(String username) {
-		Optional<User> user = userRepository.findOneByUsernameIgnoreCase(username);
-		if (user.isPresent()) {
-			return userConverter.toUserDetailsDto(user);
-		} else {
-			throw new UsernameNotFoundException(username);
-		}
-	}
+    @Override
+    @Transactional
+    public UserDetailsDto loadUserByUsername(String username) {
+        Optional<User> user = userRepository.findOneByUsernameIgnoreCase(username);
+        if (user.isPresent()) {
+            return userConverter.toUserDetailsDto(user);
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
 
-	@Override
-	public boolean exist() {
-		return userRepository.count() > 0;
-	}
+    @Override
+    public boolean exist() {
+        return userRepository.count() > 0;
+    }
 
-	@Override
-	@Transactional
-	public User save(UserDto userDto) {
-		checkUsernameExists(userDto.getId(), userDto.getUsername());
-		User user = new User();
-		userConverter.copyProperties(user, userDto);
-		String password = userDto.getPassword();
-		if (StringUtils.isNotBlank(password)) {
-			user.setPassword(passwordEncoder.encode(password));
-		} else {
-			user.setPassword(null);
-		}
-		addPostsAndRoles(user, userDto);
-		user = userRepository.save(user);
-		user.setOrder(user.getId());
-		return user;
-	}
+    @Override
+    @Transactional
+    public User save(UserDto userDto) {
+        checkUsernameExists(userDto.getId(), userDto.getUsername());
+        User user = new User();
+        userConverter.copyProperties(user, userDto);
+        String password = userDto.getPassword();
+        if (StringUtils.isNotBlank(password)) {
+            user.setPassword(passwordEncoder.encode(password));
+        } else {
+            user.setPassword(null);
+        }
+        addPostsAndRoles(user, userDto);
+        user = userRepository.save(user);
+        user.setOrder(user.getId());
+        return user;
+    }
 
-	/**
-	 * 判断某个用户名是否被占用，检测用户ID!=指定ID
-	 * 
-	 * @param id
-	 * 
-	 * @param usernamee
-	 * @return
-	 */
-	private void checkUsernameExists(Long id, String username) {
+    /**
+     * 判断某个用户名是否被占用，检测用户ID!=指定ID
+     * 
+     * @param id
+     * 
+     * @param usernamee
+     * @return
+     */
+    private void checkUsernameExists(Long id, String username) {
 
-		BooleanBuilder builder = new BooleanBuilder();
-		if (!Objects.isNull(id)) {
-			builder.and(qUser.id.ne(id));
-		}
+        BooleanBuilder builder = new BooleanBuilder();
+        if (!Objects.isNull(id)) {
+            builder.and(qUser.id.ne(id));
+        }
 
-		if (StringUtils.isNotBlank(username)) {
-			builder.and(qUser.username.eq(username));
-		} else {
-			throw new RuntimeException("The username can not be empty");
-		}
-		if (userRepository.exists(builder)) {
-			throw new DataValidateException("用户名已被占用");
-		}
-	}
+        if (StringUtils.isNotBlank(username)) {
+            builder.and(qUser.username.eq(username));
+        } else {
+            throw new RuntimeException("The username can not be empty");
+        }
+        if (userRepository.exists(builder)) {
+            throw new DataValidateException("用户名已被占用");
+        }
+    }
 
-	@Override
-	public Optional<User> get(Long id) {
-		return userRepository.findById(id);
-	}
+    @Override
+    public Optional<User> get(Long id) {
+        return userRepository.findById(id);
+    }
 
-	@Override
-	@Transactional
-	public void delete(Long id) {
-		userRepository.deleteById(id);
-	}
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
 
-	@Override
-	@Transactional
-	public User update(long id, UserDto userDto) {
-		checkUsernameExists(id, userDto.getUsername());
-		User user = userRepository.getOne(id);
-		userConverter.copyProperties(user, userDto);
-		addPostsAndRoles(user, userDto);
-		return user;
-	}
+    @Override
+    @Transactional
+    public User update(long id, UserDto userDto) {
+        checkUsernameExists(id, userDto.getUsername());
+        User user = userRepository.getOne(id);
+        userConverter.copyProperties(user, userDto);
+        addPostsAndRoles(user, userDto);
+        return user;
+    }
 
-	@Override
-	public Page<User> search(String key, Pageable pageable) {
-		if (StringUtils.isNotBlank(key)) {
-			BooleanExpression expression = qUser.username.containsIgnoreCase(key)
-					.or(qUser.fullname.containsIgnoreCase(key));
-			return userRepository.findAll(expression, pageable);
-		} else {
-			return userRepository.findAll(pageable);
-		}
-	}
+    @Override
+    public Page<User> search(String key, Pageable pageable) {
+        if (StringUtils.isNotBlank(key)) {
+            BooleanExpression expression = qUser.username.containsIgnoreCase(key)
+                    .or(qUser.fullname.containsIgnoreCase(key));
+            return userRepository.findAll(expression, pageable);
+        } else {
+            return userRepository.findAll(pageable);
+        }
+    }
 
-	@Override
-	public boolean checkPassword(Long id, String password) {
-		User user = userRepository.getOne(id);
-		return passwordEncoder.matches(password, user.getPassword());
-	}
+    @Override
+    public boolean checkPassword(Long id, String password) {
+        User user = userRepository.getOne(id);
+        return passwordEncoder.matches(password, user.getPassword());
+    }
 
-	@Override
-	@Transactional
-	public User repassword(Long id, String password) {
-		User user = userRepository.getOne(id);
-		user.setPassword(passwordEncoder.encode(password));
-		return user;
-	}
+    @Override
+    @Transactional
+    public User repassword(Long id, String password) {
+        User user = userRepository.getOne(id);
+        user.setPassword(passwordEncoder.encode(password));
+        return user;
+    }
 
-	@Override
-	public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable) {
-		BooleanBuilder query = new BooleanBuilder();
-		if (!Objects.isNull(department)) {
-			Department dep = dpr.getOne(department);
-			query.and(qUser.posts.containsKey(dep));
-		}
-		if (!Objects.isNull(role)) {
-			query.and(qUser.roles.any().id.eq(role));
-		}
-		if (!Objects.isNull(roleGroup)) {
-			query.and(qUser.roles.any().group.id.eq(roleGroup));
-		}
-		if (StringUtils.isNotBlank(key)) {
-			query.and(qUser.username.containsIgnoreCase(key)
-					.or(qUser.fullname.containsIgnoreCase(key)));
-		}
-		return userRepository.findAll(query, pageable);
-	}
+    @Override
+    public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable) {
+        BooleanBuilder query = new BooleanBuilder();
+        if (!Objects.isNull(department)) {
+            Department dep = dpr.getOne(department);
+            query.and(qUser.posts.containsKey(dep));
+        }
+        if (!Objects.isNull(role)) {
+            query.and(qUser.roles.any().id.eq(role));
+        }
+        if (!Objects.isNull(roleGroup)) {
+            query.and(qUser.roles.any().group.id.eq(roleGroup));
+        }
+        if (StringUtils.isNotBlank(key)) {
+            query.and(qUser.username.containsIgnoreCase(key)
+                    .or(qUser.fullname.containsIgnoreCase(key)));
+        }
+        return userRepository.findAll(query, pageable);
+    }
 
-	// 添加用户的职务和角色信息
-	private void addPostsAndRoles(User model, UserDto dto) {
-		List<UserPostDto> posts = dto.getPosts();
-		List<RoleDto> _roles = dto.getRoles();
-		if (CollectionUtils.isNotEmpty(posts)) {
-			Map<Department, String> posts_ = new HashMap<>();
-			posts.forEach(entry -> {
-				posts_.put(departmentRepository.getOne(entry.getDepartment().getId()), entry.getPost());
-			});
-			model.setPosts(posts_);
-		} else {
-			model.setPosts(Collections.emptyMap());
-		}
-		if (CollectionUtils.isNotEmpty(_roles)) {
-			List<Role> roles = _roles.stream().map(RoleDto::getId).map(roleRepository::getOne)
-					.collect(Collectors.toList());
-			model.setRoles(roles);
-		} else {
-			model.setRoles(Collections.emptyList());
-		}
-	}
+    // 添加用户的职务和角色信息
+    private void addPostsAndRoles(User model, UserDto dto) {
+        List<UserPostDto> posts = dto.getPosts();
+        List<RoleDto> _roles = dto.getRoles();
+        if (CollectionUtils.isNotEmpty(posts)) {
+            Map<Department, String> posts_ = new HashMap<>();
+            posts.forEach(entry -> {
+                posts_.put(departmentRepository.getOne(entry.getDepartment().getId()), entry.getPost());
+            });
+            model.setPosts(posts_);
+        } else {
+            model.setPosts(Collections.emptyMap());
+        }
+        if (CollectionUtils.isNotEmpty(_roles)) {
+            List<Role> roles = _roles.stream().map(RoleDto::getId).map(roleRepository::getOne)
+                    .collect(Collectors.toList());
+            model.setRoles(roles);
+        } else {
+            model.setRoles(Collections.emptyList());
+        }
+    }
 }

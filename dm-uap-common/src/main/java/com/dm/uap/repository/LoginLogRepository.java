@@ -5,6 +5,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.dm.uap.entity.LoginLog;
 
-public interface LoginLogRepository extends JpaRepository<LoginLog, Long>,QuerydslPredicateExecutor<LoginLog> {
+public interface LoginLogRepository extends JpaRepository<LoginLog, Long>, QuerydslPredicateExecutor<LoginLog> {
 
 }

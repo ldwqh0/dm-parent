@@ -6,12 +6,12 @@ import lombok.Data;
 
 @Data
 public class UpdatePasswordDto {
-	@NotBlank
-	private String oldPassword;
+    @NotBlank
+    private String oldPassword;
 
-	@NotBlank
-	private String password;
+    @NotBlank
+    private String password;
 
-	@NotBlank
-	private String repassword;
+    @NotBlank
+    private String repassword;
 }

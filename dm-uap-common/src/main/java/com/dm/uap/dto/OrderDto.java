@@ -14,15 +14,15 @@ import lombok.Data;
 @Data
 @JsonInclude(Include.NON_NULL)
 public class OrderDto {
-	/**
-	 * 移动的顺序
-	 * 
-	 * @author LiDong
-	 *
-	 */
-	public enum Position {
-		UP, DOWN
-	}
+    /**
+     * 移动的顺序
+     * 
+     * @author LiDong
+     *
+     */
+    public enum Position {
+        UP, DOWN
+    }
 
-	private Position position;
+    private Position position;
 }

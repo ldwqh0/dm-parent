@@ -21,75 +21,75 @@ import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
  *
  */
 public interface DingTalkService {
-	/**
-	 * 获取accessToken
-	 * 
-	 * @return
-	 */
-	public String getAccessToken();
+    /**
+     * 获取accessToken
+     * 
+     * @return
+     */
+    public String getAccessToken();
 
-	/**
-	 * 根据用户ID获取用户信息
-	 * 
-	 * @param userid
-	 * @return
-	 */
+    /**
+     * 根据用户ID获取用户信息
+     * 
+     * @param userid
+     * @return
+     */
 //	public UserInfo getUserInfoByUserid(String userid);
 
-	/**
-	 * 获取部门列表信息
-	 * 
-	 * @return
-	 */
-	public List<Department> fetchDepartments();
+    /**
+     * 获取部门列表信息
+     * 
+     * @return
+     */
+    public List<Department> fetchDepartments();
 
-	/**
-	 * 获取角色组
-	 * 
-	 * @return
-	 */
-	public List<OpenRoleGroup> fetchRoleGroups();
+    /**
+     * 获取角色组
+     * 
+     * @return
+     */
+    public List<OpenRoleGroup> fetchRoleGroups();
 
-	/**
-	 * 创建一个钉钉用户
-	 * 
-	 * @param request
-	 * @return
-	 */
-	public OapiUserCreateResponse createUser(OapiUserCreateRequest request);
+    /**
+     * 创建一个钉钉用户
+     * 
+     * @param request
+     * @return
+     */
+    public OapiUserCreateResponse createUser(OapiUserCreateRequest request);
 
-	/**
-	 * 更新一个钉钉用户
-	 * 
-	 * @param request
-	 * @return
-	 */
-	public OapiUserUpdateResponse updateUser(OapiUserUpdateRequest request);
+    /**
+     * 更新一个钉钉用户
+     * 
+     * @param request
+     * @return
+     */
+    public OapiUserUpdateResponse updateUser(OapiUserUpdateRequest request);
 
-	/**
-	 * 根据免登录授权码获取用户信息
-	 * 
-	 * @param authCode
-	 * @return
-	 */
-	public OapiUserGetuserinfoResponse getUserByAuthCode(String authCode);
+    /**
+     * 根据免登录授权码获取用户信息
+     * 
+     * @param authCode
+     * @return
+     */
+    public OapiUserGetuserinfoResponse getUserByAuthCode(String authCode);
 
-	/**
-	 * 获取一个部门的用户列表
-	 * 
-	 * @param depId
-	 * @return
-	 */
-	public OapiUserGetDeptMemberResponse fetchUsers(Long depId);
+    /**
+     * 获取一个部门的用户列表
+     * 
+     * @param depId
+     * @return
+     */
+    public OapiUserGetDeptMemberResponse fetchUsers(Long depId);
 
-	/**
-	 * 获取一个用户的信息
-	 * 
-	 * @param userid
-	 * @return
-	 */
-	public OapiUserGetResponse fetchUserById(String userid);
+    /**
+     * 获取一个用户的信息
+     * 
+     * @param userid
+     * @return
+     */
+    public OapiUserGetResponse fetchUserById(String userid);
 
-	public OapiRoleAddrolesforempsResponse batchSetUserRole(Collection<String> userIds, Collection<Long> roleIds);
+    public OapiRoleAddrolesforempsResponse batchSetUserRole(Collection<String> userIds, Collection<Long> roleIds);
 
 }

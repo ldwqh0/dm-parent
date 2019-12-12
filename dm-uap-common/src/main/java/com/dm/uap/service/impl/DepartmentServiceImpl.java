@@ -22,71 +22,71 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
-	private final QDepartment qDepartment = QDepartment.department;
+    private final QDepartment qDepartment = QDepartment.department;
 
-	@Autowired
-	private DepartmentRepository departmentRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
-	@Autowired
-	private DepartmentConverter departmentConverter;
+    @Autowired
+    private DepartmentConverter departmentConverter;
 
-	@Override
-	@Transactional
-	public Department save(DepartmentDto data) {
-		Department department = new Department();
-		departmentConverter.copyProperties(department, data);
-		DepartmentDto parent = data.getParent();
-		if (Objects.isNull(parent)) {
-			department.setParent(null);
-		} else {
-			department.setParent(departmentRepository.getOne(parent.getId()));
-		}
+    @Override
+    @Transactional
+    public Department save(DepartmentDto data) {
+        Department department = new Department();
+        departmentConverter.copyProperties(department, data);
+        DepartmentDto parent = data.getParent();
+        if (Objects.isNull(parent)) {
+            department.setParent(null);
+        } else {
+            department.setParent(departmentRepository.getOne(parent.getId()));
+        }
 
-		Department dep = departmentRepository.save(department);
-		// 设置部门的顺序
-		dep.setOrder(dep.getId());
-		return dep;
-	}
+        Department dep = departmentRepository.save(department);
+        // 设置部门的顺序
+        dep.setOrder(dep.getId());
+        return dep;
+    }
 
-	@Override
-	public Optional<Department> findById(Long id) {
-		return departmentRepository.findById(id);
-	}
+    @Override
+    public Optional<Department> findById(Long id) {
+        return departmentRepository.findById(id);
+    }
 
-	@Override
-	@Transactional
-	public Department update(Long id, DepartmentDto data) {
-		Department department = departmentRepository.getOne(id);
-		departmentConverter.copyProperties(department, data);
-		DepartmentDto parent = data.getParent();
-		if (!Objects.isNull(parent)) {
-			department.setParent(departmentRepository.getOne(parent.getId()));
-		} else {
-			department.setParent(null);
-		}
-		return departmentRepository.save(department);
-	}
+    @Override
+    @Transactional
+    public Department update(Long id, DepartmentDto data) {
+        Department department = departmentRepository.getOne(id);
+        departmentConverter.copyProperties(department, data);
+        DepartmentDto parent = data.getParent();
+        if (!Objects.isNull(parent)) {
+            department.setParent(departmentRepository.getOne(parent.getId()));
+        } else {
+            department.setParent(null);
+        }
+        return departmentRepository.save(department);
+    }
 
-	@Override
-	@Transactional
-	public void deleteById(Long id) {
-		departmentRepository.deleteById(id);
-	}
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        departmentRepository.deleteById(id);
+    }
 
-	@Override
-	public Page<Department> find(String key, Pageable pageable) {
-		if (StringUtils.isBlank(key)) {
-			return departmentRepository.findAll(pageable);
-		} else {
-			BooleanExpression query = qDepartment.fullname.containsIgnoreCase(key)
-					.or(qDepartment.shortname.containsIgnoreCase(key))
-					.or(qDepartment.description.containsIgnoreCase(key));
-			return departmentRepository.findAll(query, pageable);
-		}
-	}
+    @Override
+    public Page<Department> find(String key, Pageable pageable) {
+        if (StringUtils.isBlank(key)) {
+            return departmentRepository.findAll(pageable);
+        } else {
+            BooleanExpression query = qDepartment.fullname.containsIgnoreCase(key)
+                    .or(qDepartment.shortname.containsIgnoreCase(key))
+                    .or(qDepartment.description.containsIgnoreCase(key));
+            return departmentRepository.findAll(query, pageable);
+        }
+    }
 
-	@Override
-	public List<Department> findAll() {
-		return departmentRepository.findAll();
-	}
+    @Override
+    public List<Department> findAll() {
+        return departmentRepository.findAll();
+    }
 }

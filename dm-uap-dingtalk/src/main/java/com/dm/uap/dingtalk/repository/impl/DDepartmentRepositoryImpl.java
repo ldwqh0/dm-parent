@@ -11,12 +11,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class DDepartmentRepositoryImpl {
 
-	@Autowired
-	public EntityManager em;
-	private final QDDepartment qdDepartment = QDDepartment.dDepartment;
+    @Autowired
+    public EntityManager em;
+    private final QDDepartment qdDepartment = QDDepartment.dDepartment;
 
-	public void deleteByIdNotIn(List<Long> ids) {
-		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-		queryFactory.delete(qdDepartment).where(qdDepartment.id.notIn(ids)).execute();
-	}
+    public void deleteByIdNotIn(List<Long> ids) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        queryFactory.delete(qdDepartment).where(qdDepartment.id.notIn(ids)).execute();
+    }
 }

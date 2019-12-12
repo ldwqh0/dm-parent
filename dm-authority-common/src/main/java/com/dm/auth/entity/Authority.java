@@ -32,29 +32,29 @@ import lombok.Setter;
 @Setter
 public class Authority implements Serializable {
 
-	private static final long serialVersionUID = 1819180600973309677L;
+    private static final long serialVersionUID = 1819180600973309677L;
 
-	@Column(name = "role_id_")
-	private Long id;
+    @Column(name = "role_id_")
+    private Long id;
 
-	@Id
-	@Column(name = "role_name_", length = 100)
-	private String roleName;
+    @Id
+    @Column(name = "role_name_", length = 100)
+    private String roleName;
 
-	@Column(name = "description_")
-	private String description;
+    @Column(name = "description_")
+    private String description;
 
-	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-	@JoinTable(name = "dm_authority_menu_", joinColumns = {
-			@JoinColumn(name = "role_name_", referencedColumnName = "role_name_") }, inverseJoinColumns = {
-					@JoinColumn(name = "menu_id_", referencedColumnName = "id_") }, indexes = {
-							@Index(columnList = "role_name_", name = "IDX_dm_authority_menu_role_name_") })
-	private Set<Menu> menus;
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(name = "dm_authority_menu_", joinColumns = {
+            @JoinColumn(name = "role_name_", referencedColumnName = "role_name_") }, inverseJoinColumns = {
+                    @JoinColumn(name = "menu_id_", referencedColumnName = "id_") }, indexes = {
+                            @Index(columnList = "role_name_", name = "IDX_dm_authority_menu_role_name_") })
+    private Set<Menu> menus;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@JoinTable(name = "dm_authority_resource_operation_", joinColumns = {
-			@JoinColumn(name = "role_name_", referencedColumnName = "role_name_") })
-	@OrderColumn(name = "order_by_")
-	private Set<ResourceOperation> resourceOperations;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(name = "dm_authority_resource_operation_", joinColumns = {
+            @JoinColumn(name = "role_name_", referencedColumnName = "role_name_") })
+    @OrderColumn(name = "order_by_")
+    private Set<ResourceOperation> resourceOperations;
 
 }

@@ -27,88 +27,88 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
-	@Autowired
-	private ResourceRepository resourceRepository;
+    @Autowired
+    private ResourceRepository resourceRepository;
 
-	@Autowired
-	private ResourceConverter resourceConverter;
+    @Autowired
+    private ResourceConverter resourceConverter;
 
-	@Autowired
-	private AuthorityRepository authorityRepository;
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
-	private final QResource qResource = QResource.resource;
+    private final QResource qResource = QResource.resource;
 
-	@Override
-	@Transactional
-	public Resource save(ResourceDto dto) {
-		Resource resource = new Resource();
-		resourceConverter.copyProperties(resource, dto);
-		return resourceRepository.save(resource);
-	}
+    @Override
+    @Transactional
+    public Resource save(ResourceDto dto) {
+        Resource resource = new Resource();
+        resourceConverter.copyProperties(resource, dto);
+        return resourceRepository.save(resource);
+    }
 
-	@Override
-	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public void deleteById(Long id) {
-		List<Authority> authorities = authorityRepository.findByResourceOperationsResourceId(id);
-		for (Authority authority : authorities) {
-			Iterator<ResourceOperation> iterator = authority.getResourceOperations().iterator();
-			while (iterator.hasNext()) {
-				ResourceOperation operation = iterator.next();
-				if (Objects.equals(operation.getResource().getId(), id)) {
-					iterator.remove();
-				}
-			}
-		}
-		resourceRepository.deleteById(id);
-	}
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public void deleteById(Long id) {
+        List<Authority> authorities = authorityRepository.findByResourceOperationsResourceId(id);
+        for (Authority authority : authorities) {
+            Iterator<ResourceOperation> iterator = authority.getResourceOperations().iterator();
+            while (iterator.hasNext()) {
+                ResourceOperation operation = iterator.next();
+                if (Objects.equals(operation.getResource().getId(), id)) {
+                    iterator.remove();
+                }
+            }
+        }
+        resourceRepository.deleteById(id);
+    }
 
-	@Override
-	@Transactional
-	public Resource update(Long id, ResourceDto dto) {
-		Resource resource = resourceRepository.getOne(id);
-		resourceConverter.copyProperties(resource, dto);
-		return resource;
-	}
+    @Override
+    @Transactional
+    public Resource update(Long id, ResourceDto dto) {
+        Resource resource = resourceRepository.getOne(id);
+        resourceConverter.copyProperties(resource, dto);
+        return resource;
+    }
 
-	@Override
-	public Page<Resource> search(String keywords, Pageable pageable) {
-		if (StringUtils.isNotBlank(keywords)) {
-			BooleanExpression expression = qResource.description.containsIgnoreCase(keywords);
-			expression.or(qResource.matcher.containsIgnoreCase(keywords));
-			return resourceRepository.findAll(expression, pageable);
-		} else {
-			return resourceRepository.findAll(pageable);
-		}
-	}
+    @Override
+    public Page<Resource> search(String keywords, Pageable pageable) {
+        if (StringUtils.isNotBlank(keywords)) {
+            BooleanExpression expression = qResource.description.containsIgnoreCase(keywords);
+            expression.or(qResource.matcher.containsIgnoreCase(keywords));
+            return resourceRepository.findAll(expression, pageable);
+        } else {
+            return resourceRepository.findAll(pageable);
+        }
+    }
 
-	@Override
-	public Optional<Resource> findById(Long id) {
-		return resourceRepository.findById(id);
-	}
+    @Override
+    public Optional<Resource> findById(Long id) {
+        return resourceRepository.findById(id);
+    }
 
-	@Override
-	public List<Resource> listAll() {
-		return resourceRepository.findAll();
-	}
+    @Override
+    public List<Resource> listAll() {
+        return resourceRepository.findAll();
+    }
 
-	@Override
-	public boolean exist() {
-		return resourceRepository.count() > 0;
-	}
+    @Override
+    public boolean exist() {
+        return resourceRepository.count() > 0;
+    }
 
-	@Override
-	public Optional<Resource> findByName(String name) {
-		return resourceRepository.findByName(name);
-	}
+    @Override
+    public Optional<Resource> findByName(String name) {
+        return resourceRepository.findByName(name);
+    }
 
-	@Override
-	public List<Resource> findByIdNotIn(List<Long> ids) {
-		return resourceRepository.findByIdNotIn(ids);
-	}
+    @Override
+    public List<Resource> findByIdNotIn(List<Long> ids) {
+        return resourceRepository.findByIdNotIn(ids);
+    }
 
-	@Override
-	public List<String> listScopes() {
-		return resourceRepository.listScopes();
-	}
+    @Override
+    public List<String> listScopes() {
+        return resourceRepository.listScopes();
+    }
 
 }

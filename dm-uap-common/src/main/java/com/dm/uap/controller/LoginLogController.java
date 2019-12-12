@@ -25,6 +25,6 @@ public class LoginLogController {
     public Page<LoginLogDto> search(
             Pageable pageable,
             @RequestParam(value = "key", required = false) String query) {
-        return loginLogService.list(query, pageable).map(loginLogConverter::toDto) ;
+        return loginLogService.list(query, pageable).map(loginLogConverter::toDto);
     }
 }

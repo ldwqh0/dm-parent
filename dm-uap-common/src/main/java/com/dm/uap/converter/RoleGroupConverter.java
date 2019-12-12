@@ -9,20 +9,20 @@ import com.dm.uap.entity.RoleGroup;
 @Component
 public class RoleGroupConverter extends AbstractConverter<RoleGroup, RoleGroupDto> {
 
-	@Override
-	protected RoleGroupDto toDtoActual(RoleGroup model) {
-		RoleGroupDto dto = new RoleGroupDto();
-		dto.setId(model.getId());
-		dto.setDescription(model.getDescription());
-		dto.setName(model.getName());
-		return dto;
-	}
+    @Override
+    protected RoleGroupDto toDtoActual(RoleGroup model) {
+        RoleGroupDto dto = new RoleGroupDto();
+        dto.setId(model.getId());
+        dto.setDescription(model.getDescription());
+        dto.setName(model.getName());
+        return dto;
+    }
 
-	@Override
-	public RoleGroup copyProperties(RoleGroup model, RoleGroupDto dto) {
-		model.setDescription(dto.getDescription());
-		model.setName(dto.getName());
-		return model;
-	}
+    @Override
+    public RoleGroup copyProperties(RoleGroup model, RoleGroupDto dto) {
+        model.setDescription(dto.getDescription());
+        model.setName(dto.getName());
+        return model;
+    }
 
 }

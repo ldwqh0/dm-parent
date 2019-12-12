@@ -13,16 +13,16 @@ import com.dm.uap.dingtalk.service.DRoleGroupService;
 @RequestMapping("dRoleGroups")
 public class DRoleGroupController {
 
-	@Autowired
-	private DRoleGroupService dRoleGroupService;
+    @Autowired
+    private DRoleGroupService dRoleGroupService;
 
-	@PostMapping("sync")
-	public void sync() {
-		dRoleGroupService.syncToUap();
-	}
+    @PostMapping("sync")
+    public void sync() {
+        dRoleGroupService.syncToUap();
+    }
 
-	@DeleteMapping("{id}")
-	public void deleteById(@PathVariable("id") Long id) {
-		dRoleGroupService.deleteById(id);
-	}
+    @DeleteMapping("{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        dRoleGroupService.deleteById(id);
+    }
 }

@@ -13,11 +13,11 @@ import com.dm.auth.service.ResourceService;
 @RestController
 public class ScopeController {
 
-	@Autowired
-	private ResourceService resourceService;
+    @Autowired
+    private ResourceService resourceService;
 
-	@GetMapping
-	public List<String> listScope() {
-		return resourceService.listScopes();
-	}
+    @GetMapping
+    public List<String> listScope() {
+        return resourceService.listScopes();
+    }
 }

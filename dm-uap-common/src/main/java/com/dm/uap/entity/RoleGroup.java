@@ -15,24 +15,24 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RoleGroup extends AbstractEntity {
-	private static final long serialVersionUID = 3288697536654269610L;
+    private static final long serialVersionUID = 3288697536654269610L;
 
-	@Column(name = "name_", nullable = false, unique = true, length = 100)
-	private String name;
+    @Column(name = "name_", nullable = false, unique = true, length = 100)
+    private String name;
 
-	@Column(name = "description_", length = 2000)
-	private String description;
+    @Column(name = "description_", length = 2000)
+    private String description;
 
-	@OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
-	private Set<Role> roles;
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
+    private Set<Role> roles;
 
-	public RoleGroup() {
-		super();
-	}
+    public RoleGroup() {
+        super();
+    }
 
-	public RoleGroup(String name) {
-		super();
-		this.name = name;
-	}
+    public RoleGroup(String name) {
+        super();
+        this.name = name;
+    }
 
 }

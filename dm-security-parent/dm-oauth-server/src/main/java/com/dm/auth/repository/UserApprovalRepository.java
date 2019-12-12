@@ -9,8 +9,8 @@ import com.dm.auth.entity.UserApprovalPK;
 
 public interface UserApprovalRepository extends JpaRepository<UserApproval, UserApprovalPK> {
 
-	public List<UserApproval> findByClientIdAndUserId(String clientId, String userId);
+    public List<UserApproval> findByClientIdAndUserId(String clientId, String userId);
 
-	public void deleteByClientId(String clientId);
+    public void deleteByClientId(String clientId);
 
 }
