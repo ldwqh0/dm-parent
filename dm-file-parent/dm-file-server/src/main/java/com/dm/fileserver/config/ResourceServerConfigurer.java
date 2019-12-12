@@ -1,34 +1,29 @@
 package com.dm.fileserver.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
-import com.dm.security.oauth2.server.resource.introspection.UserInfoOpaqueTokenIntrospector;
-
-@EnableWebSecurity
-public class ResourceServerConfigurer extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private OAuth2ResourceServerProperties properties;
-
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.GET).permitAll()
-                .anyRequest().authenticated();
-        http.oauth2ResourceServer()
-                .opaqueToken().introspector(opaqueTokenIntrospector());
-    }
-
+@EnableWebFluxSecurity
+//@Configuration
+public class ResourceServerConfigurer {
     @Bean
-    public OpaqueTokenIntrospector opaqueTokenIntrospector() {
-        return new UserInfoOpaqueTokenIntrospector(properties.getOpaquetoken().getIntrospectionUri());
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http
+                .authorizeExchange().anyExchange().authenticated()
+                .and().oauth2ResourceServer().bearerTokenConverter(exchange -> {
+                    var s = exchange.getPrincipal();
+                    s.map(p -> {
+                        System.out.println(p);
+                        return p;
+                    });
+                    return null;
+                }).opaqueToken();
+//                .httpBasic(Customizer.withDefaults())
+//                .formLogin(Customizer.withDefaults());
+        return http.build();
     }
-
 }

@@ -34,6 +34,13 @@
 			<artifactId>spring-security-config</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.dm</groupId>
 			<artifactId>dm-uap-common</artifactId>
