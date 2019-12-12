@@ -8,31 +8,29 @@
     <artifactId>dm-security-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>dm-resource-server-spring-boot-starter</artifactId>
+  <artifactId>dm-security-resource-server</artifactId>
   <dependencies>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-core</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>com.dm</groupId>
-      <artifactId>dm-common</artifactId>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webflux</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-oauth2-resource-server</artifactId>
     </dependency>
     <dependency>
       <groupId>com.dm</groupId>
       <artifactId>dm-security-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.dm</groupId>
-      <artifactId>dm-security-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.dm</groupId>
-      <artifactId>dm-security-resource-server</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.dm</groupId>
-      <artifactId>dm-autoconfigure</artifactId>
     </dependency>
   </dependencies>
 </project>

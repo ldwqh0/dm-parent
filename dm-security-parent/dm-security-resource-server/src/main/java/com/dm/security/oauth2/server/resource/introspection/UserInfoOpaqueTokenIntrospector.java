@@ -14,7 +14,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class UserInfoOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
-    private String url = "http://localhost:8887/oauth/users/current";
+    private String url = "";
     private RestTemplate restTemplate;
 
     private PrincipalExtractor principalExtractor = new UserDetailsDtoPrincipalExtractor();

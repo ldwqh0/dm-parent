@@ -15,11 +15,11 @@ public class ResourceServerConfigurer {
         http
                 .authorizeExchange().anyExchange().authenticated()
                 .and().oauth2ResourceServer().bearerTokenConverter(exchange -> {
-                    var s = exchange.getPrincipal();
-                    s.map(p -> {
-                        System.out.println(p);
-                        return p;
-                    });
+//                    var s = exchange.getPrincipal();
+//                    s.map(p -> {
+//                        System.out.println(p);
+//                        return p;
+//                    });
                     return null;
                 }).opaqueToken();
 //                .httpBasic(Customizer.withDefaults())

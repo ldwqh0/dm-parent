@@ -167,6 +167,11 @@
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
+        <artifactId>dm-security-resource-server</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
         <artifactId>dm-resource-server-spring-boot-starter</artifactId>
         <version>${dm.version}</version>
       </dependency>
