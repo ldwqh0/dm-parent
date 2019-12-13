@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.multipart.MultipartRequest;
 
 import com.dm.common.exception.DataNotExistException;
 import com.dm.file.config.FileConfig;
@@ -105,21 +104,15 @@ public class FileController {
      * @throws Exception
      */
     @PostMapping(headers = { "chunk-index" })
-//	@ApiOperation("文件分块上传文件")''
+    @ApiOperation("文件分块上传文件")
     public FileInfoDto upload(
-            @RequestHeader("chunk-index") Long chunkIndex, // 块
+            @RequestHeader("chunk-index") Long chunkIndex,
             @RequestHeader("file-id") String tempId,
             @RequestHeader("chunk-count") int chunkCount,
             @RequestParam("filename") String filename,
             MultipartFile mFile) throws Exception {
-
-//        Collection<MultipartFile> files = request.getFileMap().values();
-//        if (CollectionUtils.isNotEmpty(files)) {
-//            MultipartFile mFile = files.iterator().next();
         String tempName = config.getTempPath() + tempId + "." + chunkIndex;
         mFile.transferTo(new File(tempName));
-//        }
-        // 这个标记代表块完成
         if (chunkIndex == chunkCount - 1) {
             File target = new File(config.getTempPath() + tempId + "." + StringUtils.substringAfter(filename, "."));
             File[] src = new File[chunkCount];
@@ -135,7 +128,6 @@ public class FileController {
         } else {
             return null;
         }
-
     }
 
     // 使用produces指定可以接受的accept类型，当accept中包含如下信息时，返回图片
@@ -181,14 +173,13 @@ public class FileController {
             "image/webp",
             "image/*",
             "*/*" })
-    public ResponseEntity<InputStreamResource> preview(
+    public ResponseEntity<?> preview(
             @PathVariable("id") UUID id,
             @RequestParam(value = "level", defaultValue = "1") int level,
             WebRequest request) {
-
-        Optional<FileInfo> file = fileService.findById(id);
-        if (file.isPresent()) {
-            Optional<ZonedDateTime> lastModify = file.get().getLastModifiedDate();
+        Optional<FileInfo> fileOptional = fileService.findById(id);
+        return fileOptional.map((file) -> {
+            Optional<ZonedDateTime> lastModify = file.getLastModifiedDate();
             if (lastModify.isPresent() && request.checkNotModified(lastModify.get().toInstant().toEpochMilli())) {
                 return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
             } else {
@@ -196,16 +187,14 @@ public class FileController {
                     return ResponseEntity.ok().lastModified(lastModify.get())
                             .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
                             .contentType(MediaType.IMAGE_JPEG)
-                            .body(new InputStreamResource(thumbnailService.getStream(file.get().getPath(), level)));
+                            .body(new InputStreamResource(thumbnailService.getStream(file.getPath(), level)));
                 } catch (FileNotFoundException e) {
                     return ResponseEntity.notFound().build();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -291,7 +280,6 @@ public class FileController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     /**

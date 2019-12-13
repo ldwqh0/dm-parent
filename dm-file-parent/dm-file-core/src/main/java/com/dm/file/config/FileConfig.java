@@ -131,6 +131,7 @@ public class FileConfig {
         this.mime.put("pml", "application/x-perfmon");
         this.mime.put("pmr", "application/x-perfmon");
         this.mime.put("pmw", "application/x-perfmon");
+        this.mime.put("png", "image/png");
         this.mime.put("pnm", "image/x-portable-anymap");
         this.mime.put("pot,", "application/vnd.ms-powerpoint");
         this.mime.put("ppm", "image/x-portable-pixmap");

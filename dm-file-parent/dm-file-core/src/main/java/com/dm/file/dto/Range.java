@@ -17,14 +17,14 @@ import lombok.Data;
  * @since 0.2.3
  *
  */
-@Data
-public class Range {
-    long start;
-    long end;
 
-    public long getContentLength() {
-        return end - start + 1;
-    }
+public interface Range {
+
+    public long getStart();
+
+    public long getEnd();
+
+    public long getContentLength();
 
     public static Range of(String str, long count) throws RangeNotSatisfiableException {
         try {
@@ -34,7 +34,7 @@ public class Range {
             if (str.endsWith("-")) {
                 String num = StringUtils.stripEnd(str, "-").trim();
                 if (NumberUtils.isCreatable(num)) {
-                    return new Range(NumberUtils.toLong(num), count - 1);
+                    return new RangeImpl(NumberUtils.toLong(num), count - 1);
                 } else {
                     throw new RangeNotSatisfiableException();
                 }
@@ -47,7 +47,7 @@ public class Range {
                     if (start < 0) {
                         start = 0;
                     }
-                    return new Range(start, count - 1);
+                    return new RangeImpl(start, count - 1);
                 } else {
                     throw new RangeNotSatisfiableException();
                 }
@@ -61,7 +61,7 @@ public class Range {
                 if (end < start || end > count) {
                     throw new RangeNotSatisfiableException();
                 } else {
-                    return new Range(start, end);
+                    return new RangeImpl(start, end);
                 }
             } else {
                 throw new RangeNotSatisfiableException();
@@ -85,9 +85,19 @@ public class Range {
         return result;
     }
 
-    private Range(long start, long end) {
-        this.start = start;
-        this.end = end;
+    @Data
+    static class RangeImpl implements Range {
+        private long start;
+        private long end;
+
+        public long getContentLength() {
+            return end - start + 1;
+        }
+
+        public RangeImpl(long start, long end) {
+            this.start = start;
+            this.end = end;
+        }
     }
 
 }
