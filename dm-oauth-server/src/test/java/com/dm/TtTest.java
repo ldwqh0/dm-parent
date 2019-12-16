@@ -11,18 +11,14 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.codec.DecoderException;
 
-public class TtTest {
-	private static final String algorithm = "DES";
+import com.dm.auth.security.AesUtil;
 
-	private static final byte[] securityKey = "rereabewrewrewrwerc".getBytes();
+public class TtTest {
 
 	public static void main(String[] args)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
 			BadPaddingException, InvalidKeySpecException, UnsupportedEncodingException, DecoderException {
-		System.out.println(DesUtil.encrypt("20192124", "adgas5555555555555dg"));
-
-		System.out.println(DesUtil.decrypt("14b672b2d334af2333cadf68a2d21b06", "adgas5555555555555dg"));
-		;
+		System.out.println(AesUtil.encrypt("2019-12-21T00:00:00.000+08:00", "我都不知道我要输入一段什么样的文本来加密这个内容"));
 	}
 
 }

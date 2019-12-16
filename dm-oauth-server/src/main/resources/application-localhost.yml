@@ -21,9 +21,5 @@ spring:
     hibernate:
       use-new-id-generator-mappings: true
       ddl-auto: update
-#  redis:
-#    host: 127.0.0.1
-#    port: 6379
-#    database: 9
   thymeleaf:
     cache: false

@@ -16,11 +16,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.dm.auth.security.SavedRequestAwareAuthenticationAndLoggingSuccessHandler;
 import com.dm.auth.security.SimpleUrlAuthenticationLoginLogFailureHandler;
+import com.dm.auth.security.TermOfValidityFilter;
 import com.dm.uap.service.LoginLogService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigure extends WebSecurityConfigurerAdapter {
+
+	@Value("${system.authorization.key}")
+	private String authorizationKey;
 
 	@Autowired
 	private UserDetailsService userService;
@@ -44,8 +48,8 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 				.and().formLogin()
 				.loginPage("/oauth/login.html").loginProcessingUrl("/oauth/login").permitAll()
 				.failureHandler(authenticationFailureHandler())
-				.successHandler(authenticationSuccessHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
-				.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/oauth/logout"))
+				.successHandler(authenticationSuccessHandler())
+				.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/oauth/logout"))// .defaultSuccessUrl(defaultSuccessUrl)
 				.and().httpBasic().disable();
 	}
 
@@ -66,7 +70,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		super.configure(auth);
+//		super.configure(auth);
 		auth.userDetailsService(userService);
 	}
 
@@ -74,6 +78,11 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
+	}
+
+	@Bean
+	public TermOfValidityFilter termOfValidityFilter() {
+		return new TermOfValidityFilter(authorizationKey);
 	}
 
 }
