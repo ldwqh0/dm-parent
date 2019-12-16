@@ -1,0 +1,5 @@
+spring:
+  profiles:    active:    - lidong  cloud:    gateway:      routes:      - id: files
+        uri: http://127.0.0.1:8886
+        filters:        - StripPrefix=1
+        predicates:        - Path=/d/files**/**

@@ -6,12 +6,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClas
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 
 @Configuration
 @ConditionalOnClass(ReactiveAuthenticationManager.class)
-@ConditionalOnMissingBean(WebSecurityConfigurerAdapter.class)
+@ConditionalOnMissingBean(type = {"org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter"})
 @ConditionalOnMissingClass({ "javax.servlet.Servlet" })
 public class ReactiveSecurityConfiguration {
 

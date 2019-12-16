@@ -41,6 +41,7 @@
     <module>dm-file-parent</module>
     <module>dm-code</module>
     <module>dm-security-parent</module>
+    <module>dm-gateway-server</module>
   </modules>
   <packaging>pom</packaging>
   <dependencyManagement>

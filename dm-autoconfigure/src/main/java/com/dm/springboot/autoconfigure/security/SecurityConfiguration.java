@@ -8,7 +8,6 @@ import javax.servlet.Servlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,8 +22,7 @@ import com.dm.security.web.authentication.LoginFailureHandler;
 import com.dm.security.web.authentication.LoginSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Configuration
-@ConditionalOnClass({ Servlet.class })
+@ConditionalOnClass({ Servlet.class, WebSecurityConfigurerAdapter.class })
 @ConditionalOnMissingBean({ WebSecurityConfigurerAdapter.class, SecurityWebFilterChain.class })
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
