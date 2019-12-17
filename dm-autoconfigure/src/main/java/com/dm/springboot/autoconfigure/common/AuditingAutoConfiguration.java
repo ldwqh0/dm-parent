@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.AuditingHandler;
@@ -40,6 +41,7 @@ public class AuditingAutoConfiguration {
     }
 
     @Configuration
+    @ConditionalOnClass(AuditorAware.class)
     @ConditionalOnMissingBean(AuditorAware.class)
     public static class SimpleAuditorAware implements AuditorAware<Audit> {
         @Override

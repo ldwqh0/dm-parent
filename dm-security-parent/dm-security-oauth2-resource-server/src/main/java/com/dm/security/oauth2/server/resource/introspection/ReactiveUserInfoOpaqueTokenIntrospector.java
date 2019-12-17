@@ -6,6 +6,9 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.server.resource.introspection.ReactiveOpaqueTokenIntrospector;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.dm.security.oauth2.core.PrincipalExtractor;
+import com.dm.security.oauth2.core.UserDetailsDtoPrincipalExtractor;
+
 import reactor.core.publisher.Mono;
 
 public class ReactiveUserInfoOpaqueTokenIntrospector implements ReactiveOpaqueTokenIntrospector {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import com.dm.common.exception.DmRuntimeException;
 
 @Configuration
 @ControllerAdvice
+@ConditionalOnClass(DmRuntimeException.class)
 public class WebControllerAdvice {
 
     @ExceptionHandler(DmRuntimeException.class)
@@ -35,7 +37,6 @@ public class WebControllerAdvice {
             result.put("status", code);
             result.put("timestamp", ZonedDateTime.now());
             return ResponseEntity.status(status.code()).body(result);
-
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

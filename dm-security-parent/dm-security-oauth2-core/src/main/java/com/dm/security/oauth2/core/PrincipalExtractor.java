@@ -1,4 +1,4 @@
-package com.dm.security.oauth2.server.resource.introspection;
+package com.dm.security.oauth2.core;
 
 
 import java.util.Map;

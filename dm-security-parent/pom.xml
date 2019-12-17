@@ -14,7 +14,9 @@
     <module>dm-security-core</module>
     <module>dm-security-web</module>
     <module>dm-security-mp</module>
-    <module>dm-security-resource-server</module>
+    <module>dm-security-oauth2-core</module>
+    <module>dm-security-oauth2-client</module>
+    <module>dm-security-oauth2-resource-server</module>
     <module>dm-resource-server-spring-boot-starter</module>
     <module>dm-security-spring-boot-starter</module>
   </modules>

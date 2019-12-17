@@ -13,6 +13,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.dm.security.oauth2.core.PrincipalExtractor;
+import com.dm.security.oauth2.core.UserDetailsDtoPrincipalExtractor;
+
 public class UserInfoOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
     private String url = "";
     private RestTemplate restTemplate;

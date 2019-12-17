@@ -41,7 +41,7 @@
     <module>dm-file-parent</module>
     <module>dm-code</module>
     <module>dm-security-parent</module>
-    <module>dm-gateway-server</module>
+    <!-- <module>dm-gateway-server</module> -->
   </modules>
   <packaging>pom</packaging>
   <dependencyManagement>
@@ -163,12 +163,22 @@
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
+        <artifactId>dm-security-mp</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
         <artifactId>dm-security-web</artifactId>
         <version>${dm.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
-        <artifactId>dm-security-resource-server</artifactId>
+        <artifactId>dm-security-oauth2-core</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-security-oauth2-resource-server</artifactId>
         <version>${dm.version}</version>
       </dependency>
       <dependency>
@@ -184,11 +194,6 @@
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-file-spring-boot-starter</artifactId>
-        <version>${dm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dm</groupId>
-        <artifactId>dm-security-mp</artifactId>
         <version>${dm.version}</version>
       </dependency>
     </dependencies>

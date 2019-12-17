@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>com.dm</groupId>
-      <artifactId>dm-security-resource-server</artifactId>
+      <artifactId>dm-security-oauth2-resource-server</artifactId>
     </dependency>
     <dependency>
       <groupId>com.dm</groupId>
