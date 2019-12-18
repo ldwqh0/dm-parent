@@ -44,6 +44,7 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
     @Override
     public Mono<OAuth2User> loadUser(OAuth2UserRequest userRequest)
             throws OAuth2AuthenticationException {
+//        userRequest.getAccessToken().getScopes()
         return Mono.defer(() -> {
             Assert.notNull(userRequest, "userRequest cannot be null");
 
@@ -102,6 +103,9 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
 
             // 使用自定义的解码器解码
             return userAttributes.map(principalExtractor::extract)
+                    .doOnSuccess(i -> {
+                        i.getAttributes().put("accessToken", userRequest.getAccessToken());
+                    })
                     .onErrorMap(e -> e instanceof IOException,
                             t -> new AuthenticationServiceException(
                                     "Unable to access the userInfoEndpoint " + userInfoUri, t))

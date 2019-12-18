@@ -47,7 +47,8 @@ public class ServerHttpRequestReactiveAuthorizationManager
                 .filter(MatchContext::isMatch)
                 .map(MatchContext::getResourceAuthorityAttribute)
                 .collectList();
-        return Mono.zip(matches, authentication).map(result -> check(result.getT1(), result.getT2()));
+        return Mono.zip(matches, authentication)
+                .map(result -> check(result.getT1(), result.getT2()));
     }
 
     /**
@@ -80,13 +81,23 @@ public class ServerHttpRequestReactiveAuthorizationManager
                     && CollectionUtils.isNotEmpty(attribute.getAccessAuthority())
                     && CollectionUtils.containsAny(currentAuthorities,
                             attribute.getAccessAuthority())) {
-                grantCount++;
-//                if (validScope(attribute, authentication)) {
-//                    grantCount++;
-//                }
+                if (additionalValidate(attribute, authentication)) {
+                    grantCount++;
+                }
             }
         }
         return new AuthorizationDecision(grantCount > 0);
+    }
+
+    /**
+     * 进行额外的校验
+     * 
+     * @param attribute
+     * @param authentication
+     * @return
+     */
+    protected boolean additionalValidate(ResourceAuthorityAttribute attribute, Authentication authentication) {
+        return true;
     }
 
     // 判断是否匹配
