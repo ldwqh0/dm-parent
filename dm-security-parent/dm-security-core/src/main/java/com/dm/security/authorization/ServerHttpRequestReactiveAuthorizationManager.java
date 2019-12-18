@@ -1,6 +1,7 @@
 package com.dm.security.authorization;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,7 +15,6 @@ import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
-import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -38,24 +38,16 @@ public class ServerHttpRequestReactiveAuthorizationManager
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
-        ServerWebExchange exchange = context.getExchange();
-        return Mono.defer(() -> {
-            Collection<ResourceAuthorityAttribute> attributes = resourceAuthorityService.listAll();
-            Mono<List<ResourceAuthorityAttribute>> matches = Flux
-                    .concat(Flux.fromIterable(attributes).map(attribute -> matches(exchange, attribute)))
-                    .filter(mc -> mc.getMatchResult().isMatch())
-                    .map(MatchContext::getResourceAuthorityAttribute)
-                    .collectList();
-            return Mono.zip(matches, authentication).map(a -> {
-                List<ResourceAuthorityAttribute> list = a.getT1();
-                Authentication au = a.getT2();
-                final Set<String> currentAuthorities = au.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
-                return check(list, currentAuthorities);
-            });
-        });
-
+        final ServerWebExchange exchange = context.getExchange();
+        final Collection<ResourceAuthorityAttribute> attributes = Collections
+                .unmodifiableCollection(resourceAuthorityService.listAll());
+        // 获取所有匹配到的数据
+        Mono<List<ResourceAuthorityAttribute>> matches = Flux
+                .concat(Flux.fromIterable(attributes).map(attribute -> matches(exchange, attribute)))
+                .filter(MatchContext::isMatch)
+                .map(MatchContext::getResourceAuthorityAttribute)
+                .collectList();
+        return Mono.zip(matches, authentication).map(result -> check(result.getT1(), result.getT2()));
     }
 
     /**
@@ -65,8 +57,11 @@ public class ServerHttpRequestReactiveAuthorizationManager
      * @param currentAuthorities
      * @return
      */
-    private AuthorizationDecision check(List<ResourceAuthorityAttribute> list, Set<String> currentAuthorities) {
+    private AuthorizationDecision check(List<ResourceAuthorityAttribute> list, Authentication authentication) {
         int grantCount = 0;
+        final Set<String> currentAuthorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
         for (ResourceAuthorityAttribute attribute : list) {
             // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
 //          if (attribute.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
@@ -101,7 +96,7 @@ public class ServerHttpRequestReactiveAuthorizationManager
         if (MatchType.ANT_PATH.equals(matchType)) {
             return ServerWebExchangeMatchers.pathMatchers(HttpMethod.resolve(resource.getMethod()), resource.getPath())
                     .matches(exchange)
-                    .map(i -> new MatchContext(i, attribute));
+                    .map(i -> new MatchContext(i.isMatch(), attribute));
         }
         if (MatchType.REGEXP.equals(matchType)) {
 //          return new RegexRequestMatcher(resource.getPath(), resource.getMethod(), true).matches(ex);
@@ -110,23 +105,21 @@ public class ServerHttpRequestReactiveAuthorizationManager
     }
 
     class MatchContext {
-        MatchResult matchResult;
-        ResourceAuthorityAttribute resourceAuthorityAttribute;
+        private boolean match;
+        private ResourceAuthorityAttribute resourceAuthorityAttribute;
 
-        public MatchResult getMatchResult() {
-            return matchResult;
+        public boolean isMatch() {
+            return match;
         }
 
         public ResourceAuthorityAttribute getResourceAuthorityAttribute() {
             return resourceAuthorityAttribute;
         }
 
-        public MatchContext(MatchResult matchResult, ResourceAuthorityAttribute raa) {
+        public MatchContext(boolean matchResult, ResourceAuthorityAttribute raa) {
             super();
-            this.matchResult = matchResult;
+            this.match = matchResult;
             this.resourceAuthorityAttribute = raa;
         }
-
     }
-
 }
