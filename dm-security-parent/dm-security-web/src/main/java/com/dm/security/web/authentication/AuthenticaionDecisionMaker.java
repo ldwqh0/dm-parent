@@ -11,5 +11,5 @@ import org.springframework.security.core.Authentication;
  *
  */
 public interface AuthenticaionDecisionMaker {
-    public boolean check(Authentication authentication, HttpServletRequest request);
+    public boolean check(Authentication authentication, HttpServletRequest exchange);
 }

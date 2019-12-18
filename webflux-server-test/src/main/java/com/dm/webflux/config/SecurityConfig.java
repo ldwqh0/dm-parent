@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.MapReactiveUserDetailsServi
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-
+import com.dm.security.authorization.ServerHttpRequestReactiveAuthorizationManager;
 import com.dm.security.oauth2.client.userinfo.DmReactiveOAuth2UserService;
 
 @Configuration
@@ -17,9 +17,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-//        TODO 这里干什么
-        http.authorizeExchange().anyExchange().authenticated();
-//        http.formLogin();
+        http.authorizeExchange().anyExchange().access(serverHttpRequestReactiveAuthorizationManager());
         http.oauth2Login();
         return http.build();
     }
@@ -27,6 +25,11 @@ public class SecurityConfig {
     @Bean
     public DmReactiveOAuth2UserService reactiveOAuth2UserService() {
         return new DmReactiveOAuth2UserService();
+    }
+
+    @Bean
+    public ServerHttpRequestReactiveAuthorizationManager serverHttpRequestReactiveAuthorizationManager() {
+        return new ServerHttpRequestReactiveAuthorizationManager();
     }
 
     @Bean

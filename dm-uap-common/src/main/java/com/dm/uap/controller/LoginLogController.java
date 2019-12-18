@@ -23,7 +23,7 @@ public class LoginLogController {
 
     @GetMapping(params = "draw")
     public Page<LoginLogDto> search(
-            Pageable pageable,
+            Pageable pageable, // 分页请求的入参，是page,size
             @RequestParam(value = "key", required = false) String query) {
         return loginLogService.list(query, pageable).map(loginLogConverter::toDto);
     }
