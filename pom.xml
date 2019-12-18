@@ -61,21 +61,6 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>org.springframework.security.oauth</groupId>
-        <artifactId>spring-security-oauth2</artifactId>
-        <version>${spring.security.oauth2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dm</groupId>
-        <artifactId>dm-authority-common</artifactId>
-        <version>${dm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dm</groupId>
-        <artifactId>dm-region</artifactId>
-        <version>${dm.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
         <exclusions>
@@ -85,6 +70,11 @@
           </exclusion>
         </exclusions>
         <version>${springboot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security.oauth</groupId>
+        <artifactId>spring-security-oauth2</artifactId>
+        <version>${spring.security.oauth2.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security.oauth.boot</groupId>
@@ -125,6 +115,16 @@
         <groupId>io.springfox</groupId>
         <artifactId>springfox-swagger-ui</artifactId>
         <version>${springfox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-authority-common</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-region</artifactId>
+        <version>${dm.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
@@ -178,12 +178,22 @@
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
+        <artifactId>dm-security-oauth2-client</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
         <artifactId>dm-security-oauth2-resource-server</artifactId>
         <version>${dm.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-resource-server-spring-boot-starter</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-oauth2-client-spring-boot-starter</artifactId>
         <version>${dm.version}</version>
       </dependency>
       <dependency>

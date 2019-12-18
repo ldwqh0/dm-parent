@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+import com.dm.security.oauth2.client.userinfo.DmReactiveOAuth2UserService;
+
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
@@ -20,6 +22,11 @@ public class SecurityConfig {
 //        http.formLogin();
         http.oauth2Login();
         return http.build();
+    }
+
+    @Bean
+    public DmReactiveOAuth2UserService reactiveOAuth2UserService() {
+        return new DmReactiveOAuth2UserService();
     }
 
     @Bean

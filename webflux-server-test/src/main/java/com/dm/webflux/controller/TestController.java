@@ -1,5 +1,6 @@
 package com.dm.webflux.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +12,7 @@ import reactor.core.publisher.Mono;
 public class TestController {
 
     @GetMapping
-    public Mono<String> test() {
-        return Mono.just("good good study");
+    public Mono<Object> test(@AuthenticationPrincipal Object p) {
+        return Mono.just(p);
     }
 }
