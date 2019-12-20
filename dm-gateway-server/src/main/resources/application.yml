@@ -8,15 +8,22 @@ spring:
             client-id: zuul
             client-secret: 123456
             authorization-grant-type: authorization_code
+            # TODO 需要配合nginx的redirect_rewrite参数才能实现正确的请求，需要解决redirect_uri问题
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-#            client-authentication-method: 
         provider:
           oauth2:
             user-info-uri: http://127.0.0.1:8887/oauth/users/current
             authorization-uri: http://127.0.0.1:8887/oauth/authorize
             token-uri: http://127.0.0.1:8887/oauth/token
-            user-name-attribute: username            
-#            user-info-authentication-method: POST # 指定通过post获取用户信息  cloud:    gateway:      routes:      - id: files
-        uri: http://127.0.0.1:8886/files/1
-        filters:        - StripPrefix=1
+            user-name-attribute: username
+  cloud:    gateway:
+      default-filters:      - TokenRelay= # 复制token到上游服务器
+      routes:      - id: files
+        uri: http://127.0.0.1:8886
+        filters:
+        - StripPrefix=1 # 截断路径中多余的部分
         predicates:        - Path=/d/files**/**
+      - id: uap
+        uri: http://127.0.0.1:8887
+        filters:
+        - StripPrefix=1        predicates:        - Path=/u/**

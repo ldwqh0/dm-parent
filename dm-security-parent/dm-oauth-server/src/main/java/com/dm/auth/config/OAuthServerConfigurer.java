@@ -1,5 +1,8 @@
 package com.dm.auth.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -12,11 +15,20 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
+import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
+import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
+import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
+import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
@@ -24,6 +36,7 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 
 import com.dm.auth.provider.endpoint.DmOauthRedirectResolver;
 import com.dm.auth.provider.token.UserDetailsAuthenticationConverter;
+import com.dm.auth.security.oauth2.provider.code.DmAuthorizationCodeTokenGranter;
 import com.dm.auth.service.UserApprovalService;
 //import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
 
@@ -86,10 +99,13 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         super.configure(endpoints);
+        // 重新配置tokenGranter
+        endpoints.tokenGranter(tokenGranter(endpoints.getTokenServices(), endpoints.getAuthorizationCodeServices()));
         endpoints.userApprovalHandler(userApprovalHandler()); // 用户授权处理逻辑
         // 如果使用自定义的tokenService,以下的配置都不可用，需要在tokenService中重新配置
         endpoints.tokenStore(tokenStore());
         endpoints.accessTokenConverter(accessTokenConverter());
+        endpoints.getTokenServices();
         // 指定是否可以重用refreshToken
         endpoints.reuseRefreshTokens(false);
         // 如果要使用RefreshToken可用，必须指定UserDetailsService
@@ -140,6 +156,37 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
     @Bean
     public TokenStore tokenStore() {
         return new InMemoryTokenStore();
+    }
+
+    private TokenGranter tokenGranter(AuthorizationServerTokenServices tokenService,
+            AuthorizationCodeServices authorizationCodeServices) {
+        return new CompositeTokenGranter(getDefaultTokenGranters(tokenService, authorizationCodeServices));
+    }
+
+    private List<TokenGranter> getDefaultTokenGranters(AuthorizationServerTokenServices tokenServices,
+            AuthorizationCodeServices authorizationCodeServices) {
+//        ClientDetailsService clientDetails = clientDetailsService();
+//        AuthorizationServerTokenServices tokenServices = tokenServices ;
+//        AuthorizationCodeServices authorizationCodeServices = authorizationCodeServices ;
+        OAuth2RequestFactory requestFactory = requestFactory();
+
+        List<TokenGranter> tokenGranters = new ArrayList<TokenGranter>();
+
+        DmAuthorizationCodeTokenGranter dmAuthorizationCodeTokenGranter = new DmAuthorizationCodeTokenGranter(
+                tokenServices, authorizationCodeServices, clientDetailsService, requestFactory);
+        // 对于某些clientId，不进行URL检查
+        dmAuthorizationCodeTokenGranter.addWhiteList("zuul");
+        // 添加自定义的tokenGranter白名单
+        tokenGranters.add(dmAuthorizationCodeTokenGranter);
+        tokenGranters.add(new RefreshTokenGranter(tokenServices, clientDetailsService, requestFactory));
+        ImplicitTokenGranter implicit = new ImplicitTokenGranter(tokenServices, clientDetailsService, requestFactory);
+        tokenGranters.add(implicit);
+        tokenGranters.add(new ClientCredentialsTokenGranter(tokenServices, clientDetailsService, requestFactory));
+        if (authenticationManager != null) {
+            tokenGranters.add(new ResourceOwnerPasswordTokenGranter(authenticationManager, tokenServices,
+                    clientDetailsService, requestFactory));
+        }
+        return tokenGranters;
     }
 
 }

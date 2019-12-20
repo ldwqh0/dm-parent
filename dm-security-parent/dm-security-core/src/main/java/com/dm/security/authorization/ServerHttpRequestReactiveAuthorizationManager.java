@@ -15,6 +15,7 @@ import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -42,51 +43,52 @@ public class ServerHttpRequestReactiveAuthorizationManager
         final Collection<ResourceAuthorityAttribute> attributes = Collections
                 .unmodifiableCollection(resourceAuthorityService.listAll());
         // 获取所有匹配到的数据
-        Mono<List<ResourceAuthorityAttribute>> matches = Flux
-                .concat(Flux.fromIterable(attributes).map(attribute -> matches(exchange, attribute)))
-                .filter(MatchContext::isMatch)
-                .map(MatchContext::getResourceAuthorityAttribute)
+        Mono<List<ResourceAuthorityAttribute>> matches = Flux.fromIterable(attributes)
+                .filterWhen(attribute -> matches(exchange, attribute).map(MatchResult::isMatch))
                 .collectList();
-        return Mono.zip(matches, authentication)
-                .map(result -> check(result.getT1(), result.getT2()));
+        return Flux.concat(Mono.zip(matches, authentication)
+                .map(result -> check(result.getT1(), result.getT2(), context)))
+                .next();
     }
 
     /**
      * 判断是否有访问权限
      * 
      * @param list
+     * @param exchange
      * @param currentAuthorities
      * @return
      */
-    private AuthorizationDecision check(List<ResourceAuthorityAttribute> list, Authentication authentication) {
-        int grantCount = 0;
-        final Set<String> currentAuthorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
-        for (ResourceAuthorityAttribute attribute : list) {
-            // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
-//          if (attribute.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-//              grantCount++;
-//          }
-            // 如果拒绝列表中包含某一个当前用户的所属角色，立即返回
-            if (CollectionUtils.isNotEmpty(currentAuthorities)
-                    && CollectionUtils.isNotEmpty(attribute.getDenyAuthorities())
-                    && CollectionUtils.containsAny(currentAuthorities,
-                            attribute.getDenyAuthorities())) {
-                return new AuthorizationDecision(false);
-            }
+    private Mono<AuthorizationDecision> check(List<ResourceAuthorityAttribute> list, Authentication authentication,
+            AuthorizationContext context) {
+        return Mono.defer(() -> {
+            Flux<Boolean> checkResult = Flux.empty();
+            final Set<String> currentAuthorities = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
+            for (ResourceAuthorityAttribute attribute : list) {
+                // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
+//              if (attribute.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+//                  grantCount++;
+//              }
+                // 如果拒绝列表中包含某一个当前用户的所属角色，立即返回
+                if (CollectionUtils.isNotEmpty(currentAuthorities)
+                        && CollectionUtils.isNotEmpty(attribute.getDenyAuthorities())
+                        && CollectionUtils.containsAny(currentAuthorities,
+                                attribute.getDenyAuthorities())) {
+                    return Mono.just(new AuthorizationDecision(false));
+                }
 
-            // 匿名用户的可访问权限包含在显示的权限配置中
-            if (CollectionUtils.isNotEmpty(currentAuthorities)
-                    && CollectionUtils.isNotEmpty(attribute.getAccessAuthority())
-                    && CollectionUtils.containsAny(currentAuthorities,
-                            attribute.getAccessAuthority())) {
-                if (additionalValidate(attribute, authentication)) {
-                    grantCount++;
+                // 匿名用户的可访问权限包含在显示的权限配置中
+                if (CollectionUtils.isNotEmpty(currentAuthorities)
+                        && CollectionUtils.isNotEmpty(attribute.getAccessAuthority())
+                        && CollectionUtils.containsAny(currentAuthorities,
+                                attribute.getAccessAuthority())) {
+                    checkResult = checkResult.concatWith(additionalValidate(attribute, authentication, context));
                 }
             }
-        }
-        return new AuthorizationDecision(grantCount > 0);
+            return checkResult.any(Boolean.TRUE::equals).map(AuthorizationDecision::new);
+        });
     }
 
     /**
@@ -96,41 +98,22 @@ public class ServerHttpRequestReactiveAuthorizationManager
      * @param authentication
      * @return
      */
-    protected boolean additionalValidate(ResourceAuthorityAttribute attribute, Authentication authentication) {
-        return true;
+    protected Mono<Boolean> additionalValidate(ResourceAuthorityAttribute attribute, Authentication authentication,
+            AuthorizationContext context) {
+        return Mono.just(Boolean.TRUE);
     }
 
     // 判断是否匹配
-    private Mono<MatchContext> matches(ServerWebExchange exchange, ResourceAuthorityAttribute attribute) {
+    private Mono<MatchResult> matches(ServerWebExchange exchange, ResourceAuthorityAttribute attribute) {
         UriResource resource = attribute.getResource();
         MatchType matchType = resource.getMatchType();
         if (MatchType.ANT_PATH.equals(matchType)) {
             return ServerWebExchangeMatchers.pathMatchers(HttpMethod.resolve(resource.getMethod()), resource.getPath())
-                    .matches(exchange)
-                    .map(i -> new MatchContext(i.isMatch(), attribute));
+                    .matches(exchange);
         }
         if (MatchType.REGEXP.equals(matchType)) {
 //          return new RegexRequestMatcher(resource.getPath(), resource.getMethod(), true).matches(ex);
         }
         return Mono.empty();
-    }
-
-    class MatchContext {
-        private boolean match;
-        private ResourceAuthorityAttribute resourceAuthorityAttribute;
-
-        public boolean isMatch() {
-            return match;
-        }
-
-        public ResourceAuthorityAttribute getResourceAuthorityAttribute() {
-            return resourceAuthorityAttribute;
-        }
-
-        public MatchContext(boolean matchResult, ResourceAuthorityAttribute raa) {
-            super();
-            this.match = matchResult;
-            this.resourceAuthorityAttribute = raa;
-        }
     }
 }
