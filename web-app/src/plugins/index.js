@@ -1,2 +1,1 @@
-export AjaxPlugin from './ajax-plugin'
-export EleDateFormater from './EleDateFormater'
+export AjaxPlugin from './AjaxPlugin'
