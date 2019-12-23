@@ -3,17 +3,18 @@ package com.dm.region.converter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.Region;
 
 @Component
-public class RegionConverter extends AbstractConverter<Region, RegionDto> {
+public class RegionConverter implements Converter<Region, RegionDto> {
 
-    @Override
-    protected RegionDto toDtoActual(Region model) {
+    private RegionDto toDtoActual(Region model) {
         RegionDto dto = new RegionDto();
         dto.setCode(model.getCode());
         dto.setName(model.getName());
@@ -46,5 +47,10 @@ public class RegionConverter extends AbstractConverter<Region, RegionDto> {
             current = current.getParentCode();
         }
         return result;
+    }
+
+    @Override
+    public RegionDto toDto(Region model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 }

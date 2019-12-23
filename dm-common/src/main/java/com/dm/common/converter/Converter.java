@@ -2,7 +2,6 @@ package com.dm.common.converter;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -10,7 +9,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
 
-public abstract class AbstractConverter<M, DTO> {
+public interface Converter<M, DTO> {
 
     /**
      * 将实体安静的转换为Dto对象，<br>
@@ -20,19 +19,7 @@ public abstract class AbstractConverter<M, DTO> {
      * @return 转换后的dto对象
      */
     @Nullable
-    public final DTO toDto(@Nullable M model) {
-        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
-    }
-
-    /**
-     * 将实体模型转换为DTO的实际动作，模型参数不会为空<br />
-     * 所有的converter应该实现该方法以完成转换
-     * 
-     * @param model 待转换的模型，当子类重写该方法时，model不会为空
-     * 
-     * @return
-     */
-    protected abstract DTO toDtoActual(M model);
+    public DTO toDto(@Nullable M model);
 
     /**
      * 将实体模型列表转换为DTO列表
@@ -40,11 +27,11 @@ public abstract class AbstractConverter<M, DTO> {
      * @param models
      * @return
      */
-    public List<DTO> toDto(Iterable<M> models) {
+    public default List<DTO> toDto(Iterable<M> models) {
         if (IterableUtils.isEmpty(models)) {
             return Collections.emptyList();
         } else {
-            return StreamSupport.stream(models.spliterator(), false).map(this::toDtoActual)
+            return StreamSupport.stream(models.spliterator(), false).map(this::toDto)
                     .collect(Collectors.toList());
         }
     }

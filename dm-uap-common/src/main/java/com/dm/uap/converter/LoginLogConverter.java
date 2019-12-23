@@ -1,16 +1,17 @@
 package com.dm.uap.converter;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 import com.dm.uap.dto.LoginLogDto;
 import com.dm.uap.entity.LoginLog;
 
 @Component
-public class LoginLogConverter extends AbstractConverter<LoginLog, LoginLogDto> {
+public class LoginLogConverter implements Converter<LoginLog, LoginLogDto> {
 
-    @Override
-    protected LoginLogDto toDtoActual(LoginLog model) {
+    private LoginLogDto toDtoActual(LoginLog model) {
         LoginLogDto dto = new LoginLogDto();
         dto.setId(model.getId());
         dto.setIp(model.getIp());
@@ -29,6 +30,11 @@ public class LoginLogConverter extends AbstractConverter<LoginLog, LoginLogDto> 
         dest.setTime(source.getTime());
         dest.setType(source.getType());
         return dest;
+    }
+
+    @Override
+    public LoginLogDto toDto(LoginLog model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 
 }

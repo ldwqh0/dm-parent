@@ -10,11 +10,11 @@ import com.dm.auth.dto.AuthorityDto;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.entity.Authority;
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 import com.dm.common.exception.DataNotExistException;
 
 @Component
-public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDto> {
+public class AuthorityConverter implements Converter<Authority, AuthorityDto> {
 
     @Autowired
     private MenuConverter menuConverter;
@@ -22,7 +22,6 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
     @Autowired
     private ResourceOperationConverter resourceOperationConverter;
 
-    @Override
     protected AuthorityDto toDtoActual(Authority model) {
         return null;
     }
@@ -60,6 +59,11 @@ public class AuthorityConverter extends AbstractConverter<Authority, AuthorityDt
         } else {
             throw new DataNotExistException();
         }
+    }
+
+    @Override
+    public AuthorityDto toDto(Authority model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 
 }

@@ -1,16 +1,17 @@
 package com.dm.auth.converter;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.entity.Menu;
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 
 @Component
-public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
+public class MenuConverter implements Converter<Menu, MenuDto> {
 
-    @Override
-    protected MenuDto toDtoActual(Menu model) {
+    private MenuDto toDtoActual(Menu model) {
         MenuDto menuDto = new MenuDto();
         menuDto.setId(model.getId());
         menuDto.setName(model.getName());
@@ -36,5 +37,10 @@ public class MenuConverter extends AbstractConverter<Menu, MenuDto> {
         model.setType(dto.getType());
         model.setOpenInNewWindow(dto.getOpenInNewWindow());
         return model;
+    }
+
+    @Override
+    public MenuDto toDto(Menu model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 }

@@ -1,16 +1,17 @@
 package com.dm.file.converter;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 import com.dm.file.dto.FileInfoDto;
 import com.dm.file.entity.FileInfo;
 
 @Component
-public class FileInfoConverter extends AbstractConverter<FileInfo, FileInfoDto> {
+public class FileInfoConverter implements Converter<FileInfo, FileInfoDto> {
 
-    @Override
-    protected FileInfoDto toDtoActual(FileInfo model) {
+    private FileInfoDto toDtoActual(FileInfo model) {
         FileInfoDto file_ = new FileInfoDto();
         file_.setId(model.getId());
         file_.setFilename(model.getFilename());
@@ -28,6 +29,11 @@ public class FileInfoConverter extends AbstractConverter<FileInfo, FileInfoDto> 
         dest.setPath(src.getPath());
         dest.setSize(src.getSize());
         return dest;
+    }
+
+    @Override
+    public FileInfoDto toDto(FileInfo model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 
 }

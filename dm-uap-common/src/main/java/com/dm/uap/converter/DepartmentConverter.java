@@ -1,17 +1,18 @@
 package com.dm.uap.converter;
 
 import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.entity.Department;
 
 @Component
-public class DepartmentConverter extends AbstractConverter<Department, DepartmentDto> {
+public class DepartmentConverter implements Converter<Department, DepartmentDto> {
 
-    @Override
-    protected DepartmentDto toDtoActual(Department model) {
+    private DepartmentDto toDtoActual(Department model) {
         DepartmentDto result = new DepartmentDto();
         result.setId(model.getId());
         result.setFullname(model.getFullname());
@@ -32,5 +33,10 @@ public class DepartmentConverter extends AbstractConverter<Department, Departmen
         model.setDescription(dto.getDescription());
         model.setType(dto.getType());
         return model;
+    }
+
+    @Override
+    public DepartmentDto toDto(Department model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 }

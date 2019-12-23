@@ -12,7 +12,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
@@ -21,7 +21,7 @@ import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 
 @Component
-public class UserConverter extends AbstractConverter<User, UserDto> {
+public class UserConverter implements Converter<User, UserDto> {
 
     @Autowired
     private RoleConverter roleConverter;
@@ -55,8 +55,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 
     }
 
-    @Override
-    protected UserDto toDtoActual(User user) {
+    private UserDto toDtoActual(User user) {
         UserDto dto = new UserDto();
         dto.setEnabled(user.isEnabled());
         dto.setId(user.getId());
@@ -95,6 +94,11 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
             user.setRegionCode(userDto.getRegionCode());
         }
         return user;
+    }
+
+    @Override
+    public UserDto toDto(User model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 
 }

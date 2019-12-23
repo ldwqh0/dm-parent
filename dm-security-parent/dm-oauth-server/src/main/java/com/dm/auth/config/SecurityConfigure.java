@@ -30,7 +30,6 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     @Autowired
     private LoginLogService loginLogService;
 
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 // 如果不使用默认的failureHandler，需要手动指定登录失败页面，也就是login.html?error的权限为跳过
@@ -58,7 +57,6 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
         return handler;
     }
 
-    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         super.configure(auth);
         auth.userDetailsService(userService);

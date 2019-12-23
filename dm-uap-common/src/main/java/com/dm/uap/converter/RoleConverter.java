@@ -2,19 +2,20 @@ package com.dm.uap.converter;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 import com.dm.security.core.userdetails.GrantedAuthorityDto;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.entity.Role;
 
 @Component
-public class RoleConverter extends AbstractConverter<Role, RoleDto> {
+public class RoleConverter implements Converter<Role, RoleDto> {
 
     @Autowired
     private RoleGroupConverter roleGroupConverter;
@@ -25,8 +26,7 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
      * @param role
      * @return
      */
-    @Override
-    protected RoleDto toDtoActual(Role role) {
+    private RoleDto toDtoActual(Role role) {
         RoleDto dto = new RoleDto();
         dto.setId(role.getId());
         dto.setName(role.getName());
@@ -61,6 +61,11 @@ public class RoleConverter extends AbstractConverter<Role, RoleDto> {
         dto.setId(role.getId());
         dto.setAuthority(role.getGroup().getName() + "_" + role.getName());
         return dto;
+    }
+
+    @Override
+    public RoleDto toDto(Role model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 
 }

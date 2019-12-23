@@ -1,16 +1,16 @@
 package com.dm.auth.converter;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.entity.Resource;
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 
 @Component
-public class ResourceConverter extends AbstractConverter<Resource, ResourceDto> {
-
-    @Override
-    protected ResourceDto toDtoActual(Resource model) {
+public class ResourceConverter implements Converter<Resource, ResourceDto> {
+    private ResourceDto toDtoActual(Resource model) {
         ResourceDto dto = new ResourceDto();
         dto.setId(model.getId());
         dto.setName(model.getName());
@@ -29,6 +29,11 @@ public class ResourceConverter extends AbstractConverter<Resource, ResourceDto> 
         model.setMatchType(dto.getMatchType());
         model.setScope(dto.getScope());
         return model;
+    }
+
+    @Override
+    public ResourceDto toDto(Resource model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 
 }

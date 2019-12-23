@@ -27,7 +27,6 @@ public class ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerH
     /**
      * 针对oauth2Client的请求，要验证scope
      */
-    @Override
     protected Mono<Boolean> additionalValidate(ResourceAuthorityAttribute attribute, Authentication authentication,
             AuthorizationContext context) {
         if (authentication instanceof OAuth2AuthenticationToken) {

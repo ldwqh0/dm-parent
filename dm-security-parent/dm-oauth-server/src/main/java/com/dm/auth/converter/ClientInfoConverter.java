@@ -8,13 +8,12 @@ import org.springframework.stereotype.Component;
 import com.dm.auth.dto.ClientDetailsDto;
 import com.dm.auth.dto.ClientInfoDto;
 import com.dm.auth.entity.ClientInfo;
-import com.dm.common.converter.AbstractConverter;
+import com.dm.common.converter.Converter;
 
 @Component
-public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInfoDto> {
+public class ClientInfoConverter implements Converter<ClientInfo, ClientInfoDto> {
 
-    @Override
-    protected ClientInfoDto toDtoActual(ClientInfo model) {
+    private ClientInfoDto toDtoActual(ClientInfo model) {
         ClientInfoDto info = new ClientInfoDto();
         info.setAccessTokenValiditySeconds(model.getAccessTokenValiditySeconds());
         info.setAuthorizedGrantTypes(model.getAuthorizedGrantTypes());
@@ -62,6 +61,11 @@ public class ClientInfoConverter extends AbstractConverter<ClientInfo, ClientInf
         dto.setScope(model.getScope());
         dto.setClientName(model.getName());
         return dto;
+    }
+
+    @Override
+    public ClientInfoDto toDto(ClientInfo model) {
+        return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 
 }
