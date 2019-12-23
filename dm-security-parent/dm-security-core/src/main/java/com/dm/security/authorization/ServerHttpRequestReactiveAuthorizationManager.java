@@ -39,16 +39,17 @@ public class ServerHttpRequestReactiveAuthorizationManager
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
-        final ServerWebExchange exchange = context.getExchange();
-        final Collection<ResourceAuthorityAttribute> attributes = Collections
-                .unmodifiableCollection(resourceAuthorityService.listAll());
-        // 获取所有匹配到的数据
-        Mono<List<ResourceAuthorityAttribute>> matches = Flux.fromIterable(attributes)
-                .filterWhen(attribute -> matches(exchange, attribute).map(MatchResult::isMatch))
-                .collectList();
-        return Flux.concat(Mono.zip(matches, authentication)
-                .map(result -> check(result.getT1(), result.getT2(), context)))
-                .next();
+        return Mono.defer(() -> {
+            final ServerWebExchange exchange = context.getExchange();
+            final Collection<ResourceAuthorityAttribute> attributes = Collections
+                    .unmodifiableCollection(resourceAuthorityService.listAll());
+            // 获取所有匹配到的数据
+            Mono<List<ResourceAuthorityAttribute>> matches = Flux.fromIterable(attributes)
+                    .filterWhen(attribute -> matches(exchange, attribute).map(MatchResult::isMatch))
+                    .collectList();
+            return Mono.zip(matches, authentication)
+                    .flatMap(result -> check(result.getT1(), result.getT2(), context));
+        });
     }
 
     /**
@@ -61,34 +62,32 @@ public class ServerHttpRequestReactiveAuthorizationManager
      */
     private Mono<AuthorizationDecision> check(List<ResourceAuthorityAttribute> list, Authentication authentication,
             AuthorizationContext context) {
-        return Mono.defer(() -> {
-            Flux<Boolean> checkResult = Flux.empty();
-            final Set<String> currentAuthorities = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
-            for (ResourceAuthorityAttribute attribute : list) {
-                // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
+        Flux<Boolean> checkResult = Flux.empty();
+        final Set<String> currentAuthorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
+        for (ResourceAuthorityAttribute attribute : list) {
+            // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
 //              if (attribute.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
 //                  grantCount++;
 //              }
-                // 如果拒绝列表中包含某一个当前用户的所属角色，立即返回
-                if (CollectionUtils.isNotEmpty(currentAuthorities)
-                        && CollectionUtils.isNotEmpty(attribute.getDenyAuthorities())
-                        && CollectionUtils.containsAny(currentAuthorities,
-                                attribute.getDenyAuthorities())) {
-                    return Mono.just(new AuthorizationDecision(false));
-                }
-
-                // 匿名用户的可访问权限包含在显示的权限配置中
-                if (CollectionUtils.isNotEmpty(currentAuthorities)
-                        && CollectionUtils.isNotEmpty(attribute.getAccessAuthority())
-                        && CollectionUtils.containsAny(currentAuthorities,
-                                attribute.getAccessAuthority())) {
-                    checkResult = checkResult.concatWith(additionalValidate(attribute, authentication, context));
-                }
+            // 如果拒绝列表中包含某一个当前用户的所属角色，立即返回
+            if (CollectionUtils.isNotEmpty(currentAuthorities)
+                    && CollectionUtils.isNotEmpty(attribute.getDenyAuthorities())
+                    && CollectionUtils.containsAny(currentAuthorities,
+                            attribute.getDenyAuthorities())) {
+                return Mono.just(new AuthorizationDecision(false));
             }
-            return checkResult.any(Boolean.TRUE::equals).map(AuthorizationDecision::new);
-        });
+
+            // 匿名用户的可访问权限包含在显示的权限配置中
+            if (CollectionUtils.isNotEmpty(currentAuthorities)
+                    && CollectionUtils.isNotEmpty(attribute.getAccessAuthority())
+                    && CollectionUtils.containsAny(currentAuthorities,
+                            attribute.getAccessAuthority())) {
+                checkResult = checkResult.concatWith(additionalValidate(attribute, authentication, context));
+            }
+        }
+        return checkResult.any(Boolean.TRUE::equals).map(AuthorizationDecision::new);
     }
 
     /**
