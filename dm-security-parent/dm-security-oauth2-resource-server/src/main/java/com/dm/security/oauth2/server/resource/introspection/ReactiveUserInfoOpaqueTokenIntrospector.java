@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 public class ReactiveUserInfoOpaqueTokenIntrospector implements ReactiveOpaqueTokenIntrospector {
     // TODO 这里需要处理
-    private String url = "http://localhost:8887/oauth/users/current";
+    private String url = "";
     private WebClient webClient;
 
     private PrincipalExtractor principalExtractor = new UserDetailsDtoPrincipalExtractor();

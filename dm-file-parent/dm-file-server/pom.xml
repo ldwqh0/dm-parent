@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>com.dm</groupId>
-      <artifactId>dm-resource-server-spring-boot-starter</artifactId>
+      <artifactId>dm-oauth2-resource-server-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>com.dm</groupId>
