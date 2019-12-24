@@ -47,8 +47,7 @@
   import ElPagination from 'element-ui/lib/pagination'
   import VLoading from 'element-ui/lib/loading'
   import config from './config'
-
-  const qs = require('qs')
+  import qs from 'qs'
 
   /**
    * 一个表格组件，在组件内部实现分页和数据请求逻辑,

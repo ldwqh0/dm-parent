@@ -28,7 +28,7 @@ import com.dm.security.authentication.UriResource.MatchType;
  */
 public class DefaultAuthenticaionDecisionMaker implements AuthenticaionDecisionMaker {
 
-    private ResourceAuthorityService authorityService;
+    private ResourceAuthorityService authorityService = null;
 
     public void setAuthorityService(ResourceAuthorityService authorityService) {
         this.authorityService = authorityService;

@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
 public class ServerHttpRequestReactiveAuthorizationManager
         implements ReactiveAuthorizationManager<AuthorizationContext> {
 
-    private ResourceAuthorityService resourceAuthorityService;
+    private ResourceAuthorityService resourceAuthorityService = null;
 
     @Autowired(required = false)
     public void setResourceAuthorityService(ResourceAuthorityService resourceAuthorityService) {
@@ -111,6 +111,7 @@ public class ServerHttpRequestReactiveAuthorizationManager
                     .matches(exchange);
         }
         if (MatchType.REGEXP.equals(matchType)) {
+            // TODO 正则表达式匹配器待实现
 //          return new RegexRequestMatcher(resource.getPath(), resource.getMethod(), true).matches(ex);
         }
         return Mono.empty();

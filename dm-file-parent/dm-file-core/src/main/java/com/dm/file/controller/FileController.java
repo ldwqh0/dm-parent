@@ -249,12 +249,14 @@ public class FileController {
                 status = 206; // 将响应设置为206
                 Range r = ranges.get(0);
                 contentLength = r.getContentLength();
+                // 将一个流的最大读取值限定在一定的范围之内
                 BoundedInputStream bis = new BoundedInputStream(fileStorageService.getInputStream(path),
                         r.getEnd() + 1);
-                bis.skip(r.getStart());
-                contentRange = "bytes " + r.getStart() + "-" + r.getEnd() + "/" + fileSize;
+                long start = bis.skip(r.getStart());
+                contentRange = "bytes " + start + "-" + r.getEnd() + "/" + fileSize;
                 body = new InputStreamResource(bis);
             } else if (ranges.size() > 1) {
+                log.info("multi range not implement");
                 // TODO 返回多个range待实现
             }
             // 计算文件名

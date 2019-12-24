@@ -3,6 +3,8 @@ import axios, { CancelToken } from 'axios'
 import router from '../router'
 import qs from 'qs'
 
+// import cookie from 'js-cookie'
+
 class Queue {
   holder = new Map()
   counter = 0
@@ -29,6 +31,10 @@ const instance = axios.create()
 
 instance.interceptors.request.use(config => {
   // 取消
+  // let token = cookie.get('XSRF-TOKEN')
+  // if (token) {
+  //   debugger
+  // }
   config.cancelSource = CancelToken.source()
   config.paramsSerializer = (params) => {
     return qs.stringify(params, { arrayFormat: 'repeat' })

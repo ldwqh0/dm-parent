@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * 有限范围内的分页
  * 
@@ -30,6 +33,7 @@ public interface RangePage<T> extends Page<T> {
     }
 }
 
+@EqualsAndHashCode(callSuper = true)
 class RangePageImpl<T> extends PageImpl<T> implements RangePage<T> {
 
     private static final long serialVersionUID = -2418518649668788225L;

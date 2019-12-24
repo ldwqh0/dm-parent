@@ -22,7 +22,8 @@ import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
         InitializingBean, MessageSourceAware {
 
-    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    @SuppressWarnings("unused")
+    private MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
     private AuthenticationUserDetailsService<WxMpOAuth2AuthenticationAccessToken> authenticationUserDetailsService;
 

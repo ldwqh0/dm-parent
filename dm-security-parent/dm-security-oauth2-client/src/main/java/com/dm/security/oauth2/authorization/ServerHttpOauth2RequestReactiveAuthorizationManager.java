@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 
 public class ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerHttpRequestReactiveAuthorizationManager {
 
-    private ServerOAuth2AuthorizedClientRepository authorizedClientRepository;
+    private ServerOAuth2AuthorizedClientRepository authorizedClientRepository = null;
 
     @Autowired
     public void setAuthorizedClientRepository(ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {

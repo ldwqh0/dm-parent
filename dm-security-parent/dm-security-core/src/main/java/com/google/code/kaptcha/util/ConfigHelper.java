@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.lang.reflect.Field;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * This class provides helper methods in parsing configuration values.
  */
@@ -12,7 +14,7 @@ public class ConfigHelper {
     public Color getColor(String paramName, String paramValue,
             Color defaultColor) {
         Color color;
-        if ("".equals(paramValue) || paramValue == null) {
+        if (StringUtils.isBlank(paramValue)) {
             color = defaultColor;
         } else if (paramValue.indexOf(",") > 0) {
             color = createColorFromCommaSeparatedValues(paramName, paramValue);

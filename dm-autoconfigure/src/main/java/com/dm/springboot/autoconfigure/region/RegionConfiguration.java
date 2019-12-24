@@ -68,9 +68,9 @@ public class RegionConfiguration {
                             parent.setCode(parentCode);
                             region.setParent(parent);
                         }
-                        if (StringUtils.isBlank(region.getCode())) {
-//							System.out.println(region);
-                        }
+//                        if (StringUtils.isBlank(region.getCode())) {
+//                            System.out.println(region);
+//                        }
                         return region;
                     }).collect(Collectors.toList());
                     regionService.save(regions);

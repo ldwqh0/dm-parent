@@ -58,7 +58,7 @@ public class LocalThumbnailServiceImpl implements ThumbnailService {
                 for (int i = 0; i < levelScales.length; i++) {
                     createThumbnail(image, filename, i);
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 log.error("创建文件缩略图时出错", e);
             }
         }

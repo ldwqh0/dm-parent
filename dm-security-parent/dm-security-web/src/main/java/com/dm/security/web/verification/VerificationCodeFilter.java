@@ -28,7 +28,7 @@ public class VerificationCodeFilter extends GenericFilterBean {
 
     private final List<RequestMatcher> requestMathcers = new ArrayList<>();
 
-    private VerificationCodeStorage storage;
+    private VerificationCodeStorage storage = null;
 
     private ObjectMapper om = new ObjectMapper();
 

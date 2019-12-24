@@ -18,7 +18,7 @@ import com.dm.security.verification.VerificationCodeStorage;
  */
 public class SessionScopeVerificationCodeStorage implements VerificationCodeStorage {
 
-    private VerificationCode storageCode;
+    private VerificationCode storageCode = null;
 
     @Override
     public VerificationCode get(String id) {

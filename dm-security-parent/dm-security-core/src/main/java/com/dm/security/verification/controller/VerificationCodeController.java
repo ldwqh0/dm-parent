@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.Base64;
@@ -58,7 +59,7 @@ public class VerificationCodeController {
             code.setImgData(imgData);
             codeStorage.save(code);
             return code;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -79,7 +80,7 @@ public class VerificationCodeController {
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             codeStorage.save(code);
             return ResponseEntity.ok(new InputStreamResource(is));
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
