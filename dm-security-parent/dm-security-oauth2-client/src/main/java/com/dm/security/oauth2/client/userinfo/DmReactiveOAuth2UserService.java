@@ -44,10 +44,8 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
     @Override
     public Mono<OAuth2User> loadUser(OAuth2UserRequest userRequest)
             throws OAuth2AuthenticationException {
-//        userRequest.getAccessToken().getScopes()
         return Mono.defer(() -> {
             Assert.notNull(userRequest, "userRequest cannot be null");
-
             String userInfoUri = userRequest.getClientRegistration().getProviderDetails()
                     .getUserInfoEndpoint().getUri();
             if (!StringUtils.hasText(
@@ -82,7 +80,7 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
                         .uri(userInfoUri)
                         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .syncBody("access_token=" + userRequest.getAccessToken().getTokenValue());
+                        .bodyValue("access_token=" + userRequest.getAccessToken().getTokenValue());
             } else {
                 requestHeadersSpec = this.webClient.get()
                         .uri(userInfoUri)

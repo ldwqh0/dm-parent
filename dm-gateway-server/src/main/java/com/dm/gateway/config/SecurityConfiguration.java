@@ -1,16 +1,11 @@
 package com.dm.gateway.config;
 
 import java.util.Collections;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -23,15 +18,22 @@ import org.springframework.security.web.server.authorization.AuthorizationContex
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import org.springframework.security.web.server.csrf.CsrfToken;
 import org.springframework.security.web.server.util.matcher.MediaTypeServerWebExchangeMatcher;
-import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
-import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import com.dm.security.oauth2.authorization.ServerHttpOauth2RequestReactiveAuthorizationManager;
 import com.dm.security.oauth2.server.resource.introspection.ReactiveUserInfoOpaqueTokenIntrospector;
+import com.dm.security.web.server.util.matcher.NotBearerTokenServerWebExchangeMatcher;
 
 import reactor.core.publisher.Mono;
 
+/**
+ * 网关安全配置
+ * 
+ * @author ldwqh0@outlook.com
+ * 
+ * @since 1.0.0
+ *
+ */
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
@@ -66,12 +68,13 @@ public class SecurityConfiguration {
      * @return
      */
     @Bean
-    public WebFilter addCsrfToken() {
+    public WebFilter addCsrfTokenFilter() {
+        final NotBearerTokenServerWebExchangeMatcher addCsrfTokenCookieRequestMatcher = new NotBearerTokenServerWebExchangeMatcher();
         return (exchange, next) -> Mono.just(exchange)
-                .filterWhen(ex -> addCsrfTokenCookieRequestMatcher().matches(ex)
-                        .map(MatchResult::isMatch))
+                .filterWhen(ex -> addCsrfTokenCookieRequestMatcher.matches(ex).map(MatchResult::isMatch))
                 .flatMap(ex -> ex.<Mono<CsrfToken>>getAttribute(CsrfToken.class.getName()))
                 .doOnNext(ex -> {
+                    // nothing ,only subscribe for generate csrf cookie.
                 })
                 .then(next.filter(exchange));
     }
@@ -86,38 +89,4 @@ public class SecurityConfiguration {
         return new ReactiveUserInfoOpaqueTokenIntrospector(iu);
     }
 
-    @Bean
-    public ServerWebExchangeMatcher addCsrfTokenCookieRequestMatcher() {
-        return new AddCsrfTokenCookieRequestMatcher();
-    }
-
-    public static class AddCsrfTokenCookieRequestMatcher implements ServerWebExchangeMatcher {
-        private static final Pattern authorizationPattern = Pattern.compile(
-                "^Bearer (?<token>[a-zA-Z0-9-._~+/]+)=*$",
-                Pattern.CASE_INSENSITIVE);
-
-        @Override
-        public Mono<MatchResult> matches(ServerWebExchange exchange) {
-            return Mono.just(exchange)
-                    .map(ServerWebExchange::getRequest)
-                    .filter(this::match)
-                    .flatMap(i -> MatchResult.match())
-                    .switchIfEmpty(MatchResult.notMatch());
-        }
-
-        public boolean match(ServerHttpRequest request) {
-            // 没有指定的头，也没有相关的参数，代表不是一个beartoken请求，都要添加csrftoken
-            return !matchHeader(request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
-                    && !matchParameter(request.getQueryParams().getFirst("access_token"));
-        }
-
-        private boolean matchParameter(String parameter) {
-            return StringUtils.isNotEmpty(parameter);
-        }
-
-        private boolean matchHeader(String header) {
-            return StringUtils.isNotBlank(header) && authorizationPattern.matcher(header).matches();
-        }
-
-    }
 }
