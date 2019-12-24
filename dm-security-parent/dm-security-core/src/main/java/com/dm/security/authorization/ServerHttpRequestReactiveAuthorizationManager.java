@@ -23,6 +23,7 @@ import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
 import com.dm.security.authentication.UriResource.MatchType;
+import com.dm.security.web.server.util.matcher.RegexServerWebExchangeMatcher;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -107,12 +108,14 @@ public class ServerHttpRequestReactiveAuthorizationManager
         UriResource resource = attribute.getResource();
         MatchType matchType = resource.getMatchType();
         if (MatchType.ANT_PATH.equals(matchType)) {
-            return ServerWebExchangeMatchers.pathMatchers(HttpMethod.resolve(resource.getMethod()), resource.getPath())
+            return ServerWebExchangeMatchers
+                    .pathMatchers(HttpMethod.resolve(resource.getMethod()), resource.getPath())
                     .matches(exchange);
         }
         if (MatchType.REGEXP.equals(matchType)) {
-            // TODO 正则表达式匹配器待实现
-//          return new RegexRequestMatcher(resource.getPath(), resource.getMethod(), true).matches(ex);
+            return ServerWebExchangeMatchers
+                    .matchers(new RegexServerWebExchangeMatcher(resource.getPath(), resource.getMethod()))
+                    .matches(exchange);
         }
         return Mono.empty();
     }

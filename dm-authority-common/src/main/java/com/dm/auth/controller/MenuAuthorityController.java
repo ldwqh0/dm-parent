@@ -54,6 +54,7 @@ public class MenuAuthorityController {
     @PutMapping("{rolename}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
+    @Transactional
     public MenuAuthorityDto save(@PathVariable("rolename") String rolename,
             @RequestBody MenuAuthorityDto authorityDto) {
         Authority menuAuthority = authorityService.save(authorityDto);
@@ -84,6 +85,7 @@ public class MenuAuthorityController {
      */
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
+    @Transactional(readOnly = true)
     public List<MenuDto> systemMenu(@CurrentUser UserDetailsDto userDto) {
         Collection<GrantedAuthority> authorities = userDto.getRoles();
         if (CollectionUtils.isNotEmpty(authorities)) {

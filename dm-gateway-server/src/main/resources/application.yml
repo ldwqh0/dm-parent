@@ -1,6 +1,4 @@
 spring:
-  security:
-    oauth2:
-      resourceserver:
-        opaquetoken:
-          introspection-uri: 
+  cache:    cache-names:    - AuthorityAttributes
+    jcache:
+      config: classpath:config/ehcache.xml

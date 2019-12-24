@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ public class ResourceAuthorityController {
      */
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Transactional
     public ResourceAuthorityDto save(@RequestBody ResourceAuthorityDto resourceAuthority) {
         Authority authority = authorityService.save(resourceAuthority);
         return authorityConverter.toResourceAuthorityDto(authority);
@@ -62,10 +64,10 @@ public class ResourceAuthorityController {
      * @return
      */
     @GetMapping("{rolename}")
+    @Transactional(readOnly = true)
     public ResourceAuthorityDto get(@PathVariable("rolename") String rolename) {
         Optional<Authority> authority = authorityService.get(rolename);
         ResourceAuthorityDto result;
-
         // 没有被权限设置所包含的资源
         List<Resource> notIncludeResource = null;
         if (authority.isPresent() && CollectionUtils.isNotEmpty(authority.get().getResourceOperations())) {

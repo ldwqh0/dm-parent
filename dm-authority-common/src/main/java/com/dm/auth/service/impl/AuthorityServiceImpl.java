@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,8 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
      */
     @Override
     @Transactional(readOnly = true)
+    // TODO 这里待处理缓存
+//    @Cacheable(cacheNames =  "AuthorityAttributes",)
     public List<Menu> listMenuByAuthorities(List<String> ids) {
         // 添加所有菜单项
         // 所有菜单的父级菜单
@@ -156,6 +159,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
     public Authority save(ResourceAuthorityDto authorityDto) {
         Long roleId = authorityDto.getRoleId();
         String roleName = authorityDto.getRoleName();
@@ -185,6 +189,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     }
 
     @Override
+    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
     public void deleteResourceAuthoritiesByRoleName(String rolename) {
         if (authorityRepository.existsById(rolename)) {
             Authority authority = authorityRepository.getOne(rolename);
@@ -198,7 +203,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     // TODO 这里要使用缓存策略
     @Transactional(readOnly = true)
     @Override
-    @Cacheable(cacheNames = "AuthorityAttribute", key = "all", sync = true)
+    @Cacheable(cacheNames = "AuthorityAttributes", key = "'all_resource'", sync = true)
     public Collection<ResourceAuthorityAttribute> listAll() {
         List<Authority> authorities = authorityRepository.findAll();
         // 一个资源的权限配置

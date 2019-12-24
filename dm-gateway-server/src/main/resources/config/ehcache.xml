@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xmlns='http://www.ehcache.org/v3'
+  xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+  xsi:schemaLocation="
+        http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd
+        http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
+  <cache-template name="default">
+    <resources>
+      <heap unit="MB">30</heap>
+      <expiry>
+        <ttl unit="seconds">20</ttl>
+      </expiry>
+    </resources>
+  </cache-template>
+</config>

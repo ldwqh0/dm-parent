@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dm.auth.converter.ResourceConverter;
 import com.dm.auth.dto.ResourceDto;
-import com.dm.auth.entity.Resource;
 import com.dm.auth.service.ResourceService;
 import com.dm.common.exception.DataNotExistException;
 
@@ -53,21 +53,22 @@ public class ResourceController {
     }
 
     @GetMapping("{id}")
+    @Transactional(readOnly = true)
     public ResourceDto get(@PathVariable("id") Long id) {
         return resourceConverter.toDto(resourceService.findById(id).orElseThrow(DataNotExistException::new));
     }
 
     @GetMapping(params = { "draw" })
+    @Transactional(readOnly = true)
     public Page<ResourceDto> search(@RequestParam("draw") Long draw,
             @PageableDefault Pageable pageable,
             @RequestParam(value = "search", required = false) String keywords) {
-        Page<Resource> resources = resourceService.search(keywords, pageable);
-        return resources.map(resourceConverter::toDto);
+        return resourceService.search(keywords, pageable).map(resourceConverter::toDto);
     }
 
     @GetMapping
+    @Transactional(readOnly = true)
     public List<ResourceDto> listAll() {
-        List<Resource> resources = resourceService.listAll();
-        return resourceConverter.toDto(resources);
+        return resourceConverter.toDto(resourceService.listAll());
     }
 }
