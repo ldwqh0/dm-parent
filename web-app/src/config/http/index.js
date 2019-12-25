@@ -3,8 +3,6 @@ import axios, { CancelToken } from 'axios'
 import router from '../router'
 import qs from 'qs'
 
-// import cookie from 'js-cookie'
-
 class Queue {
   holder = new Map()
   counter = 0
@@ -30,11 +28,6 @@ const queue = new Queue()
 const instance = axios.create()
 
 instance.interceptors.request.use(config => {
-  // 取消
-  // let token = cookie.get('XSRF-TOKEN')
-  // if (token) {
-  //   debugger
-  // }
   config.cancelSource = CancelToken.source()
   config.paramsSerializer = (params) => {
     return qs.stringify(params, { arrayFormat: 'repeat' })
@@ -68,9 +61,9 @@ instance.interceptors.response.use(response => {
     if (status === 401) {
       console.debug('检测到未登录，取消所有请求')
       queue.cancelAll()
-      const { name, query, params } = router.history.current
-      const redirect = { name, query, params }
-      router.replace({ name: 'login', query: { redirect: JSON.stringify(redirect) } })
+      // 检测到没有登录的时候，跳转到登录
+      let redirect = window.location.href
+      router.replace({ name: 'login', query: { redirect } })
     } else {
       // store.commit('addError', error)
     }

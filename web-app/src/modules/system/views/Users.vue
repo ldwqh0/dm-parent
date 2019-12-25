@@ -42,7 +42,8 @@
               <el-dropdown class="node-operation" v-if="data.type==='role'">
                 <span>操作<i class="el-icon-arrow-down el-icon--right"/></span>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click.native="editRole(data)">编辑</el-dropdown-item>
+                  <!--内置分组不允许修改-->
+                  <el-dropdown-item v-if="data.group.name!=='内置分组'" @click.native="editRole(data)">编辑</el-dropdown-item>
                   <el-dropdown-item @click.native="editMenuAuthority(data)">菜单权限</el-dropdown-item>
                   <el-dropdown-item @click.native="editResourceAuthority(data)">资源权限</el-dropdown-item>
                 </el-dropdown-menu>

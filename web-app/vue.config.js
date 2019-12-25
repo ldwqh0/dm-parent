@@ -11,13 +11,14 @@ const config = {
         pathRewrite: { '^/gw/': '/' },
         onProxyRes (proxyRes, req, res) {
           if (proxyRes.statusCode === 302) {
-            let redirect = proxyRes.headers.location
+            let redirect = proxyRes.headers.locationl
             if (redirect) {
-              proxyRes.headers.location = redirect.replace(/http:\/\/127.0.0.1:8080\//g, 'http://localhost:1024/gw/')
+              redirect = redirect.replace(/http:\/\/127.0.0.1:8080\//g, 'http://localhost:1024/gw/')
             }
             if (redirect.startsWith('/')) {
-              proxyRes.headers.location = process.env.CONTEXT_PATH + redirect.substring(1)
+              redirect = process.env.CONTEXT_PATH + redirect.substring(1) + 'login'
             }
+            proxyRes.headers.location = redirect
           }
         }
       }
