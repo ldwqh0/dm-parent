@@ -3,13 +3,13 @@ package com.dm.uap.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
+import com.dm.common.repository.IdentifiableDtoRepository;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.User;
 
-public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User> {
+public interface UserRepository extends IdentifiableDtoRepository<User, Long>, QuerydslPredicateExecutor<User> {
 
     public Optional<User> findOneByUsernameIgnoreCase(String username);
 

@@ -3,6 +3,7 @@ package com.dm.uap.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,7 +13,7 @@ import lombok.Data;
 @Data
 @JsonInclude(value = Include.NON_NULL)
 @JsonIgnoreProperties(allowSetters = true, value = { "password" })
-public class UserDto implements Serializable {
+public class UserDto implements Serializable, IdentifiableDto<Long> {
 
     private static final long serialVersionUID = 3115204474399309007L;
 

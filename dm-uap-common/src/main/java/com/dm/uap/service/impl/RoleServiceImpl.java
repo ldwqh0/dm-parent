@@ -1,12 +1,9 @@
 package com.dm.uap.service.impl;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,12 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.RoleGroupDto;
-import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.QRole;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.Role.Status;
 import com.dm.uap.entity.RoleGroup;
-import com.dm.uap.entity.User;
 import com.dm.uap.repository.RoleGroupRepository;
 import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
@@ -118,17 +113,9 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findByState(Status.ENABLED);
     }
 
-    private List<User> getUsersFromDto(List<UserDto> users) {
-        if (CollectionUtils.isNotEmpty(users)) {
-            return users.stream().map(UserDto::getId).map(userRepository::getOne).collect(Collectors.toList());
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
     private void copyProperties(Role data, RoleDto dto) {
         roleConverter.copyProperties(data, dto);
-        data.setUsers(getUsersFromDto(dto.getUsers()));
+        data.setUsers(userRepository.getByDto(dto.getUsers()));
         RoleGroupDto _group = dto.getGroup();
         if (Objects.isNull(_group)) {
             data.setGroup(null);
@@ -141,7 +128,6 @@ public class RoleServiceImpl implements RoleService {
                 RoleGroup group = new RoleGroup(groupName);
                 data.setGroup(roleGroupRepository.save(group));
             }
-
         }
     }
 }

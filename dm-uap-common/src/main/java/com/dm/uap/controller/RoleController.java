@@ -44,6 +44,10 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public RoleDto save(@RequestBody RoleDto roleDto) {
+        // 不允许将角色添加到内置分组
+        if ("内置分组".equals(roleDto.getGroup().getName())) {
+            throw new DataValidateException("不允许修改内置组定义");
+        }
         if (roleService.nameExist(null, roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
@@ -57,6 +61,12 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public RoleDto update(@PathVariable("id") long id, @RequestBody RoleDto roleDto) {
+        // 内置分组角色不允许修改
+        roleService.get(id)
+                .filter(role -> "内置分组".equals(role.getGroup().getName()))
+                .ifPresent(role -> {
+                    throw new DataValidateException("不允许修改内置分组");
+                });
         if (roleService.nameExist(id, roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
@@ -81,7 +91,7 @@ public class RoleController {
 
     @ApiOperation("查询角色")
     @GetMapping(params = { "draw" })
-    public Page<?> list(
+    public Page<RoleDto> list(
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "search", required = false) String key,
             @RequestParam(value = "draw", required = false) Long draw,
