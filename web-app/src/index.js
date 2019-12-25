@@ -8,6 +8,7 @@ import EleDataTables from './components/ele-datatables'
 import { security, system } from './modules'
 import { AjaxPlugin } from './plugins'
 import httpInstance from './config/http'
+import './styles/default.less'
 
 Vue.use(security, { router, store })
 Vue.use(system, { router, store })

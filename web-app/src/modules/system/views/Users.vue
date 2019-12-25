@@ -61,14 +61,14 @@
                      class="clear-float">
               <el-row>
                 <el-col :span="12">
-                  <el-form-item class="pull-left">
+                  <el-form-item>
                     <el-input
                       placeholder="请输入关键字"
                       v-model="userSearchKey"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item class="pull-right">
+                  <el-form-item class="float-right">
                     <el-button type="primary" @click="editDepartment()">新增部门</el-button>
                     <el-button type="primary" @click="editRole()">新增角色</el-button>
                     <!--                <el-button type="primary" @click="doSyncDepartments()">同步组织机构</el-button>-->
@@ -112,57 +112,65 @@
 
     <el-dialog title="用户编辑"
                :visible.sync="userDialogVisible"
+               :close-on-click-modal="false"
                v-if="userDialogVisible">
       <user ref="user"
+            @on-submit="submitting=$event"
             :id="currentUser"/>
       <span slot="footer">
         <el-button @click="userDialogVisible=false">取消</el-button>
-        <el-button @click="saveUser" type="primary">确定</el-button>
+        <el-button @click="saveUser" type="primary" :loading="submitting">确定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="组织机构编辑"
                :visible.sync="departmentDialogVisible"
+               :close-on-click-modal="false"
                v-if="departmentDialogVisible">
       <department :id="currentDepartment"
+                  @on-submit="submitting=$event"
                   ref="department"/>
       <span slot="footer">
         <el-button @click="departmentDialogVisible=false">取消</el-button>
-        <el-button @click="saveDepartment" type="primary">确定</el-button>
+        <el-button @click="saveDepartment" type="primary" :loading="submitting">确定</el-button>
       </span>
     </el-dialog>
     <!--角色编辑-->
     <el-dialog title="角色编辑"
                :visible.sync="roleDialogVisible"
+               :close-on-click-modal="false"
                v-if="roleDialogVisible">
       <role :id="currentRole"
+            @on-submit="submitting=$event"
             ref="role"/>
       <template slot="footer">
         <el-button @click="roleDialogVisible=false">取消</el-button>
-        <el-button @click="saveRole" type="primary">确定</el-button>
+        <el-button @click="saveRole" type="primary" :loading="submitting">确定</el-button>
       </template>
     </el-dialog>
 
     <!--菜单权限-->
     <el-dialog :title="`${currentAuthority.group.name}_${currentAuthority.name}的菜单权限`"
                v-if="menuAuthorityDialogVisible"
+               :close-on-click-modal="false"
                :visible.sync="menuAuthorityDialogVisible">
       <menu-authority ref="menu-authority"
                       :name="`${currentAuthority.group.name}_${currentAuthority.name}`"/>
       <div slot="footer">
         <el-button @click="menuAuthorityDialogVisible=false">取消</el-button>
-        <el-button @click="saveMenuAuthority" type="primary">确定</el-button>
+        <el-button @click="saveMenuAuthority" type="primary" :loading="submitting">确定</el-button>
       </div>
     </el-dialog>
 
     <!--资源权限-->
     <el-dialog :title="`${currentAuthority.group.name}_${currentAuthority.name}的资源权限`"
                v-if="resourceAuthorityDialogVisible"
+               :close-on-click-modal="false"
                :visible.sync="resourceAuthorityDialogVisible">
       <resource-authority ref="resource-authority"
                           :name="`${currentAuthority.group.name}_${currentAuthority.name}`"/>
       <div slot="footer">
         <el-button @click="resourceAuthorityDialogVisible=false">取消</el-button>
-        <el-button @click="saveResourceAuthority" type="primary">确定</el-button>
+        <el-button @click="saveResourceAuthority" type="primary" :loading="submitting">确定</el-button>
       </div>
     </el-dialog>
   </el-container>
@@ -206,6 +214,8 @@
     currentAuthority = {} // 当前授权对象
     currentNode = '' // 当前选中的节点
     treeFilterKeyWords = ''// 过滤树型结构的关键字
+
+    submitting = false
 
     departmentTreeProps = {
       children: 'children',

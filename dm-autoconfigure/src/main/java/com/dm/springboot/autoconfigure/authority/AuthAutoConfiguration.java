@@ -6,11 +6,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -31,6 +31,7 @@ import com.dm.security.authentication.UriResource.MatchType;
 @EntityScan({ "com.dm.auth" })
 @EnableJpaRepositories({ "com.dm.auth" })
 @ComponentScan({ "com.dm.auth" })
+@Import(AuthJCacheConfiguration.class)
 public class AuthAutoConfiguration {
 
     @Autowired

@@ -1,9 +1,10 @@
 package com.dm.auth.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,6 +28,7 @@ import com.dm.auth.dto.MenuDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.AuthorityService;
+import com.dm.common.exception.DataNotExistException;
 import com.dm.security.annotation.CurrentUser;
 import com.dm.security.core.userdetails.UserDetailsDto;
 
@@ -57,6 +59,7 @@ public class MenuAuthorityController {
     @Transactional
     public MenuAuthorityDto save(@PathVariable("rolename") String rolename,
             @RequestBody MenuAuthorityDto authorityDto) {
+        authorityDto.setRoleName(rolename);
         Authority menuAuthority = authorityService.save(authorityDto);
         return authorityConverter.toMenuAuthorityDto(menuAuthority);
     }
@@ -72,8 +75,8 @@ public class MenuAuthorityController {
     @GetMapping("{rolename}")
     @Transactional(readOnly = true)
     public MenuAuthorityDto get(@PathVariable("rolename") String rolename) {
-        Optional<Authority> authority = authorityService.get(rolename);
-        return authorityConverter.toMenuAuthorityDto(authority);
+        return authorityService.get(rolename).map(authorityConverter::toMenuAuthorityDto)
+                .orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -89,9 +92,13 @@ public class MenuAuthorityController {
     public List<MenuDto> systemMenu(@CurrentUser UserDetailsDto userDto) {
         Collection<GrantedAuthority> authorities = userDto.getRoles();
         if (CollectionUtils.isNotEmpty(authorities)) {
-            List<String> authorityNames = authorities.stream().map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
-            List<Menu> menus = authorityService.listMenuByAuthorities(authorityNames);
+            Set<Menu> menus = authorities.stream().map(GrantedAuthority::getAuthority)
+                    .map(authorityService::findByAuthority)
+                    .flatMap(Set::stream)
+                    .collect(Collectors.toSet());
+            List<Menu> result = new ArrayList<Menu>();
+            result.addAll(menus);
+            Collections.sort(result, (o1, o2) -> (int) (o1.getOrder() - o2.getOrder()));
             return menuConverter.toDto(menus);
         } else {
             return Collections.emptyList();

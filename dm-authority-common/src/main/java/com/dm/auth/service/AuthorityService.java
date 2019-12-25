@@ -1,7 +1,7 @@
 package com.dm.auth.service;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
@@ -31,6 +31,6 @@ public interface AuthorityService {
      */
     public void deleteResourceAuthoritiesByRoleName(String rolenamme);
 
-    public List<Menu> listMenuByAuthorities(List<String> authorities);
+    public Set<Menu> findByAuthority(String auth);
 
 }

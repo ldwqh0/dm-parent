@@ -40,11 +40,12 @@ public class ClientInfoServiceImpl implements ClientInfoService, ClientDetailsSe
     @Override
     public ClientDetails loadClientByClientId(final String clientId) throws ClientRegistrationException {
         if (StringUtils.isBlank(clientId)) {
-            throw new ClientRegistrationException("adg");
+            throw new ClientRegistrationException("clientid can not be null!");
         }
         Optional<ClientInfo> client = clientInfoRepository.findById(clientId);
-        return clientInfoConverter.toClientDetails(client).orElseThrow(
-                () -> new ClientRegistrationException("The client with id {" + clientId + "} is not exists"));
+        return client.flatMap(clientInfoConverter::toClientDetails)
+                .orElseThrow(
+                        () -> new ClientRegistrationException("The client with id {" + clientId + "} is not exists"));
     }
 
     @Transactional

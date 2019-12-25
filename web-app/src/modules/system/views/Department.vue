@@ -1,6 +1,5 @@
 <template>
   <el-form ref="form"
-           size="mini"
            :rules="rules"
            :model="department"
            label-width="100px">
@@ -21,7 +20,7 @@
     <el-row>
       <el-col :span="24">
         <el-form-item label="部门类型：" prop="type">
-          <el-select v-model="department.type" placeholder="请选择">
+          <el-select v-model="department.type" placeholder="请选择" style="width: 100%;">
             <el-option label="机构" value="ORGANS"/>
             <el-option label="部门" value="DEPARTMENT"/>
             <el-option label="分组" value="GROUP"/>
@@ -42,6 +41,7 @@
       <el-col :span="24">
         <el-form-item label="上级单位：" prop="parent">
           <el-cascader
+            style="width:100%;"
             clearable
             v-model="parent"
             expand-trigger="hover"
@@ -73,7 +73,7 @@
     @Prop({ type: [String, Number], default: 'new' })
     id
 
- // 当前项目的ID,为"new时代表新增"
+    // 当前项目的ID,为"new时代表新增"
     department = {// department对象
       type: 'DEPARTMENT',
       state: 'ENABLED'
@@ -132,8 +132,11 @@
     }
 
     submit () {
+      this.$emit('on-submit', true)
       return this.$refs.form.validate().then(() => {
         return this.id === 'new' ? this.save(this.department) : this.update(this.department)
+      }).finally(() => {
+        this.$emit('on-submit', false)
       })
     }
   }

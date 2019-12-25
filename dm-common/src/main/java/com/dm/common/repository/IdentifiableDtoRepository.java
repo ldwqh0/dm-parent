@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,10 +33,6 @@ public interface IdentifiableDtoRepository<T, ID extends Serializable> extends J
         } else {
             return getOne(element.getId());
         }
-    }
-
-    public default T getByDto(Optional<? extends IdentifiableDto<ID>> element) {
-        return element.map(IdentifiableDto::getId).map(this::getOne).orElse(null);
     }
 
     public default List<T> getByDto(List<? extends IdentifiableDto<ID>> elements) {

@@ -1,6 +1,9 @@
 import user from './user'
 import role from './role'
 import department from './department'
+import menu from './menu'
+import menuAuthority from './menuAuthority'
+import resourceAuthority from './resourceAuthority'
 
 export default {
   namespaced: true,
@@ -9,6 +12,9 @@ export default {
   modules: {
     user,
     role,
-    department
+    department,
+    menu,
+    menuAuthority,
+    resourceAuthority
   }
 }

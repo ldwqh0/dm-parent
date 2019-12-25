@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +46,7 @@ public class MenuServcieImpl implements MenuService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu save(MenuDto menuDto) {
         preCheck(menuDto);
         final Menu menu = new Menu();
@@ -67,6 +69,7 @@ public class MenuServcieImpl implements MenuService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu update(long id, MenuDto menuDto) {
         preCheck(menuDto);
         Menu menu = menuRepository.getOne(id);
@@ -87,6 +90,7 @@ public class MenuServcieImpl implements MenuService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public void delete(Long id) {
         Menu menu = menuRepository.getOne(id);
         List<Authority> authorities = authorityRepository.findByMenu(menu);
@@ -119,6 +123,7 @@ public class MenuServcieImpl implements MenuService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu patch(long id, MenuDto _menu) {
         Menu menu = menuRepository.getOne(id);
         if (!Objects.isNull(_menu.getEnabled())) {
@@ -129,6 +134,7 @@ public class MenuServcieImpl implements MenuService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu moveUp(Long id) {
         Menu one = menuRepository.getOne(id);
         Long order = one.getOrder();
@@ -154,6 +160,7 @@ public class MenuServcieImpl implements MenuService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu moveDown(Long id) {
         Menu one = menuRepository.getOne(id);
         Long order = one.getOrder();

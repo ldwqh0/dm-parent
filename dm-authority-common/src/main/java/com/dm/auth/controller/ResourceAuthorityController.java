@@ -71,7 +71,7 @@ public class ResourceAuthorityController {
         // 没有被权限设置所包含的资源
         List<Resource> notIncludeResource = null;
         if (authority.isPresent() && CollectionUtils.isNotEmpty(authority.get().getResourceOperations())) {
-            result = authorityConverter.toResourceAuthorityDto(authority);
+            result = authority.map(authorityConverter::toResourceAuthorityDto).get();
             // 获取没有被资源权限设置所包含的资源
             List<Long> existResource = result.getResourceAuthorities().stream()
                     .map(ResourceOperationDto::getResource)

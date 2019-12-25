@@ -11,7 +11,6 @@ import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.entity.Authority;
 import com.dm.common.converter.Converter;
-import com.dm.common.exception.DataNotExistException;
 
 @Component
 public class AuthorityConverter implements Converter<Authority, AuthorityDto> {
@@ -43,22 +42,6 @@ public class AuthorityConverter implements Converter<Authority, AuthorityDto> {
         dto.setRoleName(menuAuthority.getRoleName());
         dto.setAuthorityMenus(menuConverter.toDto(menuAuthority.getMenus()));
         return dto;
-    }
-
-    public MenuAuthorityDto toMenuAuthorityDto(Optional<Authority> authority) {
-        if (authority.isPresent()) {
-            return toMenuAuthorityDto(authority.get());
-        } else {
-            throw new DataNotExistException();
-        }
-    }
-
-    public ResourceAuthorityDto toResourceAuthorityDto(Optional<Authority> authority) {
-        if (authority.isPresent()) {
-            return toResourceAuthorityDto(authority.get());
-        } else {
-            throw new DataNotExistException();
-        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 <template>
   <el-form class="user"
-           size="mini"
            :model="user"
            :rules="rules"
            label-width="100px"
@@ -171,12 +170,6 @@
       emitPath: false
     }
 
-    // @regionSpace.Getter('regionTree')
-    // regions
-    //
-    // @regionSpace.Action('loadRegions')
-    // loadRegions
-
     @Prop({ default: () => 'new' })
     id
 
@@ -252,8 +245,9 @@
       // this.loadRegions()
       if (this.id !== 'new') {
         // 获取用户之后，重置用户的职务信息
-        this.getUser({ id: this.id }).then(({ data, data: { posts } }) => {
+        this.getUser({ id: this.id }).then(({ data, data: { posts = [] } }) => {
           this.user = data
+          this.$set(this.user, 'posts', posts)
         })
       }
     }
@@ -269,13 +263,18 @@
     }
 
     submit () {
-      const validations = [...this.$refs.postForms, this.$refs.userform]
-        .map(form => form.validate())
-      return Promise.all(validations).then(() => {
+      this.$emit('on-submit', true)
+      const validations = [this.$refs.userform]
+      if (this.$refs.postForms) {
+        validations.push(...this.$refs.postForms)
+      }
+      return Promise.all(validations.map(form => form.validate())).then(() => {
         return this.id === 'new' ? this.save(this.user) : this.update(this.user)
       }).catch(e => {
         console.error('校验不通过')
         return Promise.reject(e)
+      }).finally(() => {
+        this.$emit('on-submit', false)
       })
     }
 

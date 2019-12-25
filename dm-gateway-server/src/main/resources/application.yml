@@ -1,4 +1,5 @@
 spring:
-  cache:    cache-names:    - AuthorityAttributes
+  cache:
+    type: jcache#    cache-names:#    - AuthorityAttributes
     jcache:
       config: classpath:config/ehcache.xml

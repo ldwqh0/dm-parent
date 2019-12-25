@@ -3,6 +3,7 @@ package com.dm.auth.dto;
 import java.io.Serializable;
 
 import com.dm.auth.entity.Menu.MenuType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -26,8 +27,8 @@ public class MenuDto implements Serializable {
     private String icon;
     private String description;
     private MenuType type;
+    @JsonIgnoreProperties(value = { "parent", "url", "description", "openInNewWindow" })
     private MenuDto parent;
-
     private Boolean openInNewWindow;
 
 }

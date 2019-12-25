@@ -1,6 +1,5 @@
 package com.dm.auth.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,6 +57,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "AuthorityMenus", key = "#p0.roleName")
     public Authority save(MenuAuthorityDto authorityDto) {
         Long roleId = authorityDto.getRoleId();
         String roleName = authorityDto.getRoleName();
@@ -77,42 +77,31 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     }
 
     /**
-     * 获取指定角色列表的菜单项目，这个事务是只读的
+     * 根据角色查询菜单项目
+     * 
+     * @param auth
+     * @return
      */
     @Override
-    @Transactional(readOnly = true)
-    // TODO 这里待处理缓存
-//    @Cacheable(cacheNames =  "AuthorityAttributes",)
-    public List<Menu> listMenuByAuthorities(List<String> ids) {
-        // 添加所有菜单项
-        // 所有菜单的父级菜单
+    @Cacheable(cacheNames = "AuthorityMenus")
+    public Set<Menu> findByAuthority(String auth) {
         Set<Menu> parents = new HashSet<Menu>();
-        Set<Menu> menus = ids.stream().filter(authorityRepository::existsById)
-                .map(authorityRepository::getOne)
+        Set<Menu> menus = authorityRepository.findById(auth)
                 .map(Authority::getMenus)
-                .flatMap(Set::stream)
-                .filter(Menu::isEnabled)
-                .collect(Collectors.toSet());
-
+                .orElse(Collections.emptySet());
         // 递归添加所有父级菜单
         for (Menu menu : menus) {
             addParent(menu, parents);
         }
         menus.addAll(parents);
-
         Iterator<Menu> menusIteraotr = menus.iterator();
-        // 移除所有的不可用的项
         while (menusIteraotr.hasNext()) {
             Menu next = menusIteraotr.next();
             if (!isEnabled(next)) {
                 menusIteraotr.remove();
             }
         }
-
-        List<Menu> result = new ArrayList<Menu>();
-        result.addAll(menus);
-        Collections.sort(result, (o1, o2) -> (int) (o1.getOrder() - o2.getOrder()));
-        return result;
+        return menus;
     }
 
     /**
@@ -200,7 +189,6 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
         }
     }
 
-    // TODO 这里要使用缓存策略
     @Transactional(readOnly = true)
     @Override
     @Cacheable(cacheNames = "AuthorityAttributes", key = "'all_resource'", sync = true)

@@ -45,10 +45,6 @@ public class ClientInfoConverter implements Converter<ClientInfo, ClientInfoDto>
         return Optional.ofNullable(model).map(this::toClientDetailsActual);
     }
 
-    public Optional<ClientDetailsDto> toClientDetails(Optional<ClientInfo> model) {
-        return model.map(this::toClientDetailsActual);
-    }
-
     private ClientDetailsDto toClientDetailsActual(ClientInfo model) {
         ClientDetailsDto dto = new ClientDetailsDto();
         dto.setClient_id_(model.getClientId());

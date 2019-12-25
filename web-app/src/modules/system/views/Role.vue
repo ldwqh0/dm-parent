@@ -1,9 +1,8 @@
 <template>
   <el-form class="role"
-           size="mini"
            :model="role"
            :rules="rules"
-           label-width="120px"
+           label-width="100px"
            ref="roleform">
     <el-row>
       <el-col :span="24">
@@ -16,6 +15,7 @@
       <el-col :span="24">
         <el-form-item label="角色组：">
           <el-select v-model="role.group"
+                     style="width: 100%"
                      value-key="id"
                      placeholder="请选择角色所属组,也可以直接输入新增一个角色组"
                      allow-create
@@ -99,6 +99,7 @@
     }
 
     submit () {
+      this.$emit('on-submit', true)
       return this.$refs.roleform.validate().then(valid => {
         // 对数据进行一下造型，主要是手动输入的角色是名称，需要在后台添加
         const data = { ...this.role }
@@ -106,6 +107,8 @@
           data.group = { name: data.group }
         }
         return this.id === 'new' ? this.save(data) : this.update(data, { id: this.id })
+      }).finally(() => {
+        this.$emit('on-submit', false)
       })
     }
   }
