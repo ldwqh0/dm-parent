@@ -4,6 +4,7 @@ import department from './department'
 import menu from './menu'
 import menuAuthority from './menuAuthority'
 import resourceAuthority from './resourceAuthority'
+import roleGroup from './roleGroup'
 
 export default {
   namespaced: true,
@@ -15,6 +16,7 @@ export default {
     department,
     menu,
     menuAuthority,
-    resourceAuthority
+    resourceAuthority,
+    roleGroup
   }
 }

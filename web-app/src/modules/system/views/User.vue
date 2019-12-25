@@ -63,6 +63,7 @@
       <el-col :span="12">
         <el-form-item label="所属角色" prop="roles">
           <el-select multiple
+                     style="width: 100%;"
                      value-key="id"
                      placeholder="请选择"
                      v-model="user.roles">
@@ -81,17 +82,17 @@
     <el-form ref="postForms"
              v-for="(post,index) in user.posts"
              :key="index"
-             size="mini"
              label-width="100px"
              :model="post"
              :rules="postRules">
       <el-row>
-        <el-col :span="11">
+        <el-col :span="12">
           <el-form-item prop="department.id">
             <template #label>
-              职务 {{ index+1 }}
+              部门
             </template>
             <el-cascader
+              style="width: 100%;"
               v-model="post.department.id"
               expand-trigger="hover"
               :options="departmentTree"
@@ -99,16 +100,14 @@
               change-on-select/>
           </el-form-item>
         </el-col>
-        <el-col :span="11">
+        <el-col :span="12">
           <el-form-item label="职务" prop="post">
-            <el-input v-model="post.post"/>
+            <el-input v-model="post.post">
+              <template v-slot:append>
+                <el-button icon="el-icon-delete" @click="removePost(index)"></el-button>
+              </template>
+            </el-input>
           </el-form-item>
-        </el-col>
-        <el-col :span="2">
-          <!--        <el-form-item>-->
-          <!--这里做一个减号图标-->
-          <el-button size="mini" @click="removePost(index)">移除</el-button>
-          <!--        </el-form-item>-->
         </el-col>
       </el-row>
     </el-form>

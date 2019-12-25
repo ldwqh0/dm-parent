@@ -4,7 +4,7 @@ const config = {
   assetsDir: process.env.ASSETS_DIR,
   publicPath: process.env.CONTEXT_PATH,
   devServer: {
-    port: 80,
+    port: 1024,
     proxy: {
       '/gw/': {
         target: 'http://127.0.0.1:8080',
