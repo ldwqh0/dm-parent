@@ -14,4 +14,5 @@ public interface RegionRepository extends JpaRepository<Region, String>, Queryds
     public List<Region> findAllByParentCode_Code(String code);
 
     public List<Region> findAllChildren(String code);
+
 }
