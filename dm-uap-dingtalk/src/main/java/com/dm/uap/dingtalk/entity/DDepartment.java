@@ -20,55 +20,61 @@ import static javax.persistence.CascadeType.*;
 @Setter
 public class DDepartment implements Serializable {
 
-	private static final long serialVersionUID = 8399805234987134498L;
+    private static final long serialVersionUID = 8399805234987134498L;
 
-	/**
-	 * id
-	 */
-	@Id
-	@Column(name = "id_")
-	private Long id;
+    /**
+     * id
+     */
+    @Id
+    @Column(name = "id_")
+    private Long id;
 
-	/**
-	 * autoAddUser
-	 */
-	private Boolean autoAddUser;
-	/**
-	 * createDeptGroup
-	 */
-	private Boolean createDeptGroup;
+    /**
+     * autoAddUser
+     */
+    private Boolean autoAddUser;
+    /**
+     * createDeptGroup
+     */
+    private Boolean createDeptGroup;
 
-	/**
-	 * name
-	 */
-	@Column(name = "name_")
-	private String name;
-	/**
-	 * parentid
-	 */
-	private Long parentid;
-	/**
-	 * sourceIdentifier
-	 */
-	private String sourceIdentifier;
+    /**
+     * name
+     */
+    @Column(name = "name_")
+    private String name;
+    /**
+     * parentid
+     */
+    private Long parentid;
+    /**
+     * sourceIdentifier
+     */
+    private String sourceIdentifier;
 
-	/**
-	 * 一个钉钉部门对应的系统部门
-	 */
-	@OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
-	@JoinColumn(name = "dm_department_id_")
-	public Department department;
+    /**
+     * 一个钉钉部门对应的系统部门
+     */
+    @OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
+    @JoinColumn(name = "dm_department_id_")
+    public Department department;
 
-	public DDepartment() {
-		super();
-	}
+    /**
+     * 标识用户是否被删除
+     */
+    @Column(name = "deleted_")
+    private boolean deleted = false;
 
-	public DDepartment(Long id) {
-		super();
-		this.id = id;
-	}
+    public DDepartment() {
+        super();
+    }
 
-	void setId(Long id) {
-		this.id = id;
-	}
+    public DDepartment(Long id) {
+        super();
+        this.id = id;
+    }
+
+    void setId(Long id) {
+        this.id = id;
+    }
 }

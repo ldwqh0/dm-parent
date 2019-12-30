@@ -1,6 +1,7 @@
 package com.dm.uap.dingtalk.repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,8 @@ public interface DRoleRepository extends JpaRepository<DRole, Long>, QuerydslPre
      * @param ids
      */
     public long deleteByIdNotIn(Collection<Long> ids);
+
+    public List<DRole> findByIdNotInAndDeletedFalse(Collection<Long> ids);
 
     public Optional<DRole> findByRoleId(Long roleID);
 

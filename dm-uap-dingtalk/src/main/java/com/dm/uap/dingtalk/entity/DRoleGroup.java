@@ -21,33 +21,39 @@ import static javax.persistence.CascadeType.*;
 @Setter
 public class DRoleGroup implements Serializable {
 
-	private static final long serialVersionUID = -4172275539106446430L;
+    private static final long serialVersionUID = -4172275539106446430L;
 
-	@Id
-	private Long id;
+    @Id
+    private Long id;
 
-	@Column(name = "name_")
-	private String name;
+    @Column(name = "name_")
+    private String name;
 
-	@OneToMany(cascade = ALL)
-	@JoinColumn(name = "dd_group_id_")
-	private Set<DRole> roles;
+    @OneToMany(cascade = ALL)
+    @JoinColumn(name = "dd_group_id_")
+    private Set<DRole> roles;
 
-	@OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
-	@JoinColumn(name = "dm_group_id")
-	private RoleGroup group;
+    @OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
+    @JoinColumn(name = "dm_group_id")
+    private RoleGroup group;
 
-	public DRoleGroup(Long id) {
-		super();
-		this.id = id;
-	}
+    /**
+     * 标识角色组是否被删除
+     */
+    @Column(name = "deleted_")
+    private boolean deleted = false;
 
-	public DRoleGroup() {
-		super();
-	}
+    public DRoleGroup(Long id) {
+        super();
+        this.id = id;
+    }
 
-	void setId(Long id) {
-		this.id = id;
-	}
+    public DRoleGroup() {
+        super();
+    }
+
+    void setId(Long id) {
+        this.id = id;
+    }
 
 }

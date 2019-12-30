@@ -121,9 +121,11 @@ public class DUserServiceImpl implements DUserService {
      * @param dUsers
      * @return
      */
-    private List<User> syncToUap(List<DUser> dUsers) {
+    private void syncToUap(List<DUser> dUsers) {
+        log.info("开始同步用户信息到UAP");
         List<User> users = dUsers.stream().map(this::toUser).collect(Collectors.toList());
-        return userRepository.saveAll(users);
+        userRepository.saveAll(users);
+        log.info("同步用户信息到UAP完成");
     }
 
     private User toUser(DUser dUser) {
