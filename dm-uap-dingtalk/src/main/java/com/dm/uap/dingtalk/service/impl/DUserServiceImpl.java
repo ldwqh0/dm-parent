@@ -183,13 +183,27 @@ public class DUserServiceImpl implements DUserService {
         // 遍历所有部门
         Set<String> userIds = dDepartments.stream()
                 .map(DDepartment::getId)
-                .map(dingTalkService::fetchUsers)// 从钉钉服务器上拉取所有部门的用户信息
+                .map(departmentId -> {
+                    try {
+                        // 每次进程进来的时候，延迟30毫秒
+                        Thread.sleep(30); // 因为钉钉对同时并发的请求数量有限制
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return dingTalkService.fetchUsers(departmentId);
+                })// 从钉钉服务器上拉取所有部门的用户信息
                 .map(OapiUserGetDeptMemberResponse::getUserIds)
                 .flatMap(List::stream)// 获取所有的用户列表
                 .collect(Collectors.toSet());
 
-        // 不删除现有数据，关联太多
-        // dUserRepository.deleteByIdNotIn(userIds); // 删除在本地数据库中存在，但不存在于钉钉服务器上的数据
+        List<DUser> deletedUsers = dUserRepository.findByUseridNotInAndDeletedFalse(userIds);
+        deletedUsers.forEach(u -> {
+            // 进行逻辑删除
+            u.setDeleted(true);
+            // 将对应的用户禁用
+            u.getUser().setEnabled(false);
+        });
+
         List<DUser> users = userIds.stream()
                 // 将从服务器上抓取的数据，复制到本地数据库中
                 .map(userid -> {
@@ -212,7 +226,7 @@ public class DUserServiceImpl implements DUserService {
      * @param dUser
      * @param rsp
      * @return
-     */    
+     */
     private DUser copyProperties(DUser dUser, OapiUserGetResponse rsp) {
         dUserConverter.copyProperties(dUser, rsp);
         log.info("正在合并用户信息 userid={}", dUser.getUserid());

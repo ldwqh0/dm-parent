@@ -18,7 +18,7 @@ public class TtTest {
 	public static void main(String[] args)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
 			BadPaddingException, InvalidKeySpecException, UnsupportedEncodingException, DecoderException {
-		System.out.println(AesUtil.encrypt("2019-12-21T00:00:00.000+08:00", "我都不知道我要输入一段什么样的文本来加密这个内容"));
+		System.out.println(AesUtil.encrypt("2020-01-10T00:00:00.000+08:00", "我都不知道我要输入一段什么样的文本来加密这个内容"));
 	}
 
 }

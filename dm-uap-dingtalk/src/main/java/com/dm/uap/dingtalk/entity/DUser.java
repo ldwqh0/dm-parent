@@ -12,11 +12,13 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,139 +33,144 @@ import static javax.persistence.CascadeType.*;
 @Entity(name = "dd_user_")
 @Getter
 @Setter
+@Table(indexes = { @Index(columnList = "deleted_", name = "idx_deleted_") })
 public class DUser implements Serializable {
 
-	private static final long serialVersionUID = -6763998745823230765L;
-	@Id
-	@Column(name = "userid_")
-	private String userid;
+    private static final long serialVersionUID = -6763998745823230765L;
+    @Id
+    @Column(name = "userid_")
+    private String userid;
 
-	@Column(name = "unionid_")
-	private String unionid;
+    @Column(name = "unionid_")
+    private String unionid;
 
-	@Column(name = "name_")
-	private String name;
+    @Column(name = "name_")
+    private String name;
 
-	@Column(name = "tel_")
-	private String tel;
+    @Column(name = "tel_")
+    private String tel;
 
-	@Column(name = "work_place_")
-	private String workPlace;
+    @Column(name = "work_place_")
+    private String workPlace;
 
-	@Column(name = "remark_")
-	private String remark;
+    @Column(name = "remark_")
+    private String remark;
 
-	@Column(name = "mobile_")
-	private String mobile;
+    @Column(name = "mobile_")
+    private String mobile;
 
-	@Column(name = "email_")
-	private String email;
+    @Column(name = "email_")
+    private String email;
 
-	@Column(name = "org_email_")
-	private String orgEmail;
+    @Column(name = "org_email_")
+    private String orgEmail;
 
-	@Column(name = "active_")
-	private Boolean active;
+    @Column(name = "active_")
+    private Boolean active;
 
-	@Column(name = "order_")
-	@JoinTable(name = "dd_department_user_order_", joinColumns = {
-			@JoinColumn(name = "dd_user_id_")
-	})
-	@ElementCollection
-	@MapKeyJoinColumn(name = "dd_department_id_")
-	private Map<DDepartment, Long> orderInDepts;
+    @Column(name = "order_")
+    @JoinTable(name = "dd_department_user_order_", joinColumns = {
+            @JoinColumn(name = "dd_user_id_")
+    })
+    @ElementCollection
+    @MapKeyJoinColumn(name = "dd_department_id_")
+    private Map<DDepartment, Long> orderInDepts;
 
-	@Column(name = "is_admin_")
-	private Boolean admin;
+    @Column(name = "is_admin_")
+    private Boolean admin;
 
-	@Column(name = "is_boss_")
-	private Boolean boss;
+    @Column(name = "is_boss_")
+    private Boolean boss;
 
-	@Column(name = "is_leader_")
-	@ElementCollection
-	@JoinTable(name = "dd_department_user_leader_", joinColumns = {
-			@JoinColumn(name = "dd_user_id_")
-	})
-	@MapKeyJoinColumn(name = "dd_department_id_")
-	private Map<DDepartment, Boolean> leaderInDepts;
+    // 标识用户是否被删除
+    @Column(name = "deleted_")
+    private boolean deleted = false;
 
-	@Column(name = "hide_")
-	private Boolean hide;
+    @Column(name = "is_leader_")
+    @ElementCollection
+    @JoinTable(name = "dd_department_user_leader_", joinColumns = {
+            @JoinColumn(name = "dd_user_id_")
+    })
+    @MapKeyJoinColumn(name = "dd_department_id_")
+    private Map<DDepartment, Boolean> leaderInDepts;
 
-	@ManyToMany
-	@JoinTable(name = "dd_department_dd_user_", joinColumns = {
-			@JoinColumn(name = "dd_user_id_")
-	}, inverseJoinColumns = {
-			@JoinColumn(name = "dd_department_id_")
-	})
-	private Set<DDepartment> departments;
+    @Column(name = "hide_")
+    private Boolean hide;
 
-	@Column(name = "position_")
-	private String position;
+    @ManyToMany
+    @JoinTable(name = "dd_department_dd_user_", joinColumns = {
+            @JoinColumn(name = "dd_user_id_")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "dd_department_id_")
+    })
+    private Set<DDepartment> departments;
 
-	@Column(name = "avatar_")
-	private String avatar;
+    @Column(name = "position_")
+    private String position;
 
-	@Column(name = "hired_date_")
-	private ZonedDateTime hiredDate;
+    @Column(name = "avatar_")
+    private String avatar;
 
-	@Column(name = "jobnumber_")
-	private String jobnumber;
+    @Column(name = "hired_date_")
+    private ZonedDateTime hiredDate;
 
-	@Column(name = "senior_")
-	private Boolean senior;
+    @Column(name = "jobnumber_")
+    private String jobnumber;
 
-	@Column(name = "state_code_")
-	private String stateCode;
+    @Column(name = "senior_")
+    private Boolean senior;
 
-	@ManyToMany
-	@JoinTable(name = "dd_role_user_", joinColumns = {
-			@JoinColumn(name = "dd_user_id_")
-	}, inverseJoinColumns = {
-			@JoinColumn(name = "dd_role_id_")
-	})
-	private Set<DRole> roles;
+    @Column(name = "state_code_")
+    private String stateCode;
 
-	@OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
-	@JoinColumn(name = "dm_user_id_")
-	private User user;
+    @ManyToMany
+    @JoinTable(name = "dd_role_user_", joinColumns = {
+            @JoinColumn(name = "dd_user_id_")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "dd_role_id_")
+    })
+    private Set<DRole> roles;
 
-	/**
-	 * 这两个个字段仅仅在数据传输的过程中使用,用于{@link DUser}向{@link User}的传输，不会存储实体
-	 */
-	@Transient
-	private Map<DDepartment, String> posts;
+    @OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
+    @JoinColumn(name = "dm_user_id_")
+    private User user;
 
-	public void setPosts(Map<DDepartment, String> posts) {
-		this.posts = posts;
-		Set<Entry<DDepartment, String>> postEntry = posts.entrySet();
-		String pos = null;
-		Set<DDepartment> departments = new HashSet<DDepartment>();
-		for (Entry<DDepartment, String> entry : postEntry) {
-			if (StringUtils.isBlank(pos)) {
-				pos = entry.getValue();
-			}
-			departments.add(entry.getKey());
-		}
-		this.position = pos;
-		this.departments = departments;
-	}
+    /**
+     * 这两个个字段仅仅在数据传输的过程中使用,用于{@link DUser}向{@link User}的传输，不会存储实体
+     */
+    @Transient
+    private Map<DDepartment, String> posts;
 
-	public DUser() {
-		super();
-	}
+    public void setPosts(Map<DDepartment, String> posts) {
+        this.posts = posts;
+        Set<Entry<DDepartment, String>> postEntry = posts.entrySet();
+        String pos = null;
+        Set<DDepartment> departments = new HashSet<DDepartment>();
+        for (Entry<DDepartment, String> entry : postEntry) {
+            if (StringUtils.isBlank(pos)) {
+                pos = entry.getValue();
+            }
+            departments.add(entry.getKey());
+        }
+        this.position = pos;
+        this.departments = departments;
+    }
 
-	public DUser(String userid) {
-		super();
-		this.userid = userid;
-	}
+    public DUser() {
+        super();
+    }
 
-	public void setUserid(String userid) {
-		if (StringUtils.isBlank(this.userid)) {
-			this.userid = userid;
-		} else if (!Objects.equals(this.userid, userid)) {
-			throw new UnsupportedOperationException("you can not change the userid");
-		}
-	}
+    public DUser(String userid) {
+        super();
+        this.userid = userid;
+    }
+
+    public void setUserid(String userid) {
+        if (StringUtils.isBlank(this.userid)) {
+            this.userid = userid;
+        } else if (!Objects.equals(this.userid, userid)) {
+            throw new UnsupportedOperationException("you can not change the userid");
+        }
+    }
 
 }
