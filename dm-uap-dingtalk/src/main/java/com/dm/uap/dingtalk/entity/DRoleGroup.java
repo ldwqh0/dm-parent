@@ -6,9 +6,11 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import com.dm.uap.entity.RoleGroup;
 
@@ -19,6 +21,7 @@ import static javax.persistence.CascadeType.*;
 @Entity(name = "dd_role_group_")
 @Getter
 @Setter
+@Table(indexes = { @Index(name = "idx_dd_role_group_deleted_", columnList = "deleted_") })
 public class DRoleGroup implements Serializable {
 
     private static final long serialVersionUID = -4172275539106446430L;
@@ -41,7 +44,7 @@ public class DRoleGroup implements Serializable {
      * 标识角色组是否被删除
      */
     @Column(name = "deleted_")
-    private boolean deleted = false;
+    private Boolean deleted = false;
 
     public DRoleGroup(Long id) {
         super();

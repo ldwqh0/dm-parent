@@ -3,9 +3,11 @@ package com.dm.uap.dingtalk.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import com.dm.uap.entity.Role;
 
@@ -18,6 +20,7 @@ import java.io.Serializable;
 @Entity(name = "dd_role_")
 @Getter
 @Setter
+@Table(indexes = { @Index(name = "idx_dd_role_deleted_", columnList = "deleted_") })
 public class DRole implements Serializable {
 
     private static final long serialVersionUID = -8441406771526246885L;
@@ -41,7 +44,7 @@ public class DRole implements Serializable {
      * 标识角色是否被删除
      */
     @Column(name = "deleted_")
-    private boolean deleted = false;
+    private Boolean deleted = false;
 
     public DRole() {
         super();

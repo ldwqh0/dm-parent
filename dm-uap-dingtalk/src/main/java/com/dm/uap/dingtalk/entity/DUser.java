@@ -33,7 +33,7 @@ import static javax.persistence.CascadeType.*;
 @Entity(name = "dd_user_")
 @Getter
 @Setter
-@Table(indexes = { @Index(columnList = "deleted_", name = "idx_deleted_") })
+@Table(indexes = { @Index(columnList = "deleted_", name = "idx_dd_user_deleted_") })
 public class DUser implements Serializable {
 
     private static final long serialVersionUID = -6763998745823230765L;
@@ -84,7 +84,7 @@ public class DUser implements Serializable {
 
     // 标识用户是否被删除
     @Column(name = "deleted_")
-    private boolean deleted = false;
+    private Boolean deleted = false;
 
     @Column(name = "is_leader_")
     @ElementCollection

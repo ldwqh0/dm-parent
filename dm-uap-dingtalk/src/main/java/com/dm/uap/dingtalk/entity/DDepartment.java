@@ -5,8 +5,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import com.dm.uap.entity.Department;
 
@@ -18,6 +20,7 @@ import static javax.persistence.CascadeType.*;
 @Entity(name = "dd_department_")
 @Getter
 @Setter
+@Table(indexes = { @Index(columnList = "deleted_", name = "idx_dd_department_deleted_") })
 public class DDepartment implements Serializable {
 
     private static final long serialVersionUID = 8399805234987134498L;
@@ -63,7 +66,7 @@ public class DDepartment implements Serializable {
      * 标识用户是否被删除
      */
     @Column(name = "deleted_")
-    private boolean deleted = false;
+    private Boolean deleted = false;
 
     public DDepartment() {
         super();
