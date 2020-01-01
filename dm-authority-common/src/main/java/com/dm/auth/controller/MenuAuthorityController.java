@@ -99,7 +99,7 @@ public class MenuAuthorityController {
             List<Menu> result = new ArrayList<Menu>();
             result.addAll(menus);
             Collections.sort(result, (o1, o2) -> (int) (o1.getOrder() - o2.getOrder()));
-            return menuConverter.toDto(menus);
+            return menuConverter.toDto(result);
         } else {
             return Collections.emptyList();
         }

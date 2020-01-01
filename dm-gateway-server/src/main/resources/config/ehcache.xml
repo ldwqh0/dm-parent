@@ -14,8 +14,4 @@
       <heap unit="MB">30</heap>
     </resources>
   </cache-template>
- <!--  <cache
-    alias="AuthorityAttributes"
-    uses-template="default">
-  </cache> -->
 </config>

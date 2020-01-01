@@ -69,11 +69,10 @@ public class ConfigHelper {
     }
 
     /** */
-    @SuppressWarnings("deprecation")
     public Object getClassInstance(String paramName, String paramValue,
             Object defaultInstance, Config config) {
         Object instance;
-        if ("".equals(paramValue) || paramValue == null) {
+        if (StringUtils.isBlank(paramValue)) {
             instance = defaultInstance;
         } else {
             try {
