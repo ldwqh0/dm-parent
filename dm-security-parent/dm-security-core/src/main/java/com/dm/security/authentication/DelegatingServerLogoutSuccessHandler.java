@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.WebFilterExchange;
+import org.springframework.security.web.server.authentication.logout.HttpStatusReturningServerLogoutSuccessHandler;
 import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.web.server.ServerWebExchange;
@@ -24,6 +25,7 @@ public class DelegatingServerLogoutSuccessHandler implements ServerLogoutSuccess
 
     public DelegatingServerLogoutSuccessHandler(DelegateLogoutSuccessEntry... entry) {
         this.delegateLogoutSuccessHandler = Arrays.asList(entry);
+        this.defaultLogoutSuccessHandler = new HttpStatusReturningServerLogoutSuccessHandler();
     }
 
     @Override
