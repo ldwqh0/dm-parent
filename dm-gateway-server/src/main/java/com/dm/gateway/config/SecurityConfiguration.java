@@ -14,12 +14,16 @@ import org.springframework.security.web.server.DelegatingServerAuthenticationEnt
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
+import org.springframework.security.web.server.authentication.logout.HttpStatusReturningServerLogoutSuccessHandler;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import org.springframework.security.web.server.csrf.CsrfToken;
 import org.springframework.security.web.server.util.matcher.MediaTypeServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
 import org.springframework.web.server.WebFilter;
+
+import com.dm.security.authentication.DelegateLogoutSuccessEntry;
+import com.dm.security.authentication.DelegatingServerLogoutSuccessHandler;
 import com.dm.security.oauth2.authorization.ServerHttpOauth2RequestReactiveAuthorizationManager;
 import com.dm.security.oauth2.server.resource.introspection.ReactiveUserInfoOpaqueTokenIntrospector;
 import com.dm.security.web.server.util.matcher.NotBearerTokenServerWebExchangeMatcher;
@@ -59,6 +63,8 @@ public class SecurityConfiguration {
         http.csrf().csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse());
         // 网关自身也是资源服务器
         http.oauth2ResourceServer().opaqueToken();
+        http.logout().logoutSuccessHandler(new DelegatingServerLogoutSuccessHandler(
+                new DelegateLogoutSuccessEntry(mediaMathcer, new HttpStatusReturningServerLogoutSuccessHandler())));
         return http.build();
     }
 
