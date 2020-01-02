@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.dm.auth.security.SavedRequestAwareAuthenticationAndLoggingSuccessHandler;
 import com.dm.auth.security.SimpleUrlAuthenticationLoginLogFailureHandler;
@@ -40,7 +42,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/oauth/login").permitAll().failureHandler(authenticationFailureHandler())
                 .successHandler(authenticationSuccessHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
                 .and().httpBasic().disable();
-//        http.logout().logoutUrl("/oauth/logout");
+        http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/oauth/logout", HttpMethod.GET.toString()));// .logoutUrl("/oauth/logout");
     }
 
     private AuthenticationFailureHandler authenticationFailureHandler() {
