@@ -31,7 +31,7 @@ import com.dm.uap.service.UserService;
 @EnableJpaRepositories({ "com.dm.uap" })
 @ComponentScan({ "com.dm.uap" })
 @EnableConfigurationProperties({ DefaultUserProperties.class })
-@Import(UapBeanConfiguration.class)
+@Import({ UapBeanConfiguration.class, UapJCacheConfiguration.class })
 public class UapAutoConfiguration implements InitializingBean {
 
     @Autowired

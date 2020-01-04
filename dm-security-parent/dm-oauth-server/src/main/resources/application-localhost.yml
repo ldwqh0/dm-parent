@@ -5,6 +5,8 @@ server:
       cookie:
         name: OAUTHSESSION
 spring:
+  cache:
+    type: jcache
   security: 
     default-success-url: '/'
   datasource:
