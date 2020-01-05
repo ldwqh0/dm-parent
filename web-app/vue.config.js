@@ -11,7 +11,7 @@ const config = {
         pathRewrite: { '^/gw/': '/' },
         onProxyRes (proxyRes, req, res) {
           if (proxyRes.statusCode === 302) {
-            let redirect = proxyRes.headers.locationl
+            let redirect = proxyRes.headers.location
             if (redirect) {
               redirect = redirect.replace(/http:\/\/127.0.0.1:8080\//g, 'http://localhost:1024/gw/')
             }

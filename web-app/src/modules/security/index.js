@@ -1,8 +1,9 @@
 import routes from './routes'
+import vuex from './vuex'
 
 export default {
-  install (Vue, { store, router }) {
+  install (Vue, {store, router}) {
     router.addRoutes(routes)
-    // store.registerModule('security')
+    store.registerModule('security', vuex)
   }
 }

@@ -6,5 +6,9 @@ export default [{
     name: 'users',
     path: 'users',
     component: () => import('./views/Users')
+  }, {
+    name: 'menus',
+    path: 'menus',
+    component: () => import('./views/Menus')
   }]
 }]

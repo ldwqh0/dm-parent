@@ -270,7 +270,7 @@
       return Promise.all(validations.map(form => form.validate())).then(() => {
         return this.id === 'new' ? this.save(this.user) : this.update(this.user)
       }).catch(e => {
-        console.error('校验不通过')
+        // console.error('校验不通过')
         return Promise.reject(e)
       }).finally(() => {
         this.$emit('on-submit', false)
