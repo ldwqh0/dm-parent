@@ -29,10 +29,6 @@ public class UserConverter implements Converter<User, UserDto> {
     @Autowired
     private DepartmentConverter departmentConverter;
 
-    public <T extends User> UserDetailsDto toUserDetailsDto(Optional<T> user) {
-        return user.map(this::toUserDetailsDto).orElse(null);
-    }
-
     public <T extends User> UserDetailsDto toUserDetailsDto(T user) {
         UserDetailsDto dto = new UserDetailsDto();
         dto.setPassword(user.getPassword());

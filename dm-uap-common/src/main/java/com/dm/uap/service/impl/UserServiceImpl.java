@@ -65,12 +65,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Cacheable(cacheNames = { "users" }, sync = true, key = "#username.toLowerCase()")
     public UserDetailsDto loadUserByUsername(String username) {
-        Optional<User> user = userRepository.findOneByUsernameIgnoreCase(username);
-        if (user.isPresent()) {
-            return userConverter.toUserDetailsDto(user);
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        return Optional.<String>ofNullable(username)
+                .filter(StringUtils::isNotEmpty)
+                .map(String::toLowerCase)
+                .flatMap(userRepository::findOneByUsernameIgnoreCase)
+                .map(userConverter::toUserDetailsDto)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     @Override
