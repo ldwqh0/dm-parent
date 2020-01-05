@@ -11,18 +11,16 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
@@ -61,14 +59,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private DepartmentRepository dpr;
 
-//    @Autowired(required = false)
-//    private CacheManager cacheManager;
-
     private final QUser qUser = QUser.user;
 
     @Override
     @Transactional
-    @Cacheable(cacheNames = { "users" }, sync = true)
+    @Cacheable(cacheNames = { "users" }, sync = true, key = "#username.toLowerCase()")
     public UserDetailsDto loadUserByUsername(String username) {
         Optional<User> user = userRepository.findOneByUsernameIgnoreCase(username);
         if (user.isPresent()) {
@@ -132,24 +127,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        userRepository.findById(id).ifPresent(user -> {
-            // 从缓存中移除
-            evictFromUserCache(user.getUsername());
-            userRepository.deleteById(id);
-        });
-
+    @CacheEvict(cacheNames = { "users" }, key = "#result.username.toLowerCase()")
+    public User delete(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        user.ifPresent(a -> userRepository.deleteById(id));
+        return user.orElseThrow(DataNotExistException::new);
     }
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "users" }, key = "#result.username.toLowerCase()")
     public User update(long id, UserDto userDto) {
         checkUsernameExists(id, userDto.getUsername());
         User user = userRepository.getOne(id);
         userConverter.copyProperties(user, userDto);
         addPostsAndRoles(user, userDto);
-        // 从缓存中移除
-        evictFromUserCache(user.getUsername());
         return user;
     }
 
@@ -172,10 +164,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = { "users" }, key = "#result.username.toLowerCase()")
     public User repassword(Long id, String password) {
         User user = userRepository.getOne(id);
         user.setPassword(passwordEncoder.encode(password));
-        evictFromUserCache(user.getUsername());
         return user;
     }
 
@@ -219,14 +211,5 @@ public class UserServiceImpl implements UserService {
         } else {
             model.setRoles(Collections.emptyList());
         }
-    }
-
-    private void evictFromUserCache(String username) {
-//        if (!Objects.isNull(cacheManager)) {
-//            Cache userCache = cacheManager.getCache("users");
-//            if (!Objects.isNull(userCache)) {
-//                userCache.evictIfPresent(username);
-//            }
-//        }
     }
 }

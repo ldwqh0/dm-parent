@@ -28,7 +28,7 @@ public interface UserService extends UserDetailsService {
 
     public Optional<User> get(Long id);
 
-    public void delete(Long id);
+    public User delete(Long id);
 
     public User update(long id, UserDto userDto);
 
