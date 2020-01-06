@@ -25,6 +25,7 @@ import com.dm.dingtalk.api.response.TaobaoResponse;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.response.OapiUserCreateResponse;
+import com.dm.dingtalk.api.response.OapiUserDeleteResponse;
 import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
 import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
@@ -182,12 +183,12 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
         String url = SERVER + "/user/get?access_token={0}&userid={1}";
         OapiUserGetResponse response = restTemplate.getForObject(url, OapiUserGetResponse.class, getAccessToken(),
                 userid);
-        checkResponse(response);
         if (Objects.isNull(response)) {
             throw new RuntimeException("the response is null");
         } else if (Objects.equals(USER_NOT_FOUND_CODE, response.getErrcode())) {
             return response;
         } else {
+            checkResponse(response);
             return response;
         }
     }
@@ -229,6 +230,14 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
             this.restTemplate = new RestTemplate();
         }
         Assert.notNull(clientConfig, "The clientConfig can not be null");
+    }
+
+    @Override
+    public void deleteUser(String userid) {
+        String url = SERVER + "/user/delete?access_token={0}&userid={1}";
+        OapiUserDeleteResponse response = restTemplate.getForObject(url, OapiUserDeleteResponse.class, getAccessToken(),
+                userid);
+        checkResponse(response);
     }
 
 }

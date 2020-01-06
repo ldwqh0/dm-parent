@@ -83,8 +83,17 @@ public class DUserServiceImpl implements DUserService {
 
     @Override
     public DUser save(DUser dUser) {
-        // 保存到钉钉服务器
-        dUser = saveToDingTalk(dUser);
+        try {
+            // 如果用户被标记为删除，从钉钉通讯录中删除用户
+            if (Boolean.TRUE.equals(dUser.getDeleted())) {
+                dingTalkService.deleteUser(dUser.getUserid());
+            } else {
+                dUser = saveToDingTalk(dUser);
+            }
+            // 保存到钉钉服务器
+        } catch (Exception e) {
+            log.error("将用户信息保存到钉钉时出错", e);
+        }
         // 更新关联的用户信息
         User user = toUser(dUser);
         dUser.setUser(user);
