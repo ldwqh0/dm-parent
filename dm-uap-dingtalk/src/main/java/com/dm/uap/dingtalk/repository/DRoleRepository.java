@@ -25,6 +25,7 @@ public interface DRoleRepository extends JpaRepository<DRole, Long>, QuerydslPre
      * @param deleted
      * @return
      */
+    @Query("select dr.role.id from DRole dr where dr.deleted=?1")
     public List<Long> findRoleIdByDRoleDeleted(boolean deleted);
 
 }

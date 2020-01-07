@@ -16,6 +16,7 @@ public interface DUserRepository extends JpaRepository<DUser, String>, QuerydslP
     @Modifying
     public int setDeletedByUseridNotIn(Collection<String> userIds);
 
+    @Query("select du.user.id from DUser du where du.deleted=?1")
     public List<Long> findUserIdsByDUserDeleted(boolean b);
 
 }
