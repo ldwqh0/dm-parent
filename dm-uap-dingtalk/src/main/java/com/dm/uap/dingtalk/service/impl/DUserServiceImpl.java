@@ -208,16 +208,7 @@ public class DUserServiceImpl implements DUserService {
                 .collect(Collectors.toSet());
         dUserRepository.setDeletedByUseridNotIn(userIds);
         List<Long> deleteUsers = dUserRepository.findUserIdsByDUserDeleted(true);
-
         userRepository.batchSetEnabled(deleteUsers, false);
-
-//        deletedUsers.forEach(u -> {
-//            // 进行逻辑删除
-//            u.setDeleted(true);
-//            // 将对应的用户禁用
-//            // TODO 需要解决用户禁用的问题
-//            u.getUser().setEnabled(false);
-//        });
 
         List<DUser> users = userIds.stream()
                 // 将从服务器上抓取的数据，复制到本地数据库中

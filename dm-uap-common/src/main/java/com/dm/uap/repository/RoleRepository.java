@@ -16,7 +16,7 @@ public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredi
 
     public Optional<Role> findByName(String name);
 
-    @Query("update Role set state=?1 where id in (?2)")
+    @Query("update Role set state=?2 where id in (?1)")
     @Modifying
     public int batchSetState(List<Long> ids, Status state);
 

@@ -12,10 +12,6 @@ import com.dm.uap.dingtalk.entity.DUser;
 
 public interface DUserRepository extends JpaRepository<DUser, String>, QuerydslPredicateExecutor<DUser> {
 
-//    public long deleteByUseridNotIn(Set<String> userIds);
-
-//    public List<DUser> findByUseridNotInAndDeletedFalse(Set<String> userIds);
-
     @Query("update DUser set deleted=true where deleted != true and id not in(?1)")
     @Modifying
     public int setDeletedByUseridNotIn(Collection<String> userIds);
