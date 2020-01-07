@@ -2,3 +2,4 @@ spring:
   profiles:
     active:
     - localhost
+system:  authorization:    key: EnZ/+ju1VO0qqUBNhkEAEss4rCJBZyl1sNdF2o0OCxU=      

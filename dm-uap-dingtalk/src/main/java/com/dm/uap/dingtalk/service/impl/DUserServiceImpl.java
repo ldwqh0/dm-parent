@@ -83,8 +83,17 @@ public class DUserServiceImpl implements DUserService {
 
     @Override
     public DUser save(DUser dUser) {
-        // 保存到钉钉服务器
-        dUser = saveToDingTalk(dUser);
+        try {
+            // 如果用户被标记为删除，从钉钉通讯录中删除用户
+            if (Boolean.TRUE.equals(dUser.getDeleted())) {
+                dingTalkService.deleteUser(dUser.getUserid());
+            } else {
+                dUser = saveToDingTalk(dUser);
+            }
+            // 保存到钉钉服务器
+        } catch (Exception e) {
+            log.error("将用户信息保存到钉钉时出错", e);
+        }
         // 更新关联的用户信息
         User user = toUser(dUser);
         dUser.setUser(user);
@@ -121,9 +130,11 @@ public class DUserServiceImpl implements DUserService {
      * @param dUsers
      * @return
      */
-    private List<User> syncToUap(List<DUser> dUsers) {
+    private void syncToUap(List<DUser> dUsers) {
+        log.info("开始同步用户信息到UAP");
         List<User> users = dUsers.stream().map(this::toUser).collect(Collectors.toList());
-        return userRepository.saveAll(users);
+        userRepository.saveAll(users);
+        log.info("同步用户信息到UAP完成");
     }
 
     private User toUser(DUser dUser) {
@@ -183,13 +194,27 @@ public class DUserServiceImpl implements DUserService {
         // 遍历所有部门
         Set<String> userIds = dDepartments.stream()
                 .map(DDepartment::getId)
-                .map(dingTalkService::fetchUsers)// 从钉钉服务器上拉取所有部门的用户信息
+                .map(departmentId -> {
+                    try {
+                        // 每次进程进来的时候，延迟30毫秒
+                        Thread.sleep(30); // 因为钉钉对同时并发的请求数量有限制
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return dingTalkService.fetchUsers(departmentId);
+                })// 从钉钉服务器上拉取所有部门的用户信息
                 .map(OapiUserGetDeptMemberResponse::getUserIds)
                 .flatMap(List::stream)// 获取所有的用户列表
                 .collect(Collectors.toSet());
 
-        // 不删除现有数据，关联太多
-        // dUserRepository.deleteByIdNotIn(userIds); // 删除在本地数据库中存在，但不存在于钉钉服务器上的数据
+        List<DUser> deletedUsers = dUserRepository.findByUseridNotInAndDeletedFalse(userIds);
+        deletedUsers.forEach(u -> {
+            // 进行逻辑删除
+            u.setDeleted(true);
+            // 将对应的用户禁用
+            u.getUser().setEnabled(false);
+        });
+
         List<DUser> users = userIds.stream()
                 // 将从服务器上抓取的数据，复制到本地数据库中
                 .map(userid -> {

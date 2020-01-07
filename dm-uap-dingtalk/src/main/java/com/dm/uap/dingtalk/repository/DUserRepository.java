@@ -1,5 +1,6 @@
 package com.dm.uap.dingtalk.repository;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,8 @@ import com.dm.uap.dingtalk.entity.DUser;
 
 public interface DUserRepository extends JpaRepository<DUser, String>, QuerydslPredicateExecutor<DUser> {
 
-    public long deleteByIdNotIn(Set<String> userIds);
+    public long deleteByUseridNotIn(Set<String> userIds);
+
+    public List<DUser> findByUseridNotInAndDeletedFalse(Set<String> userIds);
 
 }
