@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +57,9 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         // 需要先删除原有部门中不存在于本次抓取部门[2,3,6]中的部门[1]
         List<Long> exists = departments.stream().map(Department::getId).collect(Collectors.toList());
         // 找到已经删除，但没有被标记为删除的部门,将之标记为删除
-        dDepartmentRepository.setDeletedByIdNotIn(exists);
+        if (CollectionUtils.isNotEmpty(exists)) {
+            dDepartmentRepository.setDeletedByIdNotIn(exists);
+        }
         // 将抓取到的数据映射为实体
         List<DDepartment> dDepartments_ = departments.stream()
                 .map(_department -> {

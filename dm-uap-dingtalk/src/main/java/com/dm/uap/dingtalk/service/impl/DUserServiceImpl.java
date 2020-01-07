@@ -208,8 +208,9 @@ public class DUserServiceImpl implements DUserService {
                 .collect(Collectors.toSet());
         dUserRepository.setDeletedByUseridNotIn(userIds);
         List<Long> deleteUsers = dUserRepository.findUserIdsByDUserDeleted(true);
-        userRepository.batchSetEnabled(deleteUsers, false);
-
+        if (CollectionUtils.isNotEmpty(deleteUsers)) {
+            userRepository.batchSetEnabled(deleteUsers, false);
+        }
         List<DUser> users = userIds.stream()
                 // 将从服务器上抓取的数据，复制到本地数据库中
                 .map(userid -> {
