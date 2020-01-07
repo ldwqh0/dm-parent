@@ -25,6 +25,7 @@ import com.dm.dingtalk.api.response.TaobaoResponse;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.response.OapiUserCreateResponse;
+import com.dm.dingtalk.api.response.OapiUserDeleteResponse;
 import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
 import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
