@@ -17,10 +17,10 @@ import static javax.persistence.CascadeType.*;
 
 import java.io.Serializable;
 
-@Entity(name = "dd_role_")
+@Entity
 @Getter
 @Setter
-@Table(indexes = { @Index(name = "idx_dd_role_deleted_", columnList = "deleted_") })
+@Table(name = "dd_role_", indexes = { @Index(name = "idx_dd_role_deleted_", columnList = "deleted_") })
 public class DRole implements Serializable {
 
     private static final long serialVersionUID = -8441406771526246885L;

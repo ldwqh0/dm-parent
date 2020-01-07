@@ -54,10 +54,9 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         // 删除原有列表中，不存在于本次同步抓取到的部门列表中的数据
         // 如果原有数据中 有部门 [1,2,3],本次抓取的部门有 [2,3,6]
         // 需要先删除原有部门中不存在于本次抓取部门[2,3,6]中的部门[1]
-
         List<Long> exists = departments.stream().map(Department::getId).collect(Collectors.toList());
         // 找到已经删除，但没有被标记为删除的部门,将之标记为删除
-        dDepartmentRepository.findByIdNotInAndDeletedFalse(exists).forEach(d -> d.setDeleted(true));
+        dDepartmentRepository.setDeletedByIdNotIn(exists);
         // 将抓取到的数据映射为实体
         List<DDepartment> dDepartments_ = departments.stream()
                 .map(_department -> {

@@ -18,10 +18,10 @@ import lombok.Setter;
  * @author 李东
  *
  */
-@Entity(name = "dm_login_log_")
+@Entity
 @Getter
 @Setter
-@Table(indexes = { @Index(columnList = "login_name_", name = "idx_login_name_"),
+@Table(name = "dm_login_log_", indexes = { @Index(columnList = "login_name_", name = "idx_login_name_"),
         @Index(columnList = "time_", name = "idx_time_") })
 public class LoginLog extends AbstractEntity {
 

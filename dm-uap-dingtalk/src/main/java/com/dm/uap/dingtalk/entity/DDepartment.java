@@ -17,10 +17,10 @@ import lombok.Setter;
 
 import static javax.persistence.CascadeType.*;
 
-@Entity(name = "dd_department_")
+@Entity
 @Getter
 @Setter
-@Table(indexes = { @Index(columnList = "deleted_", name = "idx_dd_department_deleted_") })
+@Table(name = "dd_department_", indexes = { @Index(columnList = "deleted_", name = "idx_dd_department_deleted_") })
 public class DDepartment implements Serializable {
 
     private static final long serialVersionUID = 8399805234987134498L;

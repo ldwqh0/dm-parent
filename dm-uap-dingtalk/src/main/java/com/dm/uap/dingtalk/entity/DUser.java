@@ -30,10 +30,10 @@ import lombok.Setter;
 
 import static javax.persistence.CascadeType.*;
 
-@Entity(name = "dd_user_")
+@Entity
 @Getter
 @Setter
-@Table(indexes = { @Index(columnList = "deleted_", name = "idx_dd_user_deleted_") })
+@Table(name = "dd_user_", indexes = { @Index(columnList = "deleted_", name = "idx_dd_user_deleted_") })
 public class DUser implements Serializable {
 
     private static final long serialVersionUID = -6763998745823230765L;

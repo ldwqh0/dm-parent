@@ -18,10 +18,10 @@ import lombok.Getter;
 import lombok.Setter;
 import static javax.persistence.CascadeType.*;
 
-@Entity(name = "dd_role_group_")
+@Entity
 @Getter
 @Setter
-@Table(indexes = { @Index(name = "idx_dd_role_group_deleted_", columnList = "deleted_") })
+@Table(name = "dd_role_group_", indexes = { @Index(name = "idx_dd_role_group_deleted_", columnList = "deleted_") })
 public class DRoleGroup implements Serializable {
 
     private static final long serialVersionUID = -4172275539106446430L;
