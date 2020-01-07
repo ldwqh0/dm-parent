@@ -58,12 +58,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Department update(Long id, DepartmentDto data) {
         Department department = departmentRepository.getOne(id);
         departmentConverter.copyProperties(department, data);
-        DepartmentDto parent = data.getParent();
-        if (!Objects.isNull(parent)) {
-            department.setParent(departmentRepository.getOne(parent.getId()));
-        } else {
-            department.setParent(null);
-        }
+        Department parent = Optional.ofNullable(data.getParent())
+                .map(DepartmentDto::getId)
+                .map(departmentRepository::getOne)
+                .orElse(null);
+        department.setParent(parent);
         return departmentRepository.save(department);
     }
 

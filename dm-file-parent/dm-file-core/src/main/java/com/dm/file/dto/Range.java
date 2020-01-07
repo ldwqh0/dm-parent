@@ -90,6 +90,7 @@ public interface Range {
         private long start;
         private long end;
 
+        @Override
         public long getContentLength() {
             return end - start + 1;
         }

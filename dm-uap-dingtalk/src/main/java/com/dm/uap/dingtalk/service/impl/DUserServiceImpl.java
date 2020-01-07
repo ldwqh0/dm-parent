@@ -206,7 +206,7 @@ public class DUserServiceImpl implements DUserService {
                 .map(OapiUserGetDeptMemberResponse::getUserIds)
                 .flatMap(List::stream)// 获取所有的用户列表
                 .collect(Collectors.toSet());
-        // 设置删除状态
+        // 将存在于本地用户，但不存在于钉钉的用户，将本地状态设置为删除，
         dUserRepository.setDeletedByUseridNotIn(userIds);
         List<Long> deleteUsers = dUserRepository.findUserIdsByDUserDeleted(true);
         if (CollectionUtils.isNotEmpty(deleteUsers)) {
@@ -218,6 +218,7 @@ public class DUserServiceImpl implements DUserService {
                     try {
                         return dingTalkService.fetchUserById(userid);
                     } catch (Exception e) {
+                        log.error("从服务器抓取用户[{}]的信息出错,错误信息是 [{}]", userid, e.getMessage());
                         return null;
                     }
                 })

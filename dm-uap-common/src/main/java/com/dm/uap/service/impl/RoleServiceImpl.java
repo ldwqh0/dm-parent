@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,12 +57,6 @@ public class RoleServiceImpl implements RoleService {
         Role role = new Role();
         copyProperties(role, roleDto);
         return roleRepository.save(role);
-    }
-
-    @Override
-    public Optional<Role> getFirst() {
-        PageRequest page = PageRequest.of(0, 1);
-        return roleRepository.findAll(page).stream().findFirst();
     }
 
     @Override

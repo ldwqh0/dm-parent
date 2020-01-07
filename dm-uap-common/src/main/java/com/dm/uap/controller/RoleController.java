@@ -86,7 +86,7 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable("id") long id) {
-     // 内置分组角色不允许修改
+        // 内置分组角色不允许修改
         roleService.get(id)
                 .filter(role -> "内置分组".equals(role.getGroup().getName()))
                 .ifPresent(role -> {
