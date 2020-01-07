@@ -1,5 +1,6 @@
 package com.dm.springboot.autoconfigure.security;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
@@ -10,9 +11,11 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
 
 @Configuration
-@ConditionalOnClass(ReactiveAuthenticationManager.class)
+@ConditionalOnClass({ ReactiveAuthenticationManager.class })
+@ConditionalOnBean({ RequestMappingHandlerAdapter.class })
 @ConditionalOnMissingBean(type = {
         "org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter" })
 @ConditionalOnMissingClass({ "javax.servlet.Servlet" })

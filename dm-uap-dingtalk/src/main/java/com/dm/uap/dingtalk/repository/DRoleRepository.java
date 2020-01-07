@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.dm.uap.dingtalk.entity.DRole;
@@ -16,8 +17,11 @@ public interface DRoleRepository extends JpaRepository<DRole, Long>, QuerydslPre
      *
      * @param ids
      */
+    @Modifying
+    @Deprecated
     public long deleteByIdNotIn(Collection<Long> ids);
 
+    @Deprecated
     public List<DRole> findByIdNotInAndDeletedFalse(Collection<Long> ids);
 
     public Optional<DRole> findByRoleId(Long roleID);
