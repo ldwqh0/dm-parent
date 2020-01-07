@@ -14,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -26,7 +27,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "dm_user_")
+@Entity
+@Table(name = "dm_user_")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User extends AbstractEntity {
 

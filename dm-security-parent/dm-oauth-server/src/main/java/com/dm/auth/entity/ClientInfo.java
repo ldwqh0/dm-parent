@@ -17,9 +17,10 @@ import org.springframework.data.domain.Persistable;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "dm_client_")
+@Entity
 @Getter
 @Setter
+@Table(name = "dm_client_")
 public class ClientInfo implements Persistable<String>, Serializable {
     private static final long serialVersionUID = -8180613850135404512L;
 

@@ -206,15 +206,12 @@ public class DUserServiceImpl implements DUserService {
                 .map(OapiUserGetDeptMemberResponse::getUserIds)
                 .flatMap(List::stream)// 获取所有的用户列表
                 .collect(Collectors.toSet());
-
-        List<DUser> deletedUsers = dUserRepository.findByUseridNotInAndDeletedFalse(userIds);
-        deletedUsers.forEach(u -> {
-            // 进行逻辑删除
-            u.setDeleted(true);
-            // 将对应的用户禁用
-            u.getUser().setEnabled(false);
-        });
-
+        // 设置删除状态
+        dUserRepository.setDeletedByUseridNotIn(userIds);
+        List<Long> deleteUsers = dUserRepository.findUserIdsByDUserDeleted(true);
+        if (CollectionUtils.isNotEmpty(deleteUsers)) {
+            userRepository.batchSetEnabled(deleteUsers, false);
+        }
         List<DUser> users = userIds.stream()
                 // 将从服务器上抓取的数据，复制到本地数据库中
                 .map(userid -> {

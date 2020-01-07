@@ -10,6 +10,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 
 import com.dm.common.entity.AbstractEntity;
 import com.dm.security.authentication.UriResource.MatchType;
@@ -23,9 +24,10 @@ import lombok.Setter;
  * @author LiDong
  *
  */
-@Entity(name = "dm_resource_")
+@Entity
 @Getter
 @Setter
+@Table(name = "dm_resource_")
 public class Resource extends AbstractEntity {
     private static final long serialVersionUID = 8273786895229540103L;
 

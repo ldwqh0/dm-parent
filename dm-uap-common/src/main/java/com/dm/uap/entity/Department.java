@@ -14,10 +14,10 @@ import com.dm.common.entity.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "dm_department_")
+@Entity
 @Getter
 @Setter
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "parent_id_", "full_name_" }) })
+@Table(name = "dm_department_", uniqueConstraints = { @UniqueConstraint(columnNames = { "parent_id_", "full_name_" }) })
 public class Department extends AbstractEntity {
     private static final long serialVersionUID = -6824250546678747271L;
 

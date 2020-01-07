@@ -17,28 +17,28 @@ import static javax.persistence.CascadeType.*;
 
 import java.io.Serializable;
 
-@Entity(name = "dd_role_")
+@Entity
 @Getter
 @Setter
-@Table(indexes = { @Index(name = "idx_dd_role_deleted_", columnList = "deleted_") })
+@Table(name = "dd_role_", indexes = { @Index(name = "idx_dd_role_deleted_", columnList = "deleted_") })
 public class DRole implements Serializable {
 
-	private static final long serialVersionUID = -8441406771526246885L;
+    private static final long serialVersionUID = -8441406771526246885L;
 
-	@Id
-	@Column(name = "id_")
-	private Long id;
+    @Id
+    @Column(name = "id_")
+    private Long id;
 
-	@Column(name = "name_")
-	private String name;
+    @Column(name = "name_")
+    private String name;
 
-	@OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
-	@JoinColumn(name = "dm_role_id_")
-	private Role role;
+    @OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
+    @JoinColumn(name = "dm_role_id_")
+    private Role role;
 
-	@ManyToOne(cascade = REFRESH)
-	@JoinColumn(name = "dd_group_id_")
-	private DRoleGroup group;
+    @ManyToOne(cascade = REFRESH)
+    @JoinColumn(name = "dd_group_id_")
+    private DRoleGroup group;
 
     /**
      * 标识角色是否被删除
@@ -50,13 +50,13 @@ public class DRole implements Serializable {
         super();
     }
 
-	public DRole(Long id) {
-		super();
-		this.id = id;
-	}
+    public DRole(Long id) {
+        super();
+        this.id = id;
+    }
 
-	void setId(Long id) {
-		this.id = id;
-	}
+    void setId(Long id) {
+        this.id = id;
+    }
 
 }

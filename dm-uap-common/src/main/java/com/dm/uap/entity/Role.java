@@ -24,8 +24,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "dm_role_")
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "role_group_id_", "name_" }) })
+@Entity
+@Table(name = "dm_role_", uniqueConstraints = { @UniqueConstraint(columnNames = { "role_group_id_", "name_" }) })
 public class Role extends AbstractEntity {
 
     public enum Status {

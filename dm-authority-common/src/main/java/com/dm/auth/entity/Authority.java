@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OrderColumn;
+import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,10 +27,11 @@ import lombok.Setter;
  * @author LiDong
  *
  */
-@Entity(name = "dm_authority_")
+@Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Getter
 @Setter
+@Table(name = "dm_authority_")
 public class Authority implements Serializable {
 
     private static final long serialVersionUID = 1819180600973309677L;

@@ -6,24 +6,26 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.dm.uap.dingtalk.entity.DRole;
 
 public interface DRoleRepository extends JpaRepository<DRole, Long>, QuerydslPredicateExecutor<DRole> {
 
-    /**
-     * 删除ID不在列表中中的角色
-     *
-     * @param ids
-     */
+    @Query("update DRole set deleted=true where deleted !=true and id not in (?1)")
     @Modifying
-    @Deprecated
-    public long deleteByIdNotIn(Collection<Long> ids);
-
-    @Deprecated
-    public List<DRole> findByIdNotInAndDeletedFalse(Collection<Long> ids);
+    public int setDeletedByIdNotIn(Collection<Long> ids);
 
     public Optional<DRole> findByRoleId(Long roleID);
+
+    /**
+     * 根据钉钉角色是否被禁用查找钉钉角色对应的系统角色ID
+     * 
+     * @param deleted
+     * @return
+     */
+    @Query("select dr.role.id from DRole dr where dr.deleted=?1")
+    public List<Long> findRoleIdByDRoleDeleted(boolean deleted);
 
 }

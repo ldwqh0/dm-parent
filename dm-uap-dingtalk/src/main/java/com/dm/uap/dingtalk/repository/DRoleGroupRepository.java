@@ -1,19 +1,16 @@
 package com.dm.uap.dingtalk.repository;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import com.dm.uap.dingtalk.entity.DRoleGroup;
 
 public interface DRoleGroupRepository extends JpaRepository<DRoleGroup, Long> {
 
+    @Query("update DRoleGroup set deleted=true where deleted != true and id not in (?1)")
     @Modifying
-    @Deprecated
-    public long deleteByIdNotIn(List<Long> collect);
-
-    @Deprecated
-    public List<DRoleGroup> findByIdNotInAndDeletedFalse(Collection<Long> ids);
+    public int setDeletedByIdNotIn(Collection<Long> ids);
 }

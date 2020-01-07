@@ -18,10 +18,11 @@ import org.springframework.security.oauth2.provider.approval.Approval.ApprovalSt
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "dm_user_approval_")
+@Entity
 @Getter
 @Setter
 @IdClass(UserApprovalPK.class)
+@Table(name = "dm_user_approval_") 
 @EntityListeners(AuditingEntityListener.class)
 public class UserApproval {
     @Id

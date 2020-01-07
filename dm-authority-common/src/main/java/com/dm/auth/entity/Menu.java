@@ -18,10 +18,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "dm_menu_")
-@Table(indexes = { @Index(columnList = "parent_", name = "IDX_bf_menu_parent_") }, uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "name_", "parent_" })
-})
+@Entity
+@Table(name = "dm_menu_", indexes = {
+        @Index(columnList = "parent_", name = "IDX_bf_menu_parent_") }, uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "name_", "parent_" })
+        })
 public class Menu extends AbstractEntity {
 
     private static final long serialVersionUID = -5469864417544946812L;

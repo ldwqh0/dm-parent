@@ -23,6 +23,7 @@ import com.dm.uap.dingtalk.service.DRoleGroupService;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.Role.Status;
 import com.dm.uap.repository.RoleGroupRepository;
+import com.dm.uap.repository.RoleRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,23 +33,26 @@ import com.dm.uap.entity.RoleGroup;
 @Slf4j
 public class DRoleGroupServiceImpl implements DRoleGroupService {
 
-	@Autowired
-	private DingTalkService dingTalkService;
+    @Autowired
+    private DingTalkService dingTalkService;
 
-	@Autowired
-	private DRoleGroupConverter dRoleGroupConverter;
+    @Autowired
+    private DRoleGroupConverter dRoleGroupConverter;
 
-	@Autowired
-	private DRoleGroupRepository dRoleGroupRepository;
+    @Autowired
+    private DRoleGroupRepository dRoleGroupRepository;
 
-	@Autowired
-	private DRoleConverter dRoleConverter;
+    @Autowired
+    private DRoleConverter dRoleConverter;
 
-	@Autowired
-	private DRoleRepository dRoleRepository;
+    @Autowired
+    private DRoleRepository dRoleRepository;
 
-	@Autowired
-	private RoleGroupRepository uRoleGroupRepository;
+    @Autowired
+    private RoleGroupRepository uRoleGroupRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     /**
      * 从钉钉加载角色和角色组数据，并保存在本地
@@ -60,21 +64,20 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
         List<Long> roleGroupIds = roleGroups.stream().map(OpenRoleGroup::getGroupId).collect(Collectors.toList());
         List<Long> roleIds = roleGroups.stream().map(OpenRoleGroup::getRoles)
                 .flatMap(List::stream).map(OpenRole::getId).collect(Collectors.toList());
-        List<DRole> deletedRoles = dRoleRepository.findByIdNotInAndDeletedFalse(roleIds);
-        List<DRoleGroup> deletedRoleGroups = dRoleGroupRepository.findByIdNotInAndDeletedFalse(roleGroupIds);
-        deletedRoles.forEach(i -> {
-            i.setDeleted(true);
-            Role role = i.getRole();
-            if (role != null) {
-                role.setState(Status.DISABLED);
-            }
-        });
-        deletedRoleGroups.forEach(i -> {
-            i.setDeleted(true);
-        });
-        dRoleRepository.saveAll(deletedRoles);
-        dRoleGroupRepository.saveAll(deletedRoleGroups);
+        // 设置逻辑钉钉角色
+        if (CollectionUtils.isNotEmpty(roleIds)) {
+            dRoleRepository.setDeletedByIdNotIn(roleIds);
+        }
 
+        // 设置逻辑删除钉钉角色组
+        if (CollectionUtils.isNotEmpty(roleGroupIds)) {
+            dRoleGroupRepository.setDeletedByIdNotIn(roleGroupIds);
+        }
+        // 禁用系统角色
+        List<Long> deletedIds = dRoleRepository.findRoleIdByDRoleDeleted(true);
+        if (CollectionUtils.isNotEmpty(deletedIds)) {
+            roleRepository.batchSetState(deletedIds, Status.DISABLED);
+        }
         List<DRoleGroup> result = roleGroups.stream().map(originalGroup -> {
             Long groupId = originalGroup.getGroupId();
             final DRoleGroup dRoleGroup = dRoleGroupRepository.existsById(groupId)
@@ -135,9 +138,9 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
         log.info("同步角色信息完成");
     }
 
-	@Override
-	@Transactional
-	public void deleteById(Long id) {
-		dRoleGroupRepository.deleteById(id);
-	}
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        dRoleGroupRepository.deleteById(id);
+    }
 }

@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,8 +26,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-@Entity(name = "dm_file_")
+@Entity
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "dm_file_")
 @JsonIgnoreProperties(value = { "lastModifiedBy", "createdBy", "createdDate", "lastModifiedDate" }, allowGetters = true)
 public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializable {
     private static final long serialVersionUID = -914974010332311193L;

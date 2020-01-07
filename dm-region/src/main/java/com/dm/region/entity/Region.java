@@ -8,13 +8,15 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "dm_region_")
+@Entity
+@Table(name = "dm_region_")
 public class Region implements Serializable {
     private static final long serialVersionUID = 2116833927883554195L;
 

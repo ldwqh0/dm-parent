@@ -4,8 +4,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-@Entity(name = "dm_code_")
+@Entity
+@Table(name = "dm_code_")
 public class Code {
 
     @ManyToOne

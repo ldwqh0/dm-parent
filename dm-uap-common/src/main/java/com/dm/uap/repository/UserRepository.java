@@ -3,6 +3,8 @@ package com.dm.uap.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.dm.common.repository.IdentifiableDtoRepository;
@@ -23,5 +25,9 @@ public interface UserRepository extends IdentifiableDtoRepository<User, Long>, Q
      * @return
      */
     public List<User> findByDepartment(Department dp, boolean recursive);
+
+    @Modifying
+    @Query("update User set enabled = ?2 where id in (?1)")
+    public int batchSetEnabled(List<Long> deleteUsers, boolean b);
 
 }

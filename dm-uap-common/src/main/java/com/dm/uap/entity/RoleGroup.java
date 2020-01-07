@@ -6,14 +6,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import com.dm.common.entity.AbstractEntity;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "dm_role_group_")
+@Entity
 @Getter
 @Setter
+@Table(name = "dm_role_group_")
 public class RoleGroup extends AbstractEntity {
     private static final long serialVersionUID = 3288697536654269610L;
 
