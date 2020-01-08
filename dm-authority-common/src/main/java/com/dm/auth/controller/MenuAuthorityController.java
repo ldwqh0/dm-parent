@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,6 @@ import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.AuthorityService;
 import com.dm.common.exception.DataNotExistException;
-import com.dm.security.annotation.CurrentUser;
 import com.dm.security.core.userdetails.UserDetailsDto;
 
 import io.swagger.annotations.ApiOperation;
@@ -89,7 +89,7 @@ public class MenuAuthorityController {
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
     @Transactional(readOnly = true)
-    public List<MenuDto> systemMenu(@CurrentUser UserDetailsDto userDto) {
+    public List<MenuDto> systemMenu(@AuthenticationPrincipal UserDetailsDto userDto) {
         Collection<GrantedAuthority> authorities = userDto.getRoles();
         if (CollectionUtils.isNotEmpty(authorities)) {
             Set<Menu> menus = authorities.stream().map(GrantedAuthority::getAuthority)

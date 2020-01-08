@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Persistable;

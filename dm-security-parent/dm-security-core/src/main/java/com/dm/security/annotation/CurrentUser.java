@@ -8,6 +8,12 @@ import java.lang.annotation.Target;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+/**
+ * 这是 {@link AuthenticationPrincipal}的一个别名.
+ * 
+ * @author ldwqh0@outlook.com
+ *
+ */
 @Target({ ElementType.PARAMETER, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

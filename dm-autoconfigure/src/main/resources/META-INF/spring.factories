@@ -4,6 +4,7 @@ com.dm.springboot.autoconfigure.authority.AuthAutoConfiguration,\
 com.dm.springboot.autoconfigure.common.AuditingAutoConfiguration,\
 com.dm.springboot.autoconfigure.region.RegionConfiguration,\
 com.dm.springboot.autoconfigure.security.SecurityConfiguration,\
+com.dm.springboot.autoconfigure.security.SecurityAutoConfiguration,\
 com.dm.springboot.autoconfigure.data.SpringDataReactiveAutoConfiguration,\
 com.dm.springboot.autoconfigure.security.ReactiveSecurityConfiguration,\
 com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration,\

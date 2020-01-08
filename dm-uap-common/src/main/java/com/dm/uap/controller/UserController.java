@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
-import com.dm.security.annotation.CurrentUser;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.UpdatePasswordDto;
@@ -108,7 +108,7 @@ public class UserController {
     @PatchMapping("current/password")
     @ResponseStatus(CREATED)
     public UserDto changePassword(
-            @CurrentUser UserDetailsDto user,
+            @AuthenticationPrincipal UserDetailsDto user,
             @Valid @RequestBody UpdatePasswordDto data) {
         Long id = user.getId();
         validRePassword(data.getPassword(), data.getRepassword());
@@ -140,11 +140,11 @@ public class UserController {
         return result.map(userConverter::toDto);
     }
 
-    @GetMapping({ "current", "authorities/currentUser" })
-    @ApiOperation("获取当前用户信息")
-    public UserDetailsDto getCurrentUser(@CurrentUser UserDetailsDto currentUser) {
-        return currentUser;
-    }
+//    @GetMapping({ "current", "authorities/currentUser" })
+//    @ApiOperation("获取当前用户信息")
+//    public UserDetailsDto getCurrentUser(@AuthenticationPrincipal UserDetailsDto currentUser) {
+//        return currentUser;
+//    }
 
     private void validRePassword(String password, String rePassword) {
         if (!StringUtils.equals(password, rePassword)) {
