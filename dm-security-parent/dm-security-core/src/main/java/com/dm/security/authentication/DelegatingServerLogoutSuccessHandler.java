@@ -32,10 +32,10 @@ public class DelegatingServerLogoutSuccessHandler implements ServerLogoutSuccess
     public Mono<Void> onLogoutSuccess(WebFilterExchange exchange, Authentication authentication) {
         return Flux.fromIterable(this.delegateLogoutSuccessHandler)
                 .filterWhen(entry -> isMatch(exchange.getExchange(), entry))
-                .next()
                 .map(entry -> entry.getLogoutSuccessHandler())
                 .defaultIfEmpty(this.defaultLogoutSuccessHandler)
-                .flatMap(entryPoint -> entryPoint.onLogoutSuccess(exchange, authentication));
+                .flatMap(entryPoint -> entryPoint.onLogoutSuccess(exchange, authentication))
+                .next();
     }
 
     private Mono<Boolean> isMatch(ServerWebExchange exchange, DelegateLogoutSuccessEntry entry) {

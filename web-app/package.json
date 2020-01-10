@@ -13,6 +13,7 @@
     "core-js": "^3.4.3",
     "element-datatables": "^0.3.3",
     "element-ui": "^2.13.0",
+    "js-cookie": "^2.2.1",
     "qs": "^6.9.0",
     "vue": "^2.6.10",
     "vue-property-decorator": "^8.3.0",

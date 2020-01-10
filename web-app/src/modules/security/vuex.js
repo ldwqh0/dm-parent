@@ -4,7 +4,7 @@ export default {
   namespaced: true,
   state: {
     url: {
-      currentUser: `/gw/u/users/current`,
+      currentUser: `/gw/authorities/current`,
       login: `/gw/p/login`,
       token: '/oauth/token',
       authorityMenus: `/gw/p/menuAuthorities/current`

@@ -9,6 +9,7 @@
         <el-submenu index="2">
           <template slot="title"><img src="../../assets/avast.png" class="avast">{{currentUser.fullname||currentUser.username}}
           </template>
+          <el-menu-item index="2-0" @click="logout">修改密码</el-menu-item>
           <el-menu-item index="2-1" @click="logout">退出</el-menu-item>
         </el-submenu>
       </el-menu>
