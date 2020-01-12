@@ -3,11 +3,15 @@
     <el-header class="header">
       <h1>
         <span>综合管理平台</span>
-        <a href="javascript:void(0)" @click="fullscreen"><i class="el-icon-full-screen"></i></a>
+        <a href="javascript:void(0)" @click="fullscreen">
+          <i class="el-icon-full-screen"></i>
+        </a>
       </h1>
       <el-menu mode="horizontal">
         <el-submenu index="2">
-          <template slot="title"><img src="../../assets/avast.png" class="avast">{{currentUser.fullname||currentUser.username}}
+          <template slot="title">
+            <img src="../../assets/avast.png" class="avast" />
+            {{currentUser.fullname||currentUser.username}}
           </template>
           <el-menu-item index="2-0" @click="logout">修改密码</el-menu-item>
           <el-menu-item index="2-1" @click="logout">退出</el-menu-item>
@@ -17,11 +21,11 @@
     <el-container>
       <el-aside width="250px" class="aside">
         <el-menu v-bind="menuStyle" class="menu" unique-opened>
-          <menu-item v-for="menu in menuTree" :key="menu.id" :item="menu"/>
+          <menu-item v-for="menu in menuTree" :key="menu.id" :item="menu" />
         </el-menu>
       </el-aside>
       <el-main>
-        <router-view/>
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
@@ -30,8 +34,8 @@
 <script>
   import Vue from 'vue'
   import MenuItem from './MenuItem'
-  import {Component} from 'vue-property-decorator'
-  import {namespace} from 'vuex-class'
+  import { Component } from 'vue-property-decorator'
+  import { namespace } from 'vuex-class'
 
   const securityModule = namespace('security')
   @Component({
@@ -128,7 +132,8 @@
       .menu {
         border-right: unset;
 
-        .el-submenu__title, .el-menu-item {
+        .el-submenu__title,
+        .el-menu-item {
           &:hover {
             background-color: #1287d1 !important;
           }

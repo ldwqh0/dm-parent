@@ -3,38 +3,38 @@
     <el-table v-if="!success" :span-method="spanError">
       <slot>发生错误</slot>
     </el-table>
-    <el-table :data="tableData"
-              v-if="success"
-              @select="onSelect"
-              @select-all="onSelectAll"
-              @selection-change="onSelectionChange"
-              @cell-mouse-enter="onCellMouseEnter"
-              @cell-mouse-leave="onCellMouseLeave"
-              @cell-click="onCellClick"
-              @cell-dblclick="onCellDblclick"
-              @row-click="onRowClick"
-              @row-contextmenu="onRowContextmenu"
-              @row-dblclick="onRowDblclick"
-              @header-click="onHeaderClick"
-              @header-contextmenu="onHeaderContextmenu"
-              @sort-change="onSortChange"
-              @filter-change="onFilterChange"
-              @current-change="onCurrentChange"
-              @header-dragend="onHeaderDragend"
-              @expand-change="onExpandChange"
-              :span-method="spanMethod">
+    <el-table
+      :data="tableData"
+      v-if="success"
+      @select="onSelect"
+      @select-all="onSelectAll"
+      @selection-change="onSelectionChange"
+      @cell-mouse-enter="onCellMouseEnter"
+      @cell-mouse-leave="onCellMouseLeave"
+      @cell-click="onCellClick"
+      @cell-dblclick="onCellDblclick"
+      @row-click="onRowClick"
+      @row-contextmenu="onRowContextmenu"
+      @row-dblclick="onRowDblclick"
+      @header-click="onHeaderClick"
+      @header-contextmenu="onHeaderContextmenu"
+      @sort-change="onSortChange"
+      @filter-change="onFilterChange"
+      @current-change="onCurrentChange"
+      @header-dragend="onHeaderDragend"
+      @expand-change="onExpandChange"
+      :span-method="spanMethod">
       <slot>暂无数据</slot>
     </el-table>
     <el-row>
       <el-col :span="24" style="text-align: right;">
         <slot name="pagination">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage"
-            :page-size="pageSize"
-            :layout="paginationLayout"
-            :total="total"/>
+          <el-pagination @size-change="handleSizeChange"
+                         @current-change="handleCurrentChange"
+                         :current-page.sync="currentPage"
+                         :page-size="pageSize"
+                         :layout="paginationLayout"
+                         :total="total" />
         </slot>
       </el-col>
     </el-row>

@@ -1,19 +1,22 @@
 <template>
-  <el-submenu v-if="item.children && item.children.length>0"
-              popper-class="my-submenu"
-              :index="item.id+''">
+  <el-submenu
+    :index="item.id + ''"
+    popper-class="my-submenu"
+    v-if="item.children && item.children.length > 0">
     <template v-slot:title>
-      <i :class="item.icon?item.icon:'el-icon-s-tools'"/>
+      <i :class="item.icon ? item.icon : 'el-icon-s-tools'" />
       <span>{{ item.title }}</span>
     </template>
-    <menu-item v-for="(submenu,index) in item.children"
-               :item="submenu"
-               :key="index"/>
+    <menu-item
+      :item="submenu"
+      :key="index"
+      v-for="(submenu, index) in item.children" />
   </el-submenu>
-  <el-menu-item v-else
-                @click="toTarget(item)"
-                :index="item.id+''">
-    <i :class="item.icon?item.icon:'el-icon-s-tools'"/>
+  <el-menu-item
+    :index="item.id + ''"
+    @click="toTarget(item)"
+    v-else>
+    <i :class="item.icon ? item.icon : 'el-icon-s-tools'" />
     <template v-slot:title>
       <span>{{ item.title }}</span>
     </template>
@@ -22,16 +25,16 @@
 
 <script>
   import Vue from 'vue'
-  import {Component, Prop} from 'vue-property-decorator'
+  import { Component, Prop } from 'vue-property-decorator'
 
   @Component({
     name: 'menu-item'
   })
   export default class MenuItem extends Vue {
-    @Prop({default: () => ({})})
+    @Prop({ default: () => ({}) })
     item
 
-    toTarget ({type = 'COMPONENT', url = '/', openInNewWindow = false} = {
+    toTarget ({ type = 'COMPONENT', url = '/', openInNewWindow = false } = {
       type: 'COMPONENT',
       url: '/',
       openInNewWindow: false
@@ -54,9 +57,7 @@
   }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 <style lang="less">
   .my-submenu {
     &.el-menu--vertical {
