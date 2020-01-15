@@ -134,17 +134,10 @@ public class UserController {
             @RequestParam(value = "role", required = false) Long role,
             @RequestParam(value = "roleGroup", required = false) Long roleGroup,
             @RequestParam(value = "search", required = false) String key,
-            @RequestParam(value = "draw", required = false) Long draw,
             @PageableDefault(page = 0, size = 10, sort = { "order" }, direction = Direction.ASC) Pageable pageable) {
         Page<User> result = userService.search(department, role, roleGroup, key, pageable);
         return result.map(userConverter::toDto);
     }
-
-//    @GetMapping({ "current", "authorities/currentUser" })
-//    @ApiOperation("获取当前用户信息")
-//    public UserDetailsDto getCurrentUser(@AuthenticationPrincipal UserDetailsDto currentUser) {
-//        return currentUser;
-//    }
 
     private void validRePassword(String password, String rePassword) {
         if (!StringUtils.equals(password, rePassword)) {

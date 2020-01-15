@@ -1,6 +1,7 @@
 package com.dm.uap.dingtalk.service;
 
 import com.dm.uap.dingtalk.entity.DUser;
+import com.dm.uap.dingtalk.entity.DdSyncLog;
 
 public interface DUserService {
 
@@ -21,5 +22,12 @@ public interface DUserService {
      * @return
      */
     public DUser save(DUser dUser);
+
+    /**
+     * 启动异步同步信息，并返回日志
+     * 
+     * @return
+     */
+    public DdSyncLog asyncToUap();
 
 }

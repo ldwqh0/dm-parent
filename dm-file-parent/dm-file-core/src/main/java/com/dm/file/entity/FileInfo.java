@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -28,7 +29,11 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "dm_file_")
+@Table(name = "dm_file_", indexes = {
+        @Index(name = "idx_dm_file_created_date_", columnList = "created_date_"),
+        @Index(name = "idx_dm_file_created_user_id_", columnList = "created_user_id_"),
+        @Index(name = "idx_dm_file_created_user_name_", columnList = "created_user_name_")
+})
 @JsonIgnoreProperties(value = { "lastModifiedBy", "createdBy", "createdDate", "lastModifiedDate" }, allowGetters = true)
 public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializable {
     private static final long serialVersionUID = -914974010332311193L;

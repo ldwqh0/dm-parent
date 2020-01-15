@@ -40,6 +40,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.formLogin().successHandler(new LoginSuccessHandler(om)).failureHandler(new LoginFailureHandler(om));
         http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
-        http.csrf().disable();
     }
 }

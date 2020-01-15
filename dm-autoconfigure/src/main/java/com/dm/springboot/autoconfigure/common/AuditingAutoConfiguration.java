@@ -15,7 +15,6 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.dm.common.dto.AuditDto;
 import com.dm.common.entity.Audit;
 import com.dm.security.core.userdetails.UserDetailsDto;
 
@@ -51,7 +50,7 @@ public class AuditingAutoConfiguration {
                 Object principal = authentication.getPrincipal();
                 if (principal instanceof UserDetailsDto) {
                     UserDetailsDto ud = (UserDetailsDto) principal;
-                    return Optional.ofNullable(new AuditDto(ud.getId(), ud.getUsername()));
+                    return Optional.ofNullable(Audit.of(ud.getId(), ud.getUsername()));
                 }
             }
             return Optional.empty();

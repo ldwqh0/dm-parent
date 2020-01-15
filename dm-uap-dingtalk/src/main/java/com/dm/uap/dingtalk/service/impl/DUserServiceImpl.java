@@ -15,6 +15,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ import com.dm.uap.dingtalk.converter.DUserConverter;
 import com.dm.uap.dingtalk.entity.DDepartment;
 import com.dm.uap.dingtalk.entity.DRole;
 import com.dm.uap.dingtalk.entity.DUser;
+import com.dm.uap.dingtalk.entity.DdSyncLog;
 import com.dm.uap.dingtalk.repository.DDepartmentRepository;
 import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.repository.DUserRepository;
@@ -70,15 +72,41 @@ public class DUserServiceImpl implements DUserService {
     @Autowired
     private DRoleGroupService dRoleGroupService;
 
+    private volatile Boolean syncing = Boolean.FALSE;
+// TODO 暂时不考虑日志
+//    private DdSyncLog alog;
+
     /**
      * 采用批处理同步的模式
      */
     @Transactional
     @Override
     public void syncToUap() {
-        dDepartmentService.syncToUap();
-        dRoleGroupService.syncToUap();
-        syncToUap(fetch());
+        if (Boolean.TRUE.equals(this.syncing)) {
+            log.info("一个同步进程在进行中，返回");
+            return;
+        } else {
+            synchronized (syncing) {
+                try {
+                    syncing = Boolean.TRUE;
+                    dDepartmentService.syncToUap();
+                    dRoleGroupService.syncToUap();
+                    syncToUap(fetch());
+                } catch (Exception e) {
+                    log.error("同步时发生错误", e);
+                } finally {
+                    syncing = Boolean.FALSE;
+                }
+            }
+        }
+    }
+
+    @Transactional
+    @Async
+    @Override
+    public DdSyncLog asyncToUap() {
+        this.syncToUap();
+        return null;
     }
 
     @Override

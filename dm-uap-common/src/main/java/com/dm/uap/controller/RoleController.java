@@ -96,11 +96,10 @@ public class RoleController {
     }
 
     @ApiOperation("查询角色")
-    @GetMapping(params = { "draw" })
+    @GetMapping(params = { "page", "size" })
     public Page<RoleDto> list(
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "search", required = false) String key,
-            @RequestParam(value = "draw", required = false) Long draw,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
         return roleService.search(groupId, key, pageable).map(roleConverter::toDto);
     }
