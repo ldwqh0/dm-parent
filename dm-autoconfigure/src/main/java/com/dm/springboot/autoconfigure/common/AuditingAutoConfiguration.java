@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -50,7 +51,8 @@ public class AuditingAutoConfiguration {
                 Object principal = authentication.getPrincipal();
                 if (principal instanceof UserDetailsDto) {
                     UserDetailsDto ud = (UserDetailsDto) principal;
-                    return Optional.ofNullable(Audit.of(ud.getId(), ud.getUsername()));
+                    String name = StringUtils.isBlank(ud.getFullname()) ? ud.getFullname() : ud.getUsername();
+                    return Optional.ofNullable(Audit.of(ud.getId(), name));
                 }
             }
             return Optional.empty();
