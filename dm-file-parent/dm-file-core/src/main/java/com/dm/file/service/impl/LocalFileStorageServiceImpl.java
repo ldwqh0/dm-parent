@@ -69,7 +69,9 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     @PostConstruct
     public void initStorage() throws Exception {
         String path = config.getPath();
+        String tempPath = config.getTempPath();
         File file = new File(path);
         FileUtils.forceMkdir(file);
+        FileUtils.forceMkdir(new File(tempPath));
     }
 }

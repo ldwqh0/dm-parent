@@ -12,7 +12,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +78,7 @@ public class FileController {
 
     @PostMapping
     @ApiOperation("上传文件")
-    public List<FileInfoDto> upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public FileInfoDto upload(@RequestParam("file") MultipartFile file) throws Exception {
         String originalFilename = file.getOriginalFilename();
         FileInfoDto infoDto = new FileInfoDto();
         if (StringUtils.isNotBlank(originalFilename)) {
@@ -88,7 +87,7 @@ public class FileController {
         infoDto.setSize(file.getSize());
         FileInfo file_ = fileService.save(file.getInputStream(), infoDto);
         thumbnailService.createThumbnail(file_.getPath());
-        return Collections.singletonList(fileInfoConverter.toDto(file_));
+        return fileInfoConverter.toDto(file_);
     }
 
     /**
@@ -110,20 +109,20 @@ public class FileController {
             @RequestHeader("file-id") String tempId,
             @RequestHeader("chunk-count") int chunkCount,
             @RequestParam("filename") String filename,
-            MultipartFile mFile) throws Exception {
+            @RequestParam("file") MultipartFile mFile) throws Exception {
         String tempName = config.getTempPath() + tempId + "." + chunkIndex;
         mFile.transferTo(new File(tempName));
         if (chunkIndex == chunkCount - 1) {
-            File target = new File(config.getTempPath() + tempId + "." + StringUtils.substringAfter(filename, "."));
+            long length = 0;
             File[] src = new File[chunkCount];
             for (int i = 0; i < chunkCount; i++) {
                 src[i] = new File(config.getTempPath() + tempId + "." + i);
+                length += src[i].length();
             }
             FileInfoDto fileInfo = new FileInfoDto();
             fileInfo.setFilename(filename);
-            fileInfo.setSize(target.length());
+            fileInfo.setSize(length);
             FileInfo _result = fileService.save(src, fileInfo);
-            FileUtils.forceDelete(target);
             return fileInfoConverter.toDto(_result);
         } else {
             return null;

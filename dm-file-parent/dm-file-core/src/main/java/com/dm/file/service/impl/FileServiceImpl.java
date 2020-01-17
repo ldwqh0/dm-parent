@@ -75,7 +75,7 @@ public class FileServiceImpl implements FileInfoService {
     @Transactional
     public FileInfo save(File[] src, FileInfoDto fileInfo) throws IOException {
         FileInfo file = save(fileInfo);
-        storageService.save(fileInfo.getPath(), src);
+        storageService.save(file.getPath(), src);
         return file;
     }
 
