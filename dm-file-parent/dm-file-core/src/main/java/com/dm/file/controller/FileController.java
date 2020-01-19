@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,6 +124,13 @@ public class FileController {
             fileInfo.setFilename(filename);
             fileInfo.setSize(length);
             FileInfo _result = fileService.save(src, fileInfo);
+            for (File file : src) {
+                try {
+                    FileUtils.forceDelete(file);
+                    // 删除临时文件
+                } catch (Exception e) {
+                }
+            }
             return fileInfoConverter.toDto(_result);
         } else {
             return null;
