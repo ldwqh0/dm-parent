@@ -390,4 +390,10 @@ public class DUserServiceImpl implements DUserService {
         return dUser;
     }
 
+    @Override
+    public Optional<DUser> findByUserid(String userid) {
+
+        return dUserRepository.findById(userid);
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.dm.uap.dingtalk.service;
 
+import java.util.Optional;
+
 import com.dm.uap.dingtalk.entity.DUser;
 import com.dm.uap.dingtalk.entity.DdSyncLog;
 
@@ -30,4 +32,5 @@ public interface DUserService {
      */
     public DdSyncLog asyncToUap();
 
+    public Optional<DUser> findByUserid(String userid);
 }

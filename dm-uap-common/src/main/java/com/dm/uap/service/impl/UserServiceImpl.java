@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     private final QUser qUser = QUser.user;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     @Cacheable(cacheNames = { "users" }, sync = true, key = "#username.toLowerCase()")
     public UserDetailsDto loadUserByUsername(String username) {
         return Optional.<String>ofNullable(username)
