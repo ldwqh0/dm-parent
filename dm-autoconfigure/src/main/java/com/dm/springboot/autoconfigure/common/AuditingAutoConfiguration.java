@@ -51,7 +51,7 @@ public class AuditingAutoConfiguration {
                 Object principal = authentication.getPrincipal();
                 if (principal instanceof UserDetailsDto) {
                     UserDetailsDto ud = (UserDetailsDto) principal;
-                    String name = StringUtils.isBlank(ud.getFullname()) ? ud.getFullname() : ud.getUsername();
+                    String name = StringUtils.isBlank(ud.getFullname()) ? ud.getUsername() : ud.getFullname();
                     return Optional.ofNullable(Audit.of(ud.getId(), name));
                 }
             }
