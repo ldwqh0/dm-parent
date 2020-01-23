@@ -14,7 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Parameter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Auditable;
@@ -39,9 +41,12 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
     private static final long serialVersionUID = -914974010332311193L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "ordered-uuid")
     @Type(type = "uuid-char")
     @Column(name = "id_", length = 36)
+    @GenericGenerator(name = "ordered-uuid", strategy = "org.hibernate.id.UUIDGenerator", parameters = {
+            @Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy")
+    })
     private UUID id;
 
     private CreateAudit createdBy;

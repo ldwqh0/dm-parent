@@ -14,49 +14,50 @@ import lombok.EqualsAndHashCode;
  * 
  * @author ldwqh0@outlook.com
  *
- * @param <T>
+ * @param <T> 数据类型
+ * @param <M> 最大值的类型
  */
-public interface RangePage<T> extends Page<T> {
+public interface RangePage<T, M> extends Page<T> {
     /**
      * 范围的上限
      * 
      * @return
      */
-    public long getMax();
+    public M getMax();
 
     @Override
-    public <U> RangePage<U> map(Function<? super T, ? extends U> converter);
+    public <U> RangePage<U, M> map(Function<? super T, ? extends U> converter);
 
-    public static <T> RangePage<T> of(long max, Page<T> page) {
-        return new RangePageImpl<T>(max, page.getContent(), page.getPageable(), page.getTotalElements());
+    public static <T, M> RangePage<T, M> of(M max, Page<T> page) {
+        return new RangePageImpl<T, M>(max, page.getContent(), page.getPageable(), page.getTotalElements());
     }
 }
 
 @EqualsAndHashCode(callSuper = true)
-class RangePageImpl<T> extends PageImpl<T> implements RangePage<T> {
+class RangePageImpl<T, M> extends PageImpl<T> implements RangePage<T, M> {
 
     private static final long serialVersionUID = -2418518649668788225L;
 
-    private long max;
+    private M max;
 
-    public RangePageImpl(long max, List<T> content) {
+    public RangePageImpl(M max, List<T> content) {
         super(content);
         this.max = max;
     }
 
-    RangePageImpl(long max, List<T> content, Pageable pageable, long total) {
+    RangePageImpl(M max, List<T> content, Pageable pageable, long total) {
         super(content, pageable, total);
         this.max = max;
     }
 
     @Override
-    public long getMax() {
+    public M getMax() {
         return this.max;
     }
 
     @Override
-    public <R> RangePage<R> map(Function<? super T, ? extends R> converter) {
-        return new RangePageImpl<R>(max, getConvertedContent(converter), getPageable(), getTotalElements());
+    public <R> RangePage<R, M> map(Function<? super T, ? extends R> converter) {
+        return new RangePageImpl<R, M>(max, getConvertedContent(converter), getPageable(), getTotalElements());
     }
 
 }
