@@ -46,6 +46,7 @@ public class DmAuthorizationCodeTokenGranter extends AbstractTokenGranter {
         this.authorizationCodeServices = authorizationCodeServices;
     }
 
+    @Override
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
 
         Map<String, String> parameters = tokenRequest.getRequestParameters();

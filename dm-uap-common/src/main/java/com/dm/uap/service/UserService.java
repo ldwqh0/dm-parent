@@ -40,4 +40,11 @@ public interface UserService extends UserDetailsService {
 
     public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable);
 
+    /**
+     * 
+     * @param id
+     * @param username
+     */
+    public boolean userExistsByUsername(String username);
+
 }

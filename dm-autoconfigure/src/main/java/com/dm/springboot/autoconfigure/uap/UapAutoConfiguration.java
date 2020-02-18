@@ -18,7 +18,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -30,7 +29,6 @@ import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapBeanConfigura
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.RoleGroupDto;
 import com.dm.uap.dto.UserDto;
-import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.entity.Role.Status;
 import com.dm.uap.entity.RoleGroup;
@@ -38,7 +36,6 @@ import com.dm.uap.service.RoleGroupService;
 import com.dm.uap.service.RoleService;
 import com.dm.uap.service.UserService;
 
-@Configuration
 @ConditionalOnClass(User.class)
 @EntityScan({ "com.dm.uap" })
 @EnableJpaRepositories({ "com.dm.uap" })
@@ -99,20 +96,34 @@ public class UapAutoConfiguration implements InitializingBean {
         String username = defaultUser.getUsername();
         String password = defaultUser.getPassword();
         String fullname = defaultUser.getFullname();
-
+        // 建立初始管理员账号
         if (!userService.exist()) {
             UserDto user = new UserDto();
             user.setUsername(username);
             user.setFullname(fullname);
             user.setPassword(password);
             user.setEnabled(true);
-            Optional<Role> _role = roleService.findByName("ROLE_ADMIN");
-            if (_role.isPresent()) {
+            roleService.findByName("ROLE_ADMIN").ifPresent(_role -> {
                 RoleDto role = new RoleDto();
-                role.setId(_role.get().getId());
+                role.setId(_role.getId());
                 user.setRoles(Collections.singletonList(role));
-            }
+            });
             userService.save(user);
+        }
+
+        // 建立默认匿名账号
+        if (!userService.userExistsByUsername("ANONYMOUS")) {
+            UserDto anonymous = new UserDto();
+            anonymous.setUsername("ANONYMOUS");
+            anonymous.setPassword("ANONYMOUS");
+            anonymous.setEnabled(true);
+            anonymous.setFullname("匿名用户");
+            roleService.findByName("ROLE_ANONYMOUS").ifPresent(_role -> {
+                RoleDto role = new RoleDto();
+                role.setId(_role.getId());
+                anonymous.setRoles(Collections.singletonList(role));
+            });
+            userService.save(anonymous);
         }
     }
 

@@ -212,4 +212,9 @@ public class UserServiceImpl implements UserService {
             model.setRoles(Collections.emptyList());
         }
     }
+
+    @Override
+    public boolean userExistsByUsername(String username) {
+        return userRepository.exists(qUser.username.equalsIgnoreCase(username));
+    }
 }
