@@ -18,6 +18,8 @@ import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
+import com.dm.dingtalk.api.request.OapiWorkrecordAddRequest;
+import com.dm.dingtalk.api.request.OapiWorkrecordUpdateRequest;
 import com.dm.dingtalk.api.response.AccessTokenResponse;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse;
 import com.dm.dingtalk.api.response.OapiRoleListResponse;
@@ -30,6 +32,8 @@ import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
 import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
+import com.dm.dingtalk.api.response.OapiWorkrecordAddResponse;
+import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
 import com.dm.dingtalk.api.service.DingTalkService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -238,6 +242,25 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
         OapiUserDeleteResponse response = restTemplate.getForObject(url, OapiUserDeleteResponse.class, getAccessToken(),
                 userid);
         checkResponse(response);
+    }
+
+    @Override
+    public OapiWorkrecordAddResponse addWorkRecord(OapiWorkrecordAddRequest request) {
+        String url = SERVER + "/topapi/workrecord/add?access_token={0}";
+        OapiWorkrecordAddResponse response = restTemplate.postForObject(url, request, OapiWorkrecordAddResponse.class,
+                getAccessToken());
+        checkResponse(response);
+        return response;
+    }
+
+    @Override
+    public OapiWorkrecordUpdateResponse updateWorkRecord(OapiWorkrecordUpdateRequest request) {
+        String url = SERVER + "/topapi/workrecord/update?access_token={0}";
+        OapiWorkrecordUpdateResponse response = restTemplate.postForObject(url, request,
+                OapiWorkrecordUpdateResponse.class,
+                getAccessToken());
+        checkResponse(response);
+        return response;
     }
 
 }

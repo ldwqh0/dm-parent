@@ -6,6 +6,8 @@ import java.util.List;
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
+import com.dm.dingtalk.api.request.OapiWorkrecordAddRequest;
+import com.dm.dingtalk.api.request.OapiWorkrecordUpdateRequest;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.response.OapiUserCreateResponse;
@@ -13,6 +15,8 @@ import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
 import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
+import com.dm.dingtalk.api.response.OapiWorkrecordAddResponse;
+import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
 
 /**
  * 钉钉服务器交互API
@@ -90,8 +94,34 @@ public interface DingTalkService {
      */
     public OapiUserGetResponse fetchUserById(String userid);
 
+    /**
+     * 从钉钉服务器上删除一个用户
+     * 
+     * @param userid
+     */
     public void deleteUser(String userid);
 
+    /**
+     * 批量设置用户角色信息
+     * 
+     * @param userIds
+     * @param roleIds
+     * @return
+     */
     public OapiRoleAddrolesforempsResponse batchSetUserRole(Collection<String> userIds, Collection<Long> roleIds);
 
+    /**
+     * 添加待办事项
+     * 
+     * @param request
+     * @return
+     */
+    public OapiWorkrecordAddResponse addWorkRecord(OapiWorkrecordAddRequest request);
+
+    /**
+     * 更新待办事项，该操作会将待办事项从用户的待办事项列表中删除
+     * 
+     * @return
+     */
+    public OapiWorkrecordUpdateResponse updateWorkRecord(OapiWorkrecordUpdateRequest request);
 }
