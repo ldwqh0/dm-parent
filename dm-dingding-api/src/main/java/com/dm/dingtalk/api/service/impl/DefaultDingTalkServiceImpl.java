@@ -19,6 +19,7 @@ import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.request.OapiWorkrecordAddRequest;
+import com.dm.dingtalk.api.request.OapiWorkrecordGetbyuseridRequest;
 import com.dm.dingtalk.api.request.OapiWorkrecordUpdateRequest;
 import com.dm.dingtalk.api.response.AccessTokenResponse;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse;
@@ -33,6 +34,7 @@ import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordAddResponse;
+import com.dm.dingtalk.api.response.OapiWorkrecordGetbyuseridResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
 import com.dm.dingtalk.api.service.DingTalkService;
 
@@ -261,6 +263,14 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
                 getAccessToken());
         checkResponse(response);
         return response;
+    }
+
+    @Override
+    public OapiWorkrecordGetbyuseridResponse getWorkRecordByUserid(OapiWorkrecordGetbyuseridRequest request) {
+      String url=SERVER+"/topapi/workrecord/getbyuserid?access_token={0}";
+      OapiWorkrecordGetbyuseridResponse response=restTemplate.postForObject(url, request, OapiWorkrecordGetbyuseridResponse.class, getAccessToken());
+      checkResponse(response);
+      return response;
     }
 
 }

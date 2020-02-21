@@ -143,8 +143,9 @@ public class OapiWorkrecordAddRequest implements Serializable {
         return formItemList;
     }
 
-    public void addFormItem(String title, String content) {
+    public OapiWorkrecordAddRequest addFormItem(String title, String content) {
         this.formItemList.add(new FormItem(title, content));
+        return this;
     }
 
     /**

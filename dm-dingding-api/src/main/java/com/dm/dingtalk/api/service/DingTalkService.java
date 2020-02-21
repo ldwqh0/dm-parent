@@ -7,6 +7,7 @@ import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.request.OapiWorkrecordAddRequest;
+import com.dm.dingtalk.api.request.OapiWorkrecordGetbyuseridRequest;
 import com.dm.dingtalk.api.request.OapiWorkrecordUpdateRequest;
 import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
@@ -16,6 +17,7 @@ import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordAddResponse;
+import com.dm.dingtalk.api.response.OapiWorkrecordGetbyuseridResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
 
 /**
@@ -124,4 +126,12 @@ public interface DingTalkService {
      * @return
      */
     public OapiWorkrecordUpdateResponse updateWorkRecord(OapiWorkrecordUpdateRequest request);
+
+    /**
+     * 获取某个用户的待办事项列表，每次最多50条
+     * 
+     * @param request
+     * @return
+     */
+    public OapiWorkrecordGetbyuseridResponse getWorkRecordByUserid(OapiWorkrecordGetbyuseridRequest request);
 }
