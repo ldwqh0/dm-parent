@@ -113,22 +113,26 @@ public interface DingTalkService {
     public OapiRoleAddrolesforempsResponse batchSetUserRole(Collection<String> userIds, Collection<Long> roleIds);
 
     /**
-     * 添加待办事项
-     * 
+     * 添加待办事项<br>
+     * 参考<a href=
+     * "https://ding-doc.dingtalk.com/doc#/serverapi2/gpmpiq">https://ding-doc.dingtalk.com/doc#/serverapi2/gpmpiq</a>
      * @param request
      * @return
      */
     public OapiWorkrecordAddResponse addWorkRecord(OapiWorkrecordAddRequest request);
 
     /**
-     * 更新待办事项，该操作会将待办事项从用户的待办事项列表中删除
+     * 更新待办事项，该操作会将待办事项从用户的待办事项列表中删除<br>
+     * 参考<a href=
+     * "https://ding-doc.dingtalk.com/doc#/serverapi2/cxls8y">https://ding-doc.dingtalk.com/doc#/serverapi2/cxls8y</a>
      * 
      * @return
      */
     public OapiWorkrecordUpdateResponse updateWorkRecord(OapiWorkrecordUpdateRequest request);
 
     /**
-     * 获取某个用户的待办事项列表，每次最多50条
+     * 获取某个用户的待办事项列表，每次最多50条<br>
+     * 参考<a href="https://ding-doc.dingtalk.com/doc#/serverapi2/neevhm">https://ding-doc.dingtalk.com/doc#/serverapi2/neevhm</a>
      * 
      * @param request
      * @return
