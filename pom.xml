@@ -42,7 +42,6 @@
     <module>dm-code</module>
     <module>dm-security-parent</module>
     <!-- <module>dm-gateway-server</module> -->
-    <module>dm-activity</module>
     <module>dm-activity-parent</module>
   </modules>
   <packaging>pom</packaging>
