@@ -3,32 +3,32 @@ package com.dm.activity;
 import java.util.List;
 
 /**
- * 表示流程节点
+ * 流程定义
  * 
  * @author ldwqh0@outlook.com
  *
  */
-public interface Step<ID> {
+public interface ProcessDefinition {
 
     /**
-     * 获取节点的ID
+     * 获取流程定义的ID
      * 
      * @return
      */
-    public ID getId();
+    public <ID> ID getId();
 
     /**
-     * 获取节点的名称
+     * 获取流程定义名称
      * 
      * @return
      */
     public String getName();
 
     /**
-     * 获取节点的可跳转列表
+     * 获取流程节点
      * 
      * @return
      */
-    public List<Step<ID>> getNext();
+    public <StepId> List<Step<StepId>> getSteps();
 
 }

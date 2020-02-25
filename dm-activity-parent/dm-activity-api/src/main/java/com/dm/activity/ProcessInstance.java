@@ -1,10 +1,25 @@
 package com.dm.activity;
 
-public interface ProcessInstance {
+/**
+ * 一个流程实例
+ * 
+ * @author ldwqh0@outlook.com
+ *
+ */
+public interface ProcessInstance<ID> {
 
     /**
+     * 获取该流程实例对应的流程定义
      * 
      * @return
      */
-    public ProcessInstance goTo(Step step);
+    public ProcessDefinition getProcessDefinition();
+
+    /**
+     * 获取流程当前节点
+     * 
+     * @return
+     */
+    public <StepId> Step<StepId> getStep();
+
 }
