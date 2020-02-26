@@ -1,4 +1,4 @@
-package com.dm.activity;
+package com.dm.activity.model;
 
 /**
  * 一个流程实例

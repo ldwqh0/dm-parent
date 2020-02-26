@@ -43,6 +43,7 @@
     <module>dm-security-parent</module>
     <!-- <module>dm-gateway-server</module> -->
     <module>dm-activity-parent</module>
+    <module>dm-workflow-parent</module>
   </modules>
   <packaging>pom</packaging>
   <dependencyManagement>

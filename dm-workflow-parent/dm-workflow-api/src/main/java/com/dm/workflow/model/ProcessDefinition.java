@@ -1,4 +1,4 @@
-package com.dm.activity;
+package com.dm.workflow.model;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface ProcessDefinition {
      * 
      * @return
      */
-    public <ID> ID getId();
+    public Long getId();
 
     /**
      * 获取流程定义名称
@@ -29,6 +29,6 @@ public interface ProcessDefinition {
      * 
      * @return
      */
-    public <StepId> List<Step<StepId>> getSteps();
+    public List<State> getSteps();
 
 }

@@ -1,4 +1,4 @@
-package com.dm.activity;
+package com.dm.activity.model;
 
 import java.util.List;
 
@@ -24,11 +24,6 @@ public interface Step<ID> {
      */
     public String getName();
 
-    /**
-     * 获取节点的可跳转列表
-     * 
-     * @return
-     */
-    public List<Step<ID>> getNext();
-
+    
+//    public 
 }

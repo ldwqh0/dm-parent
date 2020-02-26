@@ -1,4 +1,6 @@
-package com.dm.activity;
+package com.dm.activity.service;
+
+import com.dm.activity.model.ProcessDefinition;
 
 /**
  * 对流程定义的操作

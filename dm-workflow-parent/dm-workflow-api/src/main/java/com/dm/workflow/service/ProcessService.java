@@ -1,4 +1,8 @@
-package com.dm.activity;
+
+package com.dm.workflow.service;
+
+import com.dm.workflow.model.ProcessInstance;
+import com.dm.workflow.model.State;
 
 /**
  * 流程引擎
@@ -6,6 +10,7 @@ package com.dm.activity;
  * @author ldwqh0@outlook.com
  *
  */
+
 public interface ProcessService {
 
     /**
@@ -15,6 +20,6 @@ public interface ProcessService {
      * @param step
      * @return
      */
-    public <ID, StepId> ProcessInstance<ID> goTo(ProcessInstance<ID> instance, Step<StepId> step);
+    public ProcessInstance goTo(ProcessInstance instance, State state);
 
 }
