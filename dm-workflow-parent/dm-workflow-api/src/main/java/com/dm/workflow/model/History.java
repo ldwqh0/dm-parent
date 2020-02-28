@@ -22,14 +22,14 @@ public interface History {
      * 
      * @return
      */
-    public State getFrom();
+    public String getFrom();
 
     /**
      * 获取该操作的流程结束节点
      * 
      * @return
      */
-    public State getTo();
+    public String getTo();
 
     /**
      * 操作产生的时间
