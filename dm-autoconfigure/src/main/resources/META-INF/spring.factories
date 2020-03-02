@@ -11,3 +11,6 @@ com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration,\
 com.dm.springboot.autoconfigure.common.WebControllerAdvice,\
 com.dm.springboot.autoconfigure.file.FileConfiguration,\
 com.dm.springboot.autoconfigure.common.QueryDslConfiguration
+
+org.springframework.context.ApplicationListener=\
+org.springframework.boot.context.ApplicationPidFileWriter
