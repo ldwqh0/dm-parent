@@ -4,6 +4,7 @@ import java.util.Base64;
 
 import org.junit.jupiter.api.Test;
 
+import com.dm.dingtalk.api.callback.model.EncryptMessage;
 import com.dm.dingtalk.api.crypto.AES;
 
 public class AESTest {

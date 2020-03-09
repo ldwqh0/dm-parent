@@ -1,4 +1,4 @@
-package com.dm.dingtalk.api.crypto;
+package com.dm.dingtalk.api.callback.model;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
