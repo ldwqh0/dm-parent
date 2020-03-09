@@ -10,9 +10,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.dm.dingtalk.api.callback.CallbackController;
+import com.dm.dingtalk.api.callback.model.CallbackProperties;
 import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.dingtalk.api.service.impl.DefaultDingTalkServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +39,9 @@ public class DingTalkConfiguration {
     public static class DingClientConfigCongiguration {
         private String appkey;
         private String appsecret;
+        private String corpId;
+
+        private CallbackProperties callback;
 
         public String getAppkey() {
             return appkey;
@@ -53,9 +59,48 @@ public class DingTalkConfiguration {
             this.appsecret = appsecret;
         }
 
+        public CallbackProperties getCallback() {
+            return callback;
+        }
+
+        public void setCallback(CallbackProperties callback) {
+            this.callback = callback;
+        }
+
+        public String getCorpId() {
+            return corpId;
+        }
+
+        public void setCorpId(String corpId) {
+            this.corpId = corpId;
+        }
+
         @Bean
         public DingClientConfig clientConfig() {
-            return new DingClientConfig(appkey, appsecret);
+            return new DingClientConfig(appkey, appsecret, corpId);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean(DingtalkConfigurerAdpater.class)
+        @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
+        public DingtalkConfigurerAdpater adpater() {
+            return new DingtalkConfigurerAdpater();
+        }
+
+        @Bean
+        @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
+        public CallbackController callbackController(@Autowired ObjectMapper om) {
+            CallbackController c = new CallbackController();
+            DingtalkConfigurerAdpater adpater = adpater();
+            c.setCallbackProperties(mergeProperties(callback, adpater));
+            c.setObjectMapper(om);
+            c.setHandlers(adpater.getConsumers());
+            c.setDingClientConfig(clientConfig());
+            return c;
+        }
+
+        private CallbackProperties mergeProperties(CallbackProperties properties, DingtalkConfigurerAdpater adpater) {
+            return properties;
         }
     }
 

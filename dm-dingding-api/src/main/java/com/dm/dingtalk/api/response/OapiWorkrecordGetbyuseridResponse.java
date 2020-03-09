@@ -34,10 +34,12 @@ public class OapiWorkrecordGetbyuseridResponse extends TaobaoResponse {
         this.errcode = errcode;
     }
 
+    @Override
     public String getErrmsg() {
         return errmsg;
     }
 
+    @Override
     public void setErrmsg(String errmsg) {
         this.errmsg = errmsg;
     }

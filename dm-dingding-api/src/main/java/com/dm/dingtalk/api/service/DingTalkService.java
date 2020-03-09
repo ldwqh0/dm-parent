@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
+import com.dm.dingtalk.api.callback.model.CallbackProperties;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.request.OapiWorkrecordAddRequest;
@@ -116,6 +117,7 @@ public interface DingTalkService {
      * 添加待办事项<br>
      * 参考<a href=
      * "https://ding-doc.dingtalk.com/doc#/serverapi2/gpmpiq">https://ding-doc.dingtalk.com/doc#/serverapi2/gpmpiq</a>
+     * 
      * @param request
      * @return
      */
@@ -132,10 +134,18 @@ public interface DingTalkService {
 
     /**
      * 获取某个用户的待办事项列表，每次最多50条<br>
-     * 参考<a href="https://ding-doc.dingtalk.com/doc#/serverapi2/neevhm">https://ding-doc.dingtalk.com/doc#/serverapi2/neevhm</a>
+     * 参考<a href=
+     * "https://ding-doc.dingtalk.com/doc#/serverapi2/neevhm">https://ding-doc.dingtalk.com/doc#/serverapi2/neevhm</a>
      * 
      * @param request
      * @return
      */
     public OapiWorkrecordGetbyuseridResponse getWorkRecordByUserid(OapiWorkrecordGetbyuseridRequest request);
+
+    public String registryCallback(CallbackProperties properties);
+
+    public String deleteCallback();
+
+    public String getFailureCallback();
+
 }

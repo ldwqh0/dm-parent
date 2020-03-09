@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
+import com.dm.dingtalk.api.callback.model.CallbackProperties;
 import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
@@ -267,10 +268,29 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
     @Override
     public OapiWorkrecordGetbyuseridResponse getWorkRecordByUserid(OapiWorkrecordGetbyuseridRequest request) {
-      String url=SERVER+"/topapi/workrecord/getbyuserid?access_token={0}";
-      OapiWorkrecordGetbyuseridResponse response=restTemplate.postForObject(url, request, OapiWorkrecordGetbyuseridResponse.class, getAccessToken());
-      checkResponse(response);
-      return response;
+        String url = SERVER + "/topapi/workrecord/getbyuserid?access_token={0}";
+        OapiWorkrecordGetbyuseridResponse response = restTemplate.postForObject(url, request,
+                OapiWorkrecordGetbyuseridResponse.class, getAccessToken());
+        checkResponse(response);
+        return response;
+    }
+
+    @Override
+    public String registryCallback(CallbackProperties properties) {
+        String url = SERVER + "/call_back/register_call_back?access_token={0}";
+        return restTemplate.postForObject(url, properties, String.class, getAccessToken());
+    }
+
+    @Override
+    public String deleteCallback() {
+        String url = SERVER + "/call_back/delete_call_back?access_token={0}";
+        return restTemplate.getForObject(url, String.class, getAccessToken());
+    }
+
+    @Override
+    public String getFailureCallback() {
+        String url = SERVER + "/call_back/get_call_back_failed_result?access_token={0}";
+        return restTemplate.getForObject(url, String.class, getAccessToken());
     }
 
 }
