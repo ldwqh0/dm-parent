@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Consumer;
 
@@ -85,18 +86,17 @@ public class CallbackController {
             if ("check_url".equals(eventType)) {
                 return ResponseEntity.ok(okResponse());
             } else if (MapUtils.isNotEmpty(handlers)) {
-                System.out.println(handlers);
-//                  Consumer<Event> consumer = handlers.get(eventType);
-//                  if (!Objects.isNull(consumer)) {
-//                      consumer.accept(event);
-//                  }
+                Consumer<Event> consumer = handlers.get(eventType);
+                if (!Objects.isNull(consumer)) {
+                    consumer.accept(event);
+                }
             }
+            return ResponseEntity.ok(okResponse());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        return ResponseEntity.ok(okResponse());
     }
 
     /**
