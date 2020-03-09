@@ -4,14 +4,14 @@ import java.util.Base64;
 
 import org.junit.jupiter.api.Test;
 
-import com.dm.dingtalk.api.callback.model.EncryptMessage;
-import com.dm.dingtalk.api.crypto.AES;
+import com.dm.dingtalk.api.callback.EncryptMessage;
+import com.dm.dingtalk.api.crypto.DingAes;
 
-public class AESTest {
+public class DingAesTest {
 
     @Test
     public void decrypt() {
-        AES as = new AES("xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx");
+        DingAes as = new DingAes("xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx");
         try {
             String msg = "qEf4v+/MuYM4sszppgXYz+6hIOwKR3Rfyl1lP+ynhMQoBhGtIY1bvp1uAiiAW4t7HOwnUV6FREmuFwYCidkjnw==";
             byte[] bytes = as.decrypt(msg);
@@ -24,7 +24,7 @@ public class AESTest {
 
     @Test
     public void encrypt() {
-        AES aes = new AES("xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx");
+        DingAes aes = new DingAes("xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx");
         try {
             String nonce = "1234567890123456";
             EncryptMessage msg = EncryptMessage.of(nonce, "success", "ding1486af70d528a66635c2f4657eb6378f");

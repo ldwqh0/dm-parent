@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
-import com.dm.dingtalk.api.callback.model.CallbackProperties;
+import com.dm.dingtalk.api.callback.CallbackProperties;
 import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;

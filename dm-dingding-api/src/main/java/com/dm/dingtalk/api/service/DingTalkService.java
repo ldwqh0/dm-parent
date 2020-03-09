@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
-import com.dm.dingtalk.api.callback.model.CallbackProperties;
+import com.dm.dingtalk.api.callback.CallbackProperties;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.request.OapiWorkrecordAddRequest;

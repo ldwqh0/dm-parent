@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.dm.dingtalk.api.callback.model.Event;
+import com.dm.dingtalk.api.callback.Event;
 
 public class DingtalkConfigurerAdpater {
 

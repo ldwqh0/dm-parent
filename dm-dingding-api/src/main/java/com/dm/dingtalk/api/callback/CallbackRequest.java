@@ -1,4 +1,4 @@
-package com.dm.dingtalk.api.callback.model;
+package com.dm.dingtalk.api.callback;
 
 /**
  * 钉钉回调请求内容

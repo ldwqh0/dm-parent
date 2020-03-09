@@ -28,12 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.dingtalk.api.callback.model.CallbackProperties;
-import com.dm.dingtalk.api.callback.model.CallbackRequest;
-import com.dm.dingtalk.api.callback.model.CallbackResponse;
-import com.dm.dingtalk.api.callback.model.EncryptMessage;
-import com.dm.dingtalk.api.callback.model.Event;
-import com.dm.dingtalk.api.crypto.AES;
+import com.dm.dingtalk.api.crypto.DingAes;
 import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +45,7 @@ public class CallbackController {
 
     private ObjectMapper om;
 
-    private AES aes;
+    private DingAes aes;
 
     private static final Integer RANDOM_LENGTH = 6;
 
@@ -59,7 +54,7 @@ public class CallbackController {
 
     public void setCallbackProperties(CallbackProperties callbackProperties) {
         this.callbackProperties = callbackProperties;
-        this.aes = new AES(callbackProperties.getAesKey());
+        this.aes = new DingAes(callbackProperties.getAesKey());
     }
 
     public void setHandlers(Map<String, Consumer<Event>> handlers) {
@@ -104,22 +99,6 @@ public class CallbackController {
         return ResponseEntity.ok(okResponse());
     }
 
-    public CallbackResponse okResponse()
-            throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-        String time = String.valueOf(ZonedDateTime.now().toEpochSecond());
-        String nonce = getRandomStr(RANDOM_LENGTH);
-        EncryptMessage msg = EncryptMessage.of(nonce, "success", config.getCorpId());
-        String encrypt = aes.encryptToBase64String(msg.toBytes());
-        String signature = signature(callbackProperties.getToken(), time, nonce, encrypt);
-        return new CallbackResponse(signature, time, nonce, encrypt);
-    }
-
-    private boolean validMessage(String signature, String token, Long time, String noce, String msg) {
-        String computedSignature = signature(token, String.valueOf(time), noce, msg);
-        return StringUtils.equals(signature, computedSignature);
-    }
-
     /**
      * 注册钉钉回调地址
      * 
@@ -145,7 +124,18 @@ public class CallbackController {
         return dingService.getFailureCallback();
     }
 
-    public String getRandomStr(int count) {
+    private CallbackResponse okResponse()
+            throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        String time = String.valueOf(ZonedDateTime.now().toEpochSecond());
+        String nonce = getRandomStr(RANDOM_LENGTH);
+        EncryptMessage msg = EncryptMessage.of(nonce, "success", config.getCorpId());
+        String encrypt = aes.encryptToBase64String(msg.toBytes());
+        String signature = signature(callbackProperties.getToken(), time, nonce, encrypt);
+        return new CallbackResponse(signature, time, nonce, encrypt);
+    }
+
+    private String getRandomStr(int count) {
         String base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
         StringBuffer sb = new StringBuffer();
@@ -156,19 +146,23 @@ public class CallbackController {
         return sb.toString();
     }
 
+    private boolean validMessage(String signature, String token, Long time, String noce, String msg) {
+        String computedSignature = signature(token, String.valueOf(time), noce, msg);
+        return StringUtils.equals(signature, computedSignature);
+    }
+
     private Event getEvent(String encrypt, String signature, Long timestamp, String nonce) throws Exception {
-        try {
-            boolean b = validMessage(signature, callbackProperties.getToken(), timestamp, nonce, encrypt);
-            if (b) {
+        if (validMessage(signature, callbackProperties.getToken(), timestamp, nonce, encrypt)) {
+            try {
                 EncryptMessage msg = EncryptMessage.from(aes.decrypt(encrypt));
                 String msgBody = msg.getMsg();
                 Event event = om.readValue(msgBody, Event.class);
                 return event;
-            } else {
-                throw new RuntimeException("error for validate message");
+            } catch (Exception e) {
+                throw e;
             }
-        } catch (Exception e) {
-            throw e;
+        } else {
+            throw new RuntimeException("error for validate message");
         }
     }
 

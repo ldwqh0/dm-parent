@@ -15,13 +15,13 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AES {
+public class DingAes {
 
     private final byte[] key;
 
     private static final String algorithm = "AES";
 
-    public AES(String key) {
+    public DingAes(String key) {
         this.key = Base64.getDecoder().decode(key + "=");
     }
 

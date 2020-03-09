@@ -1,4 +1,4 @@
-package com.dm.dingtalk.api.callback.model;
+package com.dm.dingtalk.api.callback;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.dm.dingtalk.api.callback.CallbackController;
-import com.dm.dingtalk.api.callback.model.CallbackProperties;
+import com.dm.dingtalk.api.callback.CallbackProperties;
 import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.dingtalk.api.service.impl.DefaultDingTalkServiceImpl;
