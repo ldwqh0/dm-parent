@@ -1,7 +1,5 @@
 package com.dm.dingtalk.api.crypto;
 
-import java.util.Base64;
-
 import org.junit.jupiter.api.Test;
 
 import com.dm.dingtalk.api.callback.EncryptMessage;
