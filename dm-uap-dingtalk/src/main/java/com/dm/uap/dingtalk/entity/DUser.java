@@ -190,8 +190,7 @@ public class DUser implements Serializable {
         this.departments = departments;
     }
 
-    public DUser() {
-        super();
+    DUser() {
     }
 
     public DUser(String corpid, String userid) {

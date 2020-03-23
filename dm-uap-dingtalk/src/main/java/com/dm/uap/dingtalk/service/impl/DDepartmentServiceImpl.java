@@ -39,7 +39,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
     @Override
     @Transactional
     public DDepartment save(Department dDepartment) {
-        DDepartment dep_ = new DDepartment();
+        DDepartment dep_ = new DDepartment(dDepartment.getCorpId(), dDepartment.getId());
         dDepartmentConverter.copyProperties(dep_, dDepartment);
         return dDepartmentRepository.save(dep_);
     }
@@ -73,7 +73,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
     }
 
     /**
-     * 同步钉钉机构数据库到系统机构数据库 该同步会修改想要的部门数据信息 <br>
+     * 同步钉钉机构数据库到系统机构数据库 该同步会修改相应的部门数据信息 <br>
      * 但不会删除已经存在的部门信息
      */
     private void syncLocalToUap(List<DDepartment> dDepartments) {

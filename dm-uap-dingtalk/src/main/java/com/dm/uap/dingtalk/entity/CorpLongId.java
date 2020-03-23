@@ -2,9 +2,11 @@ package com.dm.uap.dingtalk.entity;
 
 import java.io.Serializable;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@Data
+@EqualsAndHashCode
+@Getter
 public class CorpLongId implements Serializable {
 
     private static final long serialVersionUID = 2683841054416224926L;
@@ -13,14 +15,13 @@ public class CorpLongId implements Serializable {
 
     private Long id;
 
+    CorpLongId() {
+    }
+
     public CorpLongId(String corpid, Long id) {
         super();
         this.corpId = corpid;
         this.id = id;
-    }
-
-    public CorpLongId() {
-        super();
     }
 
 }

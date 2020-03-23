@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
@@ -25,17 +24,9 @@ import static javax.persistence.CascadeType.*;
 @Setter
 @IdClass(CorpLongId.class)
 @Table(name = "dd_role_group_", indexes = { @Index(name = "idx_dd_role_group_deleted_", columnList = "deleted_") })
-public class DRoleGroup implements Serializable {
+public class DRoleGroup extends CorpLongEntity implements Serializable {
 
     private static final long serialVersionUID = -4172275539106446430L;
-
-    @Id
-    @Column(name = "corp_id_")
-    private String corpId;
-
-    @Id
-    @Column(name = "id_")
-    private Long id;
 
     @Column(name = "name_")
     private String name;
@@ -57,17 +48,11 @@ public class DRoleGroup implements Serializable {
     @Column(name = "deleted_")
     private Boolean deleted = false;
 
-    public DRoleGroup(Long id) {
-        super();
-        this.id = id;
+    DRoleGroup() {
     }
 
-    public DRoleGroup() {
-        super();
-    }
-
-    void setId(Long id) {
-        this.id = id;
+    public DRoleGroup(String corpid, Long id) {
+        super(corpid, id);
     }
 
 }

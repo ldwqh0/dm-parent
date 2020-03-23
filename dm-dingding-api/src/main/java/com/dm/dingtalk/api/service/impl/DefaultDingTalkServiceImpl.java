@@ -90,7 +90,9 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
         checkResponse(response);
         if (!Objects.isNull(response) && !Objects.isNull(response.getResult())
                 && CollectionUtils.isNotEmpty(response.getResult().getList())) {
-            return response.getResult().getList();
+            List<OpenRoleGroup> groups = response.getResult().getList();
+            groups.forEach(i -> i.setCorpid(corpid));
+            return groups;
         } else {
             return Collections.emptyList();
         }

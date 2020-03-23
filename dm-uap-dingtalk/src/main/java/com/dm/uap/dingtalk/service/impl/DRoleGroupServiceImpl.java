@@ -62,20 +62,18 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
      *
      * @return
      */
-    private List<DRoleGroup> fetchRoleGroup(String corpid) {
+    private List<DRoleGroup> fetchRoleGroup(final String corpid) {
         List<OpenRoleGroup> roleGroups = dingTalkService.fetchRoleGroups(corpid);
         List<Long> roleGroupIds = roleGroups.stream().map(OpenRoleGroup::getGroupId).collect(Collectors.toList());
         List<Long> roleIds = roleGroups.stream().map(OpenRoleGroup::getRoles)
                 .flatMap(List::stream).map(OpenRole::getId).collect(Collectors.toList());
-
         // 逻辑删除已经在钉钉中被删除的角色
         if (CollectionUtils.isNotEmpty(roleIds)) {
             dRoleRepository.setDeletedByCorpidAndIdNotIn(corpid, roleIds, TRUE);
         }
-
         // 设置逻辑删除钉钉角色组
         if (CollectionUtils.isNotEmpty(roleGroupIds)) {
-            dRoleGroupRepository.setDeletedByIdNotIn(corpid, roleGroupIds, Boolean.TRUE);
+            dRoleGroupRepository.setDeletedByCorpidAndIdNotIn(corpid, roleGroupIds, Boolean.TRUE);
         }
         // 禁用系统角色
         List<Long> deletedIds = dRoleRepository.findRoleIdByCorpidAndDRoleDeleted(corpid, TRUE);
@@ -86,21 +84,18 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
             Long groupId = originalGroup.getGroupId();
             final DRoleGroup dRoleGroup = dRoleGroupRepository.existsById(corpid, groupId)
                     ? dRoleGroupRepository.getOne(corpid, groupId)
-                    : new DRoleGroup(groupId);
+                    : new DRoleGroup(corpid, groupId);
             dRoleGroupConverter.copyProperties(dRoleGroup, originalGroup);
-            dRoleGroup.setCorpId(corpid);
             List<OpenRole> fetchRoles = originalGroup.getRoles();
             if (CollectionUtils.isNotEmpty(fetchRoles)) {
-
                 Set<DRole> dRoles = fetchRoles.stream()
                         .map(oRole -> {
-                            Long oRoleId = oRole.getId();
-                            DRole dRole = dRoleRepository.existsById(corpid, oRoleId)
-                                    ? dRoleRepository.getOne(corpid, oRoleId)
-                                    : new DRole(corpid, oRoleId);
+                            Long roleid = oRole.getId();
+                            DRole dRole = dRoleRepository.existsById(corpid, roleid)
+                                    ? dRoleRepository.getOne(corpid, roleid)
+                                    : new DRole(corpid, roleid);
                             return dRoleConverter.copyProperties(dRole, oRole);
-                        })
-                        .collect(Collectors.toSet());
+                        }).collect(Collectors.toSet());
                 dRoleGroup.setRoles(dRoles);
             }
             return dRoleGroup;

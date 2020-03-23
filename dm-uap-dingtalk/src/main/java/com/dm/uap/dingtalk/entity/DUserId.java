@@ -14,13 +14,11 @@ public class DUserId implements Serializable {
     private String userid;
 
     public DUserId(String corpId, String userid) {
-        super();
         this.corpId = corpId;
         this.userid = userid;
     }
 
-    public DUserId() {
-        super();
+    DUserId() {
     }
 
 }

@@ -37,4 +37,8 @@ public interface DRoleRepository extends JpaRepository<DRole, CorpLongId>, Query
         return existsById(new CorpLongId(corpid, id));
     }
 
+    public default void deleteById(String corpid, Long id) {
+        deleteById(new CorpLongId(corpid, id));
+    }
+
 }

@@ -84,7 +84,6 @@ public class DUserServiceImpl implements DUserService {
     @Transactional
     @Override
     public void syncToUap(String corpid) {
-//        dUserRepository.getOne(arg0);
         if (Boolean.TRUE.equals(this.syncing)) {
             log.info("一个同步进程在进行中，返回");
             return;
@@ -95,6 +94,9 @@ public class DUserServiceImpl implements DUserService {
                     dDepartmentService.syncToUap(corpid);
                     dRoleGroupService.syncToUap(corpid);
                     syncToUap(fetch(corpid));
+                    // TODO 尝试物理删除已经在钉钉中删除的不存在的用户,如果不存在引用关系，直接删除，如果存在引用关系，逻辑删除
+                    // TODO 尝试物理删除已经在钉钉中删除的角色信息
+                    // TODO 产生物理删除已经在钉钉中删除的部门信息
                 } catch (Exception e) {
                     log.error("同步时发生错误", e);
                 } finally {

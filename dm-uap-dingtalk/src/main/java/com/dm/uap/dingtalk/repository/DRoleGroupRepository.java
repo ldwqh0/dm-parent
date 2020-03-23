@@ -14,7 +14,7 @@ public interface DRoleGroupRepository extends JpaRepository<DRoleGroup, CorpLong
 
     @Query("update DRoleGroup set deleted=?3 where corpId=?1 and deleted != ?3 and id not in (?2)")
     @Modifying
-    public int setDeletedByIdNotIn(String corpid, Collection<Long> ids, Boolean deleted);
+    public int setDeletedByCorpidAndIdNotIn(String corpid, Collection<Long> ids, Boolean deleted);
 
     public default void deleteById(String corpid, Long id) {
         deleteById(new CorpLongId(corpid, id));

@@ -2,7 +2,6 @@ package com.dm.uap.dingtalk.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
@@ -15,6 +14,7 @@ import com.dm.uap.entity.Role;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import static javax.persistence.CascadeType.*;
 
 import java.io.Serializable;
@@ -24,17 +24,9 @@ import java.io.Serializable;
 @Setter
 @Table(name = "dd_role_", indexes = { @Index(name = "idx_dd_role_deleted_", columnList = "deleted_") })
 @IdClass(CorpLongId.class)
-public class DRole implements Serializable {
+public class DRole extends CorpLongEntity implements Serializable {
 
     private static final long serialVersionUID = -8441406771526246885L;
-
-    @Id
-    @Column(name = "corp_id_")
-    private String corpId;
-
-    @Id
-    @Column(name = "id_")
-    private Long id;
 
     @Column(name = "name_")
     private String name;
@@ -56,17 +48,11 @@ public class DRole implements Serializable {
     @Column(name = "deleted_")
     private Boolean deleted = false;
 
-    public DRole() {
-        super();
+    DRole() {
     }
 
     public DRole(String corpid, Long id) {
-        this.corpId = corpid;
-        this.id = id;
-    }
-
-    void setId(Long id) {
-        this.id = id;
+        super(corpid, id);
     }
 
 }

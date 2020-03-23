@@ -101,6 +101,9 @@ public class OapiRoleListResponse extends TaobaoResponse {
      */
     public static class OpenRoleGroup implements Serializable {
         private static final long serialVersionUID = 5231897893516396395L;
+
+        private String corpid;
+
         /**
          * 角色组id
          */
@@ -113,6 +116,14 @@ public class OapiRoleListResponse extends TaobaoResponse {
          * roles
          */
         private List<OpenRole> roles;
+
+        public String getCorpid() {
+            return corpid;
+        }
+
+        public void setCorpid(String corpid) {
+            this.corpid = corpid;
+        }
 
         public Long getGroupId() {
             return this.groupId;
