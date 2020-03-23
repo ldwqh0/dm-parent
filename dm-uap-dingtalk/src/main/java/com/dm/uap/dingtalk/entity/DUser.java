@@ -12,11 +12,13 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.MapKeyJoinColumns;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -33,14 +35,34 @@ import static javax.persistence.CascadeType.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "dd_user_", indexes = { @Index(columnList = "deleted_", name = "idx_dd_user_deleted_") })
+@Table(name = "dd_user_", indexes = {
+        @Index(columnList = "deleted_", name = "idx_dd_user_deleted_"),
+        @Index(columnList = "corp_id_,unionid_", name = "uk_dd_user_corpid_unionid_")
+})
+@IdClass(DUserId.class)
 public class DUser implements Serializable {
 
     private static final long serialVersionUID = -6763998745823230765L;
+
+    // 一个用户在一个企业中只能出现一次
+
+    /**
+     * 用户所属企业的ID
+     */
+    @Id
+    @Column(name = "corp_id_")
+    private String corpId;
+
+    /**
+     * 用户在企业内的id
+     */
     @Id
     @Column(name = "userid_")
     private String userid;
 
+    /**
+     * 用户的全局唯一识别符，用于一个用户在不同的企业确定用户的统一性
+     */
     @Column(name = "unionid_")
     private String unionid;
 
@@ -70,10 +92,14 @@ public class DUser implements Serializable {
 
     @Column(name = "order_")
     @JoinTable(name = "dd_department_user_order_", joinColumns = {
-            @JoinColumn(name = "dd_user_id_")
+            @JoinColumn(name = "dd_user_id_", referencedColumnName = "userid_"),
+            @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     })
     @ElementCollection
-    @MapKeyJoinColumn(name = "dd_department_id_")
+    @MapKeyJoinColumns({
+            @MapKeyJoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
+            @MapKeyJoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
+    })
     private Map<DDepartment, Long> orderInDepts;
 
     @Column(name = "is_admin_")
@@ -89,9 +115,13 @@ public class DUser implements Serializable {
     @Column(name = "is_leader_")
     @ElementCollection
     @JoinTable(name = "dd_department_user_leader_", joinColumns = {
-            @JoinColumn(name = "dd_user_id_")
+            @JoinColumn(name = "dd_user_id_", referencedColumnName = "userid_"),
+            @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     })
-    @MapKeyJoinColumn(name = "dd_department_id_")
+    @MapKeyJoinColumns({
+            @MapKeyJoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
+            @MapKeyJoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
+    })
     private Map<DDepartment, Boolean> leaderInDepts;
 
     @Column(name = "hide_")
@@ -99,9 +129,11 @@ public class DUser implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "dd_department_dd_user_", joinColumns = {
-            @JoinColumn(name = "dd_user_id_")
+            @JoinColumn(name = "dd_user_id_", referencedColumnName = "userid_"),
+            @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     }, inverseJoinColumns = {
-            @JoinColumn(name = "dd_department_id_")
+            @JoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
+            @JoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
     })
     private Set<DDepartment> departments;
 
@@ -125,9 +157,11 @@ public class DUser implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "dd_role_user_", joinColumns = {
-            @JoinColumn(name = "dd_user_id_")
+            @JoinColumn(name = "dd_user_id_", referencedColumnName = "userid_"),
+            @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     }, inverseJoinColumns = {
-            @JoinColumn(name = "dd_role_id_")
+            @JoinColumn(name = "dd_role_id_", referencedColumnName = "id_"),
+            @JoinColumn(name = "dd_role_corp_id_", referencedColumnName = "corp_id_")
     })
     private Set<DRole> roles;
 
@@ -160,8 +194,8 @@ public class DUser implements Serializable {
         super();
     }
 
-    public DUser(String userid) {
-        super();
+    public DUser(String corpid, String userid) {
+        this.corpId = corpid;
         this.userid = userid;
     }
 

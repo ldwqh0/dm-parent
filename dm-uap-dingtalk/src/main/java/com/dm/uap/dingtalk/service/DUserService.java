@@ -1,17 +1,48 @@
 package com.dm.uap.dingtalk.service;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import com.dm.uap.dingtalk.entity.DUser;
+import com.dm.uap.dingtalk.entity.DUserId;
 import com.dm.uap.dingtalk.entity.DdSyncLog;
 
 public interface DUserService {
 
     /**
      * 同步用户信息到本地系统<br>
+     * 
      * 在同步用户之前，会先同步组织机构信息和角色信息
      */
-    public void syncToUap();
+    public void syncToUap(String corpid);
+
+    /**
+     * 启动异步同步信息，并返回日志
+     * 
+     * @param corpid 要同步用户的企业
+     * 
+     * @return
+     */
+    public CompletableFuture<DdSyncLog> asyncToUap(String corpid);
+
+    /**
+     * 同步单个用户的信息到系统
+     * 
+     * @param userid
+     * @return
+     */
+    public DUser syncToUap(String corpid, String userid);
+
+    /**
+     * 
+     * 
+     * 异步的同步某个用户的信息
+     * 
+     * @param corpid 要同步的企业id
+     * @param userid 要同步的用户id
+     * @return
+     */
+    public CompletableFuture<DUser> asyncToUap(String corpid, String userid);
 
     /**
      * 根据情况创建或更新一个钉钉用户信息,<br>
@@ -25,12 +56,23 @@ public interface DUserService {
      */
     public DUser save(DUser dUser);
 
+    public Optional<DUser> findByUserid(String corpid, String userid);
+
+    public Optional<DUser> findById(DUserId id);
+
     /**
-     * 启动异步同步信息，并返回日志
+     * 将指定的用户标记为删除
      * 
+     * @param userId
      * @return
      */
-    public DdSyncLog asyncToUap();
+    public DUser markDeleted(String corpid, String userId);
 
-    public Optional<DUser> findByUserid(String userid);
+    /**
+     * 物理删除指定的用户信息
+     * 
+     * @param userId
+     */
+    public void delete(String corpid, String userId);
+
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -21,9 +22,14 @@ import static javax.persistence.CascadeType.*;
 @Getter
 @Setter
 @Table(name = "dd_department_", indexes = { @Index(columnList = "deleted_", name = "idx_dd_department_deleted_") })
+@IdClass(CorpLongId.class)
 public class DDepartment implements Serializable {
 
     private static final long serialVersionUID = 8399805234987134498L;
+
+    @Id
+    @Column(name = "corp_id_")
+    private String corpId;
 
     /**
      * id
@@ -72,8 +78,8 @@ public class DDepartment implements Serializable {
         super();
     }
 
-    public DDepartment(Long id) {
-        super();
+    public DDepartment(String corpid, Long id) {
+        this.corpId = corpid;
         this.id = id;
     }
 

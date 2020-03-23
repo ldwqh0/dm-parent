@@ -50,22 +50,22 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         return dDepartments.stream().map(this::save).collect(Collectors.toList());
     }
 
-    private List<DDepartment> fetchDDepartments() {
-        List<Department> departments = dingTalkService.fetchDepartments();
+    private List<DDepartment> fetchDDepartments(final String corpid) {
+        List<Department> departments = dingTalkService.fetchDepartments(corpid);
         // 删除原有列表中，不存在于本次同步抓取到的部门列表中的数据
         // 如果原有数据中 有部门 [1,2,3],本次抓取的部门有 [2,3,6]
         // 需要先删除原有部门中不存在于本次抓取部门[2,3,6]中的部门[1]
         List<Long> exists = departments.stream().map(Department::getId).collect(Collectors.toList());
         // 找到已经删除，但没有被标记为删除的部门,将之标记为删除
         if (CollectionUtils.isNotEmpty(exists)) {
-            dDepartmentRepository.setDeletedByIdNotIn(exists);
+            dDepartmentRepository.setDeletedByCorpidAndIdNotIn(corpid, exists, Boolean.TRUE);
         }
         // 将抓取到的数据映射为实体
         List<DDepartment> dDepartments_ = departments.stream()
                 .map(_department -> {
-                    DDepartment result = dDepartmentRepository.existsById(_department.getId())
-                            ? dDepartmentRepository.getOne(_department.getId())
-                            : dDepartmentRepository.save(new DDepartment(_department.getId()));
+                    DDepartment result = dDepartmentRepository.existsById(corpid, _department.getId())
+                            ? dDepartmentRepository.getOne(corpid, _department.getId())
+                            : dDepartmentRepository.save(new DDepartment(corpid, _department.getId()));
                     return dDepartmentConverter.copyProperties(result, _department);
                 })
                 .collect(Collectors.toList());
@@ -87,7 +87,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         // 构建系统组织机构的层级关系
         dDepartments.forEach(dDep -> {
             if (!Objects.isNull(dDep.getParentid())) {
-                DDepartment dParent = dDepartmentRepository.getOne(dDep.getParentid());
+                DDepartment dParent = dDepartmentRepository.getOne(dDep.getCorpId(), dDep.getParentid());
                 dDep.getDepartment().setParent(dParent.getDepartment());
             }
         });
@@ -95,9 +95,9 @@ public class DDepartmentServiceImpl implements DDepartmentService {
 
     @Override
     @Transactional
-    public void syncToUap() {
+    public void syncToUap(String corpid) {
         log.info("开始同步部门信息");
-        syncLocalToUap(fetchDDepartments());
+        syncLocalToUap(fetchDDepartments(corpid));
         log.info("同步部门信息完成");
     }
 }

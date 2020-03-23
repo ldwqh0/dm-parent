@@ -3,8 +3,10 @@ package com.dm.uap.dingtalk.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -21,9 +23,14 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Table(name = "dd_role_", indexes = { @Index(name = "idx_dd_role_deleted_", columnList = "deleted_") })
+@IdClass(CorpLongId.class)
 public class DRole implements Serializable {
 
     private static final long serialVersionUID = -8441406771526246885L;
+
+    @Id
+    @Column(name = "corp_id_")
+    private String corpId;
 
     @Id
     @Column(name = "id_")
@@ -37,7 +44,10 @@ public class DRole implements Serializable {
     private Role role;
 
     @ManyToOne(cascade = REFRESH)
-    @JoinColumn(name = "dd_group_id_")
+    @JoinColumns({
+            @JoinColumn(name = "dd_role_group_id_", referencedColumnName = "id_"),
+            @JoinColumn(name = "dd_role_group_corp_id_", referencedColumnName = "corp_id_")
+    })
     private DRoleGroup group;
 
     /**
@@ -50,8 +60,8 @@ public class DRole implements Serializable {
         super();
     }
 
-    public DRole(Long id) {
-        super();
+    public DRole(String corpid, Long id) {
+        this.corpId = corpid;
         this.id = id;
     }
 

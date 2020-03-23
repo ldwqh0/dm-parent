@@ -23,11 +23,17 @@ import com.dm.dingtalk.api.service.DingTalkService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DingTalkAuthcodeAuthenticationProvider implements AuthenticationProvider, InitializingBean {
+public class OrganizationInternalAppAuthcodeAuthenticationProvider implements AuthenticationProvider, InitializingBean {
 
     private AuthenticationUserDetailsService<DingTalkAuthCodeAuthenticationToken> userDetailsService;
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+
+    private String corpid;
+
+    public void setCorpid(String corpid) {
+        this.corpid = corpid;
+    }
 
     @Autowired
     private List<DingTalkService> dingTalkServices;
@@ -55,7 +61,7 @@ public class DingTalkAuthcodeAuthenticationProvider implements AuthenticationPro
         for (DingTalkService dingTalkService : dingTalkServices) {
             if (Objects.isNull(rsp)) {
                 try {
-                    rsp = dingTalkService.getUserByAuthCode(String.valueOf(token.getPrincipal()));
+                    rsp = dingTalkService.getUserByAuthCode(corpid, String.valueOf(token.getPrincipal()));
                 } catch (Exception e) {
                     log.info("get user info with code err , the code is [" + token.getPrincipal() + "]");
                 }
@@ -82,6 +88,7 @@ public class DingTalkAuthcodeAuthenticationProvider implements AuthenticationPro
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        Assert.notNull(corpid, "the corpid can not be null");
         Assert.notNull(userDetailsService, "the userDetailsServices can not be null");
         Assert.notEmpty(dingTalkServices, "the dingTalkServices can not be empty");
     }

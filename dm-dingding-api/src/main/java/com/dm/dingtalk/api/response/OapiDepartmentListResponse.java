@@ -67,6 +67,9 @@ public class OapiDepartmentListResponse extends TaobaoResponse {
      */
     public static class Department implements Serializable {
         private static final long serialVersionUID = 5792686412978143124L;
+
+        private String corpId;
+
         /**
          * autoAddUser
          */
@@ -87,6 +90,7 @@ public class OapiDepartmentListResponse extends TaobaoResponse {
          * parentid
          */
         private Long parentid;
+
         /**
          * sourceIdentifier
          */
@@ -138,6 +142,14 @@ public class OapiDepartmentListResponse extends TaobaoResponse {
 
         public void setSourceIdentifier(String sourceIdentifier) {
             this.sourceIdentifier = sourceIdentifier;
+        }
+
+        public String getCorpId() {
+            return corpId;
+        }
+
+        public void setCorpId(String corpId) {
+            this.corpId = corpId;
         }
 
         @Override

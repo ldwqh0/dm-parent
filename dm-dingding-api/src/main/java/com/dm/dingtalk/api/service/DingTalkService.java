@@ -28,34 +28,20 @@ import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
  *
  */
 public interface DingTalkService {
-    /**
-     * 获取accessToken
-     * 
-     * @return
-     */
-    public String getAccessToken();
-
-    /**
-     * 根据用户ID获取用户信息
-     * 
-     * @param userid
-     * @return
-     */
-//	public UserInfo getUserInfoByUserid(String userid);
 
     /**
      * 获取部门列表信息
      * 
      * @return
      */
-    public List<Department> fetchDepartments();
+    public List<Department> fetchDepartments(String corpId);
 
     /**
      * 获取角色组
      * 
      * @return
      */
-    public List<OpenRoleGroup> fetchRoleGroups();
+    public List<OpenRoleGroup> fetchRoleGroups(String corpId);
 
     /**
      * 创建一个钉钉用户
@@ -63,7 +49,7 @@ public interface DingTalkService {
      * @param request
      * @return
      */
-    public OapiUserCreateResponse createUser(OapiUserCreateRequest request);
+    public OapiUserCreateResponse createUser(String corpId, OapiUserCreateRequest request);
 
     /**
      * 更新一个钉钉用户
@@ -71,7 +57,7 @@ public interface DingTalkService {
      * @param request
      * @return
      */
-    public OapiUserUpdateResponse updateUser(OapiUserUpdateRequest request);
+    public OapiUserUpdateResponse updateUser(String corpId, OapiUserUpdateRequest request);
 
     /**
      * 根据免登录授权码获取用户信息
@@ -79,7 +65,7 @@ public interface DingTalkService {
      * @param authCode
      * @return
      */
-    public OapiUserGetuserinfoResponse getUserByAuthCode(String authCode);
+    public OapiUserGetuserinfoResponse getUserByAuthCode(String corpId, String authCode);
 
     /**
      * 获取一个部门的用户列表
@@ -87,7 +73,7 @@ public interface DingTalkService {
      * @param depId
      * @return
      */
-    public OapiUserGetDeptMemberResponse fetchUsers(Long depId);
+    public OapiUserGetDeptMemberResponse fetchUsers(String corpId, Long depId);
 
     /**
      * 获取一个用户的信息
@@ -95,14 +81,14 @@ public interface DingTalkService {
      * @param userid
      * @return
      */
-    public OapiUserGetResponse fetchUserById(String userid);
+    public OapiUserGetResponse fetchUserById(String corpId, String userid);
 
     /**
      * 从钉钉服务器上删除一个用户
      * 
      * @param userid
      */
-    public void deleteUser(String userid);
+    public void deleteUser(String corpId, String userid);
 
     /**
      * 批量设置用户角色信息
@@ -111,7 +97,8 @@ public interface DingTalkService {
      * @param roleIds
      * @return
      */
-    public OapiRoleAddrolesforempsResponse batchSetUserRole(Collection<String> userIds, Collection<Long> roleIds);
+    public OapiRoleAddrolesforempsResponse batchSetUserRole(String corpId, Collection<String> userIds,
+            Collection<Long> roleIds);
 
     /**
      * 添加待办事项<br>
@@ -121,7 +108,7 @@ public interface DingTalkService {
      * @param request
      * @return
      */
-    public OapiWorkrecordAddResponse addWorkRecord(OapiWorkrecordAddRequest request);
+    public OapiWorkrecordAddResponse addWorkRecord(String corpId, OapiWorkrecordAddRequest request);
 
     /**
      * 更新待办事项，该操作会将待办事项从用户的待办事项列表中删除<br>
@@ -130,7 +117,7 @@ public interface DingTalkService {
      * 
      * @return
      */
-    public OapiWorkrecordUpdateResponse updateWorkRecord(OapiWorkrecordUpdateRequest request);
+    public OapiWorkrecordUpdateResponse updateWorkRecord(String corpId, OapiWorkrecordUpdateRequest request);
 
     /**
      * 获取某个用户的待办事项列表，每次最多50条<br>
@@ -140,12 +127,13 @@ public interface DingTalkService {
      * @param request
      * @return
      */
-    public OapiWorkrecordGetbyuseridResponse getWorkRecordByUserid(OapiWorkrecordGetbyuseridRequest request);
+    public OapiWorkrecordGetbyuseridResponse getWorkRecordByUserid(String corpId,
+            OapiWorkrecordGetbyuseridRequest request);
 
-    public String registryCallback(CallbackProperties properties);
+    public String registryCallback(String corpid, CallbackProperties properties);
 
-    public String deleteCallback();
+    public String deleteCallback(String corpid);
 
-    public String getFailureCallback();
+    public String getFailureCallback(String corpid);
 
 }

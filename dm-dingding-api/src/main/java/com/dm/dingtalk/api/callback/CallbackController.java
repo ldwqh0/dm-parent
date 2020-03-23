@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,25 +31,38 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dm.dingtalk.api.crypto.DingAes;
-import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RestController
+import lombok.extern.slf4j.Slf4j;
+
+//@RestController
 @RequestMapping("dingTalk/callback")
+@Slf4j
 public class CallbackController {
 
     private Map<String, Consumer<Event>> handlers;
 
     private CallbackProperties callbackProperties;
 
-    private DingClientConfig config;
-
     private ObjectMapper om;
 
     private DingAes aes;
 
+    /**
+     * 对于ISV开发来说，$key填写对应的suiteKey。<br>
+     * 
+     * 对于定制服务商开发来说，$key填写对应的customKey。<br>
+     * 
+     * 对于企业内部开发来说，$key填写企业的Corpid。<br>
+     * 
+     * 参考 <a href="https://ding-doc.dingtalk.com/doc#/faquestions/ltr370">钉钉开发文档</a>
+     */
+    private String envkey;
+
     private static final Integer RANDOM_LENGTH = 6;
+
+    private static final String RANDOM_BASE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     @Autowired
     private DingTalkService dingService;
@@ -66,8 +80,8 @@ public class CallbackController {
         this.om = om;
     }
 
-    public void setDingClientConfig(DingClientConfig config) {
-        this.config = config;
+    public void setEnvkey(String envkey) {
+        this.envkey = envkey;
     }
 
     @PostMapping(params = { "signature" })
@@ -78,11 +92,12 @@ public class CallbackController {
             @RequestBody CallbackRequest rsp)
             throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        log.debug("接收到回调请求，signature={},timestamp={},nonce={}", signature, timestamp, nonce);
         String encrypt = rsp.getEncrypt();
         try {
             Event event = getEvent(encrypt, signature, timestamp, nonce);
             String eventType = event.getType();
-            System.out.println(event);
+            log.info("接收到回调请求，请求类型是 {}", eventType);
             if ("check_url".equals(eventType)) {
                 return ResponseEntity.ok(okResponse());
             } else if (MapUtils.isNotEmpty(handlers)) {
@@ -93,7 +108,7 @@ public class CallbackController {
             }
             return ResponseEntity.ok(okResponse());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("处理回调请求时发成错误", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -104,9 +119,9 @@ public class CallbackController {
      * 
      * @return
      */
-    @PostMapping
-    public String registry() {
-        return dingService.registryCallback(callbackProperties);
+    @PostMapping("{corpid}")
+    public String registry(@PathVariable("corpid") String corpid) {
+        return dingService.registryCallback(corpid, callbackProperties);
     }
 
     /**
@@ -114,41 +129,79 @@ public class CallbackController {
      * 
      * @return
      */
-    @DeleteMapping
-    public String delete() {
-        return dingService.deleteCallback();
+    @DeleteMapping("{corpid}")
+    public String delete(@PathVariable("corpid") String corpid) {
+        return dingService.deleteCallback(corpid);
     }
 
-    @GetMapping(params = "error")
-    public String getCallbackError() {
-        return dingService.getFailureCallback();
+    /**
+     * 获取指定应用的回调错误信息
+     * 
+     * @param corpid
+     * @return
+     */
+    @GetMapping(name = "errors")
+    public String getCallbackError(@RequestParam("corpid") String corpid) {
+        return dingService.getFailureCallback(corpid);
     }
 
+    @GetMapping(name = "errors/{corpid}")
+    public String getCallbackError2(@PathVariable("corpid") String corpid) {
+        return dingService.getFailureCallback(corpid);
+    }
+
+    /**
+     * 构建一个表示处理成功的响应
+     * 
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws InvalidKeyException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchPaddingException
+     * @throws InvalidAlgorithmParameterException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     */
     private CallbackResponse okResponse()
             throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         String time = String.valueOf(ZonedDateTime.now().toEpochSecond());
         String nonce = getRandomStr(RANDOM_LENGTH);
-        EncryptMessage msg = EncryptMessage.of(nonce, "success", config.getCorpId());
+        EncryptMessage msg = EncryptMessage.of(nonce, "success", envkey);
         String encrypt = aes.encryptToBase64String(msg.toBytes());
         String signature = signature(callbackProperties.getToken(), time, nonce, encrypt);
         return new CallbackResponse(signature, time, nonce, encrypt);
     }
 
+    /**
+     * 构建指定长度的随机字符串
+     * 
+     * @param count 要构建的字符串的长度
+     * @return
+     */
     private String getRandomStr(int count) {
-        String base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
+        int randomMax = RANDOM_BASE_CHAR.length();
         for (int i = 0; i < count; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
+            int number = random.nextInt(randomMax);
+            sb.append(RANDOM_BASE_CHAR.charAt(number));
         }
         return sb.toString();
     }
 
+    /**
+     * 验证消息签名的正确性
+     * 
+     * @param signature
+     * @param token
+     * @param time
+     * @param noce
+     * @param msg
+     * @return
+     */
     private boolean validMessage(String signature, String token, Long time, String noce, String msg) {
-        String computedSignature = signature(token, String.valueOf(time), noce, msg);
-        return StringUtils.equals(signature, computedSignature);
+        return StringUtils.equals(signature, signature(token, String.valueOf(time), noce, msg));
     }
 
     private Event getEvent(String encrypt, String signature, Long timestamp, String nonce) throws Exception {
@@ -159,9 +212,11 @@ public class CallbackController {
                 Event event = om.readValue(msgBody, Event.class);
                 return event;
             } catch (Exception e) {
+                log.error("解码回调请求体时发生错误", e);
                 throw e;
             }
         } else {
+            log.error("回调请求签名验证错误 encrypt={},signature={},timestamp={},nonce={}", encrypt, signature, timestamp, nonce);
             throw new RuntimeException("error for validate message");
         }
     }

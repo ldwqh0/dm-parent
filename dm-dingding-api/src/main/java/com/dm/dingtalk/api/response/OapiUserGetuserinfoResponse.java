@@ -35,6 +35,8 @@ public class OapiUserGetuserinfoResponse extends TaobaoResponse {
      */
     private String sysLevel;
 
+    private String corpid;
+
     /**
      * userid
      */
@@ -88,6 +90,14 @@ public class OapiUserGetuserinfoResponse extends TaobaoResponse {
 
     public String getUserid() {
         return this.userid;
+    }
+
+    public String getCorpid() {
+        return corpid;
+    }
+
+    public void setCorpid(String corpid) {
+        this.corpid = corpid;
     }
 
     @Override

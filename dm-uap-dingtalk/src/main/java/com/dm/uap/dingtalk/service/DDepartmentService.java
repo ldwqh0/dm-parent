@@ -25,6 +25,6 @@ public interface DDepartmentService {
     /**
      * 将钉钉用户信息同步到系统中
      */
-    public void syncToUap();
+    public void syncToUap(String corpid);
 
 }

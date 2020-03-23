@@ -59,8 +59,7 @@ public class DingtalkConfigurerAdpater {
         return url;
     }
 
-    public void registryConsumer(String eventType, Consumer<Event> consumer) {
+    public final void registryConsumer(String eventType, Consumer<Event> consumer) {
         this.consumers.put(eventType, consumer);
     }
-
 }

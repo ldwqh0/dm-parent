@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -30,6 +31,7 @@ import com.dm.uap.dingtalk.converter.DUserConverter;
 import com.dm.uap.dingtalk.entity.DDepartment;
 import com.dm.uap.dingtalk.entity.DRole;
 import com.dm.uap.dingtalk.entity.DUser;
+import com.dm.uap.dingtalk.entity.DUserId;
 import com.dm.uap.dingtalk.entity.DdSyncLog;
 import com.dm.uap.dingtalk.repository.DDepartmentRepository;
 import com.dm.uap.dingtalk.repository.DRoleRepository;
@@ -43,6 +45,8 @@ import com.dm.uap.entity.User;
 import com.dm.uap.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
+
+import static java.lang.Boolean.*;
 
 @Service
 @Slf4j
@@ -73,15 +77,14 @@ public class DUserServiceImpl implements DUserService {
     private DRoleGroupService dRoleGroupService;
 
     private volatile Boolean syncing = Boolean.FALSE;
-// TODO 暂时不考虑日志
-//    private DdSyncLog alog;
 
     /**
      * 采用批处理同步的模式
      */
     @Transactional
     @Override
-    public void syncToUap() {
+    public void syncToUap(String corpid) {
+//        dUserRepository.getOne(arg0);
         if (Boolean.TRUE.equals(this.syncing)) {
             log.info("一个同步进程在进行中，返回");
             return;
@@ -89,9 +92,9 @@ public class DUserServiceImpl implements DUserService {
             synchronized (syncing) {
                 try {
                     syncing = Boolean.TRUE;
-                    dDepartmentService.syncToUap();
-                    dRoleGroupService.syncToUap();
-                    syncToUap(fetch());
+                    dDepartmentService.syncToUap(corpid);
+                    dRoleGroupService.syncToUap(corpid);
+                    syncToUap(fetch(corpid));
                 } catch (Exception e) {
                     log.error("同步时发生错误", e);
                 } finally {
@@ -104,9 +107,9 @@ public class DUserServiceImpl implements DUserService {
     @Transactional
     @Async
     @Override
-    public DdSyncLog asyncToUap() {
-        this.syncToUap();
-        return null;
+    public CompletableFuture<DdSyncLog> asyncToUap(String corpid) {
+        this.syncToUap(corpid);
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
@@ -114,7 +117,7 @@ public class DUserServiceImpl implements DUserService {
         try {
             // 如果用户被标记为删除，从钉钉通讯录中删除用户
             if (Boolean.TRUE.equals(dUser.getDeleted())) {
-                dingTalkService.deleteUser(dUser.getUserid());
+                dingTalkService.deleteUser(dUser.getCorpId(), dUser.getUserid());
             } else {
                 dUser = saveToDingTalk(dUser);
             }
@@ -129,6 +132,62 @@ public class DUserServiceImpl implements DUserService {
         return dUserRepository.save(dUser);
     }
 
+    @Override
+    public Optional<DUser> findByUserid(String corpid, String userid) {
+        return dUserRepository.findById(corpid, userid);
+    }
+
+    @Override
+    public Optional<DUser> findById(DUserId id) {
+        return dUserRepository.findById(id);
+    }
+
+    /**
+     * 将某个用户设置为禁用
+     */
+    @Override
+    @Transactional
+    public DUser markDeleted(String corpid, String userId) {
+        Optional<DUser> o = dUserRepository.findById(corpid, userId);
+        o.ifPresent(duser -> {
+            // 将用户状态修改为删除
+            duser.setDeleted(Boolean.TRUE);
+            // 将某个用户设置为禁用
+            duser.getUser().setEnabled(Boolean.FALSE);
+        });
+        return o.orElse(null);
+    }
+
+    /**
+     * 同步指定用户的用户信息到系统
+     */
+    @Override
+    @Transactional
+    public DUser syncToUap(String corpid, String userid) {
+        try {
+            OapiUserGetResponse org = dingTalkService.fetchUserById(corpid, userid);
+            DUser dUser = copyProperties(new DUser(corpid, userid), org);
+            syncToUap(dUser);
+            return dUserRepository.save(dUser);
+        } catch (Exception e) {
+            log.error("获取指定用户信息时出现错误", e);
+            throw e;
+        }
+    }
+
+    @Transactional
+    @Async
+    @Override
+    public CompletableFuture<DUser> asyncToUap(String corpid, String userid) {
+        return CompletableFuture.completedFuture(this.syncToUap(corpid, userid));
+    }
+
+    @Override
+    @Transactional
+    public void delete(String corpid, String userid) {
+        dUserRepository.deleteById(new DUserId(corpid, userid));
+    }
+
     /**
      * 保存用户信息到钉钉, <br >
      * 保存前根据userid判断是否在钉钉中已经存在相关用户, <br>
@@ -140,16 +199,17 @@ public class DUserServiceImpl implements DUserService {
      */
     private DUser saveToDingTalk(DUser dUser) {
         String userId = dUser.getUserid();
+        String corpid = dUser.getCorpId();
         if (StringUtils.isNotBlank(userId)) {
-            OapiUserGetResponse response = dingTalkService.fetchUserById(userId);
+            OapiUserGetResponse response = dingTalkService.fetchUserById(corpid, userId);
             // 这个状态码代表找到了相关的用户信息
             if (Objects.equals(0L, response.getErrcode()) && StringUtils.isNotBlank(response.getUserid())) {
                 // 更新钉钉用户到服务器
-                return updateToDingTalk(dUser);
+                return updateToDingTalk(corpid, dUser);
             }
         }
         // 创建用户到钉钉服务器
-        return createToDingTalk(dUser);
+        return createToDingTalk(corpid, dUser);
     }
 
     /**
@@ -157,12 +217,30 @@ public class DUserServiceImpl implements DUserService {
      * 
      * @param dUsers
      * @return
+     * @return
      */
-    private void syncToUap(List<DUser> dUsers) {
+    private List<User> syncToUap(List<DUser> dUsers) {
         log.info("开始同步用户信息到UAP");
         List<User> users = dUsers.stream().map(this::toUser).collect(Collectors.toList());
-        userRepository.saveAll(users);
-        log.info("同步用户信息到UAP完成");
+        try {
+            return userRepository.saveAll(users);
+        } catch (Exception e) {
+            // do nothing here;
+            throw e;
+        } finally {
+            log.info("同步用户信息到UAP完成");
+        }
+
+    }
+
+    /**
+     * 同步指定钉钉用户到系统用户
+     * 
+     * @param dUser
+     * @return
+     */
+    private User syncToUap(DUser dUser) {
+        return userRepository.save(this.toUser(dUser));
     }
 
     private User toUser(DUser dUser) {
@@ -217,8 +295,8 @@ public class DUserServiceImpl implements DUserService {
      * 
      * @return
      */
-    private List<DUser> fetch() {
-        List<DDepartment> dDepartments = dDepartmentRepository.findAll();
+    private List<DUser> fetch(final String corpid) {
+        List<DDepartment> dDepartments = dDepartmentRepository.findByCorpId(corpid);
         // 遍历所有部门
         Set<String> userIds = dDepartments.stream()
                 .map(DDepartment::getId)
@@ -229,29 +307,29 @@ public class DUserServiceImpl implements DUserService {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    return dingTalkService.fetchUsers(departmentId);
+                    return dingTalkService.fetchUsers(corpid, departmentId);
                 })// 从钉钉服务器上拉取所有部门的用户信息
                 .map(OapiUserGetDeptMemberResponse::getUserIds)
                 .flatMap(List::stream)// 获取所有的用户列表
                 .collect(Collectors.toSet());
         // 将存在于本地用户，但不存在于钉钉的用户，将本地状态设置为删除，
-        dUserRepository.setDeletedByUseridNotIn(userIds);
-        List<Long> deleteUsers = dUserRepository.findUserIdsByDUserDeleted(true);
+        dUserRepository.setDeletedByCorpidAndUseridNotIn(corpid, userIds, TRUE);
+        List<Long> deleteUsers = dUserRepository.findUserIdsByCorpidAndDUserDeleted(corpid, TRUE);
         if (CollectionUtils.isNotEmpty(deleteUsers)) {
-            userRepository.batchSetEnabled(deleteUsers, false);
+            userRepository.batchSetEnabled(deleteUsers, FALSE);
         }
         List<DUser> users = userIds.stream()
                 // 将从服务器上抓取的数据，复制到本地数据库中
                 .map(userid -> {
                     try {
-                        return dingTalkService.fetchUserById(userid);
+                        return dingTalkService.fetchUserById(corpid, userid);
                     } catch (Exception e) {
                         log.error("从服务器抓取用户[{}]的信息出错,错误信息是 [{}]", userid, e.getMessage());
                         return null;
                     }
                 })
                 .filter(item -> !Objects.isNull(item))
-                .map(item -> copyProperties(new DUser(item.getUserid()), item))
+                .map(item -> copyProperties(new DUser(corpid, item.getUserid()), item))
                 .collect(Collectors.toList());
         // 保存所有用户信息
         return dUserRepository.saveAll(users);
@@ -266,17 +344,19 @@ public class DUserServiceImpl implements DUserService {
      */
     private DUser copyProperties(DUser dUser, OapiUserGetResponse rsp) {
         dUserConverter.copyProperties(dUser, rsp);
-        log.info("正在合并用户信息 userid={}", dUser.getUserid());
+        log.info("正在合并用户信息 corpid={}, userid={}", dUser.getUserid());
+        String corpid = dUser.getCorpId();
         // 合并是否部门领导信息
         try {
-            Set<DDepartment> departments = rsp.getDepartment().stream().map(dDepartmentRepository::getOne)
+            Set<DDepartment> departments = rsp.getDepartment().stream()
+                    .map(departmentid -> dDepartmentRepository.getOne(corpid, departmentid))
                     .collect(Collectors.toSet());
             dUser.setDepartments(departments);
             Map<Long, Boolean> isLeaderMap = parseLeaderMap(rsp.getIsLeaderInDepts());
             if (MapUtils.isNotEmpty(isLeaderMap)) {
                 Map<DDepartment, Boolean> dLeaderMap = new HashMap<>();
                 for (Entry<Long, Boolean> entry : isLeaderMap.entrySet()) {
-                    dLeaderMap.put(dDepartmentRepository.getOne(entry.getKey()), entry.getValue());
+                    dLeaderMap.put(dDepartmentRepository.getOne(corpid, entry.getKey()), entry.getValue());
                 }
                 dUser.setLeaderInDepts(dLeaderMap);
             }
@@ -289,7 +369,7 @@ public class DUserServiceImpl implements DUserService {
             if (MapUtils.isNotEmpty(orderMap)) {
                 Map<DDepartment, Long> dOrderMap = new HashMap<DDepartment, Long>();
                 for (Entry<Long, Long> orderEntry : orderMap.entrySet()) {
-                    dOrderMap.put(dDepartmentRepository.getOne(orderEntry.getKey()), orderEntry.getValue());
+                    dOrderMap.put(dDepartmentRepository.getOne(corpid, orderEntry.getKey()), orderEntry.getValue());
                 }
                 dUser.setOrderInDepts(dOrderMap);
             }
@@ -303,7 +383,7 @@ public class DUserServiceImpl implements DUserService {
         if (CollectionUtils.isNotEmpty(roles)) {
             Set<DRole> dRoles = roles.stream()
                     .map(Roles::getId)
-                    .map(dRoleRepository::getOne)
+                    .map(roleid -> dRoleRepository.getOne(corpid, roleid))
                     .collect(Collectors.toSet());
             dUser.setRoles(dRoles);
         }
@@ -366,13 +446,13 @@ public class DUserServiceImpl implements DUserService {
      * @param dUser
      * @return
      */
-    private DUser createToDingTalk(DUser dUser) {
+    private DUser createToDingTalk(String corpid, DUser dUser) {
         OapiUserCreateRequest request = dUserConverter.toOapiUserCreateRequest(dUser);
-        OapiUserCreateResponse rsp = dingTalkService.createUser(request);
+        OapiUserCreateResponse rsp = dingTalkService.createUser(corpid, request);
         dUser.setUserid(rsp.getUserid());
         // 将角色信息更新到钉钉服务器
         Set<Long> roleIds = dUser.getRoles().stream().map(DRole::getId).collect(Collectors.toSet());
-        dingTalkService.batchSetUserRole(Collections.singleton(dUser.getUserid()), roleIds);
+        dingTalkService.batchSetUserRole(corpid, Collections.singleton(dUser.getUserid()), roleIds);
         return dUser;
     }
 
@@ -382,18 +462,12 @@ public class DUserServiceImpl implements DUserService {
      * @param dUser
      * @return
      */
-    private DUser updateToDingTalk(DUser dUser) {
+    private DUser updateToDingTalk(String corpid, DUser dUser) {
         OapiUserUpdateRequest request = dUserConverter.toOapiUserUpdateRequest(dUser);
-        dingTalkService.updateUser(request);
+        dingTalkService.updateUser(corpid, request);
         Set<Long> roleIds = dUser.getRoles().stream().map(DRole::getId).collect(Collectors.toSet());
-        dingTalkService.batchSetUserRole(Collections.singleton(dUser.getUserid()), roleIds);
+        dingTalkService.batchSetUserRole(corpid, Collections.singleton(dUser.getUserid()), roleIds);
         return dUser;
-    }
-
-    @Override
-    public Optional<DUser> findByUserid(String userid) {
-
-        return dUserRepository.findById(userid);
     }
 
 }

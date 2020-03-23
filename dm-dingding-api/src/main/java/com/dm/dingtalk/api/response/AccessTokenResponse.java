@@ -21,6 +21,11 @@ public class AccessTokenResponse extends TaobaoResponse {
     private String accessToken;
 
     /**
+     * token所属企业/组织
+     */
+    private String cropId;
+
+    /**
      * token过期时间
      */
     private ZonedDateTime expireDate;

@@ -4,7 +4,7 @@
   "sourceType": "com.dm.springboot.autoconfigure.uap.DefaultUserProperties"
 },{
   "name": "dingtalk",
-  "type": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration.DingClientConfigCongiguration",
+  "type": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration",
   "sourceType": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration.DingClientConfigCongiguration"
 },{
   "name": "dm.fileserver",

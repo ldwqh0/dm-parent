@@ -1,107 +1,134 @@
 package com.dm.springboot.autoconfigure.dingtalk;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.dm.dingtalk.api.callback.CallbackController;
 import com.dm.dingtalk.api.callback.CallbackProperties;
-import com.dm.dingtalk.api.model.DingClientConfig;
 import com.dm.dingtalk.api.service.DingTalkService;
+import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
 import com.dm.dingtalk.api.service.impl.DefaultDingTalkServiceImpl;
+import com.dm.dingtalk.api.service.impl.OrganizationInternalAppAccessTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.extern.slf4j.Slf4j;
 
-@ConditionalOnClass(DefaultDingTalkServiceImpl.class)
-@Configuration
 @Slf4j
+@Configuration
+@ConfigurationProperties(prefix = "dingtalk")
+@ConditionalOnClass(DefaultDingTalkServiceImpl.class)
+@ConditionalOnProperty(prefix = "dingtalk", name = { "appkey", "appsecret" })
 public class DingTalkConfiguration {
+
+    private String appkey;
+    private String appsecret;
+
+    private String corpId;
+
+    private String customKey;
+
+    private CallbackProperties callback;
+
+    public String getAppkey() {
+        return appkey;
+    }
+
+    public void setAppkey(String appkey) {
+        this.appkey = appkey;
+    }
+
+    public String getAppsecret() {
+        return appsecret;
+    }
+
+    public void setAppsecret(String appsecret) {
+        this.appsecret = appsecret;
+    }
+
+    public CallbackProperties getCallback() {
+        return callback;
+    }
+
+    public void setCallback(CallbackProperties callback) {
+        this.callback = callback;
+    }
+
+    public String getCorpId() {
+        return corpId;
+    }
+
+    public void setCorpId(String corpId) {
+        this.corpId = corpId;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "dingtalk", name = { "corp-id" })
+    public DingtalkAccessTokenService organizationInternalAppAccessTokenService() {
+        log.info("Init default OrganizationInternalAppAccessTokenService with appkey[{}]", appkey);
+        return new OrganizationInternalAppAccessTokenService(appkey, appsecret, corpId);
+    }
 
     @Bean
     @ConditionalOnMissingBean(DingTalkService.class)
-    @ConditionalOnBean(DingClientConfig.class)
-    public DingTalkService dingTalkService(@Autowired DingClientConfig config) {
-        log.info("Init default dingclient with appkey[{}]", config.getAppkey());
-        return new DefaultDingTalkServiceImpl(config);
+    @ConditionalOnBean(DingtalkAccessTokenService.class)
+    public DingTalkService dingTalkService(@Autowired DingtalkAccessTokenService accessTokenService) {
+        DefaultDingTalkServiceImpl ddsi = new DefaultDingTalkServiceImpl();
+        ddsi.setDingtalkAccessTokenService(accessTokenService);
+        return ddsi;
     }
 
-    @ConfigurationProperties(prefix = "dingtalk")
-    @Configuration
-    @ConditionalOnProperty(prefix = "dingtalk", name = { "appkey", "appsecret" })
-    @EnableConfigurationProperties(DingClientConfigCongiguration.class)
-    public static class DingClientConfigCongiguration {
-        private String appkey;
-        private String appsecret;
-        private String corpId;
-
-        private CallbackProperties callback;
-
-        public String getAppkey() {
-            return appkey;
-        }
-
-        public void setAppkey(String appkey) {
-            this.appkey = appkey;
-        }
-
-        public String getAppsecret() {
-            return appsecret;
-        }
-
-        public void setAppsecret(String appsecret) {
-            this.appsecret = appsecret;
-        }
-
-        public CallbackProperties getCallback() {
-            return callback;
-        }
-
-        public void setCallback(CallbackProperties callback) {
-            this.callback = callback;
-        }
-
-        public String getCorpId() {
-            return corpId;
-        }
-
-        public void setCorpId(String corpId) {
-            this.corpId = corpId;
-        }
-
-        @Bean
-        public DingClientConfig clientConfig() {
-            return new DingClientConfig(appkey, appsecret, corpId);
-        }
-
-        @Bean
-        @ConditionalOnMissingBean(DingtalkConfigurerAdpater.class)
-        @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
-        public DingtalkConfigurerAdpater adpater() {
-            return new DingtalkConfigurerAdpater();
-        }
-
-        @Bean
-        @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
-        public CallbackController callbackController(@Autowired ObjectMapper om) {
-            CallbackController c = new CallbackController();
-            DingtalkConfigurerAdpater adpater = adpater();
-            c.setCallbackProperties(mergeProperties(callback, adpater));
-            c.setObjectMapper(om);
-            c.setHandlers(adpater.getConsumers());
-            c.setDingClientConfig(clientConfig());
-            return c;
-        }
-
-        private CallbackProperties mergeProperties(CallbackProperties properties, DingtalkConfigurerAdpater adpater) {
-            return properties;
-        }
+    @Bean
+    @ConditionalOnMissingBean(DingtalkConfigurerAdpater.class)
+    @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
+    public DingtalkConfigurerAdpater adpater() {
+        return new DingtalkConfigurerAdpater();
     }
+
+//    @Bean
+//    @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
+//    public CallbackController callbackController(@Autowired ObjectMapper om) {
+//        System.out.println("dsf");
+//        CallbackController c = new CallbackController();
+//        DingtalkConfigurerAdpater adpater = adpater();
+//        c.setCallbackProperties(mergeProperties(callback, adpater));
+//        c.setObjectMapper(om);
+//        c.setHandlers(adpater.getConsumers());
+//        // 设置消息加密解密的key
+//        if (StringUtils.isNotEmpty(corpId)) {
+//            c.setEnvkey(corpId);
+//        } else if (StringUtils.isNoneEmpty(customKey)) {
+//            c.setEnvkey(customKey);
+//        }
+//        return c;
+//    }
+
+    private CallbackProperties mergeProperties(CallbackProperties properties, DingtalkConfigurerAdpater adpater) {
+        return properties;
+    }
+
+//    @ConfigurationProperties(prefix = "dingtalk")
+//    @Configuration
+//    @ConditionalOnProperty(prefix = "dingtalk", name = { "appkey", "appsecret" })
+//    @EnableConfigurationProperties(DingClientConfigCongiguration.class)
+//    public static class DingClientConfigCongiguration {
+//        private String appkey;
+//        private String appsecret;
+//        private String corpId;
+//
+//        private CallbackProperties callback;
+//
+//        /**
+//         * 启用企业应用的token生成器
+//         * 
+//         * @return
+//         */
+//       
+//    }
 
 }

@@ -14,6 +14,7 @@ public class DDepartmentConverter {
         entity.setName(department.getName());
         entity.setParentid(department.getParentid());
         entity.setSourceIdentifier(department.getSourceIdentifier());
+        entity.setCorpId(department.getCorpId());
         return entity;
     }
 
@@ -23,6 +24,7 @@ public class DDepartmentConverter {
         // uDepartment.setOrder(order);
         // uDepartment.setParent();
         uDepartment.setShortname(dep.getName());
+//        uDepartment
         return uDepartment;
     }
 

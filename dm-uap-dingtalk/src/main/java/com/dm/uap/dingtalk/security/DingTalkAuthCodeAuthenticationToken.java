@@ -15,7 +15,7 @@ public class DingTalkAuthCodeAuthenticationToken extends AbstractAuthenticationT
     private static final long serialVersionUID = -1002298305299878178L;
     private Object principal;
 
-    public DingTalkAuthCodeAuthenticationToken(String principal) {
+    public DingTalkAuthCodeAuthenticationToken(Object principal) {
         super(null);
         this.principal = principal;
         super.setAuthenticated(false);
