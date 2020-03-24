@@ -11,11 +11,15 @@ public class DUserId implements Serializable {
 
     private String corpId;
 
-    private String userid;
+    private String unionid;
 
-    public DUserId(String corpId, String userid) {
+    DUserId(String corpId, String unionid) {
         this.corpId = corpId;
-        this.userid = userid;
+        this.unionid = unionid;
+    }
+
+    public static DUserId of(String corpId, String unionid) {
+        return new DUserId(corpId, unionid);
     }
 
     DUserId() {

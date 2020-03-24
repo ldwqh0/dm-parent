@@ -42,8 +42,7 @@ public class DUserConverter {
         dUser.setSenior(rsp.getIsSenior());
         dUser.setStateCode(rsp.getStateCode());
         dUser.setTel(rsp.getTel());
-        dUser.setUnionid(rsp.getUnionid());
-
+        dUser.setUserid(rsp.getUserid());
         dUser.setWorkPlace(rsp.getWorkPlace());
     }
 

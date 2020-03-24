@@ -5,7 +5,6 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -37,7 +36,7 @@ import static javax.persistence.CascadeType.*;
 @Setter
 @Table(name = "dd_user_", indexes = {
         @Index(columnList = "deleted_", name = "idx_dd_user_deleted_"),
-        @Index(columnList = "corp_id_,unionid_", name = "uk_dd_user_corpid_unionid_")
+        @Index(columnList = "corp_id_,userid_", name = "uk_dd_user_corpid_userid_")
 })
 @IdClass(DUserId.class)
 public class DUser implements Serializable {
@@ -54,17 +53,17 @@ public class DUser implements Serializable {
     private String corpId;
 
     /**
-     * 用户在企业内的id
-     */
-    @Id
-    @Column(name = "userid_")
-    private String userid;
-
-    /**
      * 用户的全局唯一识别符，用于一个用户在不同的企业确定用户的统一性
      */
+    @Id
     @Column(name = "unionid_")
     private String unionid;
+
+    /**
+     * 用户在企业内的id
+     */
+    @Column(name = "userid_")
+    private String userid;
 
     @Column(name = "name_")
     private String name;
@@ -92,7 +91,7 @@ public class DUser implements Serializable {
 
     @Column(name = "order_")
     @JoinTable(name = "dd_department_user_order_", joinColumns = {
-            @JoinColumn(name = "dd_user_id_", referencedColumnName = "userid_"),
+            @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
             @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     })
     @ElementCollection
@@ -115,7 +114,7 @@ public class DUser implements Serializable {
     @Column(name = "is_leader_")
     @ElementCollection
     @JoinTable(name = "dd_department_user_leader_", joinColumns = {
-            @JoinColumn(name = "dd_user_id_", referencedColumnName = "userid_"),
+            @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
             @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     })
     @MapKeyJoinColumns({
@@ -129,7 +128,7 @@ public class DUser implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "dd_department_dd_user_", joinColumns = {
-            @JoinColumn(name = "dd_user_id_", referencedColumnName = "userid_"),
+            @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
             @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     }, inverseJoinColumns = {
             @JoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
@@ -157,7 +156,7 @@ public class DUser implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "dd_role_user_", joinColumns = {
-            @JoinColumn(name = "dd_user_id_", referencedColumnName = "userid_"),
+            @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
             @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     }, inverseJoinColumns = {
             @JoinColumn(name = "dd_role_id_", referencedColumnName = "id_"),
@@ -193,17 +192,17 @@ public class DUser implements Serializable {
     DUser() {
     }
 
-    public DUser(String corpid, String userid) {
+    private void setCorpId(String corpid) {
         this.corpId = corpid;
-        this.userid = userid;
     }
 
-    public void setUserid(String userid) {
-        if (StringUtils.isBlank(this.userid)) {
-            this.userid = userid;
-        } else if (!Objects.equals(this.userid, userid)) {
-            throw new UnsupportedOperationException("you can not change the userid");
-        }
+    private void setUnionid(String unionid) {
+        this.unionid = unionid;
+    }
+
+    public DUser(String corpid, String unionid) {
+        setCorpId(corpid);
+        setUnionid(unionid);
     }
 
 }

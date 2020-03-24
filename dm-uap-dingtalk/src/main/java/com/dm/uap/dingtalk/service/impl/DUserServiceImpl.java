@@ -107,6 +107,7 @@ public class DUserServiceImpl implements DUserService {
                     dDepartmentService.clear(corpid);
                 } catch (Exception e) {
                     log.error("同步时发生错误", e);
+                    throw new RuntimeException(e);
                 } finally {
                     syncing = Boolean.FALSE;
                 }
@@ -195,7 +196,7 @@ public class DUserServiceImpl implements DUserService {
     @Override
     @Transactional
     public void delete(String corpid, String userid) {
-        dUserRepository.deleteById(new DUserId(corpid, userid));
+        dUserRepository.deleteById(DUserId.of(corpid, userid));
     }
 
     /**
@@ -322,12 +323,7 @@ public class DUserServiceImpl implements DUserService {
                 .map(OapiUserGetDeptMemberResponse::getUserIds)
                 .flatMap(List::stream)// 获取所有的用户列表
                 .collect(Collectors.toSet());
-        // 将存在于本地用户，但不存在于钉钉的用户，将本地状态设置为删除，
-        dUserRepository.setDeletedByCorpidAndUseridNotIn(corpid, userIds, TRUE);
-        List<Long> deleteUsers = dUserRepository.findUserIdsByCorpidAndDUserDeleted(corpid, TRUE);
-        if (CollectionUtils.isNotEmpty(deleteUsers)) {
-            userRepository.batchSetEnabled(deleteUsers, FALSE);
-        }
+
         List<DUser> users = userIds.stream()
                 // 将从服务器上抓取的数据，复制到本地数据库中
                 .map(userid -> {
@@ -339,8 +335,22 @@ public class DUserServiceImpl implements DUserService {
                     }
                 })
                 .filter(item -> !Objects.isNull(item))
-                .map(item -> copyProperties(new DUser(corpid, item.getUserid()), item))
+                .map(item -> {
+                    String unionid = item.getUnionid();
+                    DUser du = dUserRepository.findByCorpIdAndUnionid(corpid, unionid)
+                            .orElse(new DUser(corpid, unionid));
+                    return copyProperties(du, item);
+                })
                 .collect(Collectors.toList());
+
+        List<String> unionids = users.stream().map(DUser::getUnionid).collect(Collectors.toList());
+        // 将存在于本地用户，但不存在于钉钉的用户，将本地状态设置为删除，
+        dUserRepository.setDeletedByCorpidAndUnionidNotIn(corpid, unionids, TRUE);
+        List<Long> deleteUsers = dUserRepository.findUserIdsByCorpidAndDUserDeleted(corpid, TRUE);
+        if (CollectionUtils.isNotEmpty(deleteUsers)) {
+            userRepository.batchSetEnabled(deleteUsers, FALSE);
+        }
+
         // 保存所有用户信息
         return dUserRepository.saveAll(users);
     }
@@ -354,7 +364,7 @@ public class DUserServiceImpl implements DUserService {
      */
     private DUser copyProperties(DUser dUser, OapiUserGetResponse rsp) {
         dUserConverter.copyProperties(dUser, rsp);
-        log.info("正在合并用户信息 corpid={}, userid={}", dUser.getUserid());
+        log.info("正在合并用户信息 corpid={}, unionid={}, userid={}", dUser.getCorpId(), dUser.getUnionid(), dUser.getUserid());
         String corpid = dUser.getCorpId();
         // 合并是否部门领导信息
         try {
@@ -459,11 +469,17 @@ public class DUserServiceImpl implements DUserService {
     private DUser createToDingTalk(String corpid, DUser dUser) {
         OapiUserCreateRequest request = dUserConverter.toOapiUserCreateRequest(dUser);
         OapiUserCreateResponse rsp = dingTalkService.createUser(corpid, request);
-        dUser.setUserid(rsp.getUserid());
+        String userid = rsp.getUserid();
+        Set<DRole> roles = dUser.getRoles();
         // 将角色信息更新到钉钉服务器
-        Set<Long> roleIds = dUser.getRoles().stream().map(DRole::getId).collect(Collectors.toSet());
-        dingTalkService.batchSetUserRole(corpid, Collections.singleton(dUser.getUserid()), roleIds);
-        return dUser;
+        Set<Long> roleIds = roles.stream().map(DRole::getId).collect(Collectors.toSet());
+        dingTalkService.batchSetUserRole(corpid, Collections.singleton(userid), roleIds);
+        DUser result = new DUser(corpid, userid);
+        // 重新从服务器获取用户的最新信息
+        OapiUserGetResponse ougr = dingTalkService.fetchUserById(corpid, userid);
+        result.setRoles(roles);
+        dUserConverter.copyProperties(result, ougr);
+        return result;
     }
 
     /**
