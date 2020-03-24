@@ -145,4 +145,18 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
     public void deleteById(String corpid, Long id) {
         dRoleGroupRepository.deleteById(corpid, id);
     }
+
+    @Override
+    public void clear(String corpid) {
+        List<DRoleGroup> drgs = dRoleGroupRepository.findByCorpIdAndDeleted(corpid, TRUE);
+        drgs.forEach(drg -> {
+            try {
+                RoleGroup rg = drg.getGroup();
+                uRoleGroupRepository.delete(rg);
+                dRoleGroupRepository.delete(drg);
+            } catch (Exception e) {
+                log.info("尝试物理删除角色组信息时出现错误,[corpid={},id={}]", drg.getCorpId(), drg.getId());
+            }
+        });
+    }
 }

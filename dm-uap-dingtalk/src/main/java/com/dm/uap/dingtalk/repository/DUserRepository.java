@@ -72,4 +72,10 @@ public interface DUserRepository extends JpaRepository<DUser, DUserId>, Querydsl
      */
     public Optional<DUser> findByCorpIdAndUnionid(String corpId, String unionid);
 
+    /**
+     * 
+     * @param corpid
+     */
+    public List<DUser> findByCorpIdAndDeleted(String corpid, Boolean deleted);
+
 }

@@ -41,4 +41,6 @@ public interface DRoleRepository extends JpaRepository<DRole, CorpLongId>, Query
         deleteById(new CorpLongId(corpid, id));
     }
 
+    public List<DRole> findByCorpIdAndDeleted(String corpid, Boolean deleted);
+
 }

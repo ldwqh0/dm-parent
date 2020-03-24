@@ -35,4 +35,6 @@ public interface DDepartmentRepository extends JpaRepository<DDepartment, CorpLo
         return existsById(new CorpLongId(corpid, id));
     }
 
+    public List<DDepartment> findByCorpIdAndDeleted(String corpid, Boolean deleted);
+
 }

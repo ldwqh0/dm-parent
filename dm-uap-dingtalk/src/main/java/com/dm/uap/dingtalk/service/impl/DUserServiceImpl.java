@@ -38,6 +38,7 @@ import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.repository.DUserRepository;
 import com.dm.uap.dingtalk.service.DDepartmentService;
 import com.dm.uap.dingtalk.service.DRoleGroupService;
+import com.dm.uap.dingtalk.service.DRoleService;
 import com.dm.uap.dingtalk.service.DUserService;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.Role;
@@ -76,6 +77,9 @@ public class DUserServiceImpl implements DUserService {
     @Autowired
     private DRoleGroupService dRoleGroupService;
 
+    @Autowired
+    private DRoleService dRoleService;
+
     private volatile Boolean syncing = Boolean.FALSE;
 
     /**
@@ -94,9 +98,13 @@ public class DUserServiceImpl implements DUserService {
                     dDepartmentService.syncToUap(corpid);
                     dRoleGroupService.syncToUap(corpid);
                     syncToUap(fetch(corpid));
-                    // TODO 尝试物理删除已经在钉钉中删除的不存在的用户,如果不存在引用关系，直接删除，如果存在引用关系，逻辑删除
-                    // TODO 尝试物理删除已经在钉钉中删除的角色信息
-                    // TODO 产生物理删除已经在钉钉中删除的部门信息
+                    // 尝试物理删除已经在钉钉中删除的不存在的用户,如果不存在引用关系，直接删除，如果存在引用关系，逻辑删除
+                    this.clear(corpid);
+                    // 尝试物理删除已经在钉钉中删除的角色信息
+                    dRoleService.clear(corpid);
+                    dRoleGroupService.clear(corpid);
+                    // 尝试物理删除已经在钉钉中删除的部门信息
+                    dDepartmentService.clear(corpid);
                 } catch (Exception e) {
                     log.error("同步时发生错误", e);
                 } finally {
@@ -472,4 +480,21 @@ public class DUserServiceImpl implements DUserService {
         return dUser;
     }
 
+    /**
+     * 尝试物理删除标记为删除的用户
+     */
+    @Override
+    @Transactional
+    public void clear(String corpid) {
+        List<DUser> deleteUsers = dUserRepository.findByCorpIdAndDeleted(corpid, TRUE);
+        deleteUsers.forEach(du -> {
+            try {
+                User user = du.getUser();
+                userRepository.delete(user);
+                dUserRepository.delete(du);
+            } catch (Exception e) {
+                log.info("尝试删除用户失败,[corpid={},userid={}]", du.getCorpId(), du.getUserid());
+            }
+        });
+    }
 }

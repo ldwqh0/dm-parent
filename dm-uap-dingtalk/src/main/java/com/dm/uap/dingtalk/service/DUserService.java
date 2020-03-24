@@ -75,4 +75,11 @@ public interface DUserService {
      */
     public void delete(String corpid, String userId);
 
+    /**
+     * 清理数据，尝试物理删除标记为删除的用户
+     * 
+     * @param corpid
+     */
+    public void clear(String corpid);
+
 }

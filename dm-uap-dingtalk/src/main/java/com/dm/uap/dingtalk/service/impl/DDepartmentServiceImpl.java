@@ -19,6 +19,7 @@ import com.dm.uap.dingtalk.service.DDepartmentService;
 import com.dm.uap.repository.DepartmentRepository;
 
 import lombok.extern.slf4j.Slf4j;
+import static java.lang.Boolean.*;
 
 @Service
 @Slf4j
@@ -100,4 +101,19 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         syncLocalToUap(fetchDDepartments(corpid));
         log.info("同步部门信息完成");
     }
+
+    @Transactional
+    @Override
+    public void clear(String corpid) {
+        List<DDepartment> dds = dDepartmentRepository.findByCorpIdAndDeleted(corpid, TRUE);
+        dds.forEach(dd -> {
+            try {
+                com.dm.uap.entity.Department dp = dd.getDepartment();
+                departmentRepository.delete(dp);
+                dDepartmentRepository.delete(dd);
+            } catch (Exception e) {
+                log.info("尝试删除部门时出现错误 [corpid={},id={}]", dd.getCorpId(), dd.getId());
+            }
+        });
+    };
 }

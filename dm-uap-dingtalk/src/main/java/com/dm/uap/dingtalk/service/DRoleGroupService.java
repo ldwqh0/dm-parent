@@ -6,4 +6,11 @@ public interface DRoleGroupService {
 
     public void deleteById(String corpid, Long id);
 
+    /**
+     * 尝试物理删除角色组信息
+     * 
+     * @param corpid
+     */
+    public void clear(String corpid);
+
 }

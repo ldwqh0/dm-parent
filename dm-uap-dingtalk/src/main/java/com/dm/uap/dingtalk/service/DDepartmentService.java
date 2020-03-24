@@ -27,4 +27,11 @@ public interface DDepartmentService {
      */
     public void syncToUap(String corpid);
 
+    /**
+     * 尝试清理
+     * 
+     * @param corpid
+     */
+    public void clear(String corpid);
+
 }
