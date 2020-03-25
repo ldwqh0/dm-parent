@@ -29,7 +29,7 @@ public interface DUserRepository extends JpaRepository<DUser, DUserId>, Querydsl
      * @param b       重新设置的用户状态
      * @return
      */
-    @Query("update DUser set deleted=?3 where corpId=?1 and deleted != ?3 and unionid not in(?2)")
+    @Query("update DUser set deleted=?3 where corpId=?1 and (deleted != ?3 or deleted is null) and unionid not in(?2)")
     @Modifying
     public int setDeletedByCorpidAndUnionidNotIn(String corpid, Collection<String> unionids, boolean b);
 

@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRole;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
+import com.dm.dingtalk.api.response.OpenRole;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.uap.dingtalk.converter.DRoleConverter;
 import com.dm.uap.dingtalk.converter.DRoleGroupConverter;

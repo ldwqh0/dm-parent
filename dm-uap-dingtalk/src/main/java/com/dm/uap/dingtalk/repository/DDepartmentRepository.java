@@ -23,7 +23,7 @@ public interface DDepartmentRepository extends JpaRepository<DDepartment, CorpLo
 
     public List<DDepartment> findByCorpId(String corpid);
 
-    @Query("update DDepartment set deleted=?3 where corpId=?1 and deleted !=?3 and id not in (?2)")
+    @Query("update DDepartment set deleted=?3 where corpId=?1 and (deleted !=?3 or deleted is null) and id not in (?2)")
     @Modifying
     public int setDeletedByCorpidAndIdNotIn(String corpid, Collection<Long> ids, Boolean deleted);
 

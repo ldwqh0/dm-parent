@@ -2,7 +2,9 @@ package com.dm.dingtalk.api.service.impl;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -13,6 +15,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
+import com.dm.dingtalk.api.response.OapiRoleGetroleResponse;
 import com.dm.dingtalk.api.callback.CallbackProperties;
 import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
@@ -34,6 +37,7 @@ import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordAddResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordGetbyuseridResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
+import com.dm.dingtalk.api.response.OpenRole;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
 
@@ -255,6 +259,20 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public String getFailureCallback(String corpid) {
         String url = SERVER + "/call_back/get_call_back_failed_result?access_token={0}";
         return restTemplate.getForObject(url, String.class, accessTokenService.getAccessToken(corpid));
+    }
+
+    @Override
+    public OpenRole fetchRoleById(String corpid, Long roleid) {
+        String url = SERVER + "/topapi/role/getrole?access_token={0}";
+        Map<String, Object> request = new HashMap<>();
+        request.put("roleId", roleid);
+        OapiRoleGetroleResponse rsp = restTemplate.postForObject(url, request, OapiRoleGetroleResponse.class,
+                accessTokenService.getAccessToken(corpid));
+        checkResponse(rsp);
+        OpenRole or = rsp.getRole();
+        or.setId(roleid);
+        or.setCorpId(corpid);
+        return or;
     }
 
 }

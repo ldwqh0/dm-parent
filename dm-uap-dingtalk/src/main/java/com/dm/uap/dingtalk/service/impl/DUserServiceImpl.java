@@ -154,22 +154,6 @@ public class DUserServiceImpl implements DUserService {
     }
 
     /**
-     * 将某个用户设置为禁用
-     */
-    @Override
-    @Transactional
-    public DUser markDeleted(String corpid, String userId) {
-        Optional<DUser> o = dUserRepository.findById(corpid, userId);
-        o.ifPresent(duser -> {
-            // 将用户状态修改为删除
-            duser.setDeleted(Boolean.TRUE);
-            // 将某个用户设置为禁用
-            duser.getUser().setEnabled(Boolean.FALSE);
-        });
-        return o.orElse(null);
-    }
-
-    /**
      * 同步指定用户的用户信息到系统
      */
     @Override
@@ -195,8 +179,20 @@ public class DUserServiceImpl implements DUserService {
 
     @Override
     @Transactional
-    public void delete(String corpid, String userid) {
-        dUserRepository.deleteById(DUserId.of(corpid, userid));
+    public void delete(String corpid, String unionid) {
+        if (dUserRepository.existsById(corpid, unionid)) {
+            DUser du = dUserRepository.getOne(corpid, unionid);
+            try {
+                deletePhysical(du);
+            } catch (Exception e) {
+                log.info("物理删除失败，标记逻辑删除");
+                User user = du.getUser();
+                user.setEnabled(FALSE);
+                du.setDeleted(TRUE);
+            }
+        }
+
+        dUserRepository.deleteById(DUserId.of(corpid, unionid));
     }
 
     /**
@@ -505,12 +501,21 @@ public class DUserServiceImpl implements DUserService {
         List<DUser> deleteUsers = dUserRepository.findByCorpIdAndDeleted(corpid, TRUE);
         deleteUsers.forEach(du -> {
             try {
-                User user = du.getUser();
-                userRepository.delete(user);
-                dUserRepository.delete(du);
+                deletePhysical(du);
             } catch (Exception e) {
                 log.info("尝试删除用户失败,[corpid={},userid={}]", du.getCorpId(), du.getUserid());
             }
         });
+    }
+
+    /**
+     * 尝试物理删除
+     * 
+     * @param duser
+     */
+    private void deletePhysical(DUser du) {
+        User user = du.getUser();
+        userRepository.delete(user);
+        dUserRepository.delete(du);
     }
 }

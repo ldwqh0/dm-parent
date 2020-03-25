@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dm.dingtalk.api.callback.Event;
+import com.dm.uap.dingtalk.service.DRoleService;
 import com.dm.uap.dingtalk.service.DUserService;
 import com.dm.uap.dingtalk.service.DingtalkCallbackService;
 
@@ -15,9 +16,16 @@ public class DingtalkCallbackServiceImpl implements DingtalkCallbackService {
 
     private DUserService dUserService;
 
+    private DRoleService dRoleService;
+
     @Autowired
-    public void setdUserService(DUserService dUserService) {
+    public void setDuserService(DUserService dUserService) {
         this.dUserService = dUserService;
+    }
+
+    @Autowired
+    public void setDroleService(DRoleService dRoleService) {
+        this.dRoleService = dRoleService;
     }
 
     @Override
@@ -65,6 +73,28 @@ public class DingtalkCallbackServiceImpl implements DingtalkCallbackService {
 
     @Override
     public void onOrgDeptRemove(Event event) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onRoleAdd(Event event) {
+        String corpid = String.valueOf(event.get("CorpId"));
+        @SuppressWarnings("unchecked")
+        List<Integer> labelList = (List<Integer>) event.get("LabelIdList");
+        labelList.forEach(roleId -> {
+            dRoleService.asyncToUap(corpid, roleId.longValue());
+        });
+    }
+
+    @Override
+    public void onRoleDel(Event event) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onRoleModify(Event event) {
         // TODO Auto-generated method stub
 
     }

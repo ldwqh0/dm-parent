@@ -60,40 +60,6 @@ public class OapiRoleListResponse extends TaobaoResponse {
     }
 
     /**
-     * roles
-     *
-     * @author top auto create
-     * @since 1.0, null
-     */
-    public static class OpenRole implements Serializable {
-        private static final long serialVersionUID = 3158828343894518282L;
-        /**
-         * 角色id
-         */
-        private Long id;
-        /**
-         * 角色名称
-         */
-        private String name;
-
-        public Long getId() {
-            return this.id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
-    /**
      * list
      *
      * @author top auto create

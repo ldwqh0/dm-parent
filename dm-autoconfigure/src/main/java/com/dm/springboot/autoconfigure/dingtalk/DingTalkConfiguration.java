@@ -17,6 +17,7 @@ import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
 import com.dm.dingtalk.api.service.impl.DefaultDingTalkServiceImpl;
 import com.dm.dingtalk.api.service.impl.OrganizationInternalAppAccessTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -67,6 +68,14 @@ public class DingTalkConfiguration {
         this.corpId = corpId;
     }
 
+    protected String getCustomKey() {
+        return customKey;
+    }
+
+    protected void setCustomKey(String customKey) {
+        this.customKey = customKey;
+    }
+
     @Bean
     @ConditionalOnProperty(prefix = "dingtalk", name = { "corp-id" })
     public DingtalkAccessTokenService organizationInternalAppAccessTokenService() {
@@ -90,45 +99,25 @@ public class DingTalkConfiguration {
         return new DingtalkConfigurerAdpater();
     }
 
-//    @Bean
-//    @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
-//    public CallbackController callbackController(@Autowired ObjectMapper om) {
-//        System.out.println("dsf");
-//        CallbackController c = new CallbackController();
-//        DingtalkConfigurerAdpater adpater = adpater();
-//        c.setCallbackProperties(mergeProperties(callback, adpater));
-//        c.setObjectMapper(om);
-//        c.setHandlers(adpater.getConsumers());
-//        // 设置消息加密解密的key
-//        if (StringUtils.isNotEmpty(corpId)) {
-//            c.setEnvkey(corpId);
-//        } else if (StringUtils.isNoneEmpty(customKey)) {
-//            c.setEnvkey(customKey);
-//        }
-//        return c;
-//    }
+    @Bean
+    @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
+    public CallbackController callbackController(@Autowired ObjectMapper om) {
+        CallbackController c = new CallbackController();
+        DingtalkConfigurerAdpater adpater = adpater();
+        c.setCallbackProperties(mergeProperties(callback, adpater));
+        c.setObjectMapper(om);
+        c.setHandlers(adpater.getConsumers());
+        // 设置消息加密解密的key
+        if (StringUtils.isNotEmpty(corpId)) {
+            c.setEnvkey(corpId);
+        } else if (StringUtils.isNotEmpty(customKey)) {
+            c.setEnvkey(customKey);
+        }
+        return c;
+    }
 
     private CallbackProperties mergeProperties(CallbackProperties properties, DingtalkConfigurerAdpater adpater) {
         return properties;
     }
-
-//    @ConfigurationProperties(prefix = "dingtalk")
-//    @Configuration
-//    @ConditionalOnProperty(prefix = "dingtalk", name = { "appkey", "appsecret" })
-//    @EnableConfigurationProperties(DingClientConfigCongiguration.class)
-//    public static class DingClientConfigCongiguration {
-//        private String appkey;
-//        private String appsecret;
-//        private String corpId;
-//
-//        private CallbackProperties callback;
-//
-//        /**
-//         * 启用企业应用的token生成器
-//         * 
-//         * @return
-//         */
-//       
-//    }
 
 }

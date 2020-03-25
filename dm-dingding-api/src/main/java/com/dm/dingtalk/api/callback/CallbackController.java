@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
-//@RestController
+@RestController
 @RequestMapping("dingTalk/callback")
 @Slf4j
 public class CallbackController {
@@ -140,12 +140,12 @@ public class CallbackController {
      * @param corpid
      * @return
      */
-    @GetMapping(name = "errors")
+    @GetMapping("errors")
     public String getCallbackError(@RequestParam("corpid") String corpid) {
         return dingService.getFailureCallback(corpid);
     }
 
-    @GetMapping(name = "errors/{corpid}")
+    @GetMapping("errors/{corpid}")
     public String getCallbackError2(@PathVariable("corpid") String corpid) {
         return dingService.getFailureCallback(corpid);
     }

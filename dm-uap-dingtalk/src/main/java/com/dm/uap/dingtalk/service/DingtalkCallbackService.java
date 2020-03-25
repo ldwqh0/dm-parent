@@ -15,4 +15,10 @@ public interface DingtalkCallbackService {
     public void onOrgDeptModify(Event event);
 
     public void onOrgDeptRemove(Event event);
+
+    public void onRoleAdd(Event event);
+
+    public void onRoleDel(Event event);
+
+    public void onRoleModify(Event event);
 }

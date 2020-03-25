@@ -61,19 +61,13 @@ public interface DUserService {
     public Optional<DUser> findById(DUserId id);
 
     /**
-     * 将指定的用户标记为删除
+     * 删除指定的用户信息 <br>
      * 
-     * @param userId
-     * @return
-     */
-    public DUser markDeleted(String corpid, String userId);
-
-    /**
-     * 物理删除指定的用户信息
+     * 如果删除失败，则将用户标记为删除，即逻辑删除
      * 
      * @param userId
      */
-    public void delete(String corpid, String userId);
+    public void delete(String corpid, String unionid);
 
     /**
      * 清理数据，尝试物理删除标记为删除的用户

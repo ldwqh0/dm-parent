@@ -1,15 +1,8 @@
 package com.dm.dingtalk.api.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class OapiRoleGetroleResponse extends TaobaoResponse {
 
-/**
- * 待办事项响应模型
- * 
- * @author ldwqh0@outlook.com
- *
- */
-public class OapiWorkrecordAddResponse extends TaobaoResponse {
-    private static final long serialVersionUID = 6127843317528511781L;
+    private static final long serialVersionUID = -8843171350692490790L;
 
     /**
      * dingOpenErrcode
@@ -22,10 +15,9 @@ public class OapiWorkrecordAddResponse extends TaobaoResponse {
     private String errmsg;
 
     /**
-     * 待办唯一id
+     * result
      */
-    @JsonProperty("record_id")
-    private String recordId;
+    private OpenRole role;
 
     public void setErrcode(Long errcode) {
         this.errcode = errcode;
@@ -35,25 +27,22 @@ public class OapiWorkrecordAddResponse extends TaobaoResponse {
         return this.errcode;
     }
 
-    @Override
     public void setErrmsg(String errmsg) {
         this.errmsg = errmsg;
     }
 
-    @Override
     public String getErrmsg() {
         return this.errmsg;
     }
 
-    public void setRecordId(String recordId) {
-        this.recordId = recordId;
+    public void setRole(OpenRole role) {
+        this.role = role;
     }
 
-    public String getRecordId() {
-        return this.recordId;
+    public OpenRole getRole() {
+        return this.role;
     }
 
-    @Override
     public boolean isSuccess() {
         return getErrcode() == null || getErrcode().equals(0L);
     }

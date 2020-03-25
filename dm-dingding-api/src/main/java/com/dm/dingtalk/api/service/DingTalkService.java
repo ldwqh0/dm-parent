@@ -20,6 +20,7 @@ import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordAddResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordGetbyuseridResponse;
 import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
+import com.dm.dingtalk.api.response.OpenRole;
 
 /**
  * 钉钉服务器交互API
@@ -129,6 +130,15 @@ public interface DingTalkService {
      */
     public OapiWorkrecordGetbyuseridResponse getWorkRecordByUserid(String corpId,
             OapiWorkrecordGetbyuseridRequest request);
+
+    /**
+     * 获取指定企业的指定角色信息
+     * 
+     * @param corpid 指定的企业
+     * @param roleid 指定的角色
+     * @return
+     */
+    public OpenRole fetchRoleById(String corpid, Long roleid);
 
     public String registryCallback(String corpid, CallbackProperties properties);
 
