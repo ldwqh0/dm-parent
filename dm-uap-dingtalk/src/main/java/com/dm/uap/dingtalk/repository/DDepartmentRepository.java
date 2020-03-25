@@ -19,7 +19,7 @@ public interface DDepartmentRepository extends JpaRepository<DDepartment, Long> 
      */
     public Optional<DDepartment> findByDepartmentId(Long id);
 
-    @Query("update DDepartment set deleted=true where deleted !=true and id not in (?1)")
+    @Query("update DDepartment set deleted=true where deleted !=true or deleted is null and id not in (?1)")
     @Modifying
     public int setDeletedByIdNotIn(Collection<Long> ids);
 

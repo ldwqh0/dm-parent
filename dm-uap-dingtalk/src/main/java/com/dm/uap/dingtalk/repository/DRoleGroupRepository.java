@@ -10,7 +10,7 @@ import com.dm.uap.dingtalk.entity.DRoleGroup;
 
 public interface DRoleGroupRepository extends JpaRepository<DRoleGroup, Long> {
 
-    @Query("update DRoleGroup set deleted=true where deleted != true and id not in (?1)")
+    @Query("update DRoleGroup set deleted=true where deleted != true or deleted is null and id not in (?1)")
     @Modifying
     public int setDeletedByIdNotIn(Collection<Long> ids);
 

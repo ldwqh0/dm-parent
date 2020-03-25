@@ -12,7 +12,7 @@ import com.dm.uap.dingtalk.entity.DUser;
 
 public interface DUserRepository extends JpaRepository<DUser, String>, QuerydslPredicateExecutor<DUser> {
 
-    @Query("update DUser set deleted=true where deleted != true and id not in(?1)")
+    @Query("update DUser set deleted=true where deleted != true or deleted is null and id not in(?1)")
     @Modifying
     public int setDeletedByUseridNotIn(Collection<String> userIds);
 

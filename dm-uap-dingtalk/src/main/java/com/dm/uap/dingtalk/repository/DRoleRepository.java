@@ -13,7 +13,7 @@ import com.dm.uap.dingtalk.entity.DRole;
 
 public interface DRoleRepository extends JpaRepository<DRole, Long>, QuerydslPredicateExecutor<DRole> {
 
-    @Query("update DRole set deleted=true where deleted !=true and id not in (?1)")
+    @Query("update DRole set deleted=true where deleted !=true or deleted is null and id not in (?1)")
     @Modifying
     public int setDeletedByIdNotIn(Collection<Long> ids);
 
