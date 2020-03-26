@@ -31,6 +31,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
  */
 public class OAuth2ExceptionJackson2Serializer extends StdSerializer<OAuth2Exception> {
 
+    private static final long serialVersionUID = 5842516966455490732L;
+
     public OAuth2ExceptionJackson2Serializer() {
         super(OAuth2Exception.class);
     }

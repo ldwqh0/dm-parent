@@ -45,6 +45,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
  */
 public final class OAuth2AccessTokenJackson2Serializer extends StdSerializer<OAuth2AccessToken> {
 
+    private static final long serialVersionUID = 1741657921022122090L;
+
     public OAuth2AccessTokenJackson2Serializer() {
         super(OAuth2AccessToken.class);
     }

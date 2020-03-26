@@ -42,6 +42,7 @@ public class JsonDateDeserializer extends JsonDeserializer<Date> {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
+    @SuppressWarnings("deprecation")
     @Override
     public Date deserialize(com.fasterxml.jackson.core.JsonParser parser, DeserializationContext context)
             throws IOException, JsonProcessingException {
