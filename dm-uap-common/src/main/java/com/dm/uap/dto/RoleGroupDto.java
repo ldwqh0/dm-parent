@@ -2,6 +2,7 @@ package com.dm.uap.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Min;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -11,6 +12,11 @@ import lombok.Data;
 @JsonInclude(value = Include.NON_EMPTY)
 public class RoleGroupDto implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 任何时候，不能修改或者编辑内置角色组
+     */
+    @Min(value = 2)
     private Long id;
     private String name;
     private String description;

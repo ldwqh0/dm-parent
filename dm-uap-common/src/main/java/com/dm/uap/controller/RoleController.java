@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,8 @@ import static org.springframework.http.HttpStatus.*;
 
 import java.util.List;
 
+import javax.validation.constraints.Min;
+
 @RestController
 @RequestMapping("roles")
 public class RoleController {
@@ -43,11 +46,11 @@ public class RoleController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
-    public RoleDto save(@RequestBody RoleDto roleDto) {
+    public RoleDto save(@RequestBody @Validated RoleDto roleDto) {
         // 不允许将角色添加到内置分组
-        if ("内置分组".equals(roleDto.getGroup().getName())) {
-            throw new DataValidateException("不允许修改内置组定义");
-        }
+//        if ("内置分组".equals(roleDto.getGroup().getName())) {
+//            throw new DataValidateException("不允许修改内置组定义");
+//        }
         if (roleService.nameExist(null, roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
@@ -56,11 +59,22 @@ public class RoleController {
         }
     }
 
+    /**
+     * 修改角色信息<br>
+     * 
+     * 角色最小ID为4，1、2、3是系统内置角色，禁止修改 <br>
+     * 
+     * 禁止修改
+     * 
+     * @param id
+     * @param roleDto
+     * @return
+     */
     @ApiOperation("更新角色")
     @PutMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
-    public RoleDto update(@PathVariable("id") long id, @RequestBody RoleDto roleDto) {
+    public RoleDto update(@PathVariable("id") @Min(4) long id, @RequestBody @Validated RoleDto roleDto) {
         // 内置分组角色不允许修改
         roleService.get(id)
                 .filter(role -> "内置分组".equals(role.getGroup().getName()))
@@ -85,7 +99,7 @@ public class RoleController {
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable("id") long id) {
+    public void delete(@PathVariable("id") @Min(4) long id) {
         // 内置分组角色不允许修改
         roleService.get(id)
                 .filter(role -> "内置分组".equals(role.getGroup().getName()))

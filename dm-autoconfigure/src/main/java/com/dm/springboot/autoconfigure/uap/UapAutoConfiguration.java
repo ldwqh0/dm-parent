@@ -96,6 +96,7 @@ public class UapAutoConfiguration implements InitializingBean {
         String username = defaultUser.getUsername();
         String password = defaultUser.getPassword();
         String fullname = defaultUser.getFullname();
+
         // 建立初始管理员账号
         if (!userService.exist()) {
             UserDto user = new UserDto();
@@ -110,7 +111,6 @@ public class UapAutoConfiguration implements InitializingBean {
             });
             userService.save(user);
         }
-
         // 建立默认匿名账号
         if (!userService.userExistsByUsername("ANONYMOUS")) {
             UserDto anonymous = new UserDto();
@@ -125,6 +125,7 @@ public class UapAutoConfiguration implements InitializingBean {
             });
             userService.save(anonymous);
         }
+
     }
 
     private void initRoleGroup() {

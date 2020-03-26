@@ -1,0 +1,2 @@
+Spring Security Oauth2已经过期，
+这里是部分Spring Security中关于Oauth2 Server的代码的复制

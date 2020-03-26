@@ -20,5 +20,19 @@
     <module>dm-security-spring-boot-starter</module>
     <module>dm-oauth2-resource-server-spring-boot-starter</module>
     <module>dm-oauth2-client-spring-boot-starter</module>
+    <module>dm-security-oauth-server</module>
   </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-security-oauth2-server</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+
 </project>

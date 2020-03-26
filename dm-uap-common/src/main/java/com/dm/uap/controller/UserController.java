@@ -1,6 +1,7 @@
 package com.dm.uap.controller;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class UserController {
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable("id") Long id) {
+    public void delete(@PathVariable("id") @Min(3) Long id) {
         userService.delete(id);
     }
 
@@ -75,6 +76,9 @@ public class UserController {
             @PathVariable("id") Long id,
             @RequestParam("password") String password,
             @RequestParam("rePassword") String rePassword) {
+        if (id == 2) {
+            throw new DataValidateException("不能修改系统内置匿名用户");
+        }
         validRePassword(password, rePassword);
         return userConverter.toDto(userService.repassword(id, password));
     }
@@ -97,6 +101,9 @@ public class UserController {
             @RequestParam("oldPassword") String oldPassword,
             @RequestParam("password") String password,
             @RequestParam("rePassword") String rePassword) {
+        if (id == 2) {
+            throw new DataValidateException("不能修改系统内置匿名用户");
+        }
         validRePassword(password, rePassword);
         if (!userService.checkPassword(id, oldPassword)) {
             throw new DataValidateException("原始密码校验错误");
@@ -124,6 +131,9 @@ public class UserController {
     @ResponseStatus(CREATED)
     public UserDto update(@PathVariable("id") long id, @RequestBody UserDto userDto) {
         User user = userService.update(id, userDto);
+        if (id == 2) {
+            throw new DataValidateException("不能修改系统内置匿名用户");
+        }
         return userConverter.toDto(user);
     }
 
