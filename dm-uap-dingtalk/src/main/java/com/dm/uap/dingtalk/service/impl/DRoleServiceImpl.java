@@ -18,7 +18,7 @@ import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.service.DRoleService;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.Role.Status;
-import com.dm.uap.repository.RoleGroupRepository;
+//import com.dm.uap.repository.RoleGroupRepository;
 import com.dm.uap.repository.RoleRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +34,8 @@ public class DRoleServiceImpl implements DRoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    @Autowired
-    private RoleGroupRepository roleGroupRepository;
+//    @Autowired
+//    private RoleGroupRepository roleGroupRepository;
 
     @Autowired
     private DRoleGroupRepository dRoleGroupRepository;
