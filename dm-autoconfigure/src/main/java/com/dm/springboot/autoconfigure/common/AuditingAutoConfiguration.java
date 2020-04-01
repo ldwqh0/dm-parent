@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.AuditingHandler;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -33,9 +34,14 @@ public class AuditingAutoConfiguration {
     private AuditingHandler handler;
 
     /**
-     * 修改AuditingHandler的DateTimeProvider使用，ZonedDateTime获取当前时间
+     * 修改AuditingHandler的DateTimeProvider使用，ZonedDateTime获取当前时间<br>
+     * 这个正确的修改方式应该是 在 @EnableJpaAuditing(dateTimeProviderRef =
+     * "zonedDateTimeProvider") 指定<br>
+     * 
+     * 参考 {@link EnableJpaAuditing}
      */
     @PostConstruct
+    @Deprecated
     public void configAuditingHandler() {
         handler.setDateTimeProvider(() -> Optional.of(ZonedDateTime.now()));
     }

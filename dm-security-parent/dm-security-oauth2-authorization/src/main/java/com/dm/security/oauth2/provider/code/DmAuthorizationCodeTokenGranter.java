@@ -1,4 +1,4 @@
-package com.dm.security.oauth2.provider.token;
+package com.dm.security.oauth2.provider.code;
 
 import java.util.Collection;
 import java.util.HashMap;

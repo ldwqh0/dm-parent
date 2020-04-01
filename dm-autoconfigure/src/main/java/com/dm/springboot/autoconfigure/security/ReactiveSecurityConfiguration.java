@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserSer
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
 
+@Deprecated
 @Configuration
 @ConditionalOnClass({ ReactiveAuthenticationManager.class })
 @ConditionalOnBean({ RequestMappingHandlerAdapter.class })
