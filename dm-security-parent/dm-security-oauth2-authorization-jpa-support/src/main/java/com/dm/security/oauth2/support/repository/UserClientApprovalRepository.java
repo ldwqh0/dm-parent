@@ -20,4 +20,8 @@ public interface UserClientApprovalRepository extends JpaRepository<UserClientAp
     @Query("DELETE FROM UserClientApproval uca WHERE uca.userId=?1")
     public int deleteByUserId(String userid);
 
+    public default void deleteById(String client, String userid, String scope) {
+        deleteById(new UserClientApprovalPK(userid, client, scope));
+    }
+
 }
