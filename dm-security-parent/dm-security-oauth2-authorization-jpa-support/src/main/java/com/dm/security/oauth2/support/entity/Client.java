@@ -32,7 +32,7 @@ import com.dm.common.entity.CreateAudit;
 import com.dm.common.entity.ModifyAudit;
 
 @Entity
-@Table(name = "dm_hdc_client_")
+@Table(name = "dm_client_")
 @EntityListeners(AuditingEntityListener.class)
 public class Client implements Auditable<Audit, UUID, ZonedDateTime>{
 
@@ -74,17 +74,17 @@ public class Client implements Auditable<Audit, UUID, ZonedDateTime>{
     @ElementCollection
     @Column(name = "authorized_grant_type_")
     @JoinColumn(name = "client_id_")
-    @CollectionTable(name = "dm_hdc_client_authorized_grant_type_")
+    @CollectionTable(name = "dm_client_authorized_grant_type_")
     private Set<String> authorizedGrantTypes;
 
     @ElementCollection
-    @CollectionTable(name = "dm_hdc_client_scope_")
+    @CollectionTable(name = "dm_client_scope_")
     @JoinColumn(name = "client_id_")
     @Column(name = "scope_")
     private Set<String> scopes;
 
     @ElementCollection
-    @JoinTable(name = "dm_hdc_client_additional_information_")
+    @JoinTable(name = "dm_client_additional_information_")
     @MapKeyJoinColumn(name = "client_id_")
     @MapKeyColumn(name = "key_")
     @Column(name = "value_")
@@ -92,7 +92,7 @@ public class Client implements Auditable<Audit, UUID, ZonedDateTime>{
 
     @ElementCollection
     @JoinColumn(name = "client_id_")
-    @CollectionTable(name = "dm_hdc_client_registered_redirect_uri_")
+    @CollectionTable(name = "dm_client_registered_redirect_uri_")
     @Column(name = "registered_redirect_uri_")
     private Set<String> registeredRedirectUri;
 

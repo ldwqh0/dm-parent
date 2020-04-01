@@ -5,10 +5,10 @@ import java.util.Collection;
 import org.springframework.security.oauth2.provider.approval.Approval;
 import org.springframework.stereotype.Service;
 
-import com.dm.security.oauth2.support.service.UserApprovalService;
+import com.dm.security.oauth2.support.service.UserClientApprovalService;
 
 @Service
-public class UserApprovalServiceImpl implements UserApprovalService {
+public class UserClientApprovalServiceImpl implements UserClientApprovalService {
 
     @Override
     public boolean addApprovals(Collection<Approval> approvals) {

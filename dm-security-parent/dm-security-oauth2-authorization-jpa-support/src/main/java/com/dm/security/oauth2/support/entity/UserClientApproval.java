@@ -22,10 +22,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@IdClass(UserApprovalPK.class)
-@Table(name = "dm_user_approval_") 
+@IdClass(UserClientApprovalPK.class)
+@Table(name = "dm_user_client_approval_")
 @EntityListeners(AuditingEntityListener.class)
-public class UserApproval {
+public class UserClientApproval {
     @Id
     @Column(name = "user_id_", length = 50)
     private String userId;

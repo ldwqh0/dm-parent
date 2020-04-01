@@ -2,7 +2,7 @@ package com.dm.security.oauth2.support.entity;
 
 import java.io.Serializable;
 
-public class UserApprovalPK implements Serializable {
+public class UserClientApprovalPK implements Serializable {
     private static final long serialVersionUID = 6144610336580018926L;
 
     private String userId;
@@ -11,14 +11,14 @@ public class UserApprovalPK implements Serializable {
 
     private String scope;
 
-    public UserApprovalPK(String userId, String clientId, String scope) {
+    public UserClientApprovalPK(String userId, String clientId, String scope) {
         super();
         this.userId = userId;
         this.clientId = clientId;
         this.scope = scope;
     }
 
-    public UserApprovalPK() {
+    public UserClientApprovalPK() {
         super();
     }
 
@@ -40,7 +40,7 @@ public class UserApprovalPK implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        UserApprovalPK other = (UserApprovalPK) obj;
+        UserClientApprovalPK other = (UserClientApprovalPK) obj;
         if (clientId == null) {
             if (other.clientId != null)
                 return false;
