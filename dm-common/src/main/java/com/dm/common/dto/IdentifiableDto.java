@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @since 0.2.3
  *
  */
-public interface IdentifiableDto<ID extends Serializable> {
+public interface IdentifiableDto<ID extends Serializable> extends Serializable {
 
     public ID getId();
 

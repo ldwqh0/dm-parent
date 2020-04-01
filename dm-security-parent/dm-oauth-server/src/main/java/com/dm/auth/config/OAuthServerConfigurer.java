@@ -33,11 +33,11 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
-import com.dm.auth.provider.endpoint.DmOauthRedirectResolver;
 import com.dm.auth.provider.token.UserDetailsAuthenticationConverter;
 import com.dm.auth.security.oauth2.provider.code.DmAuthorizationCodeTokenGranter;
 import com.dm.auth.service.UserApprovalService;
 //import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
+import com.dm.security.oauth2.provider.endpoint.DmOauthRedirectResolver;
 
 import lombok.extern.slf4j.Slf4j;
 

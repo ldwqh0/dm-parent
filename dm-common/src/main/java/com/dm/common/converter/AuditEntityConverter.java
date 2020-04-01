@@ -1,13 +1,17 @@
 package com.dm.common.converter;
 
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import com.dm.common.dto.AuditableDto;
-import com.dm.common.entity.AbstractAuditEntity;
+import org.springframework.data.domain.Auditable;
 
-public interface AuditEntityConverter<M extends AbstractAuditEntity, DTO extends AuditableDto>
+import com.dm.common.dto.AuditableDto;
+import com.dm.common.entity.Audit;
+
+public interface AuditEntityConverter<M extends Auditable<Audit, ? extends Serializable, ZonedDateTime>, DTO extends AuditableDto>
         extends Converter<M, DTO> {
 
     public default DTO toDto(M model) {

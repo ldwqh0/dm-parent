@@ -13,6 +13,5 @@
   <modules>
     <module>dm-file-core</module>
     <module>dm-file-spring-boot-starter</module>
-    <!-- <module>dm-file-server</module> -->
   </modules>
 </project>
