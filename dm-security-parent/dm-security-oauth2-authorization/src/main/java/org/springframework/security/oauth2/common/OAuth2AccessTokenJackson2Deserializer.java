@@ -13,6 +13,7 @@
 package org.springframework.security.oauth2.common;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -97,7 +98,7 @@ public final class OAuth2AccessTokenJackson2Deserializer extends StdDeserializer
         DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(tokenValue);
         accessToken.setTokenType(tokenType);
         if (expiresIn != null) {
-            accessToken.setExpiration(new Date(System.currentTimeMillis() + (expiresIn * 1000)));
+            accessToken.setExpiration(ZonedDateTime.now().plusSeconds(expiresIn));
         }
         if (refreshToken != null) {
             accessToken.setRefreshToken(new DefaultOAuth2RefreshToken(refreshToken));

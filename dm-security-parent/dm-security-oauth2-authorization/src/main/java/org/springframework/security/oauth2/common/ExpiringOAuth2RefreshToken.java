@@ -12,7 +12,7 @@
  */
 package org.springframework.security.oauth2.common;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * <p>
@@ -25,6 +25,6 @@ import java.util.Date;
  */
 public interface ExpiringOAuth2RefreshToken extends OAuth2RefreshToken {
 
-    Date getExpiration();
+    ZonedDateTime getExpiration();
 
 }

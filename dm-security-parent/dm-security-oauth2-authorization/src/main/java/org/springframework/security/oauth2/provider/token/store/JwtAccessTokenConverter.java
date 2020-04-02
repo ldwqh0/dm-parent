@@ -34,6 +34,7 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -254,7 +255,7 @@ public class JwtAccessTokenConverter implements TokenEnhancer, AccessTokenConver
             DefaultOAuth2RefreshToken token = new DefaultOAuth2RefreshToken(
                     encode(encodedRefreshToken, authentication));
             if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
-                Date expiration = ((ExpiringOAuth2RefreshToken) refreshToken).getExpiration();
+                ZonedDateTime expiration = ((ExpiringOAuth2RefreshToken) refreshToken).getExpiration();
                 encodedRefreshToken.setExpiration(expiration);
                 token = new DefaultExpiringOAuth2RefreshToken(encode(encodedRefreshToken, authentication), expiration);
             }

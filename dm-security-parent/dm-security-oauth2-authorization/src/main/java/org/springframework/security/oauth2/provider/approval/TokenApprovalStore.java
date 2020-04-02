@@ -16,6 +16,7 @@
 
 package org.springframework.security.oauth2.provider.approval;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -102,7 +103,7 @@ public class TokenApprovalStore implements ApprovalStore {
         for (OAuth2AccessToken token : tokens) {
             OAuth2Authentication authentication = store.readAuthentication(token);
             if (authentication != null) {
-                Date expiresAt = token.getExpiration();
+                ZonedDateTime expiresAt = ZonedDateTime.from(token.getExpiration().toInstant());
                 for (String scope : token.getScope()) {
                     result.add(new Approval(userId, clientId, scope, expiresAt, ApprovalStatus.APPROVED));
                 }

@@ -13,7 +13,7 @@
 package org.springframework.security.oauth2.common;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,10 +61,11 @@ public final class OAuth2AccessTokenJackson2Serializer extends StdSerializer<OAu
         if (refreshToken != null) {
             jgen.writeStringField(OAuth2AccessToken.REFRESH_TOKEN, refreshToken.getValue());
         }
-        Date expiration = token.getExpiration();
+        ZonedDateTime expiration = token.getExpiration();
         if (expiration != null) {
-            long now = System.currentTimeMillis();
-            jgen.writeNumberField(OAuth2AccessToken.EXPIRES_IN, (expiration.getTime() - now) / 1000);
+            long now = ZonedDateTime.now().toEpochSecond();
+            // 计算过期时间
+            jgen.writeNumberField(OAuth2AccessToken.EXPIRES_IN, (expiration.toEpochSecond() - now));
         }
         Set<String> scope = token.getScope();
         if (scope != null && !scope.isEmpty()) {

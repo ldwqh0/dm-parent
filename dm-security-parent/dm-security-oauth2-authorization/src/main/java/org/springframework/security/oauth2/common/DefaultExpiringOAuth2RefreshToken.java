@@ -1,5 +1,6 @@
 package org.springframework.security.oauth2.common;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -14,12 +15,12 @@ public class DefaultExpiringOAuth2RefreshToken extends DefaultOAuth2RefreshToken
 
     private static final long serialVersionUID = 3449554332764129719L;
 
-    private final Date expiration;
+    private final ZonedDateTime expiration;
 
     /**
      * @param value
      */
-    public DefaultExpiringOAuth2RefreshToken(String value, Date expiration) {
+    public DefaultExpiringOAuth2RefreshToken(String value, ZonedDateTime expiration) {
         super(value);
         this.expiration = expiration;
     }
@@ -30,7 +31,7 @@ public class DefaultExpiringOAuth2RefreshToken extends DefaultOAuth2RefreshToken
      * @return The instant the token expires.
      */
     @Override
-    public Date getExpiration() {
+    public ZonedDateTime getExpiration() {
         return expiration;
     }
 

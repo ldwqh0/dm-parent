@@ -12,6 +12,7 @@
  */
 package org.springframework.security.oauth2.provider.token;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -111,7 +112,7 @@ public class DefaultAccessTokenConverter implements AccessTokenConverter {
         }
 
         if (token.getExpiration() != null) {
-            response.put(EXP, token.getExpiration().getTime() / 1000);
+            response.put(EXP, token.getExpiration().toEpochSecond());
         }
 
         if (includeGrantType && authentication.getOAuth2Request().getGrantType() != null) {
@@ -136,7 +137,7 @@ public class DefaultAccessTokenConverter implements AccessTokenConverter {
         info.remove(clientIdAttribute);
         info.remove(scopeAttribute);
         if (map.containsKey(EXP)) {
-            token.setExpiration(new Date((Long) map.get(EXP) * 1000L));
+            token.setExpiration(ZonedDateTime.now().plusSeconds((Long)map.get(EXP)));
         }
         if (map.containsKey(JTI)) {
             info.put(JTI, map.get(JTI));

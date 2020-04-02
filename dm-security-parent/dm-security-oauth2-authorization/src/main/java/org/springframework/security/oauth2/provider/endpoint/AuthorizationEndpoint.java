@@ -67,6 +67,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.security.Principal;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -424,9 +425,9 @@ public class AuthorizationEndpoint extends AbstractEndpoint {
         if (state != null) {
             vars.put("state", state);
         }
-        Date expiration = accessToken.getExpiration();
+        ZonedDateTime expiration = accessToken.getExpiration();
         if (expiration != null) {
-            long expires_in = (expiration.getTime() - System.currentTimeMillis()) / 1000;
+            long expires_in = expiration.toEpochSecond() - ZonedDateTime.now().toEpochSecond();
             vars.put("expires_in", expires_in);
         }
         String originalScope = authorizationRequest.getRequestParameters().get(OAuth2Utils.SCOPE);

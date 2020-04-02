@@ -16,8 +16,9 @@
 
 package org.springframework.security.oauth2.provider.approval;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
-import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -52,23 +53,23 @@ public class Approval {
 
     private ApprovalStatus status;
 
-    private Date expiresAt;
+    private ZonedDateTime expiresAt;
 
-    private Date lastUpdatedAt;
+    private ZonedDateTime lastUpdatedAt;
 
     public Approval(String userId, String clientId, String scope, int expiresIn, ApprovalStatus status) {
-        this(userId, clientId, scope, new Date(), status, new Date());
+        this(userId, clientId, scope, ZonedDateTime.now(), status, ZonedDateTime.now());
         Calendar expiresAt = Calendar.getInstance();
         expiresAt.add(Calendar.MILLISECOND, expiresIn);
-        setExpiresAt(expiresAt.getTime());
+        setExpiresAt(ZonedDateTime.now().plus(expiresIn, ChronoUnit.MILLIS));
     }
 
-    public Approval(String userId, String clientId, String scope, Date expiresAt, ApprovalStatus status) {
-        this(userId, clientId, scope, expiresAt, status, new Date());
+    public Approval(String userId, String clientId, String scope, ZonedDateTime expiresAt, ApprovalStatus status) {
+        this(userId, clientId, scope, expiresAt, status, ZonedDateTime.now());
     }
 
-    public Approval(String userId, String clientId, String scope, Date expiresAt, ApprovalStatus status,
-            Date lastUpdatedAt) {
+    public Approval(String userId, String clientId, String scope, ZonedDateTime expiresAt, ApprovalStatus status,
+            ZonedDateTime lastUpdatedAt) {
         setUserId(userId);
         setClientId(clientId);
         setScope(scope);
@@ -105,33 +106,33 @@ public class Approval {
     }
 
     @JsonSerialize(using = JsonDateSerializer.class, include = JsonSerialize.Inclusion.NON_NULL)
-    public Date getExpiresAt() {
+    public ZonedDateTime getExpiresAt() {
         return expiresAt;
     }
 
     @JsonDeserialize(using = JsonDateDeserializer.class)
-    public void setExpiresAt(Date expiresAt) {
+    public void setExpiresAt(ZonedDateTime expiresAt) {
         if (expiresAt == null) {
             Calendar thirtyMinFromNow = Calendar.getInstance();
             thirtyMinFromNow.add(Calendar.MINUTE, 30);
-            expiresAt = thirtyMinFromNow.getTime();
+            expiresAt = ZonedDateTime.now().plusMinutes(30);
         }
         this.expiresAt = expiresAt;
     }
 
     @JsonSerialize(using = JsonDateSerializer.class, include = JsonSerialize.Inclusion.NON_NULL)
-    public Date getLastUpdatedAt() {
+    public ZonedDateTime getLastUpdatedAt() {
         return lastUpdatedAt;
     }
 
     @JsonDeserialize(using = JsonDateDeserializer.class)
-    public void setLastUpdatedAt(Date lastUpdatedAt) {
+    public void setLastUpdatedAt(ZonedDateTime lastUpdatedAt) {
         this.lastUpdatedAt = lastUpdatedAt;
     }
 
     @JsonIgnore
     public boolean isCurrentlyActive() {
-        return expiresAt != null && expiresAt.after(new Date());
+        return expiresAt != null && expiresAt.isAfter(ZonedDateTime.now());
     }
 
     @JsonIgnore

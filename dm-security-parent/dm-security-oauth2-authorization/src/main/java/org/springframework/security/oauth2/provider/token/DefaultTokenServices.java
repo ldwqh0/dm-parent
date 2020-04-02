@@ -13,6 +13,7 @@
 
 package org.springframework.security.oauth2.provider.token;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -121,7 +122,7 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
         // expired.
         else if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
             ExpiringOAuth2RefreshToken expiring = (ExpiringOAuth2RefreshToken) refreshToken;
-            if (System.currentTimeMillis() > expiring.getExpiration().getTime()) {
+            if (ZonedDateTime.now().toInstant().toEpochMilli() > expiring.getExpiration().toInstant().toEpochMilli()) {
                 refreshToken = createRefreshToken(authentication);
             }
         }
@@ -228,7 +229,8 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
         if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
             ExpiringOAuth2RefreshToken expiringToken = (ExpiringOAuth2RefreshToken) refreshToken;
             return expiringToken.getExpiration() == null
-                    || System.currentTimeMillis() > expiringToken.getExpiration().getTime();
+                    || ZonedDateTime.now().toInstant().toEpochMilli() > expiringToken.getExpiration().toInstant()
+                            .toEpochMilli();
         }
         return false;
     }
@@ -297,8 +299,7 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
         int validitySeconds = getRefreshTokenValiditySeconds(authentication.getOAuth2Request());
         String value = UUID.randomUUID().toString();
         if (validitySeconds > 0) {
-            return new DefaultExpiringOAuth2RefreshToken(value, new Date(System.currentTimeMillis()
-                    + (validitySeconds * 1000L)));
+            return new DefaultExpiringOAuth2RefreshToken(value, ZonedDateTime.now().plusSeconds(validitySeconds));
         }
         return new DefaultOAuth2RefreshToken(value);
     }
@@ -307,7 +308,7 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
         DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(UUID.randomUUID().toString());
         int validitySeconds = getAccessTokenValiditySeconds(authentication.getOAuth2Request());
         if (validitySeconds > 0) {
-            token.setExpiration(new Date(System.currentTimeMillis() + (validitySeconds * 1000L)));
+            token.setExpiration(ZonedDateTime.now().plusSeconds(validitySeconds));
         }
         token.setRefreshToken(refreshToken);
         token.setScope(authentication.getOAuth2Request().getScope());

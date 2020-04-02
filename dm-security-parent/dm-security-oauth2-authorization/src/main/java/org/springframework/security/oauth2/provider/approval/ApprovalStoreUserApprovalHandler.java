@@ -16,6 +16,7 @@
 
 package org.springframework.security.oauth2.provider.approval;
 
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -130,7 +131,7 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
                     // gh-877 - if all scopes are auto approved, approvals still need to be added to
                     // the approval store.
                     Set<Approval> approvals = new HashSet<Approval>();
-                    Date expiry = computeExpiry();
+                    ZonedDateTime expiry = computeExpiry();
                     for (String approvedScope : approvedScopes) {
                         approvals.add(new Approval(userAuthentication.getName(), authorizationRequest.getClientId(),
                                 approvedScope, expiry, ApprovalStatus.APPROVED));
@@ -156,9 +157,9 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
         Collection<Approval> userApprovals = approvalStore.getApprovals(userAuthentication.getName(), clientId);
 
         // Look at the scopes and see if they have expired
-        Date today = new Date();
+        ZonedDateTime today = ZonedDateTime.now();
         for (Approval approval : userApprovals) {
-            if (approval.getExpiresAt().after(today)) {
+            if (approval.getExpiresAt().isAfter(today)) {
                 if (approval.getStatus() == ApprovalStatus.APPROVED) {
                     validUserApprovedScopes.add(approval.getScope());
                     approvedScopes.add(approval.getScope());
@@ -183,14 +184,14 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
 
     }
 
-    private Date computeExpiry() {
-        Calendar expiresAt = Calendar.getInstance();
+    private ZonedDateTime computeExpiry() {
+        ZonedDateTime expiresAt = ZonedDateTime.now();
         if (approvalExpirySeconds == -1) { // use default of 1 month
-            expiresAt.add(Calendar.MONTH, 1);
+            expiresAt.plusMonths(1);
         } else {
-            expiresAt.add(Calendar.SECOND, approvalExpirySeconds);
+            expiresAt.plusSeconds(approvalExpirySeconds);
         }
-        return expiresAt.getTime();
+        return expiresAt;
     }
 
     /**
@@ -215,7 +216,7 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
         Set<String> approvedScopes = new HashSet<String>();
         Set<Approval> approvals = new HashSet<Approval>();
 
-        Date expiry = computeExpiry();
+        ZonedDateTime expiry = computeExpiry();
 
         // Store the scopes that have been approved / denied
         Map<String, String> approvalParameters = authorizationRequest.getApprovalParameters();

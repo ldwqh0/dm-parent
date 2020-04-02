@@ -43,7 +43,7 @@ public class UserApproval {
     private ApprovalStatus status;
 
     @Column(name = "expires_at_")
-    private Date expiresAt;
+    private ZonedDateTime expiresAt;
 
     @Column(name = "last_update_at_")
     @LastModifiedDate

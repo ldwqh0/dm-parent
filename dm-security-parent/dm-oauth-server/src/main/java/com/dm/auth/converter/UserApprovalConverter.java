@@ -1,6 +1,5 @@
 package com.dm.auth.converter;
 
-import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.security.oauth2.provider.approval.Approval;
@@ -17,7 +16,7 @@ public class UserApprovalConverter implements Converter<UserApproval, Approval> 
                 model.getScope(),
                 model.getExpiresAt(),
                 model.getStatus());
-        approval.setLastUpdatedAt(Date.from(model.getLastUpdatedAt().toInstant()));
+        approval.setLastUpdatedAt(model.getLastUpdatedAt());
         return approval;
     }
 

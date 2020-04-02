@@ -1,8 +1,8 @@
 package org.springframework.security.oauth2.provider.token.store;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
@@ -296,9 +296,9 @@ public class InMemoryTokenStore implements TokenStore {
 
         private final String value;
 
-        public TokenExpiry(String value, Date date) {
+        public TokenExpiry(String value, ZonedDateTime date) {
             this.value = value;
-            this.expiry = date.getTime();
+            this.expiry = date.toInstant().toEpochMilli();
         }
 
         @Override

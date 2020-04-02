@@ -25,6 +25,7 @@ import org.springframework.security.oauth2.provider.approval.Approval.ApprovalSt
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
@@ -187,7 +188,7 @@ public class JwtTokenStore implements TokenStore {
             if (user != null) {
                 Collection<Approval> approvals = new ArrayList<Approval>();
                 for (String scope : auth.getOAuth2Request().getScope()) {
-                    approvals.add(new Approval(user.getName(), clientId, scope, new Date(), ApprovalStatus.APPROVED));
+                    approvals.add(new Approval(user.getName(), clientId, scope, ZonedDateTime.now(), ApprovalStatus.APPROVED));
                 }
                 approvalStore.revokeApprovals(approvals);
             }

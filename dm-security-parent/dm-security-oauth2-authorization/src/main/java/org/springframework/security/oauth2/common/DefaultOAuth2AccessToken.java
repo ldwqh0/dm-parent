@@ -1,8 +1,9 @@
 package org.springframework.security.oauth2.common;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
 
     private String value;
 
-    private Date expiration;
+    private ZonedDateTime expiration;
 
     private String tokenType = BEARER_TYPE.toLowerCase();
 
@@ -82,12 +83,14 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
 
     @Override
     public int getExpiresIn() {
-        return expiration != null ? Long.valueOf((expiration.getTime() - System.currentTimeMillis()) / 1000L)
-                .intValue() : 0;
+        return expiration != null ? (int) (expiration.toEpochSecond() - ZonedDateTime.now().toEpochSecond()) : 0;
     }
 
+    /**
+     * @param delta 单位，毫秒
+     */
     protected void setExpiresIn(int delta) {
-        setExpiration(new Date(System.currentTimeMillis() + delta));
+        setExpiration(ZonedDateTime.now().plus(delta, ChronoUnit.MILLIS));
     }
 
     /**
@@ -96,7 +99,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
      * @return The instant the token expires.
      */
     @Override
-    public Date getExpiration() {
+    public ZonedDateTime getExpiration() {
         return expiration;
     }
 
@@ -105,7 +108,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
      * 
      * @param expiration The instant the token expires.
      */
-    public void setExpiration(Date expiration) {
+    public void setExpiration(ZonedDateTime expiration) {
         this.expiration = expiration;
     }
 
@@ -116,7 +119,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
      */
     @Override
     public boolean isExpired() {
-        return expiration != null && expiration.before(new Date());
+        return expiration != null && expiration.isBefore(ZonedDateTime.now());
     }
 
     /**
@@ -205,7 +208,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
             } catch (NumberFormatException e) {
                 // fall through...
             }
-            token.setExpiration(new Date(System.currentTimeMillis() + (expiration * 1000L)));
+            token.setExpiration(ZonedDateTime.now().plusSeconds(expiration));
         }
 
         if (tokenParams.containsKey(REFRESH_TOKEN)) {
