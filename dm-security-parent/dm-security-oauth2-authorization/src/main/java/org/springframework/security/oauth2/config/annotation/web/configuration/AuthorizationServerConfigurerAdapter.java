@@ -38,6 +38,7 @@ public class AuthorizationServerConfigurerAdapter implements AuthorizationServer
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        
     }
 
 }

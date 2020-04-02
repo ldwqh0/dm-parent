@@ -47,7 +47,7 @@ public class AuditingAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass(AuditorAware.class)
+    @ConditionalOnClass({ AuditorAware.class, UserDetailsDto.class })
     @ConditionalOnMissingBean(AuditorAware.class)
     public static class SimpleAuditorAware implements AuditorAware<Audit> {
         @Override

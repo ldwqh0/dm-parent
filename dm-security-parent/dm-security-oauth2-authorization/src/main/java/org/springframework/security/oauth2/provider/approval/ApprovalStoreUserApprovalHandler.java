@@ -187,11 +187,10 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
     private ZonedDateTime computeExpiry() {
         ZonedDateTime expiresAt = ZonedDateTime.now();
         if (approvalExpirySeconds == -1) { // use default of 1 month
-            expiresAt.plusMonths(1);
+            return expiresAt.plusMonths(1);
         } else {
-            expiresAt.plusSeconds(approvalExpirySeconds);
+            return expiresAt.plusSeconds(approvalExpirySeconds);
         }
-        return expiresAt;
     }
 
     /**
