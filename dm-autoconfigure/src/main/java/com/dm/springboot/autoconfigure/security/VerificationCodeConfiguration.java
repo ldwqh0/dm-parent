@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.dm.security.verification.VerificationCodeGenerator;
 import com.dm.security.verification.VerificationCodeStorage;
-import com.dm.security.verification.support.InMemeryVerificationCodeStorage;
+import com.dm.security.verification.support.InMemoryVerificationCodeStorage;
 import com.dm.security.verification.support.SimpleVerificationCodeGenerator;
 import com.dm.security.web.verification.VerificationCodeController;
 import com.google.code.kaptcha.Producer;
@@ -18,14 +18,10 @@ import com.google.code.kaptcha.util.Config;
 @Configuration
 public class VerificationCodeConfiguration {
 
-    @Configuration
+    @Bean
     @ConditionalOnMissingBean(VerificationCodeStorage.class)
-    static class CodeStorageConfiguration {
-        @Bean
-        @ConditionalOnMissingBean(VerificationCodeStorage.class)
-        public VerificationCodeStorage verificationCodeStorage() {
-            return new InMemeryVerificationCodeStorage();
-        }
+    public VerificationCodeStorage verificationCodeStorage() {
+        return new InMemoryVerificationCodeStorage();
     }
 
     @Bean

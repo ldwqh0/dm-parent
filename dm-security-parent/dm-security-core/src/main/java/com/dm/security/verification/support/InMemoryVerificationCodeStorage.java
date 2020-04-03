@@ -9,13 +9,13 @@ import org.apache.commons.lang3.StringUtils;
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeStorage;
 
-public class InMemeryVerificationCodeStorage implements VerificationCodeStorage {
+public class InMemoryVerificationCodeStorage implements VerificationCodeStorage {
 
     private static final String DEFAULT_KEY = "default_key";
 
     private final ConcurrentHashMap<String, VerificationCode> storage;
 
-    public InMemeryVerificationCodeStorage() {
+    public InMemoryVerificationCodeStorage() {
         this.storage = new ConcurrentHashMap<String, VerificationCode>();
     }
 

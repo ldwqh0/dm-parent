@@ -19,6 +19,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.dm.security.verification.VerificationCodeStorage;
@@ -28,6 +29,7 @@ public class VerificationCodeFilter extends GenericFilterBean {
 
     private final List<RequestMatcher> requestMathcers = new ArrayList<>();
 
+    @Autowired
     private VerificationCodeStorage storage = null;
 
     private ObjectMapper om = new ObjectMapper();
@@ -53,7 +55,6 @@ public class VerificationCodeFilter extends GenericFilterBean {
         this.om = om;
     }
 
-    @Autowired
     public void setStorage(VerificationCodeStorage storage) {
         this.storage = storage;
     }
@@ -84,7 +85,6 @@ public class VerificationCodeFilter extends GenericFilterBean {
         } else {
             chain.doFilter(req, res);
         }
-
     }
 
     /**
@@ -108,6 +108,7 @@ public class VerificationCodeFilter extends GenericFilterBean {
     @Override
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
+        Assert.notNull(storage, "the storage can not be null");
         if (Objects.isNull(om)) {
             this.om = new ObjectMapper();
         }
