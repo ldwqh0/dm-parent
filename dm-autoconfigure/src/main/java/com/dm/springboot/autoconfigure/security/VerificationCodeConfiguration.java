@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import com.dm.security.verification.VerificationCodeGenerator;
 import com.dm.security.verification.VerificationCodeStorage;
 import com.dm.security.verification.support.InMemeryVerificationCodeStorage;
@@ -17,10 +18,14 @@ import com.google.code.kaptcha.util.Config;
 @Configuration
 public class VerificationCodeConfiguration {
 
-    @Bean
+    @Configuration
     @ConditionalOnMissingBean(VerificationCodeStorage.class)
-    public VerificationCodeStorage verificationCodeStorage() {
-        return new InMemeryVerificationCodeStorage();
+    static class CodeStorageConfiguration {
+        @Bean
+        @ConditionalOnMissingBean(VerificationCodeStorage.class)
+        public VerificationCodeStorage verificationCodeStorage() {
+            return new InMemeryVerificationCodeStorage();
+        }
     }
 
     @Bean
@@ -30,7 +35,7 @@ public class VerificationCodeConfiguration {
     }
 
     @Bean
-    public VerificationCodeController c() {
+    public VerificationCodeController controller() {
         return new VerificationCodeController();
     }
 

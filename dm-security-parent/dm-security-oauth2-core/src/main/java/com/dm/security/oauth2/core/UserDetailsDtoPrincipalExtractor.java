@@ -10,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.dm.security.oauth2.core.PrincipalExtractor;
-import com.dm.security.oauth2.core.UserDetailsDtoOAuth2User;
 
 public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 
