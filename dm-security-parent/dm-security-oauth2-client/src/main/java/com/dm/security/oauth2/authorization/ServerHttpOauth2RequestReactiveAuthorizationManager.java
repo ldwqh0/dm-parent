@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 
 import com.dm.security.authentication.ResourceAuthorityAttribute;
-import com.dm.security.authorization.ServerHttpRequestReactiveAuthorizationManager;
+import com.dm.security.web.authorization.ServerHttpRequestReactiveAuthorizationManager;
 
 import reactor.core.publisher.Mono;
 

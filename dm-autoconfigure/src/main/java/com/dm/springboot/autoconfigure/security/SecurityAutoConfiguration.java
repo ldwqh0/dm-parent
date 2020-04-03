@@ -30,10 +30,10 @@ import com.dm.security.core.userdetails.GrantedAuthorityDto;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.security.web.authentication.LoginFailureHandler;
 import com.dm.security.web.authentication.LoginSuccessHandler;
+import com.dm.security.web.controller.CurrentUserController;
+import com.dm.security.web.controller.CurrentUserReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.dm.security.controller.CurrentUserController;
-import com.dm.security.controller.CurrentUserReactiveController;
 
 //@Import({ ReactiveSecurityConfiguration.class,
 //        SecurityConfiguration.class })

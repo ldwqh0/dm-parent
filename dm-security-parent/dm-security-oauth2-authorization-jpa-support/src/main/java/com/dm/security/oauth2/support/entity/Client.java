@@ -34,7 +34,7 @@ import com.dm.common.entity.ModifyAudit;
 @Entity
 @Table(name = "dm_client_")
 @EntityListeners(AuditingEntityListener.class)
-public class Client implements Auditable<Audit, UUID, ZonedDateTime>{
+public class Client implements Auditable<Audit, UUID, ZonedDateTime> {
 
     @Id
     @Column(name = "id_", length = 36)
@@ -95,6 +95,12 @@ public class Client implements Auditable<Audit, UUID, ZonedDateTime>{
     @CollectionTable(name = "dm_client_registered_redirect_uri_")
     @Column(name = "registered_redirect_uri_")
     private Set<String> registeredRedirectUri;
+
+    @ElementCollection
+    @JoinColumn(name = "client_id_")
+    @JoinTable(name = "dm_client_authority_")
+    @Column(name = "authority_")
+    private Set<String> authorities;
 
     public Integer getAccessTokenValiditySeconds() {
         return accessTokenValiditySeconds;
@@ -213,4 +219,13 @@ public class Client implements Auditable<Audit, UUID, ZonedDateTime>{
     public void setRegisteredRedirectUri(Set<String> registeredRedirectUri) {
         this.registeredRedirectUri = registeredRedirectUri;
     }
+
+    public Set<String> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
+    }
+
 }

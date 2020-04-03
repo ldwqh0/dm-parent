@@ -1,5 +1,9 @@
 package com.dm.security.oauth2.support.converter;
 
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Component;
@@ -32,7 +36,10 @@ public class ClientConverter implements AuditEntityConverter<Client, ClientDto> 
         bcd.setAccessTokenValiditySeconds(model.getAccessTokenValiditySeconds());
         bcd.setRegisteredRedirectUri(model.getRegisteredRedirectUri());
         bcd.setAdditionalInformation(model.getAdditionalInformation());
-//        bcd.setAuthorities(authorities);
+        if (CollectionUtils.isNotEmpty(model.getAuthorities())) {
+            bcd.setAuthorities(
+                    model.getAuthorities().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet()));
+        }
         bcd.setAuthorizedGrantTypes(model.getAuthorizedGrantTypes());
 //        bcd.setAutoApproveScopes(autoApproveScopes);
         bcd.setRefreshTokenValiditySeconds(model.getRefreshTokenValiditySeconds());
