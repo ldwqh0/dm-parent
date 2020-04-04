@@ -52,7 +52,6 @@ public class AuthorizationTokenIntrospector implements OpaqueTokenIntrospector {
             attributes.put("principal", au.getPrincipal());
             return new DefaultOAuth2AuthenticatedPrincipal(name, attributes, authorities);
         }
-
     }
 
 }

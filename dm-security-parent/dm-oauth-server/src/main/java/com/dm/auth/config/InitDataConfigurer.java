@@ -10,20 +10,21 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import com.dm.auth.dto.ClientInfoDto;
-import com.dm.auth.entity.ClientInfo;
-import com.dm.auth.service.ClientInfoService;
+import com.dm.security.oauth2.support.dto.ClientDto;
+import com.dm.security.oauth2.support.entity.Client;
+import com.dm.security.oauth2.support.service.ClientService;
+
 
 @Configuration
 public class InitDataConfigurer {
 
     @Autowired
-    private ClientInfoService clientService;
+    private ClientService clientService;
 
     @PostConstruct
     public void initData() {
-        Optional<ClientInfo> ownerapp = clientService.findById("ownerapp");
-        Optional<ClientInfo> zuul = clientService.findById("zuul");
+        Optional<Client> ownerapp = clientService.findById("ownerapp");
+        Optional<Client> zuul = clientService.findById("zuul");
         if (!ownerapp.isPresent()) {
             initOwnerApp();
         }
@@ -36,14 +37,14 @@ public class InitDataConfigurer {
      * 系统启动时，新建一个默认应用
      */
     private void initOwnerApp() {
-        ClientInfoDto client = new ClientInfoDto();
-        client.setClientId("ownerapp");
+        ClientDto client = new ClientDto();
+        client.setId("ownerapp");
         client.setAccessTokenValiditySeconds(60000);
         Set<String> grantTypes = new HashSet<String>();
         grantTypes.add("password"); // 初始化的app有默认的两种grandType
         grantTypes.add("refresh_token");
         client.setAuthorizedGrantTypes(grantTypes);
-        client.setClientSecret("123456");
+        client.setSecret("123456");
         client.setName("自有应用");
         client.setRefreshTokenValiditySeconds(60000);
         client.setScope(Collections.singleton("app"));
@@ -51,9 +52,9 @@ public class InitDataConfigurer {
     }
 
     private void initZuul() {
-        ClientInfoDto zuul = new ClientInfoDto();
-        zuul.setClientId("zuul");
-        zuul.setClientSecret("123456");
+        ClientDto zuul = new ClientDto();
+        zuul.setId("zuul");
+        zuul.setSecret("123456");
         zuul.setAccessTokenValiditySeconds(6000);
         zuul.setRefreshTokenValiditySeconds(6000);
         Set<String> grantTypes = new HashSet<String>();

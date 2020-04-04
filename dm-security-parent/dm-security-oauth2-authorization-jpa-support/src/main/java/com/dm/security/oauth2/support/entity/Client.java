@@ -13,7 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -21,9 +21,6 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -34,16 +31,11 @@ import com.dm.common.entity.ModifyAudit;
 @Entity
 @Table(name = "dm_client_")
 @EntityListeners(AuditingEntityListener.class)
-public class Client implements Auditable<Audit, UUID, ZonedDateTime> {
+public class Client implements Auditable<Audit, String, ZonedDateTime> {
 
     @Id
     @Column(name = "id_", length = 36)
-    @GeneratedValue(generator = "ordered-uuid")
-    @Type(type = "uuid-char")
-    @GenericGenerator(name = "ordered-uuid", strategy = "org.hibernate.id.UUIDGenerator", parameters = {
-            @Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy")
-    })
-    private UUID id;
+    private String id;
 
     @Column(name = "name_", length = 100)
     private String name;
@@ -73,13 +65,15 @@ public class Client implements Auditable<Audit, UUID, ZonedDateTime> {
 
     @ElementCollection
     @Column(name = "authorized_grant_type_")
-    @JoinColumn(name = "client_id_")
-    @CollectionTable(name = "dm_client_authorized_grant_type_")
+    @CollectionTable(name = "dm_client_authorized_grant_type_", joinColumns = {
+            @JoinColumn(name = "client_id_")
+    })
     private Set<String> authorizedGrantTypes;
 
     @ElementCollection
-    @CollectionTable(name = "dm_client_scope_")
-    @JoinColumn(name = "client_id_")
+    @CollectionTable(name = "dm_client_scope_", joinColumns = {
+            @JoinColumn(name = "client_id_")
+    })
     @Column(name = "scope_")
     private Set<String> scopes;
 
@@ -91,16 +85,36 @@ public class Client implements Auditable<Audit, UUID, ZonedDateTime> {
     private Map<String, String> additionalInformation;
 
     @ElementCollection
-    @JoinColumn(name = "client_id_")
-    @CollectionTable(name = "dm_client_registered_redirect_uri_")
+    @CollectionTable(name = "dm_client_registered_redirect_uri_", joinColumns = {
+            @JoinColumn(name = "client_id_")
+    })
     @Column(name = "registered_redirect_uri_")
     private Set<String> registeredRedirectUri;
 
     @ElementCollection
-    @JoinColumn(name = "client_id_")
-    @JoinTable(name = "dm_client_authority_")
+    @CollectionTable(name = "dm_client_authority_", joinColumns = {
+            @JoinColumn(name = "client_id_")
+    })
     @Column(name = "authority_")
     private Set<String> authorities;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "resource_id_")
+    @CollectionTable(name = "dm_client_resource_id_", joinColumns = {
+            @JoinColumn(name = "client_id_")
+    })
+    private Set<String> resourceIds;
+
+    @Column(name = "auto_approve_", nullable = false)
+    private Boolean autoApprove = Boolean.FALSE;
+
+    public Client() {
+        this.id = UUID.randomUUID().toString();
+    }
+
+    public Client(String id) {
+        this.id = id;
+    }
 
     public Integer getAccessTokenValiditySeconds() {
         return accessTokenValiditySeconds;
@@ -126,12 +140,12 @@ public class Client implements Auditable<Audit, UUID, ZonedDateTime> {
         this.secret = secret;
     }
 
-    void setId(UUID id) {
+    void setId(String id) {
         this.id = id;
     }
 
     @Override
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

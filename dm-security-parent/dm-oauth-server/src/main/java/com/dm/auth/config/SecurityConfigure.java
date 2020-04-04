@@ -11,12 +11,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.dm.auth.security.SavedRequestAwareAuthenticationAndLoggingSuccessHandler;
 import com.dm.auth.security.SimpleUrlAuthenticationLoginLogFailureHandler;
+import com.dm.security.oauth2.introspection.AuthorizationTokenIntrospector;
 import com.dm.uap.service.LoginLogService;
 
 @Configuration
@@ -32,6 +35,9 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     @Autowired
     private LoginLogService loginLogService;
 
+    @Autowired
+    private ResourceServerTokenServices tokenService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -43,6 +49,9 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/oauth/login").permitAll().failureHandler(authenticationFailureHandler())
                 .successHandler(authenticationSuccessHandler()) // .defaultSuccessUrl(defaultSuccessUrl)
                 .and().httpBasic().disable();
+
+        http.oauth2ResourceServer().opaqueToken().introspector(authorizationTokenIntrospector());
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/oauth/logout", HttpMethod.GET.toString()));// .logoutUrl("/oauth/logout");
     }
 
@@ -71,6 +80,13 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public AuthorizationTokenIntrospector authorizationTokenIntrospector() {
+        AuthorizationTokenIntrospector tsti = new AuthorizationTokenIntrospector();
+        tsti.setTokenService(tokenService);
+        return tsti;
     }
 
 }

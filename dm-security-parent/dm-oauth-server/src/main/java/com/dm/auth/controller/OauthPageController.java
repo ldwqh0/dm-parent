@@ -2,13 +2,17 @@ package com.dm.auth.controller;
 
 import java.util.Map;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.common.exceptions.RedirectMismatchException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.dm.security.core.userdetails.UserDetailsDto;
 
 @SessionAttributes({ "authorizationRequest" })
 @Controller
@@ -16,6 +20,11 @@ public class OauthPageController {
 
     @GetMapping("/oauth/login.html")
     public String login() {
+        return "oauth/login.html";
+    }
+
+    @GetMapping({ "/oauth/logout", "/oauth/logout.html" })
+    public String logout() {
         return "oauth/login.html";
     }
 
@@ -55,4 +64,9 @@ public class OauthPageController {
         return "redirect:/oauth/index.html";
     }
 
+    @GetMapping({ "/oauth/users/current" })
+    @ResponseBody
+    public UserDetailsDto getCurrentUser(@AuthenticationPrincipal UserDetailsDto currentUser) {
+        return currentUser;
+    }
 }

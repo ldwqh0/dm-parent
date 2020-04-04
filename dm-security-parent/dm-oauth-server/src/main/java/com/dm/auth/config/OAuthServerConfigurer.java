@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.oauth2.common.util.ProxyCreator;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.TokenGranter;
@@ -26,18 +26,15 @@ import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGrante
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
-import com.dm.auth.provider.token.UserDetailsAuthenticationConverter;
-import com.dm.auth.service.UserApprovalService;
 import com.dm.security.oauth2.provider.code.DmAuthorizationCodeTokenGranter;
-//import com.dm.security.oauth2.provider.token.UserDetailsAuthenticationConverter;
 import com.dm.security.oauth2.provider.endpoint.DmOauthRedirectResolver;
+import com.dm.security.oauth2.support.service.ClientService;
+import com.dm.security.oauth2.support.service.UserClientApprovalService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,11 +44,11 @@ import lombok.extern.slf4j.Slf4j;
 public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    @Qualifier("clientInfoService")
-    private ClientDetailsService clientDetailsService;
+//    @Qualifier("clientInfoService")
+    private ClientService clientDetailsService;
 
     @Autowired
-    private UserApprovalService userApprovalService;
+    private UserClientApprovalService userApprovalService;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -59,9 +56,12 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    private AuthorizationServerEndpointsConfigurer endpoints;
+
     /**
      * 这个主要是针对授权服务的配置，也就是针对/oauth/token这个地址的相关配置，比如添加过滤器什么的
      */
+    @SuppressWarnings("deprecation")
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         // 通常情况下,Spring Security获取token的认证模式是基于http basic的,
@@ -70,6 +70,7 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
         // 或者http://client_id:client_secret@server/oauth/token的模式传递的
         // 当启用这个配置之后，server可以从表单参数中获取相应的client_id和client_secret信息
         security.allowFormAuthenticationForClients();
+        security.passwordEncoder(NoOpPasswordEncoder.getInstance());
         // 默认情况下，checkToken的验证是denyAll的，需要手动开启
         security.checkTokenAccess("isAuthenticated()");
     }
@@ -103,8 +104,8 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
         endpoints.userApprovalHandler(userApprovalHandler()); // 用户授权处理逻辑
         // 如果使用自定义的tokenService,以下的配置都不可用，需要在tokenService中重新配置
         endpoints.tokenStore(tokenStore());
-        endpoints.accessTokenConverter(accessTokenConverter());
-        endpoints.getTokenServices();
+        // tokenConverter只在使用Jwt的时候有用。
+        // endpoints.accessTokenConverter(accessTokenConverter());
         // 指定是否可以重用refreshToken
         endpoints.reuseRefreshTokens(false);
         // 如果要使用RefreshToken可用，必须指定UserDetailsService
@@ -113,20 +114,21 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
         endpoints.redirectResolver(new DmOauthRedirectResolver());
         // 使用这个authenticationManager可以启用密码模式
         endpoints.authenticationManager(authenticationManager);
+        this.endpoints = endpoints;
     }
 
-    @Bean
-    public AccessTokenConverter accessTokenConverter() {
-        DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
-        tokenConverter.setUserTokenConverter(userTokenConverter());
-        return tokenConverter;
-    }
+//    @Bean
+//    public AccessTokenConverter accessTokenConverter() {
+//        DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+//        tokenConverter.setUserTokenConverter(userTokenConverter());
+//        return tokenConverter;
+//    }
 
-    @Bean
-    public UserAuthenticationConverter userTokenConverter() {
-        UserDetailsAuthenticationConverter userTokenConverter = new UserDetailsAuthenticationConverter();
-        return userTokenConverter;
-    }
+//    @Bean
+//    public UserAuthenticationConverter userTokenConverter() {
+//        UserDetailsAuthenticationConverter userTokenConverter = new UserDetailsAuthenticationConverter();
+//        return userTokenConverter;
+//    }
 
     @Bean
     public UserApprovalHandler userApprovalHandler() {
@@ -155,6 +157,12 @@ public class OAuthServerConfigurer extends AuthorizationServerConfigurerAdapter 
     @Bean
     public TokenStore tokenStore() {
         return new InMemoryTokenStore();
+    }
+
+    @Bean
+    public ResourceServerTokenServices resourceServerTokenServices() {
+        return ProxyCreator.getProxy(ResourceServerTokenServices.class,
+                () -> endpoints.getResourceServerTokenServices());
     }
 
     private TokenGranter tokenGranter(AuthorizationServerTokenServices tokenService,

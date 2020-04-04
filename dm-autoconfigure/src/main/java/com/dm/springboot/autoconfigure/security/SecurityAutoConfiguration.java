@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 //@Import({ ReactiveSecurityConfiguration.class,
 //        SecurityConfiguration.class })
+@Configuration
 public class SecurityAutoConfiguration {
 
     @Configuration

@@ -1,7 +1,6 @@
 package com.dm.auth.provider.token;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 

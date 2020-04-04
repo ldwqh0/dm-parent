@@ -18,8 +18,11 @@ public class ClientConverter implements AuditEntityConverter<Client, ClientDto> 
     @Override
     public Client copyProperties(Client model, ClientDto dto) {
         model.setName(dto.getName());
-        model.setSecret(dto.getSecret());
+//        model.setSecret(dto.getSecret());
         model.setAuthorizedGrantTypes(dto.getAuthorizedGrantTypes());
+        model.setScopes(dto.getScope());
+        model.setAccessTokenValiditySeconds(dto.getAccessTokenValiditySeconds());
+        model.setRefreshTokenValiditySeconds(dto.getRefreshTokenValiditySeconds());
         return model;
     }
 

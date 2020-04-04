@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
-public class UserDetailsDto implements UserDetails {
+public class UserDetailsDto implements UserDetails, OAuth2User {
     private static final long serialVersionUID = -4337846050031244208L;
 
     private Long id;
@@ -168,6 +170,19 @@ public class UserDetailsDto implements UserDetails {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public Map<String, Object> getAttributes() {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    @JsonIgnore
+    public String getName() {
+        // TODO Auto-generated method stub
+        return username;
     }
 
 }
