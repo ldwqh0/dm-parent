@@ -14,7 +14,6 @@
 package org.springframework.security.oauth2.provider.token;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 

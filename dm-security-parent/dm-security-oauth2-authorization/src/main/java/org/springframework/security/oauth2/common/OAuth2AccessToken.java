@@ -13,7 +13,6 @@
 package org.springframework.security.oauth2.common;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 

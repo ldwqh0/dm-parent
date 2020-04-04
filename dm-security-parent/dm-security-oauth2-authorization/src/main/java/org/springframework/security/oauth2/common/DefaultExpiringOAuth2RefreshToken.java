@@ -1,7 +1,6 @@
 package org.springframework.security.oauth2.common;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 /**
  * <p>
