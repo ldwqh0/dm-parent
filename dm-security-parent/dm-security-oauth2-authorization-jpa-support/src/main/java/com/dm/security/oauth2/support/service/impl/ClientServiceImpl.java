@@ -30,13 +30,9 @@ public class ClientServiceImpl implements ClientService, ClientDetailsService {
     @Override
     @Transactional
     public Client save(ClientDto app) {
-        String id = app.getId();
-        Client model = null;
-        if (StringUtils.isNotBlank(id)) {
-            model = new Client(id);
-        } else {
-            model = new Client();
-        }
+        Client model = Optional.ofNullable(app.getId())
+                .map(Client::new)
+                .orElse(new Client());
         return clientRepository.save(clientConverter.copyProperties(model, app));
     }
 
