@@ -11,6 +11,7 @@ import java.util.Base64;
 import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +41,7 @@ public class VerificationReactiveController {
      * 
      * @return
      */
-    @PostMapping(produces = {
+    @GetMapping(produces = {
             TEXT_PLAIN_VALUE,
             APPLICATION_JSON_VALUE
     })

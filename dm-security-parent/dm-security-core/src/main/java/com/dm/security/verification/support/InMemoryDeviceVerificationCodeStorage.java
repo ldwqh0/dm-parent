@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.dm.security.verification.DeviceVerificationCode;
 import com.dm.security.verification.DeviceVerificationCodeStorage;
@@ -65,6 +66,21 @@ public class InMemoryDeviceVerificationCodeStorage implements DeviceVerification
             }
         }
         return Optional.<DeviceVerificationCode>ofNullable(c);
+    }
+
+    /**
+     * 一分钟秒清理一次内存
+     */
+    @Scheduled(fixedRate = 1000 * 60)
+    public synchronized void autoClean() {
+        Set<String> keys = idKeyMap.keySet();
+        ZonedDateTime now = ZonedDateTime.now();
+        keys.forEach(id -> {
+            DeviceVerificationCode code = idKeyMap.get(id);
+            if (now.isAfter(code.getExpireAt())) {
+                remove(id);
+            }
+        });
     }
 
 }

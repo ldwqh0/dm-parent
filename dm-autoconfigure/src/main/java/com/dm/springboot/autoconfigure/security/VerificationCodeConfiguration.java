@@ -2,15 +2,21 @@ package com.dm.springboot.autoconfigure.security;
 
 import java.util.Properties;
 
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.dm.security.verification.DeviceVerificationCodeStorage;
 import com.dm.security.verification.VerificationCodeGenerator;
 import com.dm.security.verification.VerificationCodeStorage;
+import com.dm.security.verification.support.InMemoryDeviceVerificationCodeStorage;
 import com.dm.security.verification.support.InMemoryVerificationCodeStorage;
 import com.dm.security.verification.support.SimpleVerificationCodeGenerator;
 import com.dm.security.web.verification.VerificationCodeController;
+import com.dm.security.web.verification.VerificationReactiveController;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
@@ -31,8 +37,29 @@ public class VerificationCodeConfiguration {
     }
 
     @Bean
-    public VerificationCodeController controller() {
+    @ConditionalOnMissingBean(DeviceVerificationCodeStorage.class)
+    public DeviceVerificationCodeStorage deviceVerificationCodeStorage() {
+        return new InMemoryDeviceVerificationCodeStorage();
+    }
+
+    /**
+     * 当有servlet时，创建这个Bean
+     * 
+     * @return
+     */
+    @Bean
+    @ConditionalOnClass(name = { "javax.servlet.Servlet" })
+    @ConditionalOnMissingBean(type = { "org.springframework.web.reactive.DispatcherHandler" })
+    public VerificationCodeController verificationCodeController() {
         return new VerificationCodeController();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean({ VerificationCodeController.class })
+    @ConditionalOnClass(name = { "org.reactivestreams.Publisher" })
+//    @ConditionalOnBean(type = { "org.springframework.web.reactive.DispatcherHandler" })
+    public VerificationReactiveController verificationReactiveController() {
+        return new VerificationReactiveController();
     }
 
     /**

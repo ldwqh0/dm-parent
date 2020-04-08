@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
+import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -35,7 +38,7 @@ import reactor.core.publisher.Mono;
  * @author LiDong
  *
  */
-public class DeviceVerificationCodeWebFilter implements WebFilter {
+public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingBean {
 
     private final List<ServerWebExchangeMatcher> requestMathcers = new ArrayList<>();
 
@@ -58,6 +61,7 @@ public class DeviceVerificationCodeWebFilter implements WebFilter {
         this.requestMathcers.add(matcher);
     }
 
+    @Autowired
     public void setDeviceVerificationCodeStorage(DeviceVerificationCodeStorage storage) {
         this.storage = storage;
     }
@@ -124,15 +128,20 @@ public class DeviceVerificationCodeWebFilter implements WebFilter {
      * @return
      */
     private boolean validate(String id, String key, String code) {
-        return storage.findById(id)
-                .map(i -> {
-                    ZonedDateTime expireAt = i.getExpireAt();
-                    String savedKey = i.getKey();
-                    String savedCode = i.getCode();
-                    return ZonedDateTime.now().isBefore(expireAt)
-                            && StringUtils.equals(key, savedKey)
-                            && StringUtils.equals(code, savedCode);
-                }).orElse(false);
+        if (StringUtils.isNotBlank(id) && StringUtils.isNotBlank(key) && StringUtils.isNotBlank(code)) {
+            return storage.findById(id)
+                    .map(i -> {
+                        ZonedDateTime expireAt = i.getExpireAt();
+                        String savedKey = i.getKey();
+                        String savedCode = i.getCode();
+                        return ZonedDateTime.now().isBefore(expireAt)
+                                && StringUtils.equals(key, savedKey)
+                                && StringUtils.equals(code, savedCode);
+                    }).orElse(false);
+        } else {
+            return false;
+        }
+
     }
 
     /**
@@ -164,4 +173,11 @@ public class DeviceVerificationCodeWebFilter implements WebFilter {
         }
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Assert.notNull(storage, "this storage can not be null");
+        if (Objects.isNull(om)) {
+            om = new ObjectMapper();
+        }
+    }
 }

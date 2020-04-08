@@ -1,8 +1,12 @@
 package com.dm.security.verification.support;
 
+import java.time.ZonedDateTime;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeStorage;
@@ -43,6 +47,21 @@ public class InMemoryVerificationCodeStorage implements VerificationCodeStorage 
     @Override
     public VerificationCode remove(String id) {
         return storage.remove(id);
+    }
+
+    /**
+     * 一分钟清理一次内存
+     */
+    @Scheduled(fixedRate = 1000 * 60)
+    public synchronized void autoClean() {
+        ZonedDateTime now = ZonedDateTime.now();
+        Iterator<Entry<String, VerificationCode>> it = storage.entrySet().iterator();
+        while (it.hasNext()) {
+            VerificationCode code = it.next().getValue();
+            if (now.isAfter(code.getInvalidateTime())) {
+                it.remove();
+            }
+        }
     }
 
 }
