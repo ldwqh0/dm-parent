@@ -20,7 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.dm.security.verification.ThreePartToolVerificationCodeStorage;
+import com.dm.security.verification.DeviceVerificationCodeStorage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author LiDong
  *
  */
-public class ThreePartToolVerificationCodeFilter extends GenericFilterBean {
+public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
     private final List<RequestMatcher> requestMathcers = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public class ThreePartToolVerificationCodeFilter extends GenericFilterBean {
 
     private String verifyCodeKeyParameterName = "email";
 
-    private ThreePartToolVerificationCodeStorage storage;
+    private DeviceVerificationCodeStorage storage;
 
     private ObjectMapper om = new ObjectMapper();
 
@@ -59,7 +59,7 @@ public class ThreePartToolVerificationCodeFilter extends GenericFilterBean {
         this.verifyIdParameterName = verifyIdParameterName;
     }
 
-    public void setStorage(ThreePartToolVerificationCodeStorage storage) {
+    public void setStorage(DeviceVerificationCodeStorage storage) {
         this.storage = storage;
     }
 
@@ -106,7 +106,7 @@ public class ThreePartToolVerificationCodeFilter extends GenericFilterBean {
         return false;
     }
 
-    private boolean validate(String id, String key, String code) {
+    private boolean validate(final String id, final String key, final String code) {
         return storage.findById(id)
                 .map(i -> {
                     ZonedDateTime expireAt = i.getExpireAt();

@@ -4,6 +4,7 @@ import java.util.Collections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
@@ -55,11 +56,13 @@ public class SecurityConfiguration {
                         new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)));
         delegationEntripoint
                 .setDefaultEntryPoint(new RedirectServerAuthenticationEntryPoint("/oauth2/authorization/oauth2"));
+        // 服务器存货检测
+        http.authorizeExchange().pathMatchers(HttpMethod.GET, "/status**").permitAll();
         http.authorizeExchange().anyExchange().access(reactiveAuthorizationManager());
         // 重新配置入口点
         http.exceptionHandling().authenticationEntryPoint(delegationEntripoint);
         // 整合oauth2登录
-        http.oauth2Login();// .authenticationSuccessHandler( );
+        http.oauth2Login();// .authenticationSuccessHandler();
         http.csrf().csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse());
         // 网关自身也是资源服务器
         http.oauth2ResourceServer().opaqueToken();

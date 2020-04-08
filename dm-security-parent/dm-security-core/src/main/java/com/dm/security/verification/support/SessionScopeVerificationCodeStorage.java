@@ -1,10 +1,5 @@
 package com.dm.security.verification.support;
 
-import java.time.ZonedDateTime;
-import java.util.Objects;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeStorage;
 
@@ -40,16 +35,6 @@ public class SessionScopeVerificationCodeStorage implements VerificationCodeStor
         VerificationCode temp = this.storageCode;
         this.storageCode = null;
         return temp;
-    }
-
-    @Override
-    public boolean validate(String id, String code) {
-        if (Objects.isNull(this.storageCode)) {
-            return false;
-        } else {
-            return StringUtils.equals(code, storageCode.getCode()) &&
-                    storageCode.getInvalidateTime().isAfter(ZonedDateTime.now());
-        }
     }
 
 }

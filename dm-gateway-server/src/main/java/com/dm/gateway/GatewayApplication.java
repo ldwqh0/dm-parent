@@ -10,8 +10,11 @@ import org.springframework.web.server.session.DefaultWebSessionManager;
 import org.springframework.web.server.session.WebSessionIdResolver;
 import org.springframework.web.server.session.WebSessionManager;
 
+import com.dm.springboot.autoconfigure.security.EnableVerificationCode;
+
 @SpringBootApplication
 @EnableCaching
+@EnableVerificationCode
 public class GatewayApplication {
 
     @Value("${server.servlet.session.cookie.name:SESSION}")

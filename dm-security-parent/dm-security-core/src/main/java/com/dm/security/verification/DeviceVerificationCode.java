@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author LiDong
  *
  */
-public class ThreePartToolVerificationCode implements Serializable {
+public class DeviceVerificationCode implements Serializable {
 
     private static final long serialVersionUID = -6060058106901443139L;
 
@@ -25,11 +25,11 @@ public class ThreePartToolVerificationCode implements Serializable {
 
     private ZonedDateTime expireAt;
 
-    public ThreePartToolVerificationCode() {
+    public DeviceVerificationCode() {
         super();
     }
 
-    public ThreePartToolVerificationCode(String id, String key, String code, ZonedDateTime expireAt) {
+    public DeviceVerificationCode(String id, String key, String code, ZonedDateTime expireAt) {
         super();
         this.id = id;
         this.key = key;
@@ -124,7 +124,7 @@ public class ThreePartToolVerificationCode implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ThreePartToolVerificationCode other = (ThreePartToolVerificationCode) obj;
+        DeviceVerificationCode other = (DeviceVerificationCode) obj;
         if (code == null) {
             if (other.code != null)
                 return false;

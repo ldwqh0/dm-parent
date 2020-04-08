@@ -1,7 +1,5 @@
 package com.dm.security.verification.support;
 
-import java.time.ZonedDateTime;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +19,11 @@ public class InMemoryVerificationCodeStorage implements VerificationCodeStorage 
 
     @Override
     public VerificationCode get(String id) {
-        return storage.get(id);
+        if (StringUtils.isNotBlank(id)) {
+            return storage.get(id);
+        } else {
+            return storage.get(DEFAULT_KEY);
+        }
     }
 
     @Override
@@ -41,35 +43,6 @@ public class InMemoryVerificationCodeStorage implements VerificationCodeStorage 
     @Override
     public VerificationCode remove(String id) {
         return storage.remove(id);
-    }
-
-    @Override
-    public boolean validate(String id, String code) {
-        boolean result = check(id, code);
-        if (result) {
-            storage.remove(id);
-        }
-        return result;
-    }
-
-    private boolean check(String id, String code) {
-        try {
-            VerificationCode storeCode;
-            if (StringUtils.isBlank(id)) {
-                storeCode = storage.get(DEFAULT_KEY);
-            } else {
-                storeCode = storage.get(id);
-            }
-            if (Objects.isNull(storeCode)) {
-                return false;
-            } else {
-                return StringUtils.equals(code, storeCode.getCode()) &&
-                        storeCode.getInvalidateTime().isAfter(ZonedDateTime.now());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
 }

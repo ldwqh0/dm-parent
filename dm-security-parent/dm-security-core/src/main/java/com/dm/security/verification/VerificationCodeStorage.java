@@ -1,7 +1,5 @@
 package com.dm.security.verification;
 
-import org.springframework.lang.Nullable;
-
 public interface VerificationCodeStorage {
 
     /**
@@ -41,5 +39,5 @@ public interface VerificationCodeStorage {
      * @param code
      * @return
      */
-    public boolean validate(@Nullable String id, String code);
+//    public boolean validate(@Nullable String id, String code);
 }

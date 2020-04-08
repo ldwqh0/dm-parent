@@ -1,5 +1,6 @@
 package com.dm.security.web.verification;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,6 @@ public class VerificationCodeController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @GetMapping(produces = {
@@ -106,7 +106,7 @@ public class VerificationCodeController {
         if (Objects.isNull(code) || ZonedDateTime.now().isAfter(code.getInvalidateTime())) {
             result.put("result", false);
             result.put("message", "验证码已经失效");
-        } else if (codeStorage.validate(verifyId, verifyCode)) {
+        } else if (validate(verifyId, verifyCode)) {
             result.put("result", Boolean.TRUE);
         } else {
             result.put("result", Boolean.FALSE);
@@ -115,4 +115,10 @@ public class VerificationCodeController {
         return result;
     }
 
+    private boolean validate(String verifyId, String verifyCode) {
+        VerificationCode savedCode = codeStorage.get(verifyId);
+        return (!Objects.isNull(savedCode))
+                && StringUtils.isNotBlank(savedCode.getCode())
+                && StringUtils.equals(savedCode.getCode(), verifyCode);
+    }
 }

@@ -12,7 +12,7 @@ spring:
     oauth2:
       resourceserver:
         opaquetoken:
-          introspection-uri: http://127.0.0.1:8887/oauth/users/current
+          introspection-uri: http://10.10.1.104:8887/oauth/users/current
       client:
         registration:
           oauth2:
@@ -23,9 +23,9 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           oauth2:
-            user-info-uri: http://127.0.0.1:8887/oauth/users/current
-            authorization-uri: http://127.0.0.1:8887/oauth/authorize
-            token-uri: http://127.0.0.1:8887/oauth/token
+            user-info-uri: http://10.10.1.104:8887/oauth/users/current
+            authorization-uri: http://10.10.1.104:8887/oauth/authorize
+            token-uri: http://10.10.1.104:8887/oauth/token
             user-name-attribute: username
   cloud:
     gateway:
