@@ -2,8 +2,6 @@ package com.dm.springboot.autoconfigure.security;
 
 import java.util.Properties;
 
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -56,8 +54,8 @@ public class VerificationCodeConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({ VerificationCodeController.class })
-    @ConditionalOnClass(name = { "org.reactivestreams.Publisher" })
-//    @ConditionalOnBean(type = { "org.springframework.web.reactive.DispatcherHandler" })
+    @ConditionalOnClass(name = { "org.reactivestreams.Publisher",
+            "org.springframework.web.reactive.DispatcherHandler" })
     public VerificationReactiveController verificationReactiveController() {
         return new VerificationReactiveController();
     }
