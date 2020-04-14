@@ -53,7 +53,13 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     private ResourceRepository resourceReopsitory;
 
     // 进行请求限定的请求类型
-    private final HttpMethod[] methods = { HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE };
+    private final HttpMethod[] methods = {
+            HttpMethod.GET,
+            HttpMethod.POST,
+            HttpMethod.PUT,
+            HttpMethod.DELETE,
+            HttpMethod.PATCH
+    };
 
     @Override
     @Transactional
