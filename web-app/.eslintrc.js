@@ -3,12 +3,18 @@ module.exports = {
   env: {
     node: true
   },
-  'extends': [
+  extends: [
     'plugin:vue/essential',
     '@vue/standard'
   ],
   globals: {
     CONTEXT_PATH: true
+  },
+  parserOptions: {
+    parser: 'babel-eslint',
+    ecmaFeatures: {
+      legacyDecorators: true
+    }
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -40,13 +46,7 @@ module.exports = {
     'template-curly-spacing': 'off', // 在模板字符串里面里面的变量${ var }的形式，前后是否留空格
     'object-curly-spacing': 'off', // 包裹对象的大括号前后是否留空格
   },
-  parserOptions: {
-    ecmaFeatures: {
-      legacyDecorators: true
-    },
-    parser: 'babel-eslint'
-  },
-  'overrides': [
+  overrides: [
     {
       'files': ['*.vue'],
       'rules': {

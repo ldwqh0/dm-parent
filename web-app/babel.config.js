@@ -5,6 +5,5 @@ module.exports = {
   plugins: [
     '@babel/plugin-transform-runtime',
     '@babel/plugin-proposal-export-default-from'
-    // '@babel/plugin-proposal-nullish-coalescing-operator'
   ]
 }

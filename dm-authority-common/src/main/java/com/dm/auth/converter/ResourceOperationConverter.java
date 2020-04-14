@@ -23,6 +23,7 @@ public class ResourceOperationConverter implements Converter<ResourceOperation, 
         dto.setReadable(model.getReadable());
         dto.setResource(resourceConverter.toDto(model.getResource()));
         dto.setUpdateable(model.getUpdateable());
+        dto.setPatchable(model.getPatchable());
         return dto;
     }
 
@@ -32,6 +33,7 @@ public class ResourceOperationConverter implements Converter<ResourceOperation, 
         model.setDeleteable(dto.getDeleteable());
         model.setReadable(dto.getReadable());
         model.setUpdateable(dto.getUpdateable());
+        model.setPatchable(dto.getPatchable());
         return model;
     }
 

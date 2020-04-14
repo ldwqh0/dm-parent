@@ -244,6 +244,9 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
         case DELETE:
             access = operation.getDeleteable();
             break;
+        case PATCH:
+            access = operation.getPatchable();
+            break;
         default:
             break;
         }

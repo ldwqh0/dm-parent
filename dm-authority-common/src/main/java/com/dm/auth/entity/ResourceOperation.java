@@ -31,4 +31,7 @@ public class ResourceOperation implements Serializable {
     @Column(name = "delete_able_")
     private Boolean deleteable;
 
+    @Column(name = "patch_able_")
+    private Boolean patchable;
+
 }
