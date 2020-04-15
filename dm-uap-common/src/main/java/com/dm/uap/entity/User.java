@@ -56,10 +56,10 @@ public class User extends AbstractEntity {
     @Column(name = "fullname_", length = 200)
     private String fullname;
 
-    @Column(name = "email_", length = 100)
+    @Column(name = "email_", length = 100, unique = true)
     private String email;
 
-    @Column(name = "mobile_", length = 20)
+    @Column(name = "mobile_", length = 20, unique = true)
     private String mobile;
 
     @Column(name = "description_", length = 2000)

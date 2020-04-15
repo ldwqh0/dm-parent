@@ -214,7 +214,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean userExistsByUsername(String username) {
-        return userRepository.exists(qUser.username.equalsIgnoreCase(username));
+    public boolean userExistsByUsername(Long id, String username) {
+        BooleanBuilder query = new BooleanBuilder();
+        query.and(qUser.username.equalsIgnoreCase(username));
+        if (!Objects.isNull(id)) {
+            query.and(qUser.id.ne(id));
+        }
+        return userRepository.exists(query);
+    }
+
+    @Override
+    public boolean userExistsByEmail(Long id, String email) {
+        BooleanBuilder query = new BooleanBuilder();
+        query.and(qUser.email.equalsIgnoreCase(email));
+        if (!Objects.isNull(id)) {
+            query.and(qUser.id.ne(id));
+        }
+        return userRepository.exists(query);
+    }
+
+    @Override
+    public boolean userExistsByMobile(Long id, String mobile) {
+        BooleanBuilder query = new BooleanBuilder();
+        query.and(qUser.mobile.equalsIgnoreCase(mobile));
+        if (!Objects.isNull(id)) {
+            query.and(qUser.id.ne(id));
+        }
+        return userRepository.exists(query);
     }
 }

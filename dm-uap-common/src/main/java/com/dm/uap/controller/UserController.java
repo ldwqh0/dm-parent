@@ -29,6 +29,7 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.UpdatePasswordDto;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.dto.ValidationResult;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
 
@@ -152,6 +153,46 @@ public class UserController {
     private void validRePassword(String password, String rePassword) {
         if (!StringUtils.equals(password, rePassword)) {
             throw new DataValidateException("两次密码输入不一致");
+        }
+    }
+
+    /**
+     * 校验用户名是否被使用
+     * 
+     * @param id
+     * @param username
+     * @return
+     */
+    @GetMapping(value = "validation", params = { "username" })
+    public ValidationResult usernameValidation(
+            @RequestParam(value = "id", required = false) Long id,
+            @RequestParam("username") String username) {
+        if (userService.userExistsByUsername(id, username)) {
+            return ValidationResult.failure("用户名已存在");
+        } else {
+            return ValidationResult.success();
+        }
+    }
+
+    @GetMapping(value = "validation", params = { "mobile" })
+    public ValidationResult mobileValidation(
+            @RequestParam(value = "id", required = false) Long id,
+            @RequestParam("mobile") String mobile) {
+        if (userService.userExistsByMobile(id, mobile)) {
+            return ValidationResult.failure("手机号已被注册");
+        } else {
+            return ValidationResult.success();
+        }
+    }
+
+    @GetMapping(value = "validation", params = { "email" })
+    public ValidationResult emailValidation(
+            @RequestParam(value = "id", required = false) Long id,
+            @RequestParam("email") String email) {
+        if (userService.userExistsByEmail(id, email)) {
+            return ValidationResult.failure("邮箱已被注册");
+        } else {
+            return ValidationResult.success();
         }
     }
 }

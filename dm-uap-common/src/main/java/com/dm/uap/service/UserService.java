@@ -41,10 +41,33 @@ public interface UserService extends UserDetailsService {
     public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable);
 
     /**
+     * 检测是否存在同名用户<br>
+     * 规则:用户等于username,但id不等于指定id的用户如果存在,则表示存在同名用户<br>
+     * 用户新增用户或者修改用户名时的预检测
      * 
      * @param id
      * @param username
      */
-    public boolean userExistsByUsername(String username);
+    public boolean userExistsByUsername(Long id, String username);
+
+    /**
+     * 检测是否存在同名用户<br>
+     * 规则:用户等于email,但id不等于指定id的用户如果存在,则表示存在同名用户<br>
+     * 用户新增用户或者修改用户名时的预检测
+     * 
+     * @param id
+     * @param username
+     */
+    public boolean userExistsByEmail(Long id, String email);
+
+    /**
+     * 检测是否存在同名用户<br>
+     * 规则:用户等于mobile,但id不等于指定id的用户如果存在,则表示存在同名用户<br>
+     * 用户新增用户或者修改用户名时的预检测
+     * 
+     * @param id
+     * @param username
+     */
+    public boolean userExistsByMobile(Long id, String mobile);
 
 }
