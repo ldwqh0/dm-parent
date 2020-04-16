@@ -114,7 +114,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
                     String savedCode = i.getCode();
                     return ZonedDateTime.now().isBefore(expireAt)
                             && StringUtils.equals(key, savedKey)
-                            && StringUtils.equals(code, savedCode);
+                            && StringUtils.equalsIgnoreCase(code, savedCode);
                 }).orElse(false);
     }
 
