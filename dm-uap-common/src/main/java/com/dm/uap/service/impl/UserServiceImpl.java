@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -67,10 +68,19 @@ public class UserServiceImpl implements UserService {
     public UserDetailsDto loadUserByUsername(String username) {
         return Optional.<String>ofNullable(username)
                 .filter(StringUtils::isNotEmpty)
-                .map(String::toLowerCase)
                 .flatMap(userRepository::findOneByUsernameIgnoreCase)
                 .map(userConverter::toUserDetailsDto)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
+        return Optional.<String>ofNullable(mobile)
+                .filter(StringUtils::isNotEmpty)
+                .flatMap(userRepository::findByMobileIgnoreCase)
+                .map(userConverter::toUserDetailsDto)
+                .orElseThrow(() -> new UsernameNotFoundException(mobile));
     }
 
     @Override
@@ -242,4 +252,10 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.exists(query);
     }
+
+    @Override
+    public Optional<User> findByMobile(String mobile) {
+        return userRepository.findByMobileIgnoreCase(mobile);
+    }
+
 }

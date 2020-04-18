@@ -15,6 +15,8 @@ public interface UserRepository extends IdentifiableDtoRepository<User, Long>, Q
 
     public Optional<User> findOneByUsernameIgnoreCase(String username);
 
+    public Optional<User> findByMobileIgnoreCase(String mobile);
+
     public List<User> findByDepartment(Department dp);
 
     /**

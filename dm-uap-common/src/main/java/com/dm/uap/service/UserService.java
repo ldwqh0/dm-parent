@@ -4,7 +4,9 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.User;
@@ -39,6 +41,10 @@ public interface UserService extends UserDetailsService {
     public User repassword(Long id, String password);
 
     public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable);
+
+    public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException;
+
+    public Optional<User> findByMobile(String mobile);
 
     /**
      * 检测是否存在同名用户<br>
