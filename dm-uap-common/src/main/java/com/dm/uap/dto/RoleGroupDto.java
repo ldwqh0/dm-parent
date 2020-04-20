@@ -20,4 +20,23 @@ public class RoleGroupDto implements Serializable {
     private Long id;
     private String name;
     private String description;
+
+    public RoleGroupDto() {
+    }
+
+    public RoleGroupDto(String name) {
+        this.name = name;
+    }
+
+    public RoleGroupDto(Long id, String name, String description) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public RoleGroupDto(Long id) {
+        super();
+        this.id = id;
+    }
 }
