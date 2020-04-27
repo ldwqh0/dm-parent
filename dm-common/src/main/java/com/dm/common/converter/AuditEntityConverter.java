@@ -23,6 +23,13 @@ public interface AuditEntityConverter<M extends Auditable<Audit, ? extends Seria
         }
     }
 
+    /**
+     * 给指定的DTO对象附加审计信息
+     * 
+     * @param dto
+     * @param model
+     * @return
+     */
     public default DTO addAuditInfo(@NotNull DTO dto, M model) {
         dto.setCreateBy(model.getCreatedBy().orElse(null));
         dto.setLastModifiedBy(model.getLastModifiedBy().orElse(null));
@@ -31,6 +38,9 @@ public interface AuditEntityConverter<M extends Auditable<Audit, ? extends Seria
         return dto;
     }
 
+    /**
+     * 转化为DTO对象，不包含审计信息
+     */
     public DTO toDtoWithoutAudit(M model);
 
 }

@@ -125,7 +125,6 @@ public class UapAutoConfiguration implements InitializingBean {
             });
             userService.save(anonymous);
         }
-
     }
 
     private void initRoleGroup() {
