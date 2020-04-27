@@ -20,7 +20,6 @@
 		<module>dm-security-spring-boot-starter</module>
 		<module>dm-oauth2-resource-server-spring-boot-starter</module>
 		<module>dm-oauth2-client-spring-boot-starter</module>
-
 		<module>dm-security-oauth2-authorization-jpa-support</module>
 	</modules>
 

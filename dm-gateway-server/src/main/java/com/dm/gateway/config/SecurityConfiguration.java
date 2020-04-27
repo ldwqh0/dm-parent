@@ -56,7 +56,7 @@ public class SecurityConfiguration {
                         new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)));
         delegationEntripoint
                 .setDefaultEntryPoint(new RedirectServerAuthenticationEntryPoint("/oauth2/authorization/oauth2"));
-        // 服务器存货检测
+        // 服务器存活检测
         http.authorizeExchange().pathMatchers(HttpMethod.GET, "/status**").permitAll();
         http.authorizeExchange().anyExchange().access(reactiveAuthorizationManager());
         // 重新配置入口点
