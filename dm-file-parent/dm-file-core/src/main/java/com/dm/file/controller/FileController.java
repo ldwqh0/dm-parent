@@ -201,7 +201,7 @@ public class FileController {
                     throw new RuntimeException(e);
                 }
             }
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**

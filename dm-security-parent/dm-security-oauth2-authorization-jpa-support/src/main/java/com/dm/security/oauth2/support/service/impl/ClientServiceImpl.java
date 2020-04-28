@@ -31,7 +31,7 @@ public class ClientServiceImpl implements ClientService, ClientDetailsService {
     public Client save(ClientDto app) {
         Client model = Optional.ofNullable(app.getId())
                 .map(Client::new)
-                .orElse(new Client());
+                .orElseGet(Client::new);
         return clientRepository.save(clientConverter.copyProperties(model, app));
     }
 

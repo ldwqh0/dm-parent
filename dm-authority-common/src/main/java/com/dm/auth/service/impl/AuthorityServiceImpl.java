@@ -94,7 +94,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
         Set<Menu> parents = new HashSet<Menu>();
         Set<Menu> menus = authorityRepository.findById(auth)
                 .map(Authority::getMenus)
-                .orElse(Collections.emptySet());
+                .orElseGet(Collections::emptySet);
         // 递归添加所有父级菜单
         for (Menu menu : menus) {
             addParent(menu, parents);

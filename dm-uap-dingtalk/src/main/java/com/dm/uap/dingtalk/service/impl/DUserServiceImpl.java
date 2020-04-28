@@ -255,7 +255,7 @@ public class DUserServiceImpl implements DUserService {
         if (Objects.isNull(user)) {
             if (StringUtils.isNotBlank(dUser.getUserid())) {
                 Optional<User> dUserOptional = userRepository.findOneByUsernameIgnoreCase(dUser.getUserid());
-                user = dUserOptional.orElse(new User());
+                user = dUserOptional.orElseGet(User::new);
             } else {
                 user = new User();
             }
@@ -334,7 +334,7 @@ public class DUserServiceImpl implements DUserService {
                 .map(item -> {
                     String unionid = item.getUnionid();
                     DUser du = dUserRepository.findByCorpIdAndUnionid(corpid, unionid)
-                            .orElse(new DUser(corpid, unionid));
+                            .orElseGet(() -> new DUser(corpid, unionid));
                     return copyProperties(du, item);
                 })
                 .collect(Collectors.toList());
