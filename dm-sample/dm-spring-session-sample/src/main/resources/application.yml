@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: 'jdbc:mysql://10.10.1.100/session?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=Asia/Shanghai'
+    driver-class-name: 'com.mysql.cj.jdbc.Driver'
+    username: 'root'
+    password: 'Abc.123456'
+    hikari:      connection-test-query: select 1
+  jpa:
+    database-platform: 'org.hibernate.dialect.MySQL57Dialect'    show-sql: true
+    generate-ddl: true
+    hibernate:      use-new-id-generator-mappings: true
+      ddl-auto: update
+  session:    store-type: redis
+  redis:    host: 10.10.1.100

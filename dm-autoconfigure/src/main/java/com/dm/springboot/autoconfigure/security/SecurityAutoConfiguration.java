@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClas
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,6 +25,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
 
 import com.dm.security.core.userdetails.GrantedAuthorityDto;
@@ -33,7 +35,6 @@ import com.dm.security.web.authentication.LoginSuccessHandler;
 import com.dm.security.web.controller.CurrentUserController;
 import com.dm.security.web.controller.CurrentUserReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 //@Import({ ReactiveSecurityConfiguration.class,
 //        SecurityConfiguration.class })
@@ -103,8 +104,14 @@ public class SecurityAutoConfiguration {
             ud.setGrantedAuthority(authorities);
             http.anonymous().authorities(authorities).principal(ud);
             http.formLogin().successHandler(new LoginSuccessHandler(om)).failureHandler(new LoginFailureHandler(om));
-            http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-            http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+
+            MediaTypeRequestMatcher mtrm = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON,
+                    MediaType.TEXT_PLAIN);
+            mtrm.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
+
+            http.exceptionHandling().defaultAuthenticationEntryPointFor(
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                    mtrm);
         }
     }
 
