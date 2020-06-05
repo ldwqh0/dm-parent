@@ -37,7 +37,6 @@
     <dependency>
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-jpa</artifactId>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
@@ -62,21 +61,6 @@
       <artifactId>javax.annotation-api</artifactId>
     </dependency>
   </dependencies>
-  <profiles>
-    <profile>
-      <id>mariadb@local</id>
-      <properties>
-        <profiles.active>localhost-mariadb</profiles.active>
-        <datasource.url>jdbc:mariadb://localhost:3306/uap?createDatabaseIfNotExist=true 
-        </datasource.url>
-        <datasource.driver>org.mariadb.jdbc.Driver</datasource.driver>
-        <datasource.username>root</datasource.username>
-        <datasource.password>admin123456!@#</datasource.password>
-        <datasource.platform>org.hibernate.dialect.MariaDB103Dialect 
-        </datasource.platform>
-      </properties>
-    </profile>
-  </profiles>
   <build>
     <plugins>
       <plugin>
