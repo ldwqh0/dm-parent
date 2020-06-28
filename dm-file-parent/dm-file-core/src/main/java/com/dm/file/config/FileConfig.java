@@ -17,7 +17,7 @@ public class FileConfig {
     public FileConfig() {
         this.path = System.getProperty("user.home") + File.separator + "uploads";
         tempPath = System.getProperty("java.io.tmpdir") + File.separator + System.currentTimeMillis() + File.separator;
-        this.mime = new HashMap<String, String>();
+        this.mime = new HashMap<>();
         this.mime.put("323", "text/h323");
         this.mime.put("acx", "application/internet-property-stream");
         this.mime.put("ai", "application/postscript");

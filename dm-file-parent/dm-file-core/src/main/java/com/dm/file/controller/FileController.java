@@ -1,16 +1,18 @@
 package com.dm.file.controller;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
+import com.dm.common.exception.DataNotExistException;
+import com.dm.file.config.FileConfig;
+import com.dm.file.converter.FileInfoConverter;
+import com.dm.file.dto.FileInfoDto;
+import com.dm.file.dto.Range;
+import com.dm.file.entity.FileInfo;
+import com.dm.file.exception.RangeNotSatisfiableException;
+import com.dm.file.service.FileInfoService;
+import com.dm.file.service.FileStorageService;
+import com.dm.file.service.ThumbnailService;
+import com.dm.file.util.DmFileUtils;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.BoundedInputStream;
@@ -23,30 +25,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.dm.common.exception.DataNotExistException;
-import com.dm.file.config.FileConfig;
-import com.dm.file.converter.FileInfoConverter;
-import com.dm.file.dto.FileInfoDto;
-import com.dm.file.dto.Range;
-import com.dm.file.entity.FileInfo;
-import com.dm.file.exception.RangeNotSatisfiableException;
-import com.dm.file.service.FileInfoService;
-import com.dm.file.service.FileStorageService;
-import com.dm.file.service.ThumbnailService;
-import com.dm.file.util.DmFileUtils;
-
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RestController
@@ -93,17 +84,15 @@ public class FileController {
 
     /**
      * 分块上传文件
-     * 
+     *
      * @param chunkIndex
      * @param tempId
      * @param chunkCount
      * @param filename
-     * @param request
-     * @param response
      * @return
      * @throws Exception
      */
-    @PostMapping(headers = { "chunk-index" })
+    @PostMapping(headers = {"chunk-index"})
     @ApiOperation("文件分块上传文件")
     public FileInfoDto upload(
             @RequestHeader("chunk-index") Long chunkIndex,
@@ -145,33 +134,34 @@ public class FileController {
             MediaType.IMAGE_PNG_VALUE,
             "image/webp",
             "image/*",
-            "*/*" })
-    public ResponseEntity<InputStreamResource> preview(@PathVariable("id") UUID id, WebRequest request) {
-        try {
-            FileInfo file = fileService.findById(id).get();
-            Optional<ZonedDateTime> lastModify = file.getLastModifiedDate();
-            if (lastModify.isPresent() && request.checkNotModified(lastModify.get().toInstant().toEpochMilli())) {
-                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
-            } else {
-                String fileName = file.getFilename();
-                String ext = StringUtils.substringAfterLast(fileName, ".").toLowerCase();
-                return ResponseEntity.ok().lastModified(lastModify.get())
-                        .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
-                        .contentType(MediaType.valueOf(config.getMime(ext)))
-                        .body(new InputStreamResource(fileStorageService.getInputStream(file.getPath())));
-            }
-        } catch (Exception e) {
-            log.error("预览文件时出错", e);
-            return ResponseEntity.notFound().build();
-        }
+            "*/*"})
+    public ResponseEntity<? extends Object> preview(@PathVariable("id") UUID id, WebRequest request) {
+        return fileService.findById(id).map(file -> file.getLastModifiedDate()
+                .filter(lastModify -> request.checkNotModified(lastModify.toInstant().toEpochMilli()))
+                .map(this::buildNotModified)
+                .orElseGet(() -> {
+                    String ext = StringUtils.substringAfterLast(file.getFilename(), ".").toLowerCase();
+                    try {
+                        return ResponseEntity.ok()
+                                .lastModified(file.getLastModifiedDate().get())
+                                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+                                .contentType(MediaType.valueOf(config.getMime(ext)))
+                                .body(new InputStreamResource(fileStorageService.getInputStream(file.getPath())));
+                    } catch (FileNotFoundException fne) {
+                        return this.buildNotFount();
+                    } catch (Exception e) {
+                        log.error("预览文件时出错", e);
+                        throw new RuntimeException(e);
+                    }
+                })).orElseGet(this::buildNotFount);
     }
 
     /**
      * 获取文件的缩略图
-     * 
-     * @param id       文件的ID号
-     * @param level    缩略图的级别
-     * @param response
+     *
+     * @param id      文件的ID号
+     * @param level   缩略图的级别
+     * @param request 请求详情
      */
     @GetMapping(value = "thumbnails/{id}", produces = {
             MediaType.IMAGE_GIF_VALUE,
@@ -179,38 +169,34 @@ public class FileController {
             MediaType.IMAGE_PNG_VALUE,
             "image/webp",
             "image/*",
-            "*/*" })
+            "*/*"})
     public ResponseEntity<?> preview(
             @PathVariable("id") UUID id,
             @RequestParam(value = "level", defaultValue = "1") int level,
             WebRequest request) {
-        Optional<FileInfo> fileOptional = fileService.findById(id);
-        return fileOptional.map((file) -> {
-            Optional<ZonedDateTime> lastModify = file.getLastModifiedDate();
-            if (lastModify.isPresent() && request.checkNotModified(lastModify.get().toInstant().toEpochMilli())) {
-                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
-            } else {
-                try {
-                    return ResponseEntity.ok().lastModified(lastModify.get())
-                            .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
-                            .contentType(MediaType.IMAGE_JPEG)
-                            .body(new InputStreamResource(thumbnailService.getStream(file.getPath(), level)));
-                } catch (FileNotFoundException e) {
-                    return ResponseEntity.notFound().build();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+        return fileService.findById(id).map(file -> file.getLastModifiedDate()
+                .filter(lastModify -> this.checkNotModified(request, lastModify))
+                .map(this::buildNotModified)
+                .orElseGet(() -> {
+                    try {
+                        return ResponseEntity.ok().lastModified(file.getLastModifiedDate().get())
+                                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+                                .contentType(MediaType.IMAGE_JPEG)
+                                .body(new InputStreamResource(thumbnailService.getStream(file.getPath(), level)));
+                    } catch (FileNotFoundException e) {
+                        return this.buildNotFount();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })).orElseGet(this::buildNotFount);
     }
 
     /**
      * 文件下载
-     * 
+     *
      * @param id
      * @param request
      * @return
-     * @throws Exception
      */
     // http 断点续传，需要处理的头包括If-Range，
     // 请求头 Range，单次请求的下载范围，包括 xx-xx指定范围，xx-从某个位置开始到结尾，-xx最后的位置,可以包含多个块
@@ -221,37 +207,62 @@ public class FileController {
     // 响应 Last-Modified ,最后修改时间
     // 响应 Content-Type, 内容类型，如果是多个范围请求(多个Range)的响应
     // 响应 Accept-Ranges, bytes,表示以字节为单位进行续传
-    @GetMapping(value = "{id}", params = { "download" })
+    @GetMapping(value = "{id}", params = {"download"})
     public ResponseEntity<? extends Object> download(
             @PathVariable("id") UUID id,
             @RequestHeader("user-agent") String userAgent,
             @RequestHeader(value = "range", required = false) String range,
-            WebRequest request) throws Exception {
-        Optional<FileInfo> fileOptional = fileService.findById(id);
-        BodyBuilder responseBuilder = null;
-        // 如果文件存在，且文件路径存在，才进行下面的操作
-        if (fileOptional.isPresent() && fileStorageService.exist(fileOptional.get().getPath())) {
-            FileInfo file = fileOptional.get();
+            WebRequest request) {
+        //如果文件不存在，直接返回404
+        return fileService.findById(id).filter(file -> {
+            try {
+                return fileStorageService.exist(file.getPath());
+            } catch (Exception e) {
+                log.error("检查文件是否存在时发现错误", e);
+                return false;
+            }
+        }).map(file -> { // 如果文件存在，执行读取文件的流程
+            return file.getLastModifiedDate()
+                    .filter(lastModify -> this.checkNotModified(request, lastModify))
+                    .map(this::buildNotModified) // 入股检测到文件未被修改，返回未修改的响应体
+                    .orElseGet(() -> buildDownloadBody(file, getRanges(range, file), userAgent));
+        }).orElseGet(this::buildNotFount);
+    }
+
+
+    /**
+     * 根据Range Header获取Range
+     *
+     * @param ranges
+     * @param file
+     * @return
+     * @throws RangeNotSatisfiableException
+     */
+    private List<Range> getRanges(String ranges, FileInfo file) {
+        if (StringUtils.isNotBlank(ranges) && StringUtils.startsWith(ranges, "bytes=")) {
+            String rangeStr = StringUtils.removeStart(ranges, "bytes=");
+            String[] rangeStrings = rangeStr.split(",");
+            return Range.of(rangeStrings, file.getSize());
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    // 构建下载响应体
+    private ResponseEntity<Object> buildDownloadBody(FileInfo file, List<Range> ranges, String userAgent) {
+        try {
             String fileName = file.getFilename();
-            String codeFileName = null;
             long fileSize = file.getSize();
+            InputStreamResource body = null;
+            int status = 200;
             long contentLength = fileSize; // 内容长度
             String contentRange = ""; // 响应范围
-            int status = 200;
-            String ext = StringUtils.substringAfterLast(fileName, ".").toLowerCase();
+            String codeFileName;
             String path = file.getPath();
+            String ext = StringUtils.substringAfterLast(fileName, ".").toLowerCase();
             String contentType = config.getMime(ext);
-            Object body = null;
-            List<Range> ranges = getRanges(range, file);
-            Optional<ZonedDateTime> lastModify = file.getLastModifiedDate();
-            // 如果没有分块需求
             if (CollectionUtils.isEmpty(ranges)) {
-                // 检查缓存
-                if (lastModify.isPresent() && request.checkNotModified(lastModify.get().toInstant().toEpochMilli())) {
-                    return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
-                } else { // 如果有分块需求,直接返回文件体
-                    body = new InputStreamResource(fileStorageService.getInputStream(file.getPath()));
-                }
+                body = new InputStreamResource(fileStorageService.getInputStream(path));
             } else if (ranges.size() == 1) {
                 status = 206; // 将响应设置为206
                 Range r = ranges.get(0);
@@ -274,7 +285,7 @@ public class FileController {
             } else {
                 codeFileName = new String(fileName.getBytes(), "ISO8859-1");
             }
-            responseBuilder = ResponseEntity.status(status)
+            BodyBuilder responseBuilder = ResponseEntity.status(status)
                     .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
                     .header("Content-Disposition", "attachment; filename=" + codeFileName)
                     .header("Content-Type", contentType)
@@ -283,30 +294,32 @@ public class FileController {
             if (StringUtils.isNotEmpty(contentRange)) {
                 responseBuilder.header("Content-Range", contentRange);
             }
-            lastModify.ifPresent(responseBuilder::lastModified);
+            file.getLastModifiedDate().ifPresent(responseBuilder::lastModified);
             return responseBuilder.body(body);
-            // 如果文件不存在，或者路径不存在，直接返回404
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private boolean checkNotModified(WebRequest request, ZonedDateTime lastModified) {
+        return request.checkNotModified(lastModified.toInstant().toEpochMilli());
     }
 
     /**
-     * 根据Range Header获取Range
-     *
-     * @param ranges
-     * @param file
-     * @return
-     * @throws RangeNotSatisfiableException
+     * 构建一个未找到的响应体
      */
-    private List<Range> getRanges(String ranges, FileInfo file) throws RangeNotSatisfiableException {
-        if (StringUtils.isNotBlank(ranges) && StringUtils.startsWith(ranges, "bytes=")) {
-            String rangeStr = StringUtils.removeStart(ranges, "bytes=");
-            String[] rangeStrs = rangeStr.split(",");
-            return Range.of(rangeStrs, file.getSize());
-        } else {
-            return Collections.emptyList();
-        }
+    private <T> ResponseEntity<T> buildNotFount() {
+        return ResponseEntity.notFound().build();
     }
 
+    /**
+     * 构建一个未修改的响应体
+     *
+     * @param any
+     * @param <T>
+     * @return
+     */
+    private <T> ResponseEntity<T> buildNotModified(Object any) {
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+    }
 }
