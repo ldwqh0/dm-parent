@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.dm</groupId>
     <artifactId>dm-activity-parent</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>dm-activity-jpa-impl</artifactId>
 </project>

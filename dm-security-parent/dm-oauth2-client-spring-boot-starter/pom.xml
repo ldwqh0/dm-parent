@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.dm</groupId>
     <artifactId>dm-security-parent</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>dm-oauth2-client-spring-boot-starter</artifactId>
   <dependencies>
