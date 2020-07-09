@@ -1,0 +1,5 @@
+root = true
+
+[*.xml]
+indent_size = tab
+tab_width = 2
