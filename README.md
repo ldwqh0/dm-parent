@@ -5,6 +5,10 @@
 * 增加小的功能模块时，中版本+1
 * bug修复发布时，小版本+1
 
+## 升级日志
+1.1.0
+* 重构oauth-server模块，添加openid实现
+* 升级spring-boot至2.2.9.RELEASE
 ## 版本对应规则
 构建版本号|Spring Boot|Spring Cloud|
 :-|:-|:-|:-
