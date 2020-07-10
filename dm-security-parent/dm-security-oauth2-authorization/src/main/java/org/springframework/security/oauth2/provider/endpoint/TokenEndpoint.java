@@ -16,26 +16,20 @@
 
 package org.springframework.security.oauth2.provider.endpoint;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.common.DefaultOpenIdAccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
-import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
-import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.common.exceptions.UnsupportedGrantTypeException;
+import org.springframework.security.oauth2.common.exceptions.*;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2RequestValidator;
-import org.springframework.security.oauth2.provider.TokenRequest;
+import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestValidator;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,11 +38,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>
@@ -59,7 +49,7 @@ import java.util.Set;
  * {@link #setTokenGranter(org.springframework.security.oauth2.provider.TokenGranter)
  * token granter}.
  * </p>
- * 
+ *
  * <p>
  * Clients must be authenticated using a Spring Security {@link Authentication}
  * to access this endpoint, and the client id is extracted from the
@@ -74,7 +64,6 @@ import java.util.Set;
  * 2.0 Migration Guide</a> for Spring Security 5.
  *
  * @author Dave Syer
- * 
  */
 @FrameworkEndpoint
 public class TokenEndpoint extends AbstractEndpoint {
@@ -85,7 +74,7 @@ public class TokenEndpoint extends AbstractEndpoint {
 
     @RequestMapping(value = "/oauth/token", method = RequestMethod.GET)
     public ResponseEntity<OAuth2AccessToken> getAccessToken(Principal principal,
-            @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+                                                            @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
         if (!allowedRequestMethods.contains(HttpMethod.GET)) {
             throw new HttpRequestMethodNotSupportedException("GET");
         }
@@ -94,7 +83,7 @@ public class TokenEndpoint extends AbstractEndpoint {
 
     @RequestMapping(value = "/oauth/token", method = RequestMethod.POST)
     public ResponseEntity<OAuth2AccessToken> postAccessToken(Principal principal,
-            @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+                                                             @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
 
         if (!(principal instanceof Authentication)) {
             throw new InsufficientAuthenticationException(
@@ -139,14 +128,20 @@ public class TokenEndpoint extends AbstractEndpoint {
             // the factory here.
             tokenRequest.setScope(OAuth2Utils.parseParameterList(parameters.get(OAuth2Utils.SCOPE)));
         }
-
         OAuth2AccessToken token = getTokenGranter().grant(tokenRequest.getGrantType(), tokenRequest);
         if (token == null) {
             throw new UnsupportedGrantTypeException("Unsupported grant type");
+        } else {
+            // 如果scope包含了openid,返回openid相关的信息
+            Set<String> scopes = tokenRequest.getScope();
+            if (CollectionUtils.isNotEmpty(scopes) && scopes.contains("openid")) {
+                // TODO 生成id_token
+                token = new DefaultOpenIdAccessToken("Ad", token);
+            }
         }
-
+//        JwtTokenStore store = new JwtTokenStore();
+        JwtAccessTokenConverter tc = new JwtAccessTokenConverter();
         return getResponse(token);
-
     }
 
     /**
