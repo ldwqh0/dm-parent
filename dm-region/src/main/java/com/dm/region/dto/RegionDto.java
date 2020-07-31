@@ -14,7 +14,7 @@ import lombok.Data;
 @JsonInclude(Include.NON_EMPTY)
 public class RegionDto implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -8378328574545247274L;
 
     /**
      * 编码

@@ -1,7 +1,5 @@
 package com.dm.dingtalk.api.response;
 
-import com.dm.dingtalk.api.response.TaobaoResponse;
-
 /**
  * TOP DingTalk-API: dingtalk.oapi.role.addrolesforemps response.
  * 
@@ -10,39 +8,39 @@ import com.dm.dingtalk.api.response.TaobaoResponse;
  */
 public class OapiRoleAddrolesforempsResponse extends TaobaoResponse {
 
-    private static final long serialVersionUID = 6132787715393265695L;
+  private static final long serialVersionUID = 6132787715393265695L;
 
-    /**
-     * errcode
-     */
-    private Long errcode;
+  /**
+   * errcode
+   */
+  private Long errcode;
 
-    /**
-     * errmsg
-     */
-    private String errmsg;
+  /**
+   * errmsg
+   */
+  private String errmsg;
 
-    public void setErrcode(Long errcode) {
-        this.errcode = errcode;
-    }
+  public void setErrcode(Long errcode) {
+    this.errcode = errcode;
+  }
 
-    public Long getErrcode() {
-        return this.errcode;
-    }
+  public Long getErrcode() {
+    return this.errcode;
+  }
 
-    @Override
-    public void setErrmsg(String errmsg) {
-        this.errmsg = errmsg;
-    }
+  @Override
+  public void setErrmsg(String errmsg) {
+    this.errmsg = errmsg;
+  }
 
-    @Override
-    public String getErrmsg() {
-        return this.errmsg;
-    }
+  @Override
+  public String getErrmsg() {
+    return this.errmsg;
+  }
 
-    @Override
-    public boolean isSuccess() {
-        return getErrcode() == null || getErrcode().equals(0L);
-    }
+  @Override
+  public boolean isSuccess() {
+    return getErrcode() == null || getErrcode().equals(0L);
+  }
 
 }
