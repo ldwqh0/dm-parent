@@ -24,7 +24,6 @@ public class FileSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         http.oauth2ResourceServer()
                 .opaqueToken().introspector(opaqueTokenIntrospector());
-        http.requestMatchers().antMatchers("/a/b");
     }
 
     @Bean
