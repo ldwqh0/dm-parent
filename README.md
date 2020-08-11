@@ -6,6 +6,9 @@
 * bug修复发布时，小版本+1
 
 ## 升级日志
+1.2.0
+* 升级spring-boot至2.3.2.RELEASE版本
+* 升级spring-cloud至Hoxton.SR7版本
 1.1.0
 * 重构oauth-server模块，添加openid实现
 * 升级spring-boot至2.2.9.RELEASE
@@ -13,7 +16,10 @@
 构建版本号|Spring Boot|Spring Cloud|
 :-|:-|:-|:-
 1.0.x|2.2.7.RELEASE|Hoxton.SR6|持续中
-1.1.x|2.2.9.RELEASE|Hoxton.SR6|计划中
-
+1.1.x|2.2.x.RELEASE|Hoxton.SR6|持续中
+1.1.0|2.2.9.RELEASE|Hoxton.SR6|持续中
+1.1.1|2.2.9.RELEASE|Hoxton.SR7|计划中
+1.2.x|2.3.x.RELEASE|Hoxton.SR7|持续中
+1.2.0|2.3.2.RELEASE|Hoxton.SR7|持续中
 ## 模块说明
 * dm-authority-common
