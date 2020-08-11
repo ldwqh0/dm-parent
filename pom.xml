@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dm</groupId>
   <artifactId>dm-parent</artifactId>
@@ -7,6 +9,9 @@
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <guava.version>29.0-jre</guava.version>
     <spring.cloud.version>Hoxton.SR6</spring.cloud.version>
     <springboot.version>2.2.9.RELEASE</springboot.version>
     <springfox.version>2.9.2</springfox.version>
@@ -16,9 +21,8 @@
     <resource.delimiter>@</resource.delimiter>
     <commons-collections4.version>4.4</commons-collections4.version>
     <querydsl.version>4.3.1</querydsl.version>
+
     <dm.version>1.1.0-SNAPSHOT</dm.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
   </properties>
   <modules>
     <!-- 平台公共模块 -->
@@ -118,6 +122,14 @@
         <artifactId>springfox-swagger-ui</artifactId>
         <version>${springfox.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+
+
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-authority-common</artifactId>
@@ -478,17 +490,22 @@
               </goals>
               <configuration>
                 <transformers>
-                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                  <transformer
+                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                     <resource>META-INF/spring.handlers</resource>
                   </transformer>
-                  <transformer implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
+                  <transformer
+                    implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
                     <resource>META-INF/spring.factories</resource>
                   </transformer>
-                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                  <transformer
+                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                     <resource>META-INF/spring.schemas</resource>
                   </transformer>
-                  <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                  <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <transformer
+                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                  <transformer
+                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                     <mainClass>${start-class}</mainClass>
                   </transformer>
                 </transformers>
