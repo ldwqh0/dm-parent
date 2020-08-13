@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.dm.file.config.FileConfig;
 import com.dm.file.service.ThumbnailService;
@@ -24,7 +23,6 @@ import com.dm.file.util.DmFileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
 public class LocalThumbnailServiceImpl implements ThumbnailService {
 

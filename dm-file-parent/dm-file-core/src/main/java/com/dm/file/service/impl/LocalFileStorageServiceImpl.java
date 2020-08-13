@@ -10,12 +10,10 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.dm.file.config.FileConfig;
 import com.dm.file.service.FileStorageService;
 
-@Service
 public class LocalFileStorageServiceImpl implements FileStorageService {
 
     @Autowired

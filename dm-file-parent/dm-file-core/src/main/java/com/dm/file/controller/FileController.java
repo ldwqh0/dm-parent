@@ -40,8 +40,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@RestController
 @RequestMapping("files")
+@RestController
 public class FileController {
 
     @Autowired
