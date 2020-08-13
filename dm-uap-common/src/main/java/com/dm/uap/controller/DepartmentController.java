@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.uap.converter.DepartmentConverter;
 import com.dm.uap.dto.DepartmentDto;
@@ -28,42 +29,42 @@ import java.util.List;
 @RequestMapping("departments")
 public class DepartmentController {
 
-    @Autowired
-    private DepartmentService departmentService;
+  @Autowired
+  private DepartmentService departmentService;
 
-    @Autowired
-    private DepartmentConverter departmentConverter;
+  @Autowired
+  private DepartmentConverter departmentConverter;
 
-    @PostMapping
-    @ResponseStatus(CREATED)
-    public DepartmentDto save(@RequestBody DepartmentDto data) {
-        return departmentConverter.toDto(departmentService.save(data));
-    }
+  @PostMapping
+  @ResponseStatus(CREATED)
+  public DepartmentDto save(@RequestBody DepartmentDto data) {
+    return departmentConverter.toDto(departmentService.save(data));
+  }
 
-    @GetMapping("{id}")
-    public DepartmentDto get(@PathVariable("id") Long id) {
-        return departmentConverter.toDto(departmentService.findById(id).orElseThrow(DataNotExistException::new));
-    }
+  @GetMapping("{id}")
+  public DepartmentDto get(@PathVariable("id") Long id) {
+    return departmentConverter.toDto(departmentService.findById(id).orElseThrow(DataNotExistException::new));
+  }
 
-    @PutMapping("{id}")
-    @ResponseStatus(CREATED)
-    public DepartmentDto update(@PathVariable("id") Long id, @RequestBody DepartmentDto data) {
-        return departmentConverter.toDto(departmentService.update(id, data));
-    }
+  @PutMapping("{id}")
+  @ResponseStatus(CREATED)
+  public DepartmentDto update(@PathVariable("id") Long id, @RequestBody DepartmentDto data) {
+    return departmentConverter.toDto(departmentService.update(id, data));
+  }
 
-    @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Long id) {
-        departmentService.deleteById(id);
-    }
+  @DeleteMapping("{id}")
+  public void delete(@PathVariable("id") Long id) {
+    departmentService.deleteById(id);
+  }
 
-    @GetMapping(params = { "draw" })
-    public Page<DepartmentDto> search(@RequestParam("draw") Long draw,
-            @RequestParam(value = "keywords", required = false) String key, @PageableDefault Pageable pageable) {
-        return departmentService.find(key, pageable).map(departmentConverter::toDto);
-    }
+  @GetMapping(params = { "draw" })
+  public Page<DepartmentDto> search(@RequestParam("draw") Long draw,
+      @RequestParam(value = "keywords", required = false) String key, @PageableDefault Pageable pageable) {
+    return departmentService.find(key, pageable).map(departmentConverter::toDto);
+  }
 
-    @GetMapping(params = "!draw")
-    public List<DepartmentDto> tree(@PageableDefault(size = 10000) Pageable pageable) {
-        return departmentConverter.toDto(departmentService.findAll());
-    }
+  @GetMapping(params = "!draw")
+  public List<DepartmentDto> tree(@PageableDefault(size = 10000) Pageable pageable) {
+    return Lists.transform(departmentService.findAll(), departmentConverter::toDto);
+  }
 }

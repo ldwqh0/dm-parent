@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
 import com.dm.dingtalk.api.response.OapiRoleGetroleResponse;
+import com.dm.collections.CollectionUtils;
 import com.dm.dingtalk.api.callback.CallbackProperties;
 import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;

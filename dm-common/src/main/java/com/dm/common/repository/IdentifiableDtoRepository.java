@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.common.dto.IdentifiableDto;
 
 public interface IdentifiableDtoRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {

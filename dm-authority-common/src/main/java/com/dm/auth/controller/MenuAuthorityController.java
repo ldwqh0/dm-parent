@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +28,8 @@ import com.dm.auth.dto.MenuDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.AuthorityService;
+import com.dm.collections.CollectionUtils;
+import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.security.core.userdetails.UserDetailsDto;
 
@@ -99,7 +100,7 @@ public class MenuAuthorityController {
             List<Menu> result = new ArrayList<Menu>();
             result.addAll(menus);
             Collections.sort(result, (o1, o2) -> (int) (o1.getOrder() - o2.getOrder()));
-            return menuConverter.toDto(result);
+            return Lists.transform(result, menuConverter::toDto);
         } else {
             return Collections.emptyList();
         }

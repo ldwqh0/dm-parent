@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dm.auth.converter.ResourceConverter;
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.service.ResourceService;
+import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 
 import static org.springframework.http.HttpStatus.*;
@@ -69,6 +70,6 @@ public class ResourceController {
     @GetMapping
     @Transactional(readOnly = true)
     public List<ResourceDto> listAll() {
-        return resourceConverter.toDto(resourceService.listAll());
+        return Lists.transform(resourceService.listAll(), resourceConverter::toDto);
     }
 }

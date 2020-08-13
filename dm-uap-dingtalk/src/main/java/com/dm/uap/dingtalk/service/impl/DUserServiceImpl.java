@@ -12,14 +12,14 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.collections.CollectionUtils;
+import com.dm.collections.Maps;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.OapiUserCreateResponse;
@@ -264,7 +264,7 @@ public class DUserServiceImpl implements DUserService {
         dUserConverter.copyProperties(user, dUser);
         // 设置部门顺序
         Map<DDepartment, Long> _orders = dUser.getOrderInDepts();
-        if (MapUtils.isNotEmpty(_orders)) {
+        if (Maps.isNotEmpty(_orders)) {
             Map<Department, Long> orders = new HashMap<>();
             _orders.entrySet().forEach(e -> {
                 orders.put(e.getKey().getDepartment(), e.getValue());
@@ -275,7 +275,7 @@ public class DUserServiceImpl implements DUserService {
         // 设置职务信息
         Map<Department, String> post = new HashMap<Department, String>();
         Map<DDepartment, String> _post = dUser.getPosts();
-        if (MapUtils.isNotEmpty(_post)) {
+        if (Maps.isNotEmpty(_post)) {
             Set<Entry<DDepartment, String>> postEntry = _post.entrySet();
             postEntry.forEach(e -> {
                 post.put(e.getKey().getDepartment(), e.getValue());
@@ -369,7 +369,7 @@ public class DUserServiceImpl implements DUserService {
                     .collect(Collectors.toSet());
             dUser.setDepartments(departments);
             Map<Long, Boolean> isLeaderMap = parseLeaderMap(rsp.getIsLeaderInDepts());
-            if (MapUtils.isNotEmpty(isLeaderMap)) {
+            if (Maps.isNotEmpty(isLeaderMap)) {
                 Map<DDepartment, Boolean> dLeaderMap = new HashMap<>();
                 for (Entry<Long, Boolean> entry : isLeaderMap.entrySet()) {
                     dLeaderMap.put(dDepartmentRepository.getOne(corpid, entry.getKey()), entry.getValue());
@@ -382,7 +382,7 @@ public class DUserServiceImpl implements DUserService {
         // 合并部门排序信息
         try {
             Map<Long, Long> orderMap = parseOrderMap(rsp.getOrderInDepts());
-            if (MapUtils.isNotEmpty(orderMap)) {
+            if (Maps.isNotEmpty(orderMap)) {
                 Map<DDepartment, Long> dOrderMap = new HashMap<DDepartment, Long>();
                 for (Entry<Long, Long> orderEntry : orderMap.entrySet()) {
                     dOrderMap.put(dDepartmentRepository.getOne(corpid, orderEntry.getKey()), orderEntry.getValue());

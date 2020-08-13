@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,6 +25,7 @@ import com.dm.auth.entity.QMenu;
 import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.service.MenuService;
+import com.dm.collections.CollectionUtils;
 import com.dm.common.exception.DataValidateException;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;

@@ -2,7 +2,6 @@ package com.dm.security.oauth2.authorization;
 
 import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -10,6 +9,7 @@ import org.springframework.security.oauth2.client.web.server.ServerOAuth2Authori
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.web.authorization.ServerHttpRequestReactiveAuthorizationManager;
 

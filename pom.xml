@@ -24,6 +24,8 @@
     <dm.version>1.2.0-SNAPSHOT</dm.version>
   </properties>
   <modules>
+    <!-- 集合工具类 -->
+    <module>collections</module>
     <!-- 平台公共模块 -->
     <module>dm-common</module>
     <!-- 平台用户模块 -->
@@ -128,7 +130,6 @@
         <version>${guava.version}</version>
       </dependency>
 
-
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-authority-common</artifactId>
@@ -227,6 +228,11 @@
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-file-spring-boot-starter</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>collections</artifactId>
         <version>${dm.version}</version>
       </dependency>
     </dependencies>

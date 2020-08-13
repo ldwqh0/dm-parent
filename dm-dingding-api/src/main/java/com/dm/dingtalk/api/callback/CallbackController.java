@@ -16,7 +16,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dm.collections.Maps;
 import com.dm.dingtalk.api.crypto.DingAes;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,7 +100,7 @@ public class CallbackController {
             log.info("接收到回调请求，请求类型是 {}", eventType);
             if ("check_url".equals(eventType)) {
                 return ResponseEntity.ok(okResponse());
-            } else if (MapUtils.isNotEmpty(handlers)) {
+            } else if (Maps.isNotEmpty(handlers)) {
                 Consumer<Event> consumer = handlers.get(eventType);
                 if (!Objects.isNull(consumer)) {
                     consumer.accept(event);
