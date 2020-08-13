@@ -29,46 +29,46 @@ import com.dm.collections.Lists;
 @RequestMapping("regions")
 public class RegionController {
 
-  @Autowired
-  private RegionService regionService;
+    @Autowired
+    private RegionService regionService;
 
-  @Autowired
-  private RegionConverter regionConverter;
+    @Autowired
+    private RegionConverter regionConverter;
 
-  @GetMapping
-  public List<RegionDto> findAll(@RequestParam(value = "parent", required = false) String parent,
-      @RequestParam(value = "includeSelf", required = false, defaultValue = "true") Boolean includeSelf) {
-    List<Region> regions;
-    if (StringUtils.isEmpty(parent)) {
-      regions = regionService.findAll();
-    } else {
-      regions = regionService.findAllChildren(parent);
+    @GetMapping
+    public List<RegionDto> findAll(@RequestParam(value = "parent", required = false) String parent,
+            @RequestParam(value = "includeSelf", required = false, defaultValue = "true") Boolean includeSelf) {
+        List<Region> regions;
+        if (StringUtils.isEmpty(parent)) {
+            regions = regionService.findAll();
+        } else {
+            regions = regionService.findAllChildren(parent);
+        }
+        if (includeSelf && StringUtils.isNoneBlank(parent)) {
+            Optional<Region> self = regionService.findByCode(parent);
+            if (self.isPresent()) {
+                regions.add(self.get());
+            }
+        }
+        return Lists.transform(regions, regionConverter::toDto);
     }
-    if (includeSelf && StringUtils.isNoneBlank(parent)) {
-      Optional<Region> self = regionService.findByCode(parent);
-      if (self.isPresent()) {
-        regions.add(self.get());
-      }
+
+    @GetMapping(value = "provinces")
+    public List<RegionDto> findProvincial() {
+        List<Region> regions = regionService.findProvincials();
+        return Lists.transform(regions, regionConverter::toDto);
     }
-    return Lists.transform(regions, regionConverter::toDto);
-  }
 
-  @GetMapping(value = "provinces")
-  public List<RegionDto> findProvincial() {
-    List<Region> regions = regionService.findProvincials();
-    return Lists.transform(regions, regionConverter::toDto);
-  }
+    @GetMapping(params = { "draw" })
+    public Page<RegionDto> find(@RequestParam("draw") Long draw,
+            @RequestParam(value = "keywords", required = false) String keywords,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return regionService.find(keywords, pageable).map(regionConverter::toDto);
+    }
 
-  @GetMapping(params = { "draw" })
-  public Page<RegionDto> find(@RequestParam("draw") Long draw,
-      @RequestParam(value = "keywords", required = false) String keywords,
-      @PageableDefault(page = 0, size = 10) Pageable pageable) {
-    return regionService.find(keywords, pageable).map(regionConverter::toDto);
-  }
-
-  @GetMapping(value = "children")
-  public List<RegionDto> findChildren(@RequestParam(required = true, value = "code") String code) {
-    List<Region> regions = regionService.findChildren(code);
-    return Lists.transform(regions, regionConverter::toDto);
-  }
+    @GetMapping(value = "children")
+    public List<RegionDto> findChildren(@RequestParam(required = true, value = "code") String code) {
+        List<Region> regions = regionService.findChildren(code);
+        return Lists.transform(regions, regionConverter::toDto);
+    }
 }

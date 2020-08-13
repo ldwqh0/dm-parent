@@ -21,10 +21,10 @@ public class AuditableDto implements Serializable {
 
     @JsonProperty(access = Access.READ_ONLY)
     private Audit lastModifiedBy;
-    
+
     @JsonProperty(access = Access.READ_ONLY)
     private ZonedDateTime createdDate;
-    
+
     @JsonProperty(access = Access.READ_ONLY)
     private ZonedDateTime lastModifiedDate;
 }

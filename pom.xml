@@ -123,13 +123,16 @@
         <artifactId>springfox-swagger-ui</artifactId>
         <version>${springfox.version}</version>
       </dependency>
-
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>collections</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-authority-common</artifactId>
@@ -228,11 +231,6 @@
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-file-spring-boot-starter</artifactId>
-        <version>${dm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dm</groupId>
-        <artifactId>collections</artifactId>
         <version>${dm.version}</version>
       </dependency>
     </dependencies>

@@ -22,7 +22,6 @@ import com.dm.security.web.authentication.LoginFailureHandler;
 import com.dm.security.web.authentication.LoginSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @Deprecated
 @ConditionalOnClass({ Servlet.class, WebSecurityConfigurerAdapter.class })
 @ConditionalOnMissingBean({ WebSecurityConfigurerAdapter.class, SecurityWebFilterChain.class })

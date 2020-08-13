@@ -188,7 +188,8 @@ public class JwtTokenStore implements TokenStore {
             if (user != null) {
                 Collection<Approval> approvals = new ArrayList<Approval>();
                 for (String scope : auth.getOAuth2Request().getScope()) {
-                    approvals.add(new Approval(user.getName(), clientId, scope, ZonedDateTime.now(), ApprovalStatus.APPROVED));
+                    approvals.add(new Approval(user.getName(), clientId, scope, ZonedDateTime.now(),
+                            ApprovalStatus.APPROVED));
                 }
                 approvalStore.revokeApprovals(approvals);
             }

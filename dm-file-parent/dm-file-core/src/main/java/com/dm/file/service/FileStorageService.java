@@ -45,7 +45,6 @@ public interface FileStorageService {
      */
     public boolean exist(String path) throws Exception;
 
-
     /**
      * 获取指定的文件流
      *

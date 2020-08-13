@@ -25,7 +25,9 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 
 /**
  * <p>
- * See the <a href="https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">OAuth 2.0 Migration Guide</a> for Spring Security 5.
+ * See the <a href=
+ * "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">OAuth
+ * 2.0 Migration Guide</a> for Spring Security 5.
  *
  * @author Rob Winch
  * 
@@ -37,7 +39,8 @@ public class ClientDetailsServiceConfigurer extends
         setBuilder(builder);
     }
 
-    public ClientDetailsServiceBuilder<?> withClientDetails(ClientDetailsService clientDetailsService) throws Exception {
+    public ClientDetailsServiceBuilder<?> withClientDetails(ClientDetailsService clientDetailsService)
+            throws Exception {
         setBuilder(getBuilder().clients(clientDetailsService));
         return this.and();
     }
@@ -47,12 +50,13 @@ public class ClientDetailsServiceConfigurer extends
         setBuilder(next);
         return next;
     }
+
     public JdbcClientDetailsServiceBuilder jdbc(DataSource dataSource) throws Exception {
         JdbcClientDetailsServiceBuilder next = getBuilder().jdbc().dataSource(dataSource);
         setBuilder(next);
         return next;
     }
-    
+
     @Override
     public void init(ClientDetailsServiceBuilder<?> builder) throws Exception {
     }

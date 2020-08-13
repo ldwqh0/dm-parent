@@ -37,91 +37,91 @@ import javax.validation.constraints.Min;
 @RequestMapping("roles")
 public class RoleController {
 
-  @Autowired
-  private RoleService roleService;
+    @Autowired
+    private RoleService roleService;
 
-  @Autowired
-  private RoleConverter roleConverter;
+    @Autowired
+    private RoleConverter roleConverter;
 
-  @ApiOperation("保存角色")
-  @PostMapping
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-  @ResponseStatus(CREATED)
-  public RoleDto save(@RequestBody @Validated RoleDto roleDto) {
-    // 不允许将角色添加到内置分组
+    @ApiOperation("保存角色")
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @ResponseStatus(CREATED)
+    public RoleDto save(@RequestBody @Validated RoleDto roleDto) {
+        // 不允许将角色添加到内置分组
 //        if ("内置分组".equals(roleDto.getGroup().getName())) {
 //            throw new DataValidateException("不允许修改内置组定义");
 //        }
-    if (roleService.nameExist(null, roleDto.getName())) {
-      throw new DataValidateException("角色名称被占用");
-    } else {
-      Role role = roleService.save(roleDto);
-      return roleConverter.toDto(role);
+        if (roleService.nameExist(null, roleDto.getName())) {
+            throw new DataValidateException("角色名称被占用");
+        } else {
+            Role role = roleService.save(roleDto);
+            return roleConverter.toDto(role);
+        }
     }
-  }
 
-  /**
-   * 修改角色信息<br>
-   * 
-   * 角色最小ID为4，1、2、3是系统内置角色，禁止修改 <br>
-   * 
-   * 禁止修改
-   * 
-   * @param id
-   * @param roleDto
-   * @return
-   */
-  @ApiOperation("更新角色")
-  @PutMapping("{id}")
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-  @ResponseStatus(CREATED)
-  public RoleDto update(@PathVariable("id") @Min(4) long id, @RequestBody @Validated RoleDto roleDto) {
-    // 内置分组角色不允许修改
-    roleService.get(id)
-        .filter(role -> "内置分组".equals(role.getGroup().getName()))
-        .ifPresent(role -> {
-          throw new DataValidateException("不允许修改内置分组");
-        });
-    if (roleService.nameExist(id, roleDto.getName())) {
-      throw new DataValidateException("角色名称被占用");
-    } else {
-      Role role = roleService.update(id, roleDto);
-      return roleConverter.toDto(role);
+    /**
+     * 修改角色信息<br>
+     * 
+     * 角色最小ID为4，1、2、3是系统内置角色，禁止修改 <br>
+     * 
+     * 禁止修改
+     * 
+     * @param id
+     * @param roleDto
+     * @return
+     */
+    @ApiOperation("更新角色")
+    @PutMapping("{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @ResponseStatus(CREATED)
+    public RoleDto update(@PathVariable("id") @Min(4) long id, @RequestBody @Validated RoleDto roleDto) {
+        // 内置分组角色不允许修改
+        roleService.get(id)
+                .filter(role -> "内置分组".equals(role.getGroup().getName()))
+                .ifPresent(role -> {
+                    throw new DataValidateException("不允许修改内置分组");
+                });
+        if (roleService.nameExist(id, roleDto.getName())) {
+            throw new DataValidateException("角色名称被占用");
+        } else {
+            Role role = roleService.update(id, roleDto);
+            return roleConverter.toDto(role);
+        }
     }
-  }
 
-  @ApiOperation("获取角色信息")
-  @GetMapping("{id}")
-  public RoleDto get(@PathVariable("id") long id) {
-    return roleConverter.toDto(roleService.get(id).orElseThrow(DataNotExistException::new));
-  }
+    @ApiOperation("获取角色信息")
+    @GetMapping("{id}")
+    public RoleDto get(@PathVariable("id") long id) {
+        return roleConverter.toDto(roleService.get(id).orElseThrow(DataNotExistException::new));
+    }
 
-  @ApiOperation("删除角色")
-  @DeleteMapping("{id}")
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-  @ResponseStatus(NO_CONTENT)
-  public void delete(@PathVariable("id") @Min(4) long id) {
-    // 内置分组角色不允许修改
-    roleService.get(id)
-        .filter(role -> "内置分组".equals(role.getGroup().getName()))
-        .ifPresent(role -> {
-          throw new DataValidateException("不允许修改内置分组");
-        });
-    roleService.delete(id);
-  }
+    @ApiOperation("删除角色")
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable("id") @Min(4) long id) {
+        // 内置分组角色不允许修改
+        roleService.get(id)
+                .filter(role -> "内置分组".equals(role.getGroup().getName()))
+                .ifPresent(role -> {
+                    throw new DataValidateException("不允许修改内置分组");
+                });
+        roleService.delete(id);
+    }
 
-  @ApiOperation("查询角色")
-  @GetMapping(params = { "page", "size" })
-  public Page<RoleDto> list(
-      @RequestParam(value = "groupId", required = false) Long groupId,
-      @RequestParam(value = "search", required = false) String key,
-      @PageableDefault(page = 0, size = 10) Pageable pageable) {
-    return roleService.search(groupId, key, pageable).map(roleConverter::toDto);
-  }
+    @ApiOperation("查询角色")
+    @GetMapping(params = { "page", "size" })
+    public Page<RoleDto> list(
+            @RequestParam(value = "groupId", required = false) Long groupId,
+            @RequestParam(value = "search", required = false) String key,
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return roleService.search(groupId, key, pageable).map(roleConverter::toDto);
+    }
 
-  @ApiOperation("获取所有启用角色")
-  @GetMapping
-  public List<RoleDto> listEnabled() {
-    return Lists.transform(roleService.listAllEnabled(), roleConverter::toDto);
-  }
+    @ApiOperation("获取所有启用角色")
+    @GetMapping
+    public List<RoleDto> listEnabled() {
+        return Lists.transform(roleService.listAllEnabled(), roleConverter::toDto);
+    }
 }

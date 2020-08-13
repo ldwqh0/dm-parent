@@ -25,39 +25,39 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("roleGroups")
 public class RoleGroupController {
 
-  @Autowired
-  private RoleGroupService roleGroupService;
+    @Autowired
+    private RoleGroupService roleGroupService;
 
-  @Autowired
-  private RoleGroupConverter roleGroupConverter;
+    @Autowired
+    private RoleGroupConverter roleGroupConverter;
 
-  @GetMapping
-  public Page<RoleGroupDto> listAll(@PageableDefault(size = 1000) Pageable pageable) {
-    return roleGroupService.search(null, pageable).map(roleGroupConverter::toDto);
-  }
+    @GetMapping
+    public Page<RoleGroupDto> listAll(@PageableDefault(size = 1000) Pageable pageable) {
+        return roleGroupService.search(null, pageable).map(roleGroupConverter::toDto);
+    }
 
-  @PostMapping
-  @ResponseStatus(CREATED)
-  public RoleGroupDto save(@RequestBody RoleGroupDto data) {
-    return roleGroupConverter.toDto(roleGroupService.save(data));
-  }
+    @PostMapping
+    @ResponseStatus(CREATED)
+    public RoleGroupDto save(@RequestBody RoleGroupDto data) {
+        return roleGroupConverter.toDto(roleGroupService.save(data));
+    }
 
-  @DeleteMapping("{id}")
-  @ResponseStatus(NO_CONTENT)
-  public void delete(@PathVariable("id") Long id) {
-    roleGroupService.deleteById(id);
-  }
+    @DeleteMapping("{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable("id") Long id) {
+        roleGroupService.deleteById(id);
+    }
 
-  @PutMapping
-  @ResponseStatus(CREATED)
-  public RoleGroupDto update(
-      @PathVariable("id") Long id,
-      @RequestBody RoleGroupDto data) {
-    return roleGroupConverter.toDto(roleGroupService.update(id, data));
-  }
+    @PutMapping
+    @ResponseStatus(CREATED)
+    public RoleGroupDto update(
+            @PathVariable("id") Long id,
+            @RequestBody RoleGroupDto data) {
+        return roleGroupConverter.toDto(roleGroupService.update(id, data));
+    }
 
-  @GetMapping("{id}")
-  public RoleGroupDto findById(@PathVariable("id") Long id) {
-    return roleGroupConverter.toDto(roleGroupService.findById(id).orElseThrow(DataNotExistException::new));
-  }
+    @GetMapping("{id}")
+    public RoleGroupDto findById(@PathVariable("id") Long id) {
+        return roleGroupConverter.toDto(roleGroupService.findById(id).orElseThrow(DataNotExistException::new));
+    }
 }
