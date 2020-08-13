@@ -20,26 +20,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "oauth")
 @XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
 class JaxbOAuth2Exception {
-	private String errorCode;
+    private String errorCode;
 
-	private String description;
+    private String description;
 
-	@XmlElement(name = "error")
-	public String getErrorCode() {
-		return errorCode;
-	}
+    @XmlElement(name = "error")
+    public String getErrorCode() {
+        return errorCode;
+    }
 
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
 
-	@XmlElement(name = "error_description")
-	public String getDescription() {
-		return description;
-	}
+    @XmlElement(name = "error_description")
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 }

@@ -158,7 +158,7 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
             // chance to re-authenticate.
             Authentication user = new PreAuthenticatedAuthenticationToken(authentication.getUserAuthentication(), "",
                     authentication.getAuthorities());
-            
+
             user = authenticationManager.authenticate(user);
             Object details = authentication.getDetails();
             authentication = new OAuth2Authentication(authentication.getOAuth2Request(), user);

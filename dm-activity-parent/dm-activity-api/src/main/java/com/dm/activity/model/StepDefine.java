@@ -23,6 +23,5 @@ public interface StepDefine<ID> {
      */
     public String getName();
 
-
     public List<ActionDefine> getActions();
 }

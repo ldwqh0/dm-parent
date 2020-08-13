@@ -41,30 +41,28 @@ import org.springframework.security.oauth2.common.util.OAuth2Utils;
 abstract class BaseRequest implements Serializable {
 
     /**
-     * Resolved client ID. This may be present in the original request
-     * parameters, or in some cases may be inferred by a processing class and
-     * inserted here.
+     * Resolved client ID. This may be present in the original request parameters,
+     * or in some cases may be inferred by a processing class and inserted here.
      */
     private String clientId;
 
     /**
-     * Resolved scope set, initialized (by the OAuth2RequestFactory) with the
-     * scopes originally requested. Further processing and user interaction may
-     * alter the set of scopes that is finally granted and stored when the
-     * request processing is complete.
+     * Resolved scope set, initialized (by the OAuth2RequestFactory) with the scopes
+     * originally requested. Further processing and user interaction may alter the
+     * set of scopes that is finally granted and stored when the request processing
+     * is complete.
      */
     private Set<String> scope = new HashSet<String>();
 
     /**
-     * Map of parameters passed in to the Authorization Endpoint or Token
-     * Endpoint, preserved unchanged from the original request. This map should
-     * not be modified after initialization. In general, classes should not
-     * retrieve values from this map directly, and should instead use the
-     * individual members on this class.
+     * Map of parameters passed in to the Authorization Endpoint or Token Endpoint,
+     * preserved unchanged from the original request. This map should not be
+     * modified after initialization. In general, classes should not retrieve values
+     * from this map directly, and should instead use the individual members on this
+     * class.
      * 
-     * The OAuth2RequestFactory is responsible for initializing all members of
-     * this class, usually by parsing the values inside the requestParmaeters
-     * map.
+     * The OAuth2RequestFactory is responsible for initializing all members of this
+     * class, usually by parsing the values inside the requestParmaeters map.
      * 
      */
     private Map<String, String> requestParameters = Collections
@@ -97,8 +95,9 @@ abstract class BaseRequest implements Serializable {
                 + ((clientId == null) ? 0 : clientId.hashCode());
         result = prime
                 * result
-                + ((requestParameters == null) ? 0 : requestParameters
-                        .hashCode());
+                + ((requestParameters == null) ? 0
+                        : requestParameters
+                                .hashCode());
         result = prime * result + ((scope == null) ? 0 : scope.hashCode());
         return result;
     }
@@ -134,9 +133,10 @@ abstract class BaseRequest implements Serializable {
         if (scope != null && scope.size() == 1) {
             String value = scope.iterator().next();
             /*
-             * This is really an error, but it can catch out unsuspecting users
-             * and it's easy to fix. It happens when an AuthorizationRequest
-             * gets bound accidentally from request parameters using
+             * This is really an error, but it can catch out unsuspecting users and it's
+             * easy to fix. It happens when an AuthorizationRequest gets bound accidentally
+             * from request parameters using
+             * 
              * @ModelAttribute.
              */
             if (value.contains(" ") || value.contains(",")) {

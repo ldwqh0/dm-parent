@@ -75,7 +75,7 @@ public class TokenEndpoint extends AbstractEndpoint {
 
     @RequestMapping(value = "/oauth/token", method = RequestMethod.GET)
     public ResponseEntity<OAuth2AccessToken> getAccessToken(Principal principal,
-                                                            @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+            @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
         if (!allowedRequestMethods.contains(HttpMethod.GET)) {
             throw new HttpRequestMethodNotSupportedException("GET");
         }
@@ -84,7 +84,7 @@ public class TokenEndpoint extends AbstractEndpoint {
 
     @RequestMapping(value = "/oauth/token", method = RequestMethod.POST)
     public ResponseEntity<OAuth2AccessToken> postAccessToken(Principal principal,
-                                                             @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+            @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
 
         if (!(principal instanceof Authentication)) {
             throw new InsufficientAuthenticationException(
