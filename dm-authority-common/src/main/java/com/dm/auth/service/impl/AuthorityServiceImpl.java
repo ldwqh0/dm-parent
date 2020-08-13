@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,6 +32,7 @@ import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.service.AuthorityService;
+import com.dm.collections.CollectionUtils;
 import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
@@ -76,7 +76,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
             authority.setRoleName(roleName);
             authority = authorityRepository.save(authority);
         }
-        List<MenuDto> menus = authorityDto.getAuthorityMenus();
+        Set<MenuDto> menus = authorityDto.getAuthorityMenus();
         Set<Menu> list = menus.stream().map(MenuDto::getId).map(menuRepository::getOne).collect(Collectors.toSet());
         authority.setMenus(list);
         return authority;
@@ -167,7 +167,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
             authority.setRoleName(roleName);
             authority = authorityRepository.save(authority);
         }
-        List<ResourceOperationDto> _resourceOperations = authorityDto.getResourceAuthorities();
+        Set<ResourceOperationDto> _resourceOperations = authorityDto.getResourceAuthorities();
 
         // 保存资源权限配置
         Set<ResourceOperation> resourceOperations = _resourceOperations.stream()

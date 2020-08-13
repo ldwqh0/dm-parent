@@ -3,9 +3,11 @@ package com.dm.springboot.autoconfigure.authority;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -74,11 +76,11 @@ public class AuthAutoConfiguration {
             MenuAuthorityDto menuAuthority = new MenuAuthorityDto();
             menuAuthority.setRoleId(roleId);
             menuAuthority.setRoleName("内置分组_ROLE_ADMIN");
-            List<MenuDto> menus_ = menus.stream().map(m -> {
+            Set<MenuDto> menus_ = menus.stream().map(m -> {
                 MenuDto md = new MenuDto();
                 md.setId(m.getId());
                 return md;
-            }).collect(Collectors.toList());
+            }).collect(Collectors.toSet());
 
             // 初始化管理员角色的资源权限，默认授予default资源的全部权限
             Optional<Resource> resource = resourceService.findByName("default");
@@ -98,7 +100,7 @@ public class AuthAutoConfiguration {
                 ResourceAuthorityDto resourceAuthority = new ResourceAuthorityDto();
                 resourceAuthority.setRoleId(roleId);
                 resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
-                resourceAuthority.setResourceAuthorities(Collections.singletonList(resourceOperation));
+                resourceAuthority.setResourceAuthorities(Collections.singleton(resourceOperation));
                 authorityService.save(resourceAuthority);
             }
 

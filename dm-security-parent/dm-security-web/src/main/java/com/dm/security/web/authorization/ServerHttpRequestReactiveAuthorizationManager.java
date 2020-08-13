@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -19,6 +18,7 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.web.server.ServerWebExchange;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;

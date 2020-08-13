@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.common.converter.Converter;
 import com.dm.security.core.userdetails.GrantedAuthorityDto;
 import com.dm.uap.dto.RoleDto;

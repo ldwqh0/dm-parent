@@ -15,7 +15,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +22,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeStorage;
 import com.fasterxml.jackson.databind.ObjectMapper;

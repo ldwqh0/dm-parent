@@ -1,8 +1,8 @@
 package com.dm.auth.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
 import lombok.Data;
 
@@ -19,5 +19,5 @@ public class ResourceAuthorityDto implements Serializable {
 
     private Long roleId;
     private String roleName;
-    private List<ResourceOperationDto> resourceAuthorities = new ArrayList<ResourceOperationDto>();
+    private Set<ResourceOperationDto> resourceAuthorities = Collections.emptySet();
 }

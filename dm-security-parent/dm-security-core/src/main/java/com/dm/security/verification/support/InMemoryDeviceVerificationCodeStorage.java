@@ -8,9 +8,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.security.verification.DeviceVerificationCode;
 import com.dm.security.verification.DeviceVerificationCodeStorage;
 

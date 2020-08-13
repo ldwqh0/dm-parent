@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.collections4.CollectionUtils;
+import com.dm.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

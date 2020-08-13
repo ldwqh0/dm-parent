@@ -26,6 +26,7 @@ import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.OrderDto;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.MenuService;
+import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 
 import io.swagger.annotations.Api;
@@ -103,7 +104,7 @@ public class MenuController {
     @Transactional(readOnly = true)
     public List<MenuDto> getAllMenuEnabled(@SortDefault(direction = Direction.ASC, sort = { "order" }) Sort sort) {
         List<Menu> allMenuEnabled = menuService.listAllEnabled(sort);
-        return menuConverter.toDto(allMenuEnabled);
+        return Lists.transform(allMenuEnabled, menuConverter::toDto);
     }
 
     @PutMapping("{id}/order")
