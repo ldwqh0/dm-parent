@@ -8,14 +8,52 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public interface Lists {
-
-  public static <E> ArrayList<E> arrayList(@SuppressWarnings("unchecked") E... e) {
-    return new ArrayList<>(Arrays.asList(e));
+public final class Lists {
+  private Lists() {
   }
 
+  public static <E> ArrayList<E> arrayList() {
+    return new ArrayList<>();
+  }
+
+  public static <E> ArrayList<E> arrayList(@SuppressWarnings("unchecked") E... e) {
+    if (e == null) {
+      return arrayList();
+    } else {
+      return new ArrayList<>(Arrays.asList(e));
+    }
+  }
+
+  /**
+   * 通过指定的collection构建新的{@link ArrayList}<br>
+   * 始终会返回一个{@link ArrayList}，无论给定的参数是否为空
+   * 
+   * @param <E>
+   * @param collection
+   * @return
+   */
   public static <E> ArrayList<E> arrayList(Collection<E> collection) {
-    return new ArrayList<>(collection);
+    if (CollectionUtils.isEmpty(collection)) {
+      return new ArrayList<>();
+    } else {
+      return new ArrayList<>(collection);
+    }
+  }
+
+  /**
+   * 通过指定的Iterable构建新的{@link ArrayList}<br>
+   * 始终会返回一个{@link ArrayList}，无论给定的参数是否为空
+   * 
+   * @param <E>
+   * @param iterable
+   * @return
+   */
+  public static <E> ArrayList<E> arrayList(Iterable<E> iterable) {
+    ArrayList<E> result = new ArrayList<>();
+    if (Iterables.isNotEmpty(iterable)) {
+      iterable.forEach(result::add);
+    }
+    return result;
   }
 
   public static <E> List<E> asList(Collection<E> collection) {

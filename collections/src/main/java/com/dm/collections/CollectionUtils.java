@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-public interface CollectionUtils {
+public final class CollectionUtils {
+  private CollectionUtils() {
+  }
+
   public static <I, O> List<O> transform(List<I> input, Function<I, O> converter) {
     return Lists.transform(input, converter);
   }
