@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-//import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 public interface FileStorageService {
 
@@ -43,7 +43,7 @@ public interface FileStorageService {
      * @return 存在返回true,不存在返回false
      * @throws Exception
      */
-    public boolean exist(String path) throws Exception;
+    public boolean exist(String path);
 
     /**
      * 获取指定的文件流
@@ -52,7 +52,9 @@ public interface FileStorageService {
      * @return
      * @throws Exception
      */
-    public InputStream getInputStream(String path) throws Exception;
+    public Resource getResource(String path);
+
+    public Resource getResource(String path, Long start, Long end);
 
     public boolean save(String path, File[] src) throws IOException;
 }

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.dto.FileInfoDto;
 import com.dm.file.entity.FileInfo;
+import com.dm.file.exception.FileStorageException;
 import com.dm.file.repository.FileInfoRepository;
 import com.dm.file.service.FileInfoService;
 import com.dm.file.service.FileStorageService;
@@ -38,8 +39,11 @@ public class FileServiceImpl implements FileInfoService {
     @Override
     public FileInfo save(File file, FileInfoDto _info) throws Exception {
         FileInfo fileInfo = save(_info);
-        storageService.save(fileInfo.getPath(), file);
-        return fileInfo;
+        if (storageService.save(fileInfo.getPath(), file)) {
+            return fileInfo;
+        } else {
+            throw new FileStorageException();
+        }
     }
 
     @Override
@@ -53,11 +57,14 @@ public class FileServiceImpl implements FileInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Throwable.class)
     public FileInfo save(InputStream inputStream, FileInfoDto _info) throws Exception {
         FileInfo info = save(_info);
-        storageService.save(info.getPath(), inputStream);
-        return info;
+        if (storageService.save(info.getPath(), inputStream)) {
+            return info;
+        } else {
+            throw new FileStorageException();
+        }
     }
 
     private FileInfo save(FileInfoDto _info) {
@@ -72,11 +79,14 @@ public class FileServiceImpl implements FileInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Throwable.class)
     public FileInfo save(File[] src, FileInfoDto fileInfo) throws IOException {
         FileInfo file = save(fileInfo);
-        storageService.save(file.getPath(), src);
-        return file;
+        if (storageService.save(file.getPath(), src)) {
+            return file;
+        } else {
+            throw new FileStorageException();
+        }
     }
 
 }
