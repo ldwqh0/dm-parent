@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 public class DmFileUtils {
 
     /**
-     * 获取一个文件的原始文件吗
+     * 获取一个文件的原始文件名
      * 
      * @param name
      * @return

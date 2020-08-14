@@ -16,6 +16,8 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.dm.file.config.FileConfig;
 import com.dm.file.service.ThumbnailService;
@@ -63,8 +65,8 @@ public class LocalThumbnailServiceImpl implements ThumbnailService {
     }
 
     @Override
-    public InputStream getStream(String filename, int level) throws IOException {
-        return new FileInputStream(getPath(filename, level));
+    public Resource getResource(String filename, int level) {
+        return new FileSystemResource(new File(getPath(filename)));
     }
 
     @PostConstruct

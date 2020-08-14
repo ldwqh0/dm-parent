@@ -1,7 +1,8 @@
 package com.dm.file.service;
 
 import java.io.IOException;
-import java.io.InputStream;
+
+import org.springframework.core.io.Resource;
 
 public interface ThumbnailService {
     /**
@@ -19,5 +20,5 @@ public interface ThumbnailService {
      * @return
      * @throws IOException
      */
-    public InputStream getStream(String path, int level) throws IOException;
+    public Resource getResource(String filename, int level);
 }

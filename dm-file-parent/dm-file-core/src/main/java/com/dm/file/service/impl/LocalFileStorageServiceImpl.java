@@ -1,7 +1,6 @@
 package com.dm.file.service.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,6 +9,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.dm.file.config.FileConfig;
 import com.dm.file.service.FileStorageService;
@@ -37,13 +38,8 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public boolean exist(String path) throws Exception {
+    public boolean exist(String path) {
         return new File(getPath(path)).exists();
-    }
-
-    @Override
-    public InputStream getInputStream(String path) throws Exception {
-        return new FileInputStream(getPath(path));
     }
 
     private String getPath(String filename) {
@@ -71,5 +67,15 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
         File file = new File(path);
         FileUtils.forceMkdir(file);
         FileUtils.forceMkdir(new File(tempPath));
+    }
+
+    @Override
+    public Resource getResource(String filename, Long start, Long end) {
+        return new FileSystemResource(new File(getPath(filename)));
+    }
+
+    @Override
+    public Resource getResource(String path) {
+        return new FileSystemResource(new File(getPath(path)));
     }
 }
