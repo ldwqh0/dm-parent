@@ -3,7 +3,6 @@ package com.dm.file.service.impl;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,6 +19,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.dm.file.config.FileConfig;
+import com.dm.file.service.FileStorageService;
 import com.dm.file.service.ThumbnailService;
 import com.dm.file.util.DmFileUtils;
 
@@ -30,6 +30,9 @@ public class LocalThumbnailServiceImpl implements ThumbnailService {
 
     @Autowired
     private FileConfig fileConfig;
+
+    @Autowired
+    private FileStorageService storageService;
 
     private static final String[] imgExt = { "jpg", "png", "bmp", "jpeg" };
     private final int[][] levelScales = { { 128, 128 }, { 256, 256 }, { 512, 512 }, { 1080, 1920 } };
@@ -53,7 +56,7 @@ public class LocalThumbnailServiceImpl implements ThumbnailService {
     public void createThumbnail(String filename) {
         String ext = DmFileUtils.getExt(filename);
         if (ArrayUtils.contains(imgExt, ext)) {
-            try (InputStream iStream = new FileInputStream(getPath(filename))) {
+            try (InputStream iStream = storageService.getResource(filename).getInputStream()) {
                 Image image = ImageIO.read(iStream);
                 for (int i = 0; i < levelScales.length; i++) {
                     createThumbnail(image, filename, i);

@@ -115,6 +115,7 @@ public class FileController {
                     FileUtils.forceDelete(file);
                     // 删除临时文件
                 } catch (Exception e) {
+                    log.error("删除临时文件时发生异常", e);
                 }
             }
             return fileInfoConverter.toDto(_result);
@@ -279,7 +280,7 @@ public class FileController {
             String contentType = config.getMime(ext);
             Range range = null;
             // 计算range
-            if (ranges.size() < 0) {
+            if (ranges.size() < 1) {
                 log.info("no range checked");
             } else if (ranges.size() == 1) {
                 range = ranges.get(0);
@@ -325,6 +326,7 @@ public class FileController {
             file.getLastModifiedDate().ifPresent(bodyBuilder::lastModified);
             return bodyBuilder.body(body);
         } catch (Exception e) {
+            log.error("构建响应体时发生异常", e);
             throw new RuntimeException(e);
         }
     }

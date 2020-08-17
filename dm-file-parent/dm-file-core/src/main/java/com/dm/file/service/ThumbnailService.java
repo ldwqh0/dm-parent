@@ -8,9 +8,9 @@ public interface ThumbnailService {
     /**
      * 创建缩略图
      * 
-     * @param file
+     * @param filename 给指定的文件创建缩略图
      */
-    public void createThumbnail(String path);
+    public void createThumbnail(String filename);
 
     /**
      * 根据文件ID和缩略图级别获取缩略图
