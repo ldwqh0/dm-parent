@@ -15,25 +15,39 @@ import org.springframework.core.io.Resource;
 import com.dm.file.config.FileConfig;
 import com.dm.file.service.FileStorageService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class LocalFileStorageServiceImpl implements FileStorageService {
 
     @Autowired
     private FileConfig config;
 
     @Override
-    public boolean save(String path, InputStream inputStream) throws IOException {
-        FileUtils.copyToFile(inputStream, new File(getPath(path)));
-        return true;
+    public boolean save(String path, InputStream inputStream) {
+        try {
+            FileUtils.copyToFile(inputStream, new File(getPath(path)));
+            return true;
+        } catch (IOException e) {
+            log.error("保存文件 {} 失败", path, e);
+            return false;
+        }
     }
 
     @Override
-    public boolean save(String path, File file) throws IOException {
-        FileUtils.copyFile(file, new File(getPath(path)));
-        return true;
+    public boolean save(String path, File file) {
+        try {
+            FileUtils.copyFile(file, new File(getPath(path)));
+            return true;
+        } catch (IOException e) {
+            log.error("保存文件 {} 失败", path, e);
+            return false;
+        }
+
     }
 
     @Override
-    public boolean delete(String path) throws IOException {
+    public boolean delete(String path) {
         return FileUtils.deleteQuietly(new File(getPath(path)));
     }
 
@@ -47,14 +61,17 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public boolean save(String path, File[] src) throws IOException {
+    public boolean save(String path, File[] src) {
         File target = new File(getPath(path));
-        try (OutputStream out = FileUtils.openOutputStream(target, true)) {
+        try (OutputStream out = FileUtils.openOutputStream(target, false)) {
             for (File file : src) {
                 FileUtils.copyFile(file, out);
             }
+            return true;
+        } catch (Exception e) {
+            log.error("保存文件 {} 时发生错误", path, e);
+            return false;
         }
-        return true;
     }
 
     /**

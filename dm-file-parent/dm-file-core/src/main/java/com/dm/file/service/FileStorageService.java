@@ -13,28 +13,32 @@ public interface FileStorageService {
      *
      * @param key         指定的key
      * @param inputStream 要存储的文件
+     * @return true 保存成功<br>
+     *         false 保存失败
      * @throws Exception
      */
-    public boolean save(String path, InputStream inputStream) throws IOException;
+    public boolean save(String path, InputStream inputStream);
 
     /**
      * 保存一个文件，用指定文件名
      *
      * @param fileName
-     * @param file
-     * @return
+     * @param file     要存储的文件
+     * @return true 保存成功<br>
+     *         false 保存失败
      * @throws IOException
      */
-    public boolean save(String path, File file) throws IOException;
+    public boolean save(String path, File file);
 
     /**
      * 删除指定的文件
      *
      * @param path 要删除的文件的路径
-     * @return
+     * @return true 删除成功<br>
+     *         false 删除失败
      * @throws Exception
      */
-    public boolean delete(String path) throws IOException;
+    public boolean delete(String path);
 
     /**
      * 指定的文件是否存在
@@ -54,7 +58,24 @@ public interface FileStorageService {
      */
     public Resource getResource(String path);
 
+    /**
+     * 根据传入的开始个结束位置返回Resource,用于文件的分块传输
+     * 
+     * @param path
+     * @param start
+     * @param end
+     * @return
+     */
     public Resource getResource(String path, Long start, Long end);
 
-    public boolean save(String path, File[] src) throws IOException;
+    /**
+     * 将所有的文件块组合保存到一个文件
+     * 
+     * @param path
+     * @param src
+     * @return true 保存成功<br>
+     *         false 保存失败
+     * @throws IOException
+     */
+    public boolean save(String path, File[] src);
 }
