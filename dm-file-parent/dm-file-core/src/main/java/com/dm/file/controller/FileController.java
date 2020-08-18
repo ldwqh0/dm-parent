@@ -29,6 +29,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -110,6 +111,8 @@ public class FileController {
             fileInfo.setFilename(filename);
             fileInfo.setSize(length);
             FileInfo _result = fileService.save(src, fileInfo);
+            // 创建文件缩略图
+            thumbnailService.createThumbnail(_result.getPath());
             for (File file : src) {
                 try {
                     FileUtils.forceDelete(file);
@@ -325,7 +328,7 @@ public class FileController {
             }
             file.getLastModifiedDate().ifPresent(bodyBuilder::lastModified);
             return bodyBuilder.body(body);
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException e) {
             log.error("构建响应体时发生异常", e);
             throw new RuntimeException(e);
         }
