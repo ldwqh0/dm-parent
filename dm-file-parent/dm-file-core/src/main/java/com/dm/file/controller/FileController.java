@@ -320,6 +320,7 @@ public class FileController {
                     contentRange = "bytes " + range.getStart() + "-" + range.getEnd() + "/" + fileSize;
                     bodyBuilder.header("Content-Range", contentRange);
                 }
+                bodyBuilder.header("Content-Type", contentType);
                 bodyBuilder.header("Accept-Ranges", "bytes")
                         .contentLength(contentLength);
             }
