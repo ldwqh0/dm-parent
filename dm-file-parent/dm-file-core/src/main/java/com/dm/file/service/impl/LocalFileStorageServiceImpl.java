@@ -43,7 +43,6 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
             log.error("保存文件 {} 失败", path, e);
             return false;
         }
-
     }
 
     @Override
