@@ -1,5 +1,6 @@
 package com.dm.collections;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -23,7 +24,7 @@ public final class Maps {
     /**
      * 将一系列的值,放入hashMap中<br>
      * 使用func通过iterable获取key
-     * 
+     *
      * @param <K>       键的类型
      * @param <V>       值的类型
      * @param iterable  值迭代器
@@ -40,7 +41,7 @@ public final class Maps {
 
     /**
      * 通过一系列的键，生成map
-     * 
+     *
      * @param <K>
      * @param <V>
      * @param iterable  一系列的键
@@ -54,4 +55,20 @@ public final class Maps {
         }
         return result;
     }
+
+    public static <K, V1, V2> Map<K, V2> transfrom(Map<K, V1> input, Function<? super V1, V2> valueConverter) {
+        if (input == null) {
+            return null;
+        }
+        if (input.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Map<K, V2> result = new HashMap<>();
+        input.forEach((key, value) -> {
+            result.put(key, valueConverter.apply(value));
+        });
+        return result;
+    }
+
+    ;
 }

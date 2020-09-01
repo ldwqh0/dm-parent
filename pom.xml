@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dm</groupId>
   <artifactId>dm-parent</artifactId>
@@ -40,8 +40,13 @@
     <!-- 钉钉API和用户鉴权模块 -->
     <module>dm-uap-dingtalk</module>
     <!-- 文件模块 -->
-    <module>dm-file-parent</module>
+    <module>dm-file-parent/dm-file-core</module>
+    <module>dm-file-parent/dm-file-spring-boot-starter</module>
+    <!--行政区划模块-->
     <module>dm-code</module>
+    <!--多数据源模块-->
+    <module>dm-jdbc/dm-multi-datasource</module>
+    <module>dm-jdbc/dm-multi-datasource-jpa-support</module>
     <module>dm-security-parent</module>
     <!-- <module>dm-gateway-server</module> -->
     <module>dm-activity-parent</module>
@@ -232,6 +237,11 @@
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-file-spring-boot-starter</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-multi-datasource</artifactId>
         <version>${dm.version}</version>
       </dependency>
     </dependencies>
@@ -507,7 +517,7 @@
                     <resource>META-INF/spring.schemas</resource>
                   </transformer>
                   <transformer
-                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                   <transformer
                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                     <mainClass>${start-class}</mainClass>
