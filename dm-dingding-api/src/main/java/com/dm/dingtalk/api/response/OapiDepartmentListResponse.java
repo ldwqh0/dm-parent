@@ -145,7 +145,7 @@ public class OapiDepartmentListResponse extends TaobaoResponse {
         }
 
         public String getCorpId() {
-            return corpId;
+            return this.corpId;
         }
 
         public void setCorpId(String corpId) {

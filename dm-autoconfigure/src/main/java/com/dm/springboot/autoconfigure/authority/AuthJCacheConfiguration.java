@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AuthJCacheConfiguration implements InitializingBean {
 
-    private CacheManager jCacheManager;
+    private CacheManager jCacheManager = null;
 
     @Autowired(required = false)
     public void setCacheManager(CacheManager cacheManager) {

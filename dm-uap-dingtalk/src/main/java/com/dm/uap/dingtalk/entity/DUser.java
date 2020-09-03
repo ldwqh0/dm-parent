@@ -1,6 +1,5 @@
 package com.dm.uap.dingtalk.entity;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,9 +38,7 @@ import static javax.persistence.CascadeType.*;
         @Index(columnList = "corp_id_,userid_", name = "uk_dd_user_corpid_userid_")
 })
 @IdClass(DUserId.class)
-public class DUser implements Serializable {
-
-    private static final long serialVersionUID = -6763998745823230765L;
+public class DUser {
 
     // 一个用户在一个企业中只能出现一次
 

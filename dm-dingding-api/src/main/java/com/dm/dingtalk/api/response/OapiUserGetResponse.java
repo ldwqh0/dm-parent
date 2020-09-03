@@ -256,11 +256,17 @@ public class OapiUserGetResponse extends TaobaoResponse {
     }
 
     public void setHiredDate(Date hiredDate) {
-        this.hiredDate = hiredDate;
+        if (hiredDate != null) {
+            this.hiredDate = (Date) hiredDate.clone();
+        }
     }
 
     public Date getHiredDate() {
-        return this.hiredDate;
+        if (this.hiredDate != null) {
+            return (Date) this.hiredDate.clone();
+        } else {
+            return null;
+        }
     }
 
     public void setInviteMobile(String inviteMobile) {

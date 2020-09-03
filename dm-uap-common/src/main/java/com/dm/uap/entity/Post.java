@@ -17,8 +17,7 @@ import lombok.Data;
  */
 @Embeddable
 @Data
-public class Post implements Serializable {
-    private static final long serialVersionUID = 7941849108500608959L;
+public class Post {
 
     @Column(name = "name_")
     private String name;

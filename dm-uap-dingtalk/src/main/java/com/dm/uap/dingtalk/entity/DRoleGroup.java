@@ -1,6 +1,5 @@
 package com.dm.uap.dingtalk.entity;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -24,9 +23,7 @@ import static javax.persistence.CascadeType.*;
 @Setter
 @IdClass(CorpLongId.class)
 @Table(name = "dd_role_group_", indexes = { @Index(name = "idx_dd_role_group_deleted_", columnList = "deleted_") })
-public class DRoleGroup extends CorpLongEntity implements Serializable {
-
-    private static final long serialVersionUID = -4172275539106446430L;
+public class DRoleGroup extends CorpLongEntity {
 
     @Column(name = "name_")
     private String name;

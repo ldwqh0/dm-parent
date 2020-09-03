@@ -8,10 +8,12 @@ import com.dm.datasource.provider.DataSourceProperties;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSourceDto> {
 
     @Override
-    public DmDataSourceDto toDto(DmDataSource model) {
+    public DmDataSourceDto toDto(@Nonnull DmDataSource model) {
         DmDataSourceDto dto = toSimpleDto(model);
         Map<String, String> additionalProperties = model.getProperties();
         if (Maps.isNotEmpty(additionalProperties)) {

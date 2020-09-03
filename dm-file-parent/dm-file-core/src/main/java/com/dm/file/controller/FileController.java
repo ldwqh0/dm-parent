@@ -299,7 +299,7 @@ public class FileController {
                         || StringUtils.contains(userAgent, "MSIE")) {
                     codeFileName = URLEncoder.encode(fileName, "UTF-8");
                 } else {
-                    codeFileName = new String(fileName.getBytes(), "ISO8859-1");
+                    codeFileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
                 }
             }
             // -----------------计算文件名结束-----------------------

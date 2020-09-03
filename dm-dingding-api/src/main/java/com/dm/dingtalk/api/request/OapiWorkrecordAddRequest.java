@@ -3,7 +3,10 @@ package com.dm.dingtalk.api.request;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -67,7 +70,7 @@ public class OapiWorkrecordAddRequest implements Serializable {
      * 这个表单显示在待办事项的消息里面<br>
      * 每人每天最多收到一条表单内容相同的待办，这里的表单内容，包括title和formItemList参数
      */
-    private List<FormItem> formItemList = new ArrayList<>();
+    private FormItem[] formItemList = null;
 
     @JsonGetter("create_time")
     public Long getCreateTime() {
@@ -140,11 +143,11 @@ public class OapiWorkrecordAddRequest implements Serializable {
     }
 
     public List<FormItem> getFormItemList() {
-        return formItemList;
+        return Arrays.asList(formItemList);
     }
 
     public OapiWorkrecordAddRequest addFormItem(String title, String content) {
-        this.formItemList.add(new FormItem(title, content));
+        this.formItemList = ArrayUtils.add(this.formItemList, new FormItem(title, content));
         return this;
     }
 
@@ -154,7 +157,9 @@ public class OapiWorkrecordAddRequest implements Serializable {
      * @author ldwqh0@outlook.com
      *
      */
-    static class FormItem {
+    static class FormItem implements Serializable {
+        private static final long serialVersionUID = -1658665027320281649L;
+
         /**
          * 表单标题
          */

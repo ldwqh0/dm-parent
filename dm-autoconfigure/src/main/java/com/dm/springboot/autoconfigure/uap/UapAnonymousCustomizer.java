@@ -19,7 +19,7 @@ public class UapAnonymousCustomizer implements Customizer<AnonymousConfigurer<Ht
     @SuppressWarnings("unused")
     private UapAutoConfiguration uac;
 
-    private UserService userService;
+    private UserService userService = null;
 
     public UapAnonymousCustomizer() {
 
