@@ -1,6 +1,7 @@
 package com.dm.datasource.provider;
 
 import com.dm.collections.Sets;
+import com.dm.datasource.provider.DataSourceProperties.DbTypes;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.MySQL8Dialect;
@@ -19,8 +20,8 @@ public class MySQL8DataSourceProvider implements DataSourceProvider {
     }
 
     @Override
-    public Set<String> getSupportDbTypes() {
-        return Sets.hashSet("MySQL8");
+    public Set<DbTypes> getSupportDbTypes() {
+        return Sets.hashSet(DbTypes.MySQL8);
     }
 
     @Override

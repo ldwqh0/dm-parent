@@ -244,6 +244,11 @@
         <artifactId>dm-multi-datasource</artifactId>
         <version>${dm.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-multi-datasource-jpa-support</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <build>

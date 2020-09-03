@@ -4,12 +4,17 @@ import java.util.Map;
 
 public interface DataSourceProperties {
 
+    public enum DbTypes {
+        MySQL8,
+        SQLSERVER
+    }
+
     /**
      * 数据连接的类型
      *
      * @return
      */
-    public String getDbType();
+    public DbTypes getDbType();
 
     public String getHost();
 

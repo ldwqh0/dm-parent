@@ -28,7 +28,7 @@ import com.dm.file.service.impl.LocalThumbnailServiceImpl;
 public class FileConfiguration {
 
     @Bean
-    public FileInfoService FileInfoService() {
+    public FileInfoService fileInfoService() {
         return new FileServiceImpl();
     }
 

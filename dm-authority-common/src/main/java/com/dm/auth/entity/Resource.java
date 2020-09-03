@@ -29,7 +29,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "dm_resource_")
 public class Resource extends AbstractEntity {
-    private static final long serialVersionUID = 8273786895229540103L;
 
     /**
      * 资源名称

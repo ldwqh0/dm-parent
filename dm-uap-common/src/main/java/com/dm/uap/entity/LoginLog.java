@@ -25,11 +25,6 @@ import lombok.Setter;
         @Index(columnList = "time_", name = "idx_time_") })
 public class LoginLog extends AbstractEntity {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7542534541704477309L;
-
     @Column(name = "login_name_", length = 250)
     private String loginName;
 

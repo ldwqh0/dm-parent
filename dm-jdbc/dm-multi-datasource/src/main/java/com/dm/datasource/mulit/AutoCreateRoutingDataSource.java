@@ -2,6 +2,7 @@ package com.dm.datasource.mulit;
 
 import com.dm.datasource.provider.DataSourceProperties;
 import com.dm.datasource.provider.DataSourceProvider;
+import com.dm.datasource.provider.DataSourceProviderHolder;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
@@ -13,27 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 一个可以自动创建数据源的 RoutingDatasource
  */
-public class AutoCreateRoutingDatasource extends AbstractRoutingDataSource {
-
-    private DetermineCurrentLookupKeyStrategy strategy;
+public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource implements DataSourceHolder {
 
     private DataSource defaultTargetDataSource;
 
-    private Map<String, DataSourceProvider> dataSourceProviders = new ConcurrentHashMap<>();
-
     private final Map<DataSourceProperties, DataSource> dataSources = new ConcurrentHashMap<>();
-
-    public void setStrategy(DetermineCurrentLookupKeyStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public void setDataSourceProviders(Iterable<DataSourceProvider> dataSourceProviders) {
-        dataSourceProviders.forEach(dataSourceProvider -> {
-            dataSourceProvider.getSupportDbTypes().forEach(dbType -> {
-                this.dataSourceProviders.put(dbType, dataSourceProvider);
-            });
-        });
-    }
 
     @Override
     protected DataSource determineTargetDataSource() {
@@ -42,26 +27,14 @@ public class AutoCreateRoutingDatasource extends AbstractRoutingDataSource {
         if (!Objects.isNull(key)) {
             resolved = dataSources.get(key);
             if (resolved == null) {
-                resolved = tryCreateNewDataSource(key);
+                resolved = add(key);
             }
         }
         return Objects.isNull(resolved) ? defaultTargetDataSource : resolved;
     }
 
-    private synchronized DataSource tryCreateNewDataSource(DataSourceProperties key) {
-        DataSource exist = dataSources.get(key);
-        if (exist == null) {
-            DataSource dataSource = createDataSource(key);
-            if (!Objects.isNull(dataSource)) {
-                dataSources.put(key, dataSource);
-                return dataSource;
-            }
-        }
-        return null;
-    }
-
     private DataSource createDataSource(DataSourceProperties properties) {
-        DataSourceProvider provider = dataSourceProviders.get(properties.getDbType());
+        DataSourceProvider provider = DataSourceProviderHolder.getProvider(properties.getDbType());
         if (Objects.isNull(provider)) {
             return null;
         } else {
@@ -75,7 +48,6 @@ public class AutoCreateRoutingDatasource extends AbstractRoutingDataSource {
         }
     }
 
-
     public void setDefaultTargetDataSource(DataSource defaultTargetDataSource) {
         super.setDefaultTargetDataSource(defaultTargetDataSource);
         this.defaultTargetDataSource = defaultTargetDataSource;
@@ -83,7 +55,7 @@ public class AutoCreateRoutingDatasource extends AbstractRoutingDataSource {
 
     @Override
     protected DataSourceProperties determineCurrentLookupKey() {
-        return strategy.determineCurrentLookupKey();
+        return DataSourceKeyContextHolder.determineCurrentLookupKey();
     }
 
     @Override
@@ -91,6 +63,32 @@ public class AutoCreateRoutingDatasource extends AbstractRoutingDataSource {
         // 什么都不做
     }
 
+    @Override
+    public void closeAndRemove(DataSourceProperties properties) {
+        DataSource dataSource = dataSources.get(properties);
+        try {
+            dataSources.remove(properties);
+            if (dataSource instanceof HikariDataSource) {
+                ((HikariDataSource) dataSource).close();
+            }
+        } catch (Exception e) {
+            // 尝试关闭连接
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public synchronized DataSource add(DataSourceProperties properties) {
+        DataSource exist = dataSources.get(properties);
+        if (exist == null) {
+            DataSource dataSource = createDataSource(properties);
+            if (!Objects.isNull(dataSource)) {
+                dataSources.put(properties, dataSource);
+                return dataSource;
+            }
+        }
+        return null;
+    }
+
     // TODO 需要增加定时检测功能
 }
-

@@ -1,6 +1,5 @@
 package com.dm.common.entity;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -14,9 +13,7 @@ import javax.persistence.Transient;
 import org.springframework.data.domain.Persistable;
 
 @MappedSuperclass
-public abstract class AbstractEntity implements Persistable<Long>, Serializable {
-
-    private static final long serialVersionUID = 6496721356813862072L;
+public abstract class AbstractEntity implements Persistable<Long> {
 
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGenerator")
     @TableGenerator(name = "tableGenerator", pkColumnName = "table_name_", table = "auto_pk_support_", valueColumnName = "next_id_", allocationSize = 50)

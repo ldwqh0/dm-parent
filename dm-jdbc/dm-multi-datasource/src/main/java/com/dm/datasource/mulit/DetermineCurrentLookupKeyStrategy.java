@@ -7,11 +7,14 @@ import com.dm.datasource.provider.DataSourceProperties;
  */
 public interface DetermineCurrentLookupKeyStrategy {
 
-
     /**
      * 选择一个
+     * 
      * @return
      */
     public DataSourceProperties determineCurrentLookupKey();
 
+    public void setKey(DataSourceProperties properties);
+
+    public void clear();
 }

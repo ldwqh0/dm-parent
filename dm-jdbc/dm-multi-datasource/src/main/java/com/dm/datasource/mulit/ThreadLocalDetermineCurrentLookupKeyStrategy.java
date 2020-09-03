@@ -2,14 +2,9 @@ package com.dm.datasource.mulit;
 
 import com.dm.datasource.provider.DataSourceProperties;
 
-public class ThreadLocalDetermineCurrentLookupKeyStrategy implements DetermineCurrentLookupKeyStrategy {
+public final class ThreadLocalDetermineCurrentLookupKeyStrategy implements DetermineCurrentLookupKeyStrategy {
 
-    private ThreadLocal<DataSourceProperties> threadLocal = new ThreadLocal<>();
-
-    public void putKey(DataSourceProperties properties) {
-        threadLocal.set(properties);
-    }
-
+    private static ThreadLocal<DataSourceProperties> threadLocal = new ThreadLocal<>();
 
     @Override
     public DataSourceProperties determineCurrentLookupKey() {
@@ -18,5 +13,10 @@ public class ThreadLocalDetermineCurrentLookupKeyStrategy implements DetermineCu
 
     public void clear() {
         threadLocal.remove();
+    }
+
+    @Override
+    public void setKey(DataSourceProperties properties) {
+        threadLocal.set(properties);
     }
 }

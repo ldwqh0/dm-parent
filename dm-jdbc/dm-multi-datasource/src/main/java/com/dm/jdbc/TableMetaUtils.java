@@ -55,6 +55,7 @@ public final class TableMetaUtils {
             );
             columns.add(column);
         }
-        return TableMeta.of(tableName, columns);
+        // TODO　这里待处理
+        return TableMeta.of(tableName, "table", columns);
     }
 }
