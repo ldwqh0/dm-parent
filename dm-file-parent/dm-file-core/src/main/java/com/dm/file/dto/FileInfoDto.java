@@ -35,5 +35,31 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
     @JsonProperty(access = Access.READ_ONLY)
     private Audit lastModifiedBy;
 
+    @JsonProperty(access = Access.READ_ONLY)
     private ZonedDateTime createTime;
+
+    public Audit getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Audit createUser) {
+        this.createUser = createUser;
+    }
+
+    public Audit getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(Audit lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public ZonedDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(ZonedDateTime createTime) {
+        this.createTime = createTime;
+    }
+
 }

@@ -3,7 +3,6 @@ package com.dm.springboot.autoconfigure.jdbc;
 import com.dm.datasource.controller.DmDataSourceController;
 import com.dm.datasource.converter.DmDataSourceConverter;
 import com.dm.datasource.entity.DmDataSource;
-import com.dm.datasource.provider.DataSourceProviderHolder;
 import com.dm.datasource.repository.DmDataSourceRepository;
 import com.dm.datasource.service.DmDataSourceService;
 import com.dm.datasource.service.impl.DmDataSourceServiceImpl;

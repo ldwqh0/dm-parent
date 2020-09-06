@@ -7,9 +7,11 @@ import com.dm.common.entity.Audit;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-@Data
+@EqualsAndHashCode
+@ToString
 public class AuditableDto implements Serializable {
     /**
      * 
@@ -27,4 +29,37 @@ public class AuditableDto implements Serializable {
 
     @JsonProperty(access = Access.READ_ONLY)
     private ZonedDateTime lastModifiedDate;
+
+    public Audit getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Audit createBy) {
+        this.createBy = createBy;
+    }
+
+    public Audit getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(Audit lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public ZonedDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
 }

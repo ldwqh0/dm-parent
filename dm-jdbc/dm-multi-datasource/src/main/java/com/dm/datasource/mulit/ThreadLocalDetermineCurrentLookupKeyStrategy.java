@@ -11,6 +11,7 @@ public final class ThreadLocalDetermineCurrentLookupKeyStrategy implements Deter
         return threadLocal.get();
     }
 
+    @Override
     public void clear() {
         threadLocal.remove();
     }

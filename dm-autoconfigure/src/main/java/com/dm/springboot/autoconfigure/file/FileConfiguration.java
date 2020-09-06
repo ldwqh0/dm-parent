@@ -18,7 +18,7 @@ import com.dm.file.service.FileStorageService;
 import com.dm.file.service.ThumbnailService;
 import com.dm.file.service.impl.FileServiceImpl;
 import com.dm.file.service.impl.LocalFileStorageServiceImpl;
-import com.dm.file.service.impl.LocalThumbnailServiceImpl;
+import com.dm.file.service.impl.DefaultThumbnailServiceImpl;
 
 @Configuration
 @ConditionalOnClass(FileInfo.class)
@@ -57,7 +57,7 @@ public class FileConfiguration {
     @Bean
     @ConditionalOnMissingBean(ThumbnailService.class)
     public ThumbnailService thumbnailService() {
-        return new LocalThumbnailServiceImpl();
+        return new DefaultThumbnailServiceImpl();
     }
 
 }

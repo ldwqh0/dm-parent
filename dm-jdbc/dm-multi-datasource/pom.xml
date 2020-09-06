@@ -32,5 +32,9 @@
       <groupId>com.dm</groupId>
       <artifactId>collections</artifactId>
     </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
   </dependencies>
 </project>

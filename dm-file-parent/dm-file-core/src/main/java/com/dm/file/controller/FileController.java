@@ -75,7 +75,7 @@ public class FileController {
             infoDto.setFilename(DmFileUtils.getOriginalFilename(originalFilename));
         }
         infoDto.setSize(file.getSize());
-        FileInfo file_ = fileService.save(file.getInputStream(), infoDto);
+        FileInfo file_ = fileService.save(file, infoDto);
         thumbnailService.createThumbnail(file_.getPath());
         return fileInfoConverter.toDto(file_);
     }

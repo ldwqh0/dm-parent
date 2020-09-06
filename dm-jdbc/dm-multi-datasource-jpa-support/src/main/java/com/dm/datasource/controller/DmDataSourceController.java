@@ -83,8 +83,8 @@ public class DmDataSourceController {
                 .orElseThrow(DataNotExistException::new);
     }
 
-    @GetMapping(value = "state")
-    public Boolean state(@ModelAttribute DmDataSourceDto cnn) throws SQLException {
+    @PostMapping(value = "state")
+    public Boolean state(@RequestBody DmDataSourceDto cnn) throws SQLException {
         return checkState(cnnConverter.toDataSourceProperties(cnn));
     }
 
