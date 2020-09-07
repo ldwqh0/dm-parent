@@ -39,8 +39,6 @@ public class Role extends AbstractEntity {
         DISABLED
     }
 
-    private static final long serialVersionUID = -7562410173176807166L;
-
     @Column(name = "name_", length = 100, nullable = false)
     @NotNull
     private String name;

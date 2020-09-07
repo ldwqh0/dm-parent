@@ -12,6 +12,7 @@
 1.1.0
 * 重构oauth-server模块，添加openid实现
 * 升级spring-boot至2.2.9.RELEASE
+* 添加多数据源功能模块
 ## 版本对应规则
 构建版本号|Spring Boot|Spring Cloud|
 :-|:-|:-|:-

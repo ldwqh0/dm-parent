@@ -2,9 +2,10 @@ package com.dm.file.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dm.file.dto.FileInfoDto;
 import com.dm.file.entity.FileInfo;
@@ -25,7 +26,7 @@ public interface FileInfoService {
      * @return
      * @throws Exception
      */
-    public FileInfo save(File file, FileInfoDto fileInfo) throws Exception;
+    public FileInfo save(MultipartFile file, FileInfoDto fileInfo) throws Exception;
 
     /**
      * 删除指定的文件
@@ -45,7 +46,7 @@ public interface FileInfoService {
      * @return
      * @throws Exception
      */
-    public FileInfo save(InputStream inputStream, FileInfoDto fileInfo) throws Exception;
+//    public FileInfo save(InputStream inputStream, FileInfoDto fileInfo) throws Exception;
 
     /**
      * 保存分块文件

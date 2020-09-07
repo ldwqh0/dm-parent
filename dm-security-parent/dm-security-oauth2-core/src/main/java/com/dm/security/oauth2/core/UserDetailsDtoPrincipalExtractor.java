@@ -13,7 +13,7 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 
     @Override
     public OAuth2User extract(Map<String, Object> map) {
-        UserDetailsDtoOAuth2User userDetailsDto = new UserDetailsDtoOAuth2User();
+        OAuth2UserDetailsDto userDetailsDto = new OAuth2UserDetailsDto();
         userDetailsDto.setId(((Integer) map.get("id")).longValue());
         userDetailsDto.setUsername((String) map.get("username"));
         userDetailsDto.setFullname((String) map.get("fullname"));

@@ -19,7 +19,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "dm_department_", uniqueConstraints = { @UniqueConstraint(columnNames = { "parent_id_", "full_name_" }) })
 public class Department extends AbstractEntity {
-    private static final long serialVersionUID = -6824250546678747271L;
 
     /**
      * 部门类型

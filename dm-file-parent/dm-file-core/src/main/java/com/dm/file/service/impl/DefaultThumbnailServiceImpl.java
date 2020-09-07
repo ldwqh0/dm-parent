@@ -2,40 +2,38 @@ package com.dm.file.service.impl;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.dm.file.config.FileConfig;
+import com.dm.file.service.FileStorageService;
 import com.dm.file.service.ThumbnailService;
 import com.dm.file.util.DmFileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class LocalThumbnailServiceImpl implements ThumbnailService {
+public class DefaultThumbnailServiceImpl implements ThumbnailService {
+
+    private FileStorageService storageService;
 
     @Autowired
-    private FileConfig fileConfig;
+    public void setStorageService(FileStorageService storageService) {
+        this.storageService = storageService;
+    }
 
     private static final String[] imgExt = { "jpg", "png", "bmp", "jpeg" };
     private final int[][] levelScales = { { 128, 128 }, { 256, 256 }, { 512, 512 }, { 1080, 1920 } };
 
     private void createThumbnail(Image image, String filename, int level) throws FileNotFoundException, IOException {
-        try (OutputStream oStream = new FileOutputStream(getPath(filename, level))) {
+        try (OutputStream oStream = storageService.getOutputStream(filename, "th" + level)) {
             int o_w = image.getWidth(null);
             int o_h = image.getHeight(null);
             int max_width = levelScales[level][0];
@@ -53,7 +51,7 @@ public class LocalThumbnailServiceImpl implements ThumbnailService {
     public void createThumbnail(String filename) {
         String ext = DmFileUtils.getExt(filename);
         if (ArrayUtils.contains(imgExt, ext)) {
-            try (InputStream iStream = new FileInputStream(getPath(filename))) {
+            try (InputStream iStream = storageService.getResource(filename).getInputStream()) {
                 Image image = ImageIO.read(iStream);
                 for (int i = 0; i < levelScales.length; i++) {
                     createThumbnail(image, filename, i);
@@ -66,24 +64,7 @@ public class LocalThumbnailServiceImpl implements ThumbnailService {
 
     @Override
     public Resource getResource(String filename, int level) {
-        return new FileSystemResource(new File(getPath(filename)));
-    }
-
-    @PostConstruct
-    public void initService() throws Exception {
-        String path = fileConfig.getPath();
-        for (int i = 0; i < levelScales.length; i++) {
-            String levelPath = path + File.separator + "th" + i + File.separator;
-            FileUtils.forceMkdir(new File(levelPath));
-        }
-    }
-
-    private String getPath(String filename) {
-        return fileConfig.getPath() + File.separator + filename;
-    }
-
-    private String getPath(String filename, int level) {
-        return fileConfig.getPath() + File.separator + "th" + level + File.separator + filename + ".jpg";
+        return storageService.getResource(filename, "th" + level);
     }
 
 }

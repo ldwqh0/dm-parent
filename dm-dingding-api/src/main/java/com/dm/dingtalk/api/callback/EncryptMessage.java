@@ -19,7 +19,7 @@ public class EncryptMessage implements Serializable {
     private String msg;
     private String key;
 
-    private final String CHARSET = "UTF-8";
+    private static final String CHARSET = "UTF-8";
 
     /**
      * 从byte[]中转换一个消息
@@ -67,7 +67,7 @@ public class EncryptMessage implements Serializable {
             byteStream.write(keyb);
             return byteStream.toByteArray();
         } catch (Exception e) {
-            return null;
+            return new byte[0];
         }
     }
 

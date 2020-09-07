@@ -1,7 +1,5 @@
 package com.dm.uap.dingtalk.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.IdClass;
@@ -22,9 +20,7 @@ import static javax.persistence.CascadeType.*;
 @Setter
 @Table(name = "dd_department_", indexes = { @Index(columnList = "deleted_", name = "idx_dd_department_deleted_") })
 @IdClass(CorpLongId.class)
-public class DDepartment extends CorpLongEntity implements Serializable {
-
-    private static final long serialVersionUID = 8399805234987134498L;
+public class DDepartment extends CorpLongEntity {
 
     /**
      * autoAddUser

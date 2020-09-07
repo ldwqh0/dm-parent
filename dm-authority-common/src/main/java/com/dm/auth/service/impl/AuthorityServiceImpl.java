@@ -88,6 +88,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
      * @param auth
      * @return
      */
+    // TODO 不能缓存实体
     @Override
     @Cacheable(cacheNames = "AuthorityMenus")
     public Set<Menu> findByAuthority(String auth) {
@@ -195,6 +196,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
         }
     }
 
+    // TODO 不能缓存实体
     @Transactional(readOnly = true)
     @Override
     @Cacheable(cacheNames = "AuthorityAttributes", key = "'all_resource'", sync = true)

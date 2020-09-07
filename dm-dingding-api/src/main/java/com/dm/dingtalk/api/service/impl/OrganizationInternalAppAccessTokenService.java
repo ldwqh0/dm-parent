@@ -14,7 +14,7 @@ import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
  **/
 public class OrganizationInternalAppAccessTokenService implements DingtalkAccessTokenService, InitializingBean {
 
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = null;
 
     private final Object tokenLock = new Object();
 

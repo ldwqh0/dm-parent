@@ -2,13 +2,13 @@ package com.dm.file.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.dto.FileInfoDto;
@@ -37,9 +37,10 @@ public class FileServiceImpl implements FileInfoService {
     }
 
     @Override
-    public FileInfo save(File file, FileInfoDto _info) throws Exception {
+    @Transactional(rollbackFor = Exception.class)
+    public FileInfo save(MultipartFile file, FileInfoDto _info) throws Exception {
         FileInfo fileInfo = save(_info);
-        if (storageService.save(fileInfo.getPath(), file)) {
+        if (storageService.save(file, fileInfo.getPath())) {
             return fileInfo;
         } else {
             throw new FileStorageException();
@@ -54,17 +55,6 @@ public class FileServiceImpl implements FileInfoService {
             storageService.delete(fileInfo.get().getPath());
         }
         fileInfoRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Throwable.class)
-    public FileInfo save(InputStream inputStream, FileInfoDto _info) throws Exception {
-        FileInfo info = save(_info);
-        if (storageService.save(info.getPath(), inputStream)) {
-            return info;
-        } else {
-            throw new FileStorageException();
-        }
     }
 
     private FileInfo save(FileInfoDto _info) {
@@ -82,7 +72,7 @@ public class FileServiceImpl implements FileInfoService {
     @Transactional(rollbackFor = Throwable.class)
     public FileInfo save(File[] src, FileInfoDto fileInfo) throws IOException {
         FileInfo file = save(fileInfo);
-        if (storageService.save(file.getPath(), src)) {
+        if (storageService.save(src, file.getPath())) {
             return file;
         } else {
             throw new FileStorageException();

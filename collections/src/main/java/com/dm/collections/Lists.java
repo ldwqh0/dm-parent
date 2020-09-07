@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,11 +59,17 @@ public final class Lists {
 
     public static <E> List<E> asList(Collection<E> collection) {
         if (collection == null) {
-            return null;
+            return Collections.emptyList();
         } else if (collection instanceof List) {
             return (List<E>) collection;
         } else {
             return arrayList(collection);
+        }
+    }
+
+    public static <E> void addAll(List<E> list, @SuppressWarnings("unchecked") E... elements) {
+        if (!Objects.isNull(elements)) {
+            list.addAll(Arrays.asList(elements));
         }
     }
 
@@ -84,5 +91,4 @@ public final class Lists {
             return input.stream().map(converter).collect(Collectors.toList());
         }
     }
-
 }

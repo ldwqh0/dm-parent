@@ -30,7 +30,7 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
     @JsonProperty(access = Access.WRITE_ONLY)
     private boolean enabled;
     private boolean locked;
-    private List<? extends GrantedAuthority> grantedAuthority;
+    private Collection<? extends GrantedAuthority> grantedAuthority;
     private String fullname;
 
     private String regionCode;
@@ -47,7 +47,7 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
         return grantedAuthority;
     }
 
-    public void setGrantedAuthority(List<? extends GrantedAuthority> grantedAuthority) {
+    public void setGrantedAuthority(Collection<? extends GrantedAuthority> grantedAuthority) {
         this.grantedAuthority = grantedAuthority;
     }
 
@@ -181,7 +181,6 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
     @Override
     @JsonIgnore
     public String getName() {
-        // TODO Auto-generated method stub
         return username;
     }
 

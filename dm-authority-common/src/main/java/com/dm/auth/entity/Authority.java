@@ -1,6 +1,5 @@
 package com.dm.auth.entity;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -32,9 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "dm_authority_")
-public class Authority implements Serializable {
-
-    private static final long serialVersionUID = 1819180600973309677L;
+public class Authority {
 
     @Column(name = "role_id_")
     private Long id;

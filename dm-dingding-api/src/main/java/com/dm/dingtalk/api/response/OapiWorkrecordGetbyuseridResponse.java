@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -132,7 +133,8 @@ class OapiWorkRecord implements Serializable {
     }
 
     @Data
-    static class FormItem {
+    static class FormItem implements Serializable {
+        private static final long serialVersionUID = -1997517300506297746L;
         private String title;
         private String content;
     }

@@ -80,8 +80,11 @@ public class SecurityConfiguration {
     public WebFilter addCsrfTokenFilter() {
         final NotBearerTokenServerWebExchangeMatcher addCsrfTokenCookieRequestMatcher = new NotBearerTokenServerWebExchangeMatcher();
         return (exchange, next) -> Mono.just(exchange)
+                
                 .filterWhen(ex -> addCsrfTokenCookieRequestMatcher.matches(ex).map(MatchResult::isMatch))
+               
                 .flatMap(ex -> ex.<Mono<CsrfToken>>getAttribute(CsrfToken.class.getName()))
+               
                 .doOnNext(ex -> {
                     // nothing ,only subscribe for generate csrf cookie.
                 })

@@ -29,6 +29,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -74,7 +75,7 @@ public class FileController {
             infoDto.setFilename(DmFileUtils.getOriginalFilename(originalFilename));
         }
         infoDto.setSize(file.getSize());
-        FileInfo file_ = fileService.save(file.getInputStream(), infoDto);
+        FileInfo file_ = fileService.save(file, infoDto);
         thumbnailService.createThumbnail(file_.getPath());
         return fileInfoConverter.toDto(file_);
     }
@@ -110,11 +111,14 @@ public class FileController {
             fileInfo.setFilename(filename);
             fileInfo.setSize(length);
             FileInfo _result = fileService.save(src, fileInfo);
+            // 创建文件缩略图
+            thumbnailService.createThumbnail(_result.getPath());
             for (File file : src) {
                 try {
                     FileUtils.forceDelete(file);
                     // 删除临时文件
                 } catch (Exception e) {
+                    log.error("删除临时文件时发生异常", e);
                 }
             }
             return fileInfoConverter.toDto(_result);
@@ -279,7 +283,7 @@ public class FileController {
             String contentType = config.getMime(ext);
             Range range = null;
             // 计算range
-            if (ranges.size() < 0) {
+            if (ranges.size() < 1) {
                 log.info("no range checked");
             } else if (ranges.size() == 1) {
                 range = ranges.get(0);
@@ -295,7 +299,7 @@ public class FileController {
                         || StringUtils.contains(userAgent, "MSIE")) {
                     codeFileName = URLEncoder.encode(fileName, "UTF-8");
                 } else {
-                    codeFileName = new String(fileName.getBytes(), "ISO8859-1");
+                    codeFileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
                 }
             }
             // -----------------计算文件名结束-----------------------
@@ -316,6 +320,7 @@ public class FileController {
                     contentRange = "bytes " + range.getStart() + "-" + range.getEnd() + "/" + fileSize;
                     bodyBuilder.header("Content-Range", contentRange);
                 }
+                bodyBuilder.header("Content-Type", contentType);
                 bodyBuilder.header("Accept-Ranges", "bytes")
                         .contentLength(contentLength);
             }
@@ -324,7 +329,8 @@ public class FileController {
             }
             file.getLastModifiedDate().ifPresent(bodyBuilder::lastModified);
             return bodyBuilder.body(body);
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException e) {
+            log.error("构建响应体时发生异常", e);
             throw new RuntimeException(e);
         }
     }

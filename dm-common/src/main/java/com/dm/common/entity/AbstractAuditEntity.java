@@ -17,8 +17,6 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractAuditEntity extends AbstractEntity implements Auditable<Audit, Long, ZonedDateTime> {
 
-    private static final long serialVersionUID = -3422581450045291219L;
-
     /**
      * 增加几个JSON忽略属性，主要在于不使用DTO的时候，
      */

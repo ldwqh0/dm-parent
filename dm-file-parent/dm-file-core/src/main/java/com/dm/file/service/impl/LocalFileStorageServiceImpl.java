@@ -1,9 +1,10 @@
 package com.dm.file.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -11,7 +12,9 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.dm.collections.Lists;
 import com.dm.file.config.FileConfig;
 import com.dm.file.service.FileStorageService;
 
@@ -20,58 +23,74 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LocalFileStorageServiceImpl implements FileStorageService {
 
-    @Autowired
     private FileConfig config;
 
+    @Autowired
+    public void setConfig(FileConfig config) {
+        this.config = config;
+    }
+
     @Override
-    public boolean save(String path, InputStream inputStream) {
+    public boolean save(MultipartFile file, String filename, String... path) {
         try {
-            FileUtils.copyToFile(inputStream, new File(getPath(path)));
+            file.transferTo(createTargetFile(filename, path));
+//            FileUtils.copyToFile(file.getInputStream(), createTargetFile(filename, path));
             return true;
         } catch (IOException e) {
-            log.error("保存文件 {} 失败", path, e);
+            log.error("保存文件 {} 失败", filename, e);
             return false;
         }
     }
 
     @Override
-    public boolean save(String path, File file) {
-        try {
-            FileUtils.copyFile(file, new File(getPath(path)));
-            return true;
-        } catch (IOException e) {
-            log.error("保存文件 {} 失败", path, e);
-            return false;
-        }
-
+    public boolean delete(String filename, String... path) {
+        return FileUtils.deleteQuietly(getTargetFile(filename, path));
     }
 
     @Override
-    public boolean delete(String path) {
-        return FileUtils.deleteQuietly(new File(getPath(path)));
+    public boolean exist(String filename, String... path) {
+        return getTargetFile(filename, path).exists();
     }
 
     @Override
-    public boolean exist(String path) {
-        return new File(getPath(path)).exists();
-    }
-
-    private String getPath(String filename) {
-        return config.getPath() + File.separator + filename;
-    }
-
-    @Override
-    public boolean save(String path, File[] src) {
-        File target = new File(getPath(path));
-        try (OutputStream out = FileUtils.openOutputStream(target, false)) {
+    public boolean save(File[] src, String filename, String... path) {
+        try (OutputStream out = FileUtils.openOutputStream(createTargetFile(filename, path), false)) {
             for (File file : src) {
                 FileUtils.copyFile(file, out);
             }
             return true;
         } catch (Exception e) {
-            log.error("保存文件 {} 时发生错误", path, e);
+            log.error("保存文件 {} 时发生错误", filename, e);
             return false;
         }
+    }
+
+    @Override
+    public Resource getResource(String filename, Long start, Long end, String... path)  {
+        return new FileSystemResource(getTargetFile(filename, path));
+    }
+
+    @Override
+    public Resource getResource(String filename, String... path) {
+        return new FileSystemResource(getTargetFile(filename, path));
+    }
+
+    @Override
+    public OutputStream getOutputStream(String filename, String... path) throws IOException {
+        return new FileOutputStream(createTargetFile(filename, path), false);
+    }
+
+    private File getTargetFile(String filename, String... path) {
+        List<String> pathList = Lists.arrayList(config.getPath());
+        Lists.addAll(pathList, path);
+        Lists.addAll(pathList, filename);
+        return FileUtils.getFile(pathList.toArray(new String[pathList.size()]));
+    }
+
+    private File createTargetFile(String filename, String... path) throws IOException {
+        File file = getTargetFile(filename, path);
+        FileUtils.forceMkdirParent(file);
+        return file;
     }
 
     /**
@@ -81,18 +100,7 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     public void initStorage() throws Exception {
         String path = config.getPath();
         String tempPath = config.getTempPath();
-        File file = new File(path);
-        FileUtils.forceMkdir(file);
+        FileUtils.forceMkdir(new File(path));
         FileUtils.forceMkdir(new File(tempPath));
-    }
-
-    @Override
-    public Resource getResource(String filename, Long start, Long end) {
-        return new FileSystemResource(new File(getPath(filename)));
-    }
-
-    @Override
-    public Resource getResource(String path) {
-        return new FileSystemResource(new File(getPath(path)));
     }
 }

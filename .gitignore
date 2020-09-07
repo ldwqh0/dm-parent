@@ -22,5 +22,7 @@ target
 .springBeans
 .factorypath
 rebel.xml
+.rebel.xml
+.rebel.xml.bak
 .sts4-cache
 application.pid

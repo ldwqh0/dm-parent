@@ -12,6 +12,10 @@ public class DataNotExistException extends RuntimeException {
         super(message);
     }
 
+    public DataNotExistException(String message, Throwable err) {
+        super(message, err);
+    }
+
     public DataNotExistException() {
         super("资源不存在");
     }

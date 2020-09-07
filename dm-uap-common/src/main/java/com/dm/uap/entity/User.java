@@ -32,8 +32,6 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User extends AbstractEntity {
 
-    private static final long serialVersionUID = 9058110335651086815L;
-
     @Column(name = "username_", unique = true, length = 50)
     @NotNull
     private String username;
