@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Data;
+import lombok.Setter;
 
 /**
  * 角色数据结构
@@ -41,16 +42,12 @@ public class RoleDto implements Serializable {
     @Valid
     private RoleGroupDto group;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
+    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
     private List<UserDto> users;
 
     @JsonIgnoreProperties({ "password", "roles" })
     public List<UserDto> getUsers() {
         return users;
-    }
-
-    public void setUsers(List<UserDto> users) {
-        this.users = users;
     }
 
 }
