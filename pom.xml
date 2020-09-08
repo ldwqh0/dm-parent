@@ -21,6 +21,7 @@
     <resource.delimiter>@</resource.delimiter>
     <commons-collections4.version>4.4</commons-collections4.version>
     <querydsl.version>4.3.1</querydsl.version>
+    <lombok.version>1.18.12</lombok.version>
     <dm.version>1.1.0-SNAPSHOT</dm.version>
   </properties>
   <modules>
@@ -42,9 +43,9 @@
     <!-- 文件模块 -->
     <module>dm-file-parent/dm-file-core</module>
     <module>dm-file-parent/dm-file-spring-boot-starter</module>
-    <!--行政区划模块-->
+    <!--行政区划模块 -->
     <module>dm-code</module>
-    <!--多数据源模块-->
+    <!--多数据源模块 -->
     <module>dm-jdbc/dm-multi-datasource</module>
     <module>dm-jdbc/dm-multi-datasource-jpa-support</module>
     <module>dm-security-parent</module>
@@ -127,7 +128,6 @@
         <artifactId>springfox-swagger-ui</artifactId>
         <version>${springfox.version}</version>
       </dependency>
-
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
@@ -273,37 +273,19 @@
     </resources>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.jetbrains.kotlin</groupId>
-          <artifactId>kotlin-maven-plugin</artifactId>
-          <version>${kotlin.version}</version>
-          <executions>
-            <execution>
-              <id>compile</id>
-              <phase>compile</phase>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>test-compile</id>
-              <phase>test-compile</phase>
-              <goals>
-                <goal>test-compile</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <jvmTarget>${java.version}</jvmTarget>
-            <javaParameters>true</javaParameters>
-          </configuration>
-        </plugin>
         <!-- maven编译依赖 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <parameters>true</parameters>
+            <annotationProcessorPaths>
+              <annotationProcessorPath>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </annotationProcessorPath>
+            </annotationProcessorPaths>
           </configuration>
         </plugin>
         <!-- apt query DSL依赖 -->
@@ -386,13 +368,6 @@
               </goals>
             </execution>
           </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <parameters>true</parameters>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -498,7 +473,7 @@
             <dependency>
               <groupId>org.springframework.boot</groupId>
               <artifactId>spring-boot-maven-plugin</artifactId>
-              <version>2.2.7.RELEASE</version>
+              <version>${springboot.version}</version>
             </dependency>
           </dependencies>
           <executions>
