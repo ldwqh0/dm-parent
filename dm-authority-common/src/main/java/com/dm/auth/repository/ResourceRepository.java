@@ -1,5 +1,6 @@
 package com.dm.auth.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ public interface ResourceRepository extends JpaRepository<Resource, Long>, Query
 
     public Optional<Resource> findByName(String name);
 
-    public List<Resource> findByIdNotIn(List<Long> ids);
+    public List<Resource> findByIdNotIn(Collection<Long> ids);
 
     /**
      * 获取所有资源的Scope

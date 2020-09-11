@@ -1,5 +1,6 @@
 package com.dm.auth.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,17 +14,17 @@ public interface ResourceService {
 
     public Resource save(ResourceDto resource);
 
-    public void deleteById(Long id);
+    public void deleteById(long id);
 
-    public Resource update(Long id, ResourceDto _resource);
+    public Resource update(long id, ResourceDto _resource);
 
     public Page<Resource> search(String keywords, Pageable pageable);
 
-    public Optional<Resource> findById(Long id);
+    public Optional<Resource> findById(long id);
 
     public List<Resource> listAll();
 
-    public List<Resource> findByIdNotIn(List<Long> ids);
+    public List<Resource> findByIdNotIn(Collection<Long> ids);
 
     public boolean exist();
 

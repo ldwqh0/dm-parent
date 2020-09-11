@@ -33,19 +33,19 @@ public class Resource extends AbstractEntity {
     /**
      * 资源名称
      */
-    @Column(name = "name_", length = 100, unique = true)
+    @Column(name = "name_", length = 100, unique = true, nullable = false)
     private String name;
 
     /**
      * 资源匹配路径
      */
-    @Column(name = "matcher_", length = 400, unique = true)
+    @Column(name = "matcher_", length = 400, unique = true, nullable = false)
     private String matcher;
 
     /**
      * 路径匹配类型
      */
-    @Column(name = "match_type_")
+    @Column(name = "match_type_", nullable = false)
     @Enumerated(EnumType.STRING)
     private MatchType matchType = MatchType.ANT_PATH;
 

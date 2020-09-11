@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -42,11 +41,15 @@ import java.util.List;
 @RestController
 public class MenuController {
 
-    @Autowired
-    private MenuService menuService;
+    private final MenuService menuService;
+
+    private final MenuConverter menuConverter;
 
     @Autowired
-    private MenuConverter menuConverter;
+    public MenuController(MenuService menuService, MenuConverter menuConverter) {
+        this.menuService = menuService;
+        this.menuConverter = menuConverter;
+    }
 
     @ApiOperation("保存菜单")
     @PostMapping
@@ -67,7 +70,6 @@ public class MenuController {
 
     @ApiOperation("获取菜单")
     @GetMapping("{id}")
-    @Transactional(readOnly = true)
     public MenuDto get(@PathVariable("id") Long id) {
         return menuService.get(id).map(menuConverter::toDto).orElseThrow(DataNotExistException::new);
     }
@@ -82,26 +84,21 @@ public class MenuController {
 
     @ApiOperation("根据关键字查询菜单")
     @GetMapping(params = { "draw" })
-    @Transactional(readOnly = true)
     public Page<MenuDto> list(
             @PageableDefault(page = 0, size = 10, direction = Direction.ASC, sort = "order") Pageable pageable,
             @RequestParam(value = "search", required = false) String key,
             @RequestParam(value = "parentId", required = false) Long parentId) {
-        Page<Menu> result = menuService.search(parentId, key, pageable);
-        return result.map(menuConverter::toDto);
+        return menuService.search(parentId, key, pageable).map(menuConverter::toDto);
     }
 
     @ApiOperation("更新菜单部分信息")
     @PatchMapping("{id}")
-    @Transactional
     public MenuDto patch(@PathVariable("id") long id, @RequestBody MenuDto _menu) {
-        Menu menu = menuService.patch(id, _menu);
-        return menuConverter.toDto(menu);
+        return menuConverter.toDto(menuService.patch(id, _menu));
     }
 
     @ApiOperation("获取可用菜单树")
     @GetMapping
-    @Transactional(readOnly = true)
     public List<MenuDto> getAllMenuEnabled(@SortDefault(direction = Direction.ASC, sort = { "order" }) Sort sort) {
         List<Menu> allMenuEnabled = menuService.listAllEnabled(sort);
         return Lists.transform(allMenuEnabled, menuConverter::toDto);
@@ -109,7 +106,6 @@ public class MenuController {
 
     @PutMapping("{id}/order")
     @ApiOperation("移动菜单")
-    @Transactional
     public MenuDto order(@PathVariable("id") Long id, @RequestBody OrderDto order) {
         Menu menu = null;
         if (UP.equals(order.getPosition())) {

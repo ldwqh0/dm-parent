@@ -19,11 +19,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dm.auth.converter.ResourceOperationConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
-import com.dm.auth.dto.ResourceOperationDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.Resource;
@@ -32,7 +30,7 @@ import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.service.AuthorityService;
-import com.dm.collections.CollectionUtils;
+import com.dm.collections.Maps;
 import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
@@ -47,9 +45,6 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     private AuthorityRepository authorityRepository;
 
     @Autowired
-    private ResourceOperationConverter resourceOperationConverter;
-
-    @Autowired
     private ResourceRepository resourceReopsitory;
 
     // 进行请求限定的请求类型
@@ -62,7 +57,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     };
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "AuthorityMenus", key = "#p0.roleName")
     public Authority save(MenuAuthorityDto authorityDto) {
         Long roleId = authorityDto.getRoleId();
@@ -91,6 +86,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     // TODO 不能缓存实体
     @Override
     @Cacheable(cacheNames = "AuthorityMenus")
+    @Transactional(readOnly = true)
     public Set<Menu> findByAuthority(String auth) {
         Set<Menu> parents = new HashSet<Menu>();
         Set<Menu> menus = authorityRepository.findById(auth)
@@ -144,7 +140,8 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     }
 
     @Override
-    public Optional<Authority> get(String rolename) {
+    @Transactional(readOnly = true)
+    public Optional<Authority> findByRoleName(String rolename) {
         return authorityRepository.findById(rolename);
     }
 
@@ -154,7 +151,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
     public Authority save(ResourceAuthorityDto authorityDto) {
         Long roleId = authorityDto.getRoleId();
@@ -168,72 +165,46 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
             authority.setRoleName(roleName);
             authority = authorityRepository.save(authority);
         }
-        Set<ResourceOperationDto> _resourceOperations = authorityDto.getResourceAuthorities();
-
-        // 保存资源权限配置
-        Set<ResourceOperation> resourceOperations = _resourceOperations.stream()
-                // 如果某组配置全部为空，代表该组未配置，则删除该组配置
-                .filter(this::hasAuhtority)
-                .map(m -> {
-                    ResourceOperation operation = new ResourceOperation();
-                    resourceOperationConverter.copyProperties(operation, m);
-                    operation.setResource(resourceReopsitory.getOne(m.getResource().getId()));
-                    return operation;
-                }).collect(Collectors.toSet());
-        authority.setResourceOperations(resourceOperations);
+        Map<Resource, ResourceOperation> resultOperations = Maps.transformKeys(
+                authorityDto.getResourceAuthorities(),
+                resourceReopsitory::getOne);
+        authority.setResourceOperations(resultOperations);
         return authority;
     }
 
     @Override
     @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
+    @Transactional(rollbackFor = Exception.class)
     public void deleteResourceAuthoritiesByRoleName(String rolename) {
         if (authorityRepository.existsById(rolename)) {
             Authority authority = authorityRepository.getOne(rolename);
-            Set<ResourceOperation> operations = authority.getResourceOperations();
-            if (CollectionUtils.isNotEmpty(operations)) {
-                operations.clear();
-            }
+            authority.setResourceOperations(null);
+            authorityRepository.save(authority);
         }
     }
 
-    // TODO 不能缓存实体
     @Transactional(readOnly = true)
     @Override
     @Cacheable(cacheNames = "AuthorityAttributes", key = "'all_resource'", sync = true)
     public Collection<ResourceAuthorityAttribute> listAll() {
         List<Authority> authorities = authorityRepository.findAll();
         // 一个资源的权限配置
-        Map<UriResource, ResourceAuthorityAttribute> resourceAuhtorityMap = new HashMap<>();
-        for (Authority authority : authorities) {
-            Set<ResourceOperation> operations = authority.getResourceOperations();
-            for (ResourceOperation operation : operations) {
+        final Map<UriResource, ResourceAuthorityAttribute> resourceAuhtorityMap = new HashMap<>();
+        authorities.forEach(authority -> {
+            authority.getResourceOperations().forEach((resource, operation) -> {
                 for (HttpMethod method : methods) {
-                    addAuthority(resourceAuhtorityMap, method, operation, authority.getRoleName());
+                    addAuthority(resourceAuhtorityMap, resource, method, operation, authority.getRoleName());
                 }
-            }
-        }
-        return resourceAuhtorityMap.values();
-    }
-
-    /**
-     * 判断一组资源操作是否被配置<br />
-     * 如果所有的配置都为空，则判定为未配置
-     * 
-     * @param op
-     * @return
-     */
-    private boolean hasAuhtority(ResourceOperationDto op) {
-        return !Objects.isNull(op.getDeleteable()) ||
-                !Objects.isNull(op.getReadable()) ||
-                !Objects.isNull(op.getSaveable()) ||
-                !Objects.isNull(op.getUpdateable());
+            });
+        });
+        return Collections.unmodifiableCollection(resourceAuhtorityMap.values());
     }
 
     private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map,
+            Resource resource,
             HttpMethod method,
             ResourceOperation operation,
             String authority) {
-        Resource resource = operation.getResource();
         UriResource ur = UriResource.of(method.toString(),
                 resource.getMatcher(),
                 resource.getMatchType(),

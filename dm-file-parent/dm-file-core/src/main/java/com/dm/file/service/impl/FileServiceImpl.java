@@ -32,6 +32,7 @@ public class FileServiceImpl implements FileInfoService {
     private FileInfoRepository fileInfoRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<FileInfo> findById(UUID id) {
         return fileInfoRepository.findById(id);
     }
@@ -48,7 +49,7 @@ public class FileServiceImpl implements FileInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(UUID id) throws Exception {
         Optional<FileInfo> fileInfo = fileInfoRepository.findById(id);
         if (fileInfo.isPresent()) {

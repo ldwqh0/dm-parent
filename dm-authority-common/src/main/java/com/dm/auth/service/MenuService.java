@@ -16,17 +16,17 @@ public interface MenuService {
 
     public Menu update(long id, MenuDto menuDto);
 
-    public Optional<Menu> get(Long id);
+    public Optional<Menu> get(long id);
 
-    public void delete(Long id);
+    public void delete(long id);
 
     public Page<Menu> search(Long parentId, String key, Pageable pageable);
 
     public Menu patch(long id, MenuDto _menu);
 
-    public Menu moveUp(Long id);
+    public Menu moveUp(long id);
 
-    public Menu moveDown(Long id);
+    public Menu moveDown(long id);
 
     public List<Menu> listAllEnabled(Sort sort);
 

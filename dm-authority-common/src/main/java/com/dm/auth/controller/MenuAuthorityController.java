@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,14 +38,21 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping({ "menuAuthorities", "p/menuAuthorities" })
 public class MenuAuthorityController {
 
-    @Autowired
-    private AuthorityService authorityService;
+    private final AuthorityService authorityService;
+
+    private final MenuConverter menuConverter;
+
+    private final AuthorityConverter authorityConverter;
 
     @Autowired
-    private MenuConverter menuConverter;
-
-    @Autowired
-    private AuthorityConverter authorityConverter;
+    public MenuAuthorityController(
+            AuthorityService authorityService,
+            MenuConverter menuConverter,
+            AuthorityConverter authorityConverter) {
+        this.authorityService = authorityService;
+        this.menuConverter = menuConverter;
+        this.authorityConverter = authorityConverter;
+    }
 
     /**
      * 保存一个角色的菜单权限配置
@@ -57,7 +63,6 @@ public class MenuAuthorityController {
     @PutMapping("{rolename}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
-    @Transactional
     public MenuAuthorityDto save(@PathVariable("rolename") String rolename,
             @RequestBody MenuAuthorityDto authorityDto) {
         authorityDto.setRoleName(rolename);
@@ -74,9 +79,8 @@ public class MenuAuthorityController {
      * @return
      */
     @GetMapping("{rolename}")
-    @Transactional(readOnly = true)
     public MenuAuthorityDto get(@PathVariable("rolename") String rolename) {
-        return authorityService.get(rolename).map(authorityConverter::toMenuAuthorityDto)
+        return authorityService.findByRoleName(rolename).map(authorityConverter::toMenuAuthorityDto)
                 .orElseThrow(DataNotExistException::new);
     }
 
@@ -89,7 +93,6 @@ public class MenuAuthorityController {
      */
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
-    @Transactional(readOnly = true)
     public List<MenuDto> systemMenu(@AuthenticationPrincipal UserDetailsDto userDto) {
         Collection<GrantedAuthority> authorities = userDto.getRoles();
         if (CollectionUtils.isNotEmpty(authorities)) {

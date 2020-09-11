@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,11 +29,15 @@ import java.util.List;
 @RequestMapping({ "resources", "p/resources" })
 public class ResourceController {
 
-    @Autowired
-    private ResourceService resourceService;
+    private final ResourceService resourceService;
+
+    private final ResourceConverter resourceConverter;
 
     @Autowired
-    private ResourceConverter resourceConverter;
+    public ResourceController(ResourceService resourceService, ResourceConverter resourceConverter) {
+        this.resourceService = resourceService;
+        this.resourceConverter = resourceConverter;
+    }
 
     @PostMapping
     @ResponseStatus(value = CREATED)
@@ -43,6 +46,7 @@ public class ResourceController {
     }
 
     @DeleteMapping("{id}")
+    @ResponseStatus(value = NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         resourceService.deleteById(id);
     }
@@ -54,13 +58,12 @@ public class ResourceController {
     }
 
     @GetMapping("{id}")
-    @Transactional(readOnly = true)
     public ResourceDto get(@PathVariable("id") Long id) {
-        return resourceConverter.toDto(resourceService.findById(id).orElseThrow(DataNotExistException::new));
+        return resourceService.findById(id).map(resourceConverter::toDto)
+                .orElseThrow(DataNotExistException::new);
     }
 
     @GetMapping(params = { "draw" })
-    @Transactional(readOnly = true)
     public Page<ResourceDto> search(@RequestParam("draw") Long draw,
             @PageableDefault Pageable pageable,
             @RequestParam(value = "search", required = false) String keywords) {
@@ -68,7 +71,6 @@ public class ResourceController {
     }
 
     @GetMapping
-    @Transactional(readOnly = true)
     public List<ResourceDto> listAll() {
         return Lists.transform(resourceService.listAll(), resourceConverter::toDto);
     }

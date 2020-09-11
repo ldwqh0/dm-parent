@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dm.file.entity.QFileInfo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,6 +20,7 @@ public class FileInfoRepositoryImpl {
         this.jqf = queryFactory;
     }
 
+    @Transactional(readOnly = true)
     public Optional<UUID> findMaxId() {
         return Optional.ofNullable(
                 jqf.select(qFileInfo.id).from(qFileInfo)

@@ -1,7 +1,6 @@
 package com.dm.security.web.authorization;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,8 +41,7 @@ public class ServerHttpRequestReactiveAuthorizationManager
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
         return Mono.defer(() -> {
             final ServerWebExchange exchange = context.getExchange();
-            final Collection<ResourceAuthorityAttribute> attributes = Collections
-                    .unmodifiableCollection(resourceAuthorityService.listAll());
+            final Collection<ResourceAuthorityAttribute> attributes = resourceAuthorityService.listAll();
             // 获取所有匹配到的数据
             Mono<List<ResourceAuthorityAttribute>> matches = Flux.fromIterable(attributes)
                     .filterWhen(attribute -> matches(exchange, attribute).map(MatchResult::isMatch))
@@ -66,12 +64,9 @@ public class ServerHttpRequestReactiveAuthorizationManager
         Flux<Boolean> checkResult = Flux.empty();
         final Set<String> currentAuthorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
+                .filter(StringUtils::isNotEmpty)
+                .collect(Collectors.toSet());
         for (ResourceAuthorityAttribute attribute : list) {
-            // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
-//              if (attribute.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-//                  grantCount++;
-//              }
             // 如果拒绝列表中包含某一个当前用户的所属角色，立即返回
             if (CollectionUtils.isNotEmpty(currentAuthorities)
                     && CollectionUtils.isNotEmpty(attribute.getDenyAuthorities())
@@ -88,7 +83,7 @@ public class ServerHttpRequestReactiveAuthorizationManager
                 checkResult = checkResult.concatWith(additionalValidate(attribute, authentication, context));
             }
         }
-        return checkResult.any(Boolean.TRUE::equals).map(AuthorizationDecision::new);
+        return checkResult.all(Boolean.TRUE::equals).map(AuthorizationDecision::new);
     }
 
     /**

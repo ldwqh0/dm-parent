@@ -59,14 +59,14 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
                 FileUtils.copyFile(file, out);
             }
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("保存文件 {} 时发生错误", filename, e);
             return false;
         }
     }
 
     @Override
-    public Resource getResource(String filename, Long start, Long end, String... path)  {
+    public Resource getResource(String filename, Long start, Long end, String... path) {
         return new FileSystemResource(getTargetFile(filename, path));
     }
 

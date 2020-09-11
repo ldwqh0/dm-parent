@@ -1,7 +1,8 @@
 package com.dm.auth.service.impl;
 
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dm.auth.converter.ResourceConverter;
 import com.dm.auth.dto.ResourceDto;
-import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.QResource;
 import com.dm.auth.entity.Resource;
 import com.dm.auth.entity.ResourceOperation;
@@ -39,7 +39,7 @@ public class ResourceServiceImpl implements ResourceService {
     private final QResource qResource = QResource.resource;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Resource save(ResourceDto dto) {
         Resource resource = new Resource();
         resourceConverter.copyProperties(resource, dto);
@@ -47,30 +47,26 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void deleteById(Long id) {
-        List<Authority> authorities = authorityRepository.findByResourceOperationsResourceId(id);
-        for (Authority authority : authorities) {
-            Iterator<ResourceOperation> iterator = authority.getResourceOperations().iterator();
-            while (iterator.hasNext()) {
-                ResourceOperation operation = iterator.next();
-                if (Objects.equals(operation.getResource().getId(), id)) {
-                    iterator.remove();
-                }
-            }
-        }
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
+    public void deleteById(long id) {
+        authorityRepository.findByResourceOperationsResourceId(id).forEach(authority -> {
+            Map<Resource, ResourceOperation> iterator = authority.getResourceOperations();
+            iterator.keySet().stream().filter(resource -> Objects.equals(resource.getId(), id))
+                    .forEach(iterator::remove);
+        });
         resourceRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
-    public Resource update(Long id, ResourceDto dto) {
+    @Transactional(rollbackFor = Exception.class)
+    public Resource update(long id, ResourceDto dto) {
         Resource resource = resourceRepository.getOne(id);
         resourceConverter.copyProperties(resource, dto);
         return resource;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Resource> search(String keywords, Pageable pageable) {
         if (StringUtils.isNotBlank(keywords)) {
             BooleanExpression expression = qResource.description.containsIgnoreCase(keywords);
@@ -82,11 +78,13 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Optional<Resource> findById(Long id) {
+    @Transactional(readOnly = true)
+    public Optional<Resource> findById(long id) {
         return resourceRepository.findById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Resource> listAll() {
         return resourceRepository.findAll();
     }
@@ -97,16 +95,19 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Resource> findByName(String name) {
         return resourceRepository.findByName(name);
     }
 
     @Override
-    public List<Resource> findByIdNotIn(List<Long> ids) {
+    @Transactional(readOnly = true)
+    public List<Resource> findByIdNotIn(Collection<Long> ids) {
         return resourceRepository.findByIdNotIn(ids);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> listScopes() {
         return resourceRepository.listScopes();
     }
