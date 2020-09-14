@@ -1,19 +1,5 @@
 package com.dm.auth.service.impl;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dm.auth.converter.ResourceConverter;
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.entity.QResource;
@@ -22,7 +8,16 @@ import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.service.ResourceService;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.BooleanBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -52,7 +47,7 @@ public class ResourceServiceImpl implements ResourceService {
         authorityRepository.findByResourceOperationsResourceId(id).forEach(authority -> {
             Map<Resource, ResourceOperation> iterator = authority.getResourceOperations();
             iterator.keySet().stream().filter(resource -> Objects.equals(resource.getId(), id))
-                    .forEach(iterator::remove);
+                .forEach(iterator::remove);
         });
         resourceRepository.deleteById(id);
     }
@@ -68,13 +63,13 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     @Transactional(readOnly = true)
     public Page<Resource> search(String keywords, Pageable pageable) {
+        BooleanBuilder query = new BooleanBuilder();
         if (StringUtils.isNotBlank(keywords)) {
-            BooleanExpression expression = qResource.description.containsIgnoreCase(keywords);
-            expression.or(qResource.matcher.containsIgnoreCase(keywords));
-            return resourceRepository.findAll(expression, pageable);
-        } else {
-            return resourceRepository.findAll(pageable);
+            query.or(qResource.name.containsIgnoreCase(keywords))
+                .or(qResource.description.containsIgnoreCase(keywords))
+                .or(qResource.matcher.containsIgnoreCase(keywords));
         }
+        return resourceRepository.findAll(query, pageable);
     }
 
     @Override

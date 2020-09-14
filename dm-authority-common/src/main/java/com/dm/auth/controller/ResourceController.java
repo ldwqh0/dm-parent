@@ -64,7 +64,7 @@ public class ResourceController {
     }
 
     @GetMapping(params = { "draw" })
-    public Page<ResourceDto> search(@RequestParam("draw") Long draw,
+    public Page<ResourceDto> search(
             @PageableDefault Pageable pageable,
             @RequestParam(value = "search", required = false) String keywords) {
         return resourceService.search(keywords, pageable).map(resourceConverter::toDto);

@@ -44,24 +44,20 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 另外一个 {@link ServerOAuth2AuthorizationRequestResolver}的实现<br>
- * 
+ * <p>
  * 大部分的实现都源自
  * {@link org.springframework.security.oauth2.client.web.server.DefaultServerOAuth2AuthorizationRequestResolver}<br>
- * 
+ * <p>
  * 但当client隐藏在代理服务器后端时，默认实现在解析 {baseUrl}/login/oauth2/code/{registrationId}
  * 这样的配置时baseUrl会被解析为服务器自身的ip和port.从而导致redirect_uri不正确<br>
  * 虽然我们可以通过固定baseUrl ，比如写成
  * http://xxx.xxx.xxx/login/oauth2/code/{registrationId}这样的形式<br>
  * 但如果某个客户端在不同的域名被访问时，可能会出现只会跳转到固定地址，而不会跟随实际访问地址变化<br>
- * 
+ * <p>
  * 示例：现有服务部署于nginx后端。<br>
  * 我们可以通过两个地址访问nginx,分别是http://aaa.com和http://bbb.com<br>
  * 比如通过访问地址为http://aaa.com/test访问页面时,在oauth跳转时,我们期望oauth认证地址为
@@ -74,14 +70,18 @@ import java.util.Objects;
  * 在这个实现中，增加了一个{xForwardedHost}参数, 我们在配置redirect-uri时可以写成
  * {xForwardedProto}://{xForwardedHost}/login/oauth2/code/{registrationId}的形式
  * </p>
- * 
- * 前端代理服务器需要通过一个 X-REAL-HOST请求头将实际请求中的host传递给服务器
- * 
+ * <p>
+ * 前端代理服务器需要通过一个x-Forwarded-Proto和x-Forwarded-Host请求头将实际请求中的host传递给服务器
+ * </p>
+ * <p>
+ * 另外一个需求
+ * </p>
+ *
  * @author ldwqh0@outlook.com
  * @since 5.1
  */
 public class DmServerOAuth2AuthorizationRequestResolver
-        implements ServerOAuth2AuthorizationRequestResolver {
+    implements ServerOAuth2AuthorizationRequestResolver {
 
     /**
      * The name of the path variable that contains the
@@ -94,7 +94,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
      * {@link ClientRegistration#getRegistrationId()}
      */
     public static final String DEFAULT_AUTHORIZATION_REQUEST_PATTERN = "/oauth2/authorization/{"
-            + DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME + "}";
+        + DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME + "}";
 
     private static final char PATH_DELIMITER = '/';
 
@@ -105,23 +105,28 @@ public class DmServerOAuth2AuthorizationRequestResolver
     private final StringKeyGenerator stateGenerator = new Base64StringKeyGenerator(Base64.getUrlEncoder());
 
     private final StringKeyGenerator secureKeyGenerator = new Base64StringKeyGenerator(
-            Base64.getUrlEncoder().withoutPadding(), 96);
+        Base64.getUrlEncoder().withoutPadding(), 96);
+    private String defaultPrefix = "";
 
-    /**
-     * Creates a new instance
-     * 
-     * @param clientRegistrationRepository the repository to resolve the
-     *                                     {@link ClientRegistration}
-     */
-    public DmServerOAuth2AuthorizationRequestResolver(
-            ReactiveClientRegistrationRepository clientRegistrationRepository) {
-        this(clientRegistrationRepository, new PathPatternParserServerWebExchangeMatcher(
-                DEFAULT_AUTHORIZATION_REQUEST_PATTERN));
+    public void setDefaultPrefix(String defaultPrefix) {
+        this.defaultPrefix = defaultPrefix;
     }
 
     /**
      * Creates a new instance
-     * 
+     *
+     * @param clientRegistrationRepository the repository to resolve the
+     *                                     {@link ClientRegistration}
+     */
+    public DmServerOAuth2AuthorizationRequestResolver(
+        ReactiveClientRegistrationRepository clientRegistrationRepository) {
+        this(clientRegistrationRepository, new PathPatternParserServerWebExchangeMatcher(
+            DEFAULT_AUTHORIZATION_REQUEST_PATTERN));
+    }
+
+    /**
+     * Creates a new instance
+     *
      * @param clientRegistrationRepository the repository to resolve the
      *                                     {@link ClientRegistration}
      * @param authorizationRequestMatcher  the matcher that determines if the
@@ -130,7 +135,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
      *                                     from the path variables.
      */
     public DmServerOAuth2AuthorizationRequestResolver(ReactiveClientRegistrationRepository clientRegistrationRepository,
-            ServerWebExchangeMatcher authorizationRequestMatcher) {
+                                                      ServerWebExchangeMatcher authorizationRequestMatcher) {
         Assert.notNull(clientRegistrationRepository, "clientRegistrationRepository cannot be null");
         Assert.notNull(authorizationRequestMatcher, "authorizationRequestMatcher cannot be null");
         this.clientRegistrationRepository = clientRegistrationRepository;
@@ -140,28 +145,28 @@ public class DmServerOAuth2AuthorizationRequestResolver
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange) {
         return this.authorizationRequestMatcher.matches(exchange)
-                .filter(matchResult -> matchResult.isMatch())
-                .map(ServerWebExchangeMatcher.MatchResult::getVariables)
-                .map(variables -> variables.get(DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME))
-                .cast(String.class)
-                .flatMap(clientRegistrationId -> resolve(exchange, clientRegistrationId));
+            .filter(matchResult -> matchResult.isMatch())
+            .map(ServerWebExchangeMatcher.MatchResult::getVariables)
+            .map(variables -> variables.get(DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME))
+            .cast(String.class)
+            .flatMap(clientRegistrationId -> resolve(exchange, clientRegistrationId));
     }
 
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange,
-            String clientRegistrationId) {
+                                                    String clientRegistrationId) {
         return this.findByRegistrationId(exchange, clientRegistrationId)
-                .map(clientRegistration -> authorizationRequest(exchange, clientRegistration));
+            .map(clientRegistration -> authorizationRequest(exchange, clientRegistration));
     }
 
     private Mono<ClientRegistration> findByRegistrationId(ServerWebExchange exchange, String clientRegistration) {
         return this.clientRegistrationRepository.findByRegistrationId(clientRegistration)
-                .switchIfEmpty(Mono.error(
-                        () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid client registration id")));
+            .switchIfEmpty(Mono.error(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid client registration id")));
     }
 
     private OAuth2AuthorizationRequest authorizationRequest(ServerWebExchange exchange,
-            ClientRegistration clientRegistration) {
+                                                            ClientRegistration clientRegistration) {
         String redirectUriStr = expandRedirectUri(exchange.getRequest(), clientRegistration);
 
         Map<String, Object> attributes = new HashMap<>();
@@ -172,7 +177,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
             builder = OAuth2AuthorizationRequest.authorizationCode();
             Map<String, Object> additionalParameters = new HashMap<>();
             if (!CollectionUtils.isEmpty(clientRegistration.getScopes()) &&
-                    clientRegistration.getScopes().contains(OidcScopes.OPENID)) {
+                clientRegistration.getScopes().contains(OidcScopes.OPENID)) {
                 // Section 3.1.2.1 Authentication Request -
                 // https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
                 // scope
@@ -187,16 +192,16 @@ public class DmServerOAuth2AuthorizationRequestResolver
             builder = OAuth2AuthorizationRequest.implicit();
         } else {
             throw new IllegalArgumentException(
-                    "Invalid Authorization Grant Type (" + clientRegistration.getAuthorizationGrantType().getValue()
-                            + ") for Client Registration with Id: " + clientRegistration.getRegistrationId());
+                "Invalid Authorization Grant Type (" + clientRegistration.getAuthorizationGrantType().getValue()
+                    + ") for Client Registration with Id: " + clientRegistration.getRegistrationId());
         }
         return builder
-                .clientId(clientRegistration.getClientId())
-                .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
-                .redirectUri(redirectUriStr).scopes(clientRegistration.getScopes())
-                .state(this.stateGenerator.generateKey())
-                .attributes(attributes)
-                .build();
+            .clientId(clientRegistration.getClientId())
+            .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
+            .redirectUri(redirectUriStr).scopes(clientRegistration.getScopes())
+            .state(this.stateGenerator.generateKey())
+            .attributes(attributes)
+            .build();
     }
 
     /**
@@ -217,7 +222,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
      *
      * @return expanded URI
      */
-    private static String expandRedirectUri(ServerHttpRequest request, ClientRegistration clientRegistration) {
+    private String expandRedirectUri(ServerHttpRequest request, ClientRegistration clientRegistration) {
         Map<String, String> uriVariables = new HashMap<>();
         uriVariables.put("registrationId", clientRegistration.getRegistrationId());
         List<String> xForwardedHost = request.getHeaders().get("x-forwarded-host");
@@ -232,12 +237,17 @@ public class DmServerOAuth2AuthorizationRequestResolver
         } else {
             uriVariables.put("xForwardedProto", "");
         }
-
+        List<String> prefix = request.getQueryParams().get("prefix");
+        if (com.dm.collections.CollectionUtils.isNotEmpty(prefix)) {
+            uriVariables.put("prefix", org.apache.commons.lang3.StringUtils.join(prefix, PATH_DELIMITER));
+        } else {
+            uriVariables.put("prefix", this.defaultPrefix);
+        }
         UriComponents uriComponents = UriComponentsBuilder.fromUri(request.getURI())
-                .replacePath(request.getPath().contextPath().value())
-                .replaceQuery(null)
-                .fragment(null)
-                .build();
+            .replacePath(request.getPath().contextPath().value())
+            .replaceQuery(null)
+            .fragment(null)
+            .build();
         String scheme = uriComponents.getScheme();
         uriVariables.put("baseScheme", scheme == null ? "" : scheme);
         String host = uriComponents.getHost();
@@ -261,8 +271,8 @@ public class DmServerOAuth2AuthorizationRequestResolver
         uriVariables.put("action", action);
 
         return UriComponentsBuilder.fromUriString(clientRegistration.getRedirectUriTemplate())
-                .buildAndExpand(uriVariables)
-                .toUriString();
+            .buildAndExpand(uriVariables)
+            .toUriString();
     }
 
     /**
@@ -273,11 +283,10 @@ public class DmServerOAuth2AuthorizationRequestResolver
      *                             stored for the authentication request
      * @param additionalParameters where the {@link OidcParameterNames#NONCE} hash
      *                             is added for the authentication request
-     *
-     * @since 5.2
      * @see <a target="_blank" href=
-     *      "https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">3.1.2.1.
-     *      Authentication Request</a>
+     * "https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">3.1.2.1.
+     * Authentication Request</a>
+     * @since 5.2
      */
     private void addNonceParameters(Map<String, Object> attributes, Map<String, Object> additionalParameters) {
         try {
@@ -300,16 +309,15 @@ public class DmServerOAuth2AuthorizationRequestResolver
      *                             {@link PkceParameterNames#CODE_CHALLENGE_METHOD}
      *                             are added to be used in the authorization
      *                             request.
-     *
+     * @see <a target="_blank" href=
+     * "https://tools.ietf.org/html/rfc7636#section-1.1">1.1. Protocol Flow</a>
+     * @see <a target="_blank" href=
+     * "https://tools.ietf.org/html/rfc7636#section-4.1">4.1. Client Creates a
+     * Code Verifier</a>
+     * @see <a target="_blank" href=
+     * "https://tools.ietf.org/html/rfc7636#section-4.2">4.2. Client Creates
+     * the Code Challenge</a>
      * @since 5.2
-     * @see <a target="_blank" href=
-     *      "https://tools.ietf.org/html/rfc7636#section-1.1">1.1. Protocol Flow</a>
-     * @see <a target="_blank" href=
-     *      "https://tools.ietf.org/html/rfc7636#section-4.1">4.1. Client Creates a
-     *      Code Verifier</a>
-     * @see <a target="_blank" href=
-     *      "https://tools.ietf.org/html/rfc7636#section-4.2">4.2. Client Creates
-     *      the Code Challenge</a>
      */
     private void addPkceParameters(Map<String, Object> attributes, Map<String, Object> additionalParameters) {
         String codeVerifier = this.secureKeyGenerator.generateKey();

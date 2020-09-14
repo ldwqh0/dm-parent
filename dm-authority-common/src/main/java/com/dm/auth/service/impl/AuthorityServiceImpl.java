@@ -1,24 +1,5 @@
 package com.dm.auth.service.impl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
@@ -34,6 +15,15 @@ import com.dm.collections.Maps;
 import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("authorityService")
 public class AuthorityServiceImpl implements AuthorityService, ResourceAuthorityService {
@@ -49,11 +39,11 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
 
     // 进行请求限定的请求类型
     private final HttpMethod[] methods = {
-            HttpMethod.GET,
-            HttpMethod.POST,
-            HttpMethod.PUT,
-            HttpMethod.DELETE,
-            HttpMethod.PATCH
+        HttpMethod.GET,
+        HttpMethod.POST,
+        HttpMethod.PUT,
+        HttpMethod.DELETE,
+        HttpMethod.PATCH
     };
 
     @Override
@@ -79,7 +69,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
 
     /**
      * 根据角色查询菜单项目
-     * 
+     *
      * @param auth
      * @return
      */
@@ -90,8 +80,8 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     public Set<Menu> findByAuthority(String auth) {
         Set<Menu> parents = new HashSet<Menu>();
         Set<Menu> menus = authorityRepository.findById(auth)
-                .map(Authority::getMenus)
-                .orElseGet(Collections::emptySet);
+            .map(Authority::getMenus)
+            .orElseGet(Collections::emptySet);
         // 递归添加所有父级菜单
         for (Menu menu : menus) {
             addParent(menu, parents);
@@ -109,7 +99,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
 
     /**
      * 循环的将某个菜单的父级菜单添加到指定列表
-     * 
+     *
      * @param menu
      * @param collection
      */
@@ -123,7 +113,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
 
     /**
      * 判断某个菜单是否被禁用，判断的标准是依次判断父级菜单是否被禁用，如果某个菜单的父级菜单被禁用，那么该菜单的子菜单也是被禁用的
-     * 
+     *
      * @param menu
      * @return
      */
@@ -152,28 +142,27 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
+    @CacheEvict(cacheNames = {"AuthorityAttributes"}, key = "'all_resource'")
     public Authority save(ResourceAuthorityDto authorityDto) {
-        Long roleId = authorityDto.getRoleId();
         String roleName = authorityDto.getRoleName();
         Authority authority = null;
         if (authorityRepository.existsById(roleName)) {
             authority = authorityRepository.getOne(roleName);
         } else {
             authority = new Authority();
-            authority.setId(roleId);
-            authority.setRoleName(roleName);
-            authority = authorityRepository.save(authority);
         }
+        authority.setId(authorityDto.getRoleId());
+        authority.setRoleName(roleName);
+        authority = authorityRepository.save(authority);
         Map<Resource, ResourceOperation> resultOperations = Maps.transformKeys(
-                authorityDto.getResourceAuthorities(),
-                resourceReopsitory::getOne);
+            authorityDto.getResourceAuthorities(),
+            resourceReopsitory::getOne);
         authority.setResourceOperations(resultOperations);
         return authority;
     }
 
     @Override
-    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
+    @CacheEvict(cacheNames = {"AuthorityAttributes"}, key = "'all_resource'")
     @Transactional(rollbackFor = Exception.class)
     public void deleteResourceAuthoritiesByRoleName(String rolename) {
         if (authorityRepository.existsById(rolename)) {
@@ -201,33 +190,33 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     }
 
     private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map,
-            Resource resource,
-            HttpMethod method,
-            ResourceOperation operation,
-            String authority) {
+                              Resource resource,
+                              HttpMethod method,
+                              ResourceOperation operation,
+                              String authority) {
         UriResource ur = UriResource.of(method.toString(),
-                resource.getMatcher(),
-                resource.getMatchType(),
-                resource.getScope());
+            resource.getMatcher(),
+            resource.getMatchType(),
+            resource.getScope());
         Boolean access = null;
         switch (method) {
-        case POST:
-            access = operation.getSaveable();
-            break;
-        case PUT:
-            access = operation.getUpdateable();
-            break;
-        case GET:
-            access = operation.getReadable();
-            break;
-        case DELETE:
-            access = operation.getDeleteable();
-            break;
-        case PATCH:
-            access = operation.getPatchable();
-            break;
-        default:
-            break;
+            case POST:
+                access = operation.getSaveable();
+                break;
+            case PUT:
+                access = operation.getUpdateable();
+                break;
+            case GET:
+                access = operation.getReadable();
+                break;
+            case DELETE:
+                access = operation.getDeleteable();
+                break;
+            case PATCH:
+                access = operation.getPatchable();
+                break;
+            default:
+                break;
         }
 
         ResourceAuthorityAttribute raa = map.get(ur);
