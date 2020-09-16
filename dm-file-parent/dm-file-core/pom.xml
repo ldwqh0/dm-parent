@@ -14,10 +14,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.persistence</groupId>
@@ -47,6 +44,11 @@
     <dependency>
       <groupId>com.dm</groupId>
       <artifactId>dm-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>

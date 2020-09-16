@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.dm.auth.entity.QResource;
+import com.dm.auth.entity.QAuthResource;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class ResourceRepositoryImpl {
 
-    private final QResource qResource = QResource.resource;
+    private final QAuthResource qResource = QAuthResource.authResource;
 
     @Autowired
     private JPAQueryFactory jpf;

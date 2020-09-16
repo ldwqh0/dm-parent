@@ -10,9 +10,15 @@ import com.dm.auth.entity.Menu;
 
 public interface AuthorityService {
 
+    /**
+     * 保存菜单授权信息
+     * 
+     * @param authorityDto
+     * @return
+     */
     public Authority save(MenuAuthorityDto authorityDto);
 
-    public Optional<Authority> get(String rolename);
+    public Optional<Authority> findByRoleName(String rolename);
 
     public boolean exists();
 

@@ -2,6 +2,7 @@ package com.dm.file.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,6 +57,6 @@ public interface FileInfoService {
      * @return
      * @throws IOException
      */
-    public FileInfo save(File[] src, FileInfoDto fileInfo) throws IOException;
+    public FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException;
 
 }

@@ -2,6 +2,7 @@ package com.dm.file.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class FileServiceImpl implements FileInfoService {
     private FileInfoRepository fileInfoRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<FileInfo> findById(UUID id) {
         return fileInfoRepository.findById(id);
     }
@@ -48,7 +50,7 @@ public class FileServiceImpl implements FileInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(UUID id) throws Exception {
         Optional<FileInfo> fileInfo = fileInfoRepository.findById(id);
         if (fileInfo.isPresent()) {
@@ -70,7 +72,7 @@ public class FileServiceImpl implements FileInfoService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public FileInfo save(File[] src, FileInfoDto fileInfo) throws IOException {
+    public FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException {
         FileInfo file = save(fileInfo);
         if (storageService.save(src, file.getPath())) {
             return file;

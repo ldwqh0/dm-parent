@@ -1,21 +1,24 @@
 package com.dm.file.util;
 
-import org.apache.commons.io.FileUtils;
+
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
 import java.util.Locale;
+import java.util.Objects;
+
+import static java.nio.file.StandardOpenOption.*;
 
 public class DmFileUtils {
 
     /**
-     * 获取一个文件的原始文件名
+     * 获取一个文件的原始文件名称部分，不包括路径分隔符
      *
-     * @param name
-     * @return
+     * @param name 文件名称
+     * @return 获取到的路径名称
      */
     public static String getOriginalFilename(String name) {
         if (StringUtils.isNotBlank(name)) {
@@ -28,25 +31,34 @@ public class DmFileUtils {
     /**
      * 获取文件扩展名
      *
-     * @param filename
-     * @return
+     * @param filename 要获取扩展名的文件名
+     * @return 获取到的扩展名
      */
     public static String getExt(String filename) {
         return StringUtils.substringAfterLast(filename, ".").toLowerCase(Locale.ROOT);
     }
 
     /**
-     * 将所有的片段文件组合到目标文件
+     * 连接多个文件为一个文件
      *
-     * @param dist 目标文件
-     * @param src  源文件的列表
-     * @throws IOException
+     * @param dist    最终保存的目标文件
+     * @param sources 文件源
+     * @return 合并成功返还true,合并失败返还false
      */
-    public static void concatFile(File dist, File[] src) throws IOException {
-        try (OutputStream oStream = new FileOutputStream(dist)) {
-            for (File file : src) {
-                FileUtils.copyFile(file, oStream);
+    public static boolean concatFile(@NotNull Path dist, Path... sources) {
+        try (FileChannel out = FileChannel.open(dist, CREATE, APPEND, WRITE)) {
+            if (Objects.isNull(out)) {
+                return false;
+            } else {
+                for (Path path : sources) {
+                    try (FileChannel in = FileChannel.open(path, READ)) {
+                        in.transferTo(0, in.size(), out);
+                    }
+                }
+                return true;
             }
+        } catch (IOException e) {
+            return false;
         }
     }
 }

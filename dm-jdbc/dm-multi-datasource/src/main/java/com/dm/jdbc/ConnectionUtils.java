@@ -9,17 +9,17 @@ public final class ConnectionUtils {
     private ConnectionUtils() {
     }
 
-    public static boolean checkState(String url, String driverClass, String username, String password) {
+    public static CheckResult checkState(String url, String driverClass, String username, String password) {
         try (Connection cnn_ = createConnection(url, driverClass, username, password);
              Statement statement = cnn_.createStatement()) {
             // 尝试打开和关闭一次连接，以便确认连接的正确性
             statement.close();
-            return true;
+            return CheckResult.success();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return CheckResult.failure(e);
         } catch (ClassNotFoundException e) {
-            return false;
+            return CheckResult.failure(e);
         }
     }
 

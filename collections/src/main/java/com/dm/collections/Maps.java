@@ -21,6 +21,17 @@ public final class Maps {
         return new HashMap<>();
     }
 
+    @SafeVarargs
+    public static <K, V> HashMap<K, V> newHashMap(Map<K, V>... maps) {
+        HashMap<K, V> result = hashMap();
+        for (Map<K, V> map : maps) {
+            if (isNotEmpty(map)) {
+                result.putAll(map);
+            }
+        }
+        return result;
+    }
+
     /**
      * 将一系列的值,放入hashMap中<br>
      * 使用func通过iterable获取key
@@ -56,7 +67,7 @@ public final class Maps {
         return result;
     }
 
-    public static <K, V1, V2> Map<K, V2> transfrom(Map<K, V1> input, Function<? super V1, V2> valueConverter) {
+    public static <K, V1, V2> Map<K, V2> transfromValues(Map<K, V1> input, Function<? super V1, V2> valueConverter) {
         if (input == null) {
             return null;
         }
@@ -70,5 +81,42 @@ public final class Maps {
         return result;
     }
 
-    ;
+    public static <K1, K2, V> Map<K2, V> transformKeys(Map<K1, V> input,
+            Function<? super K1, K2> converter) {
+        if (input == null) {
+            return null;
+        }
+        if (input.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Map<K2, V> result = new HashMap<>();
+        input.forEach((k, v) -> {
+            result.put(converter.apply(k), v);
+        });
+        return result;
+    }
+
+    public static <K, V> HashMapBuilder<K, V> entry(K key, V value) {
+        return new HashMapBuilder<K, V>(key, value);
+    }
+
+    public final static class HashMapBuilder<K, V> {
+        private final HashMap<K, V> map = new HashMap<>();
+
+        public HashMapBuilder() {
+        }
+
+        public HashMapBuilder(K key, V value) {
+            this.map.put(key, value);
+        }
+
+        public HashMapBuilder<K, V> entry(K key, V value) {
+            map.put(key, value);
+            return this;
+        }
+
+        public HashMap<K, V> build() {
+            return map;
+        }
+    }
 }

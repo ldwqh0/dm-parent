@@ -18,7 +18,6 @@ import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -35,8 +34,6 @@ import com.dm.security.web.controller.CurrentUserController;
 import com.dm.security.web.controller.CurrentUserReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-//@Import({ ReactiveSecurityConfiguration.class,
-//        SecurityConfiguration.class })
 @Configuration
 public class SecurityAutoConfiguration {
 
@@ -65,19 +62,27 @@ public class SecurityAutoConfiguration {
     @ConditionalOnClass({ ReactiveAuthenticationManager.class })
     @ConditionalOnBean({ RequestMappingHandlerAdapter.class })
     @ConditionalOnMissingBean(type = {
-            "org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter" })
+            "org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter"
+    })
     @ConditionalOnMissingClass({ "javax.servlet.Servlet" })
     static class ReactiveSecurityConfiguration {
 
-        // TODO 这个需要处理
-        @Bean
-        @ConditionalOnMissingBean(ReactiveUserDetailsService.class)
-        public ReactiveUserDetailsService reactiveUserDetailsService() {
-            return new ReactiveUserDetailsServiceImpl();
-        }
+        // TODO 这个需要处理,用于单机使用reactive,方法还没有实现
+//        @Bean
+//        @ConditionalOnMissingBean(ReactiveUserDetailsService.class)
+//        public ReactiveUserDetailsService reactiveUserDetailsService() {
+//            return new ReactiveUserDetailsServiceImpl();
+//        }
 
-        @ConditionalOnClass({ ReactiveOAuth2UserService.class,
-                com.dm.security.oauth2.client.userinfo.DmReactiveOAuth2UserService.class })
+        /**
+         * 从oauth2服务器获取用户信息的实现
+         * 
+         * @return
+         */
+        @ConditionalOnClass(name = {
+                "org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService",
+                "com.dm.security.oauth2.client.userinfo.DmReactiveOAuth2UserService"
+        })
         @ConditionalOnMissingBean(ReactiveOAuth2UserService.class)
         @Bean
         public ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> reactiveOAuth2UserService() {

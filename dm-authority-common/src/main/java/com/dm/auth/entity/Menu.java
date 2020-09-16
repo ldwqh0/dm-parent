@@ -52,7 +52,7 @@ public class Menu extends AbstractEntity {
     /**
      * 菜单标题
      */
-    @Column(name = "title_", length = 50)
+    @Column(name = "title_", length = 50, nullable = false)
     private String title;
     /**
      * 状态 启用true,禁用false
