@@ -8,6 +8,7 @@ import com.dm.datasource.provider.DataSourceProperties;
 import com.dm.datasource.provider.DataSourceProvider;
 import com.dm.datasource.provider.DataSourceProviderHolder;
 import com.dm.datasource.service.DmDataSourceService;
+import com.dm.jdbc.CheckResult;
 import com.dm.jdbc.ConnectionUtils;
 import com.dm.jdbc.TableMeta;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping({ "/connections", "/dataSources" })
+@RequestMapping({"/connections", "/dataSources"})
 public class DmDataSourceController {
 
     private DmDataSourceService cnnService;
@@ -54,7 +55,7 @@ public class DmDataSourceController {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public DmDataSourceDto update(@PathVariable("id") Long id,
-            @RequestBody @Validated(Default.class) DmDataSourceDto connection) {
+                                  @RequestBody @Validated(Default.class) DmDataSourceDto connection) {
         return cnnConverter.toDto(cnnService.update(id, connection));
     }
 
@@ -63,38 +64,38 @@ public class DmDataSourceController {
         return cnnService.findById(id).map(cnnConverter::toDto).orElseThrow(DataNotExistException::new);
     }
 
-    @GetMapping(params = { "page", "size" })
+    @GetMapping(params = {"page", "size"})
     public Page<DmDataSourceDto> list(
-            @RequestParam(value = "keyword", required = false) String keyword,
-            @PageableDefault Pageable pageable) {
+        @RequestParam(value = "keyword", required = false) String keyword,
+        @PageableDefault Pageable pageable) {
         return cnnService.list(keyword, pageable).map(cnnConverter::toSimpleDto);
     }
 
-    @GetMapping(params = { "!page", "!size" })
+    @GetMapping(params = {"!page", "!size"})
     public List<DmDataSourceDto> list() {
         return Lists.transform(cnnService.listAll(), cnnConverter::toDto);
     }
 
     @GetMapping("{cnn}/state")
-    public Boolean state(@PathVariable("cnn") Long id) throws SQLException {
+    public CheckResult state(@PathVariable("cnn") Long id) throws SQLException {
         return cnnService.findById(id)
-                .map(cnnConverter::toDataSourceProperties)
-                .map(this::checkState)
-                .orElseThrow(DataNotExistException::new);
+            .map(cnnConverter::toDataSourceProperties)
+            .map(this::checkState)
+            .orElseThrow(DataNotExistException::new);
     }
 
     @PostMapping(value = "state")
-    public Boolean state(@RequestBody DmDataSourceDto cnn) throws SQLException {
+    public CheckResult state(@RequestBody DmDataSourceDto cnn) throws SQLException {
         return checkState(cnnConverter.toDataSourceProperties(cnn));
     }
 
-    private boolean checkState(DataSourceProperties properties) {
+    private CheckResult checkState(DataSourceProperties properties) {
         DataSourceProvider provider = DataSourceProviderHolder.getProvider(properties.getDbType());
         return ConnectionUtils.checkState(
-                provider.getUrl(properties),
-                provider.getDriverClassName(),
-                properties.getUsername(),
-                properties.getPassword());
+            provider.getUrl(properties),
+            provider.getDriverClassName(),
+            properties.getUsername(),
+            properties.getPassword());
     }
 
     @GetMapping("{connection}/tables")
