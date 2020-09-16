@@ -15,9 +15,9 @@
     <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
     <springboot.version>2.3.3.RELEASE</springboot.version>
     <springfox.version>2.9.2</springfox.version>
-    <hibernate.version>5.4.18.Final</hibernate.version>
-    <commons-lang3.version>3.10</commons-lang3.version>
-    <commons-io.version>2.7</commons-io.version>
+    <hibernate.version>5.4.20.Final</hibernate.version>
+    <commons-lang3.version>3.11</commons-lang3.version>
+    <commons-io.version>2.8.0</commons-io.version>
     <resource.delimiter>@</resource.delimiter>
     <commons-collections4.version>4.4</commons-collections4.version>
     <querydsl.version>4.3.1</querydsl.version>
