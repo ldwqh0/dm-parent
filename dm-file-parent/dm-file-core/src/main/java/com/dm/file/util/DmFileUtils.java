@@ -15,10 +15,10 @@ import static java.nio.file.StandardOpenOption.*;
 public class DmFileUtils {
 
     /**
-     * 获取一个文件的原始文件名
+     * 获取一个文件的原始文件名称部分，不包括路径分隔符
      *
-     * @param name
-     * @return
+     * @param name 文件名称
+     * @return 获取到的路径名称
      */
     public static String getOriginalFilename(String name) {
         if (StringUtils.isNotBlank(name)) {
@@ -31,8 +31,8 @@ public class DmFileUtils {
     /**
      * 获取文件扩展名
      *
-     * @param filename
-     * @return
+     * @param filename 要获取扩展名的文件名
+     * @return 获取到的扩展名
      */
     public static String getExt(String filename) {
         return StringUtils.substringAfterLast(filename, ".").toLowerCase(Locale.ROOT);
@@ -43,7 +43,7 @@ public class DmFileUtils {
      *
      * @param dist    最终保存的目标文件
      * @param sources 文件源
-     * @return
+     * @return 合并成功返还true,合并失败返还false
      */
     public static boolean concatFile(@NotNull Path dist, Path... sources) {
         try (FileChannel out = FileChannel.open(dist, CREATE, APPEND, WRITE)) {
@@ -52,7 +52,7 @@ public class DmFileUtils {
             } else {
                 for (Path path : sources) {
                     try (FileChannel in = FileChannel.open(path, READ)) {
-                        in.transferTo(0, 1000, out);
+                        in.transferTo(0, in.size(), out);
                     }
                 }
                 return true;

@@ -58,12 +58,12 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     }
 
     /**
-     * 批量保存文件
+     * 将多个文件合并保存为一个文件
      *
-     * @param paths
-     * @param filename
-     * @param parents
-     * @return
+     * @param paths 源文件的路径集合
+     * @param filename 目标文件名
+     * @param parents 目录的前缀路径
+     * @return 保存成功返还true,保存失败返还false
      */
     @Override
     public boolean save(Path[] paths, String filename, String... parents) {
@@ -114,10 +114,10 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
         } else {
             if (Files.exists(parent)) {
                 if (Files.isDirectory(parent)) {
-                    log.info("指定的目录[ {} ]已经存在", parent);
+                    log.debug("指定的目录[ {} ]已经存在", parent);
                     return true;
                 } else {
-                    log.info("指定的目录[ {} ]已经存在，并且不是一个目录", parent);
+                    log.error("指定的目录[ {} ]已经存在，并且不是一个目录", parent);
                     return false;
                 }
             } else {
