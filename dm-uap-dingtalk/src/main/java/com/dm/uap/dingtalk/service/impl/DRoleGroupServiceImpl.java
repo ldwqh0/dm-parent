@@ -5,11 +5,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.response.OpenRole;
 import com.dm.dingtalk.api.service.DingTalkService;

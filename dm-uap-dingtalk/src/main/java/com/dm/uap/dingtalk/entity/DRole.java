@@ -17,16 +17,12 @@ import lombok.Setter;
 
 import static javax.persistence.CascadeType.*;
 
-import java.io.Serializable;
-
 @Entity
 @Getter
 @Setter
 @Table(name = "dd_role_", indexes = { @Index(name = "idx_dd_role_deleted_", columnList = "deleted_") })
 @IdClass(CorpLongId.class)
-public class DRole extends CorpLongEntity implements Serializable {
-
-    private static final long serialVersionUID = -8441406771526246885L;
+public class DRole extends CorpLongEntity {
 
     @Column(name = "name_")
     private String name;

@@ -1,59 +1,80 @@
 package com.dm.file.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
-//import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Path;
 
 public interface FileStorageService {
 
     /**
-     * 将一个文件按指定的key存储
+     * 用指定文件名保存一个文件
      *
-     * @param key         指定的key
-     * @param inputStream 要存储的文件
-     * @throws Exception
+     * @param filename 指定要保存的文件的文件名，文件存储服务要能根据该文件名获取文件
+     * @param from     要存储的文件
+     * @return true 保存成功<br>
+     * false 保存失败
      */
-    public boolean save(String path, InputStream inputStream) throws IOException;
-
-    /**
-     * 保存一个文件，用指定文件名
-     *
-     * @param fileName
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    public boolean save(String path, File file) throws IOException;
+    public boolean save(MultipartFile from, String filename, String... parents);
 
     /**
      * 删除指定的文件
      *
-     * @param path 要删除的文件的路径
-     * @return
-     * @throws Exception
+     * @param filename 要删除的文件文件名
+     * @return true 删除成功<br>
+     * false 删除失败
      */
-    public boolean delete(String path) throws IOException;
+    public boolean delete(String filename, String... parents);
 
     /**
      * 指定的文件是否存在
      *
-     * @param path 要查找的文件
-     * @return 存在返回true,不存在返回false
-     * @throws Exception
+     * @param filename 要查找的文件
+     * @return 存在返回true, 不存在返回false
      */
-    public boolean exist(String path) throws Exception;
-
+    public boolean exist(String filename, String... parents);
 
     /**
-     * 获取指定的文件流
+     * 根据文件名和前缀获取资源
      *
-     * @param path
+     * @param filename
+     * @param parents
      * @return
-     * @throws Exception
+     * @throws IOException
      */
-    public InputStream getInputStream(String path) throws Exception;
+    public Resource getResource(String filename, String... parents);
 
-    public boolean save(String path, File[] src) throws IOException;
+//    /**
+//     * 获取指定文件名的Resource
+//     *
+//     * @param filename 要获取资源的文件名
+//     * @return
+//     */
+//    public Resource getResource(String filename);
+
+    /**
+     * 根据传入的开始个结束位置返回Resource,用于文件的分块传输
+     *
+     * @param filename
+     * @param start
+     * @param end
+     * @return
+     * @throws IOException
+     */
+    public Resource getResource(String filename, Long start, Long end, String... parents);
+
+    /**
+     * 将所有的文件块组合保存到一个文件
+     *
+     * @param filename
+     * @param from
+     * @return true 保存成功<br>
+     * false 保存失败
+     * @throws IOException
+     */
+    public boolean save(Path[] from, String filename, String... parents);
+
+    public OutputStream getOutputStream(String filename, String... parents) throws IOException;
 }

@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,6 +25,7 @@ import com.dm.auth.entity.QMenu;
 import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.service.MenuService;
+import com.dm.collections.CollectionUtils;
 import com.dm.common.exception.DataValidateException;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -45,7 +45,7 @@ public class MenuServcieImpl implements MenuService {
     private final QMenu qMenu = QMenu.menu;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu save(MenuDto menuDto) {
         preCheck(menuDto);
@@ -68,7 +68,7 @@ public class MenuServcieImpl implements MenuService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu update(long id, MenuDto menuDto) {
         preCheck(menuDto);
@@ -84,14 +84,15 @@ public class MenuServcieImpl implements MenuService {
     }
 
     @Override
-    public Optional<Menu> get(Long id) {
+    @Transactional(readOnly = true)
+    public Optional<Menu> get(long id) {
         return menuRepository.findById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
-    public void delete(Long id) {
+    public void delete(long id) {
         Menu menu = menuRepository.getOne(id);
         List<Authority> authorities = authorityRepository.findByMenu(menu);
         // 删除菜单之前，先移除相关的权限配置信息
@@ -105,6 +106,7 @@ public class MenuServcieImpl implements MenuService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Menu> search(Long parentId, String key, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         if (Objects.isNull(parentId)) {
@@ -122,7 +124,7 @@ public class MenuServcieImpl implements MenuService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu patch(long id, MenuDto _menu) {
         Menu menu = menuRepository.getOne(id);
@@ -133,9 +135,9 @@ public class MenuServcieImpl implements MenuService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
-    public Menu moveUp(Long id) {
+    public Menu moveUp(long id) {
         Menu one = menuRepository.getOne(id);
         Long order = one.getOrder();
         Menu parent = one.getParent();
@@ -159,9 +161,9 @@ public class MenuServcieImpl implements MenuService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
-    public Menu moveDown(Long id) {
+    public Menu moveDown(long id) {
         Menu one = menuRepository.getOne(id);
         Long order = one.getOrder();
         BooleanExpression expression;
@@ -205,6 +207,7 @@ public class MenuServcieImpl implements MenuService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Menu> listAllEnabled(Sort sort) {
         List<Menu> menus = menuRepository.findByEnabled(true, sort);
         return menus.stream().filter(menu -> !isDisabled(menu)).collect(Collectors.toList());

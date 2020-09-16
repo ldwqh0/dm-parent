@@ -24,9 +24,8 @@ public interface ProcessInstance {
      */
     public ProcessDefinition getProcessDefinition();
 
-    
     public List<History> getHistories();
-    
+
     /**
      * 获取流程当前节点
      * 

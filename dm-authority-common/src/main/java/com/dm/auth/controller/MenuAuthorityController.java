@@ -7,13 +7,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +27,8 @@ import com.dm.auth.dto.MenuDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.AuthorityService;
+import com.dm.collections.CollectionUtils;
+import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.security.core.userdetails.UserDetailsDto;
 
@@ -38,14 +38,21 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping({ "menuAuthorities", "p/menuAuthorities" })
 public class MenuAuthorityController {
 
-    @Autowired
-    private AuthorityService authorityService;
+    private final AuthorityService authorityService;
+
+    private final MenuConverter menuConverter;
+
+    private final AuthorityConverter authorityConverter;
 
     @Autowired
-    private MenuConverter menuConverter;
-
-    @Autowired
-    private AuthorityConverter authorityConverter;
+    public MenuAuthorityController(
+            AuthorityService authorityService,
+            MenuConverter menuConverter,
+            AuthorityConverter authorityConverter) {
+        this.authorityService = authorityService;
+        this.menuConverter = menuConverter;
+        this.authorityConverter = authorityConverter;
+    }
 
     /**
      * 保存一个角色的菜单权限配置
@@ -56,7 +63,6 @@ public class MenuAuthorityController {
     @PutMapping("{rolename}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
-    @Transactional
     public MenuAuthorityDto save(@PathVariable("rolename") String rolename,
             @RequestBody MenuAuthorityDto authorityDto) {
         authorityDto.setRoleName(rolename);
@@ -73,9 +79,8 @@ public class MenuAuthorityController {
      * @return
      */
     @GetMapping("{rolename}")
-    @Transactional(readOnly = true)
     public MenuAuthorityDto get(@PathVariable("rolename") String rolename) {
-        return authorityService.get(rolename).map(authorityConverter::toMenuAuthorityDto)
+        return authorityService.findByRoleName(rolename).map(authorityConverter::toMenuAuthorityDto)
                 .orElseThrow(DataNotExistException::new);
     }
 
@@ -88,7 +93,6 @@ public class MenuAuthorityController {
      */
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
-    @Transactional(readOnly = true)
     public List<MenuDto> systemMenu(@AuthenticationPrincipal UserDetailsDto userDto) {
         Collection<GrantedAuthority> authorities = userDto.getRoles();
         if (CollectionUtils.isNotEmpty(authorities)) {
@@ -99,7 +103,7 @@ public class MenuAuthorityController {
             List<Menu> result = new ArrayList<Menu>();
             result.addAll(menus);
             Collections.sort(result, (o1, o2) -> (int) (o1.getOrder() - o2.getOrder()));
-            return menuConverter.toDto(result);
+            return Lists.transform(result, menuConverter::toDto);
         } else {
             return Collections.emptyList();
         }

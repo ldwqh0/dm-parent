@@ -25,8 +25,6 @@ import lombok.Setter;
         })
 public class Menu extends AbstractEntity {
 
-    private static final long serialVersionUID = -5469864417544946812L;
-
     /**
      * 菜单类型，指定一个菜单的链接类型，可以是链接到业务组件，也可以是页面URL
      * 
@@ -54,7 +52,7 @@ public class Menu extends AbstractEntity {
     /**
      * 菜单标题
      */
-    @Column(name = "title_", length = 50)
+    @Column(name = "title_", length = 50, nullable = false)
     private String title;
     /**
      * 状态 启用true,禁用false

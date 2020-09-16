@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.uap.converter.DepartmentConverter;
 import com.dm.uap.dto.DepartmentDto;
@@ -64,6 +65,6 @@ public class DepartmentController {
 
     @GetMapping(params = "!draw")
     public List<DepartmentDto> tree(@PageableDefault(size = 10000) Pageable pageable) {
-        return departmentConverter.toDto(departmentService.findAll());
+        return Lists.transform(departmentService.findAll(), departmentConverter::toDto);
     }
 }

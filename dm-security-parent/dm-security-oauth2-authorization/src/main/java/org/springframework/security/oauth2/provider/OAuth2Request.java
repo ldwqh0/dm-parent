@@ -35,38 +35,42 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     private Set<String> resourceIds = new HashSet<String>();
 
     /**
-     * Resolved granted authorities for this request. May change during request processing.
+     * Resolved granted authorities for this request. May change during request
+     * processing.
      */
     private Collection<? extends GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 
     /**
-     * Whether the request has been approved by the end user (or other process). This will be altered by the User
-     * Approval Endpoint and/or the UserApprovalHandler as appropriate.
+     * Whether the request has been approved by the end user (or other process).
+     * This will be altered by the User Approval Endpoint and/or the
+     * UserApprovalHandler as appropriate.
      */
     private boolean approved = false;
 
     /**
-     * Will be non-null if the request is for a token to be refreshed (the original grant type might still be available
-     * via {@link #getGrantType()}).
+     * Will be non-null if the request is for a token to be refreshed (the original
+     * grant type might still be available via {@link #getGrantType()}).
      */
     private TokenRequest refresh = null;
 
     /**
-     * The resolved redirect URI of this request. A URI may be present in the original request, in the
-     * authorizationParameters, or it may not be provided, in which case it will be defaulted (by processing classes) to
-     * the Client's default registered value.
+     * The resolved redirect URI of this request. A URI may be present in the
+     * original request, in the authorizationParameters, or it may not be provided,
+     * in which case it will be defaulted (by processing classes) to the Client's
+     * default registered value.
      */
     private String redirectUri;
 
     /**
-     * Resolved requested response types initialized (by the OAuth2RequestFactory) with the response types originally
-     * requested.
+     * Resolved requested response types initialized (by the OAuth2RequestFactory)
+     * with the response types originally requested.
      */
     private Set<String> responseTypes = new HashSet<String>();
 
     /**
-     * Extension point for custom processing classes which may wish to store additional information about the OAuth2
-     * request. Since this class is serializable, all members of this map must also be serializable.
+     * Extension point for custom processing classes which may wish to store
+     * additional information about the OAuth2 request. Since this class is
+     * serializable, all members of this map must also be serializable.
      */
     private Map<String, Serializable> extensions = new HashMap<String, Serializable>();
 
@@ -95,8 +99,9 @@ public class OAuth2Request extends BaseRequest implements Serializable {
 
     protected OAuth2Request(OAuth2Request other) {
         this(other.getRequestParameters(), other.getClientId(), other.getAuthorities(), other.isApproved(), other
-                .getScope(), other.getResourceIds(), other.getRedirectUri(), other.getResponseTypes(), other
-                .getExtensions());
+                .getScope(), other.getResourceIds(), other.getRedirectUri(), other.getResponseTypes(),
+                other
+                        .getExtensions());
     }
 
     protected OAuth2Request(String clientId) {
@@ -132,7 +137,9 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     }
 
     /**
-     * Update the request parameters and return a new object with the same properties except the parameters.
+     * Update the request parameters and return a new object with the same
+     * properties except the parameters.
+     * 
      * @param parameters new parameters replacing the existing ones
      * @return a new OAuth2Request
      */
@@ -142,8 +149,8 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     }
 
     /**
-     * Update the scope and create a new request. All the other properties are the same (including the request
-     * parameters).
+     * Update the scope and create a new request. All the other properties are the
+     * same (including the request parameters).
      * 
      * @param scope the new scope
      * @return a new request with the narrowed scope
@@ -170,8 +177,9 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     }
 
     /**
-     * If this request was for an access token to be refreshed, then the {@link TokenRequest} that led to the refresh
-     * <i>may</i> be available here if it is known.
+     * If this request was for an access token to be refreshed, then the
+     * {@link TokenRequest} that led to the refresh <i>may</i> be available here if
+     * it is known.
      * 
      * @return the refresh token request (may be null)
      */
@@ -180,7 +188,8 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     }
 
     /**
-     * Tries to discover the grant type requested for the token associated with this request.
+     * Tries to discover the grant type requested for the token associated with this
+     * request.
      * 
      * @return the grant type if known, or null otherwise
      */
@@ -224,32 +233,27 @@ public class OAuth2Request extends BaseRequest implements Serializable {
         if (authorities == null) {
             if (other.authorities != null)
                 return false;
-        }
-        else if (!authorities.equals(other.authorities))
+        } else if (!authorities.equals(other.authorities))
             return false;
         if (extensions == null) {
             if (other.extensions != null)
                 return false;
-        }
-        else if (!extensions.equals(other.extensions))
+        } else if (!extensions.equals(other.extensions))
             return false;
         if (redirectUri == null) {
             if (other.redirectUri != null)
                 return false;
-        }
-        else if (!redirectUri.equals(other.redirectUri))
+        } else if (!redirectUri.equals(other.redirectUri))
             return false;
         if (resourceIds == null) {
             if (other.resourceIds != null)
                 return false;
-        }
-        else if (!resourceIds.equals(other.resourceIds))
+        } else if (!resourceIds.equals(other.resourceIds))
             return false;
         if (responseTypes == null) {
             if (other.responseTypes != null)
                 return false;
-        }
-        else if (!responseTypes.equals(other.responseTypes))
+        } else if (!responseTypes.equals(other.responseTypes))
             return false;
         return true;
     }

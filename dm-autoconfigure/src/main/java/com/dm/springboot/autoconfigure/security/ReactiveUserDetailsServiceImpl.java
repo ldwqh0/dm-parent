@@ -18,7 +18,6 @@ public class ReactiveUserDetailsServiceImpl implements ReactiveUserDetailsServic
         CompletableFuture.supplyAsync(() -> {
             return null;
         });
-
         UserDetails ud = null;// userDetailsService.loadUserByUsername(username);
         return Mono.fromFuture(CompletableFuture.completedFuture(ud));
     }

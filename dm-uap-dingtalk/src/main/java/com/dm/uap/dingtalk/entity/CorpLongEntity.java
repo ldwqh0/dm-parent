@@ -1,7 +1,5 @@
 package com.dm.uap.dingtalk.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -12,9 +10,7 @@ import lombok.Getter;
 @MappedSuperclass
 @IdClass(CorpLongId.class)
 @Getter
-public abstract class CorpLongEntity implements Serializable {
-
-    private static final long serialVersionUID = 1856254435464039720L;
+public abstract class CorpLongEntity {
 
     @Id
     @Column(name = "corp_id_")

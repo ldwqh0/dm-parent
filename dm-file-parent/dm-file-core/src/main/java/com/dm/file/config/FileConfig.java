@@ -4,11 +4,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-//import org.springframework.boot.context.properties.ConfigurationProperties;
 
-//@ConfigurationProperties(prefix = "file")
+import com.dm.collections.Maps;
+
 public class FileConfig {
     private String path;
     private Map<String, String> mime;
@@ -250,7 +249,7 @@ public class FileConfig {
     }
 
     public void setMime(Map<String, String> mime) {
-        if (MapUtils.isNotEmpty(mime)) {
+        if (Maps.isNotEmpty(mime)) {
             for (Map.Entry<String, String> entity : mime.entrySet()) {
                 this.mime.put(entity.getKey(), entity.getValue());
             }

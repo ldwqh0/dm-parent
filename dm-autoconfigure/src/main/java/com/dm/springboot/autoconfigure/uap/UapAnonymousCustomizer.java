@@ -1,8 +1,6 @@
 package com.dm.springboot.autoconfigure.uap;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.dm.uap.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +8,8 @@ import org.springframework.security.config.annotation.web.configurers.AnonymousC
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.dm.uap.service.UserService;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UapAnonymousCustomizer implements Customizer<AnonymousConfigurer<HttpSecurity>> {
 
@@ -20,19 +19,19 @@ public class UapAnonymousCustomizer implements Customizer<AnonymousConfigurer<Ht
     @SuppressWarnings("unused")
     private UapAutoConfiguration uac;
 
-    private UserService userService;
+    private UserService userService = null;
 
     public UapAnonymousCustomizer() {
 
     }
 
     @Autowired
-    public void UserDetailsService(UserService userService) {
+    public void userDetailsService(UserService userService) {
         this.userService = userService;
     }
 
     @Autowired
-    public void SetUapAutoConfiguration(UapAutoConfiguration uac) {
+    public void setUapAutoConfiguration(UapAutoConfiguration uac) {
         this.uac = uac;
     }
 

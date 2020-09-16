@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;

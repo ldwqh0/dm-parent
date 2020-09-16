@@ -136,7 +136,7 @@ public class DefaultAccessTokenConverter implements AccessTokenConverter {
         info.remove(clientIdAttribute);
         info.remove(scopeAttribute);
         if (map.containsKey(EXP)) {
-            token.setExpiration(ZonedDateTime.now().plusSeconds((Long)map.get(EXP)));
+            token.setExpiration(ZonedDateTime.now().plusSeconds((Long) map.get(EXP)));
         }
         if (map.containsKey(JTI)) {
             info.put(JTI, map.get(JTI));

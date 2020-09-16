@@ -5,9 +5,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.region.entity.QRegion;
 import com.dm.region.entity.Region;
 import com.querydsl.jpa.impl.JPAQuery;

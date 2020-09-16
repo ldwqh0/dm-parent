@@ -1,6 +1,6 @@
 package com.dm.auth.entity;
 
-import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,6 +15,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
@@ -22,7 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 授权信息
+ * 权限信息
  * 
  * @author LiDong
  *
@@ -32,11 +33,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "dm_authority_")
-public class Authority implements Serializable {
+public class Authority {
 
-    private static final long serialVersionUID = 1819180600973309677L;
-
-    @Column(name = "role_id_")
+    @Column(name = "role_id_", nullable = false)
     private Long id;
 
     @Id
@@ -53,10 +52,12 @@ public class Authority implements Serializable {
                             @Index(columnList = "role_name_", name = "IDX_dm_authority_menu_role_name_") })
     private Set<Menu> menus;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @JoinTable(name = "dm_authority_resource_operation_", joinColumns = {
-            @JoinColumn(name = "role_name_", referencedColumnName = "role_name_") })
+            @JoinColumn(name = "role_name_", referencedColumnName = "role_name_")
+    })
     @OrderColumn(name = "order_by_")
-    private Set<ResourceOperation> resourceOperations;
+    @MapKeyJoinColumn(name = "resource_id_")
+    private Map<AuthResource, ResourceOperation> resourceOperations;
 
 }

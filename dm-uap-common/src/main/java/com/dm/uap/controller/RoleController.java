@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.uap.converter.RoleConverter;
@@ -121,7 +122,6 @@ public class RoleController {
     @ApiOperation("获取所有启用角色")
     @GetMapping
     public List<RoleDto> listEnabled() {
-        List<Role> roles = roleService.listAllEnabled();
-        return roleConverter.toDto(roles);
+        return Lists.transform(roleService.listAllEnabled(), roleConverter::toDto);
     }
 }

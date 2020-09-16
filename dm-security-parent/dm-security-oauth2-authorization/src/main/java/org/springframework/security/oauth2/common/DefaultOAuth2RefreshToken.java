@@ -29,7 +29,7 @@ public class DefaultOAuth2RefreshToken implements Serializable, OAuth2RefreshTok
     public DefaultOAuth2RefreshToken(String value) {
         this.value = value;
     }
-    
+
     /**
      * Default constructor for JPA and other serialization tools.
      */
@@ -38,7 +38,9 @@ public class DefaultOAuth2RefreshToken implements Serializable, OAuth2RefreshTok
         this(null);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.springframework.security.oauth2.common.IFOO#getValue()
      */
     @Override

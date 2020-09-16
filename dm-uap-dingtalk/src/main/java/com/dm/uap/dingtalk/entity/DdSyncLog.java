@@ -16,8 +16,6 @@ import lombok.Setter;
 @Setter
 public class DdSyncLog extends AbstractEntity {
 
-    private static final long serialVersionUID = -864149408016233171L;
-
     private String user;
 
     private ZonedDateTime start;

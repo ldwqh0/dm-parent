@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dm</groupId>
   <artifactId>dm-parent</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
   <properties>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,19 +12,21 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <guava.version>29.0-jre</guava.version>
-    <spring.cloud.version>Hoxton.SR6</spring.cloud.version>
-    <springboot.version>2.2.9.RELEASE</springboot.version>
+    <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
+    <springboot.version>2.3.3.RELEASE</springboot.version>
     <springfox.version>2.9.2</springfox.version>
-    <hibernate.version>5.4.18.Final</hibernate.version>
-    <commons-lang3.version>3.10</commons-lang3.version>
-    <commons-io.version>2.7</commons-io.version>
+    <hibernate.version>5.4.20.Final</hibernate.version>
+    <commons-lang3.version>3.11</commons-lang3.version>
+    <commons-io.version>2.8.0</commons-io.version>
     <resource.delimiter>@</resource.delimiter>
     <commons-collections4.version>4.4</commons-collections4.version>
     <querydsl.version>4.3.1</querydsl.version>
-
-    <dm.version>1.1.0-SNAPSHOT</dm.version>
+    <lombok.version>1.18.12</lombok.version>
+    <dm.version>1.2.0-SNAPSHOT</dm.version>
   </properties>
   <modules>
+    <!-- 集合工具类 -->
+    <module>collections</module>
     <!-- 平台公共模块 -->
     <module>dm-common</module>
     <!-- 平台用户模块 -->
@@ -40,8 +42,13 @@
     <!-- 钉钉API和用户鉴权模块 -->
     <module>dm-uap-dingtalk</module>
     <!-- 文件模块 -->
-    <module>dm-file-parent</module>
+    <module>dm-file-parent/dm-file-core</module>
+    <module>dm-file-parent/dm-file-spring-boot-starter</module>
+    <!--行政区划模块-->
     <module>dm-code</module>
+    <!--多数据源模块-->
+    <module>dm-jdbc/dm-multi-datasource</module>
+    <module>dm-jdbc/dm-multi-datasource-jpa-support</module>
     <module>dm-security-parent</module>
     <!-- <module>dm-gateway-server</module> -->
     <module>dm-activity-parent</module>
@@ -122,14 +129,16 @@
         <artifactId>springfox-swagger-ui</artifactId>
         <version>${springfox.version}</version>
       </dependency>
-
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
       </dependency>
-
-
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>collections</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-authority-common</artifactId>
@@ -230,6 +239,16 @@
         <artifactId>dm-file-spring-boot-starter</artifactId>
         <version>${dm.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-multi-datasource</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-multi-datasource-jpa-support</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <build>
@@ -254,37 +273,19 @@
     </resources>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.jetbrains.kotlin</groupId>
-          <artifactId>kotlin-maven-plugin</artifactId>
-          <version>${kotlin.version}</version>
-          <executions>
-            <execution>
-              <id>compile</id>
-              <phase>compile</phase>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>test-compile</id>
-              <phase>test-compile</phase>
-              <goals>
-                <goal>test-compile</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <jvmTarget>${java.version}</jvmTarget>
-            <javaParameters>true</javaParameters>
-          </configuration>
-        </plugin>
         <!-- maven编译依赖 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <parameters>true</parameters>
+            <annotationProcessorPaths>
+              <annotationProcessorPath>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </annotationProcessorPath>
+            </annotationProcessorPaths>
           </configuration>
         </plugin>
         <!-- apt query DSL依赖 -->
@@ -370,13 +371,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <parameters>true</parameters>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <executions>
             <execution>
@@ -445,6 +439,7 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${springboot.version}</version>
           <executions>
             <execution>
               <id>repackage</id>
@@ -479,7 +474,7 @@
             <dependency>
               <groupId>org.springframework.boot</groupId>
               <artifactId>spring-boot-maven-plugin</artifactId>
-              <version>2.2.7.RELEASE</version>
+              <version>${springboot.version}</version>
             </dependency>
           </dependencies>
           <executions>
@@ -503,7 +498,7 @@
                     <resource>META-INF/spring.schemas</resource>
                   </transformer>
                   <transformer
-                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                   <transformer
                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                     <mainClass>${start-class}</mainClass>

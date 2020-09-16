@@ -5,20 +5,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.ReactivePageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.ReactiveSortHandlerMethodArgumentResolver;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
-import org.springframework.web.server.ServerWebExchange;
 
-@ConditionalOnClass(ServerWebExchange.class)
+@ConditionalOnClass(WebFluxConfigurer.class)
 public class SpringDataReactiveAutoConfiguration {
 
     @Bean
     @ConditionalOnClass(Pageable.class)
-    public HandlerMethodArgumentResolver pr() {
+    public HandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver() {
         return new ReactivePageableHandlerMethodArgumentResolver();
     }
 
     @Bean
-    public HandlerMethodArgumentResolver sr() {
+    public HandlerMethodArgumentResolver methodArgumentResolver() {
         return new ReactiveSortHandlerMethodArgumentResolver();
     }
 }

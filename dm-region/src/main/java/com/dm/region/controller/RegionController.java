@@ -17,6 +17,7 @@ import com.dm.region.converter.RegionConverter;
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.Region;
 import com.dm.region.service.RegionService;
+import com.dm.collections.Lists;
 
 /**
  * 区县代码
@@ -49,13 +50,13 @@ public class RegionController {
                 regions.add(self.get());
             }
         }
-        return regionConverter.toDto(regions);
+        return Lists.transform(regions, regionConverter::toDto);
     }
 
     @GetMapping(value = "provinces")
     public List<RegionDto> findProvincial() {
         List<Region> regions = regionService.findProvincials();
-        return regionConverter.toDto(regions);
+        return Lists.transform(regions, regionConverter::toDto);
     }
 
     @GetMapping(params = { "draw" })
@@ -68,6 +69,6 @@ public class RegionController {
     @GetMapping(value = "children")
     public List<RegionDto> findChildren(@RequestParam(required = true, value = "code") String code) {
         List<Region> regions = regionService.findChildren(code);
-        return regionConverter.toDto(regions);
+        return Lists.transform(regions, regionConverter::toDto);
     }
 }

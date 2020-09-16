@@ -1,13 +1,13 @@
 package com.dm.common.converter;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.collections4.IterableUtils;
+import com.dm.collections.Iterables;
+import com.dm.collections.Lists;
 
 public interface Converter<M, DTO> {
 
@@ -23,17 +23,21 @@ public interface Converter<M, DTO> {
     public DTO toDto(@Nullable M model);
 
     /**
-     * 将实体模型列表转换为DTO列表
+     * 将实体模型列表转换为DTO列表 <br>
+     * 
+     * 尽量不要使用这个方法，请用{@link Lists}替代
      * 
      * @param models
+     * 
+     * @see Lists
      * @return
      */
-    public default List<DTO> toDto(Iterable<M> models) {
-        if (IterableUtils.isEmpty(models)) {
+    @Deprecated
+    public default List<DTO> toDto(Collection<M> models) {
+        if (Iterables.isEmpty(models)) {
             return Collections.emptyList();
         } else {
-            return StreamSupport.stream(models.spliterator(), false).map(this::toDto)
-                    .collect(Collectors.toList());
+            return Lists.transform(Lists.arrayList(models), this::toDto);
         }
     }
 

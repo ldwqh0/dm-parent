@@ -1,8 +1,7 @@
 package com.dm.uap.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,8 +32,8 @@ public class RoleGroupController {
     private RoleGroupConverter roleGroupConverter;
 
     @GetMapping
-    public List<RoleGroupDto> listAll(@PageableDefault(size = 1000) Pageable pageable) {
-        return roleGroupConverter.toDto(roleGroupService.search(null, pageable));
+    public Page<RoleGroupDto> listAll(@PageableDefault(size = 1000) Pageable pageable) {
+        return roleGroupService.search(null, pageable).map(roleGroupConverter::toDto);
     }
 
     @PostMapping

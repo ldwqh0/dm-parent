@@ -3,8 +3,6 @@ package com.dm.security.authentication;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 /**
  * 标识个Uri资源，用来标识一个唯一的URI资源
  * 
@@ -118,7 +116,7 @@ class UriResourceImpl implements UriResource {
         if (scopes == null) {
             if (other.scopes != null)
                 return false;
-        } else if (!CollectionUtils.isEqualCollection(scopes, other.scopes))
+        } else if (!scopes.equals(other.scopes))
             return false;
         if (type != other.type)
             return false;

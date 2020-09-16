@@ -18,7 +18,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "dm_role_group_")
 public class RoleGroup extends AbstractEntity {
-    private static final long serialVersionUID = 3288697536654269610L;
 
     @Column(name = "name_", nullable = false, unique = true, length = 100)
     private String name;

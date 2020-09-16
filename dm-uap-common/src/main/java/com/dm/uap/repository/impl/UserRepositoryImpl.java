@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QDepartment;
 import com.dm.uap.entity.QUser;

@@ -14,6 +14,7 @@ import com.dm.common.entity.Audit;
 public interface AuditEntityConverter<M extends Auditable<Audit, ? extends Serializable, ZonedDateTime>, DTO extends AuditableDto>
         extends Converter<M, DTO> {
 
+    @Override
     public default DTO toDto(M model) {
         if (Objects.isNull(model)) {
             return null;

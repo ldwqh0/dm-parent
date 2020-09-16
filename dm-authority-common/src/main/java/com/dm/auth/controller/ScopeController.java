@@ -13,8 +13,12 @@ import com.dm.auth.service.ResourceService;
 @RestController
 public class ScopeController {
 
+    private final ResourceService resourceService;
+
     @Autowired
-    private ResourceService resourceService;
+    public ScopeController(ResourceService resourceService) {
+        this.resourceService = resourceService;
+    }
 
     @GetMapping
     public List<String> listScope() {

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Data;
+import lombok.Setter;
 
 @Data
 @JsonInclude(value = Include.NON_EMPTY)
@@ -29,11 +30,13 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
 
     private Long size;
 
-    @JsonProperty(access = Access.READ_ONLY)
+    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
     private Audit createUser;
 
-    @JsonProperty(access = Access.READ_ONLY)
+    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
     private Audit lastModifiedBy;
 
+    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
     private ZonedDateTime createTime;
+
 }

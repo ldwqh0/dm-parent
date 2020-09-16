@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dm.collections.CollectionUtils;
+import com.dm.collections.Maps;
 import com.dm.common.converter.Converter;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
@@ -19,6 +19,7 @@ import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
+import com.dm.collections.Lists;
 
 @Component
 public class UserConverter implements Converter<User, UserDto> {
@@ -63,7 +64,7 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
         Map<Department, String> _posts = user.getPosts();
-        if (MapUtils.isNotEmpty(_posts)) {
+        if (Maps.isNotEmpty(_posts)) {
             List<UserPostDto> posts = new ArrayList<>();
             _posts.entrySet().forEach(a -> {
                 posts.add(new UserPostDto(departmentConverter.toDto(a.getKey()), a.getValue()));
@@ -72,7 +73,7 @@ public class UserConverter implements Converter<User, UserDto> {
         }
         List<Role> roles = user.getRoles();
         if (CollectionUtils.isNotEmpty(roles)) {
-            dto.setRoles(roleConverter.toDto(user.getRoles()));
+            dto.setRoles(Lists.transform(user.getRoles(), roleConverter::toDto));
         }
         return dto;
     }

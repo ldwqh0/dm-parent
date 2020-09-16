@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.ManyToOne;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,10 +13,7 @@ import lombok.Setter;
 @Setter
 public class ResourceOperation implements Serializable {
 
-    private static final long serialVersionUID = -5174742893339428853L;
-
-    @ManyToOne
-    private Resource resource;
+    private static final long serialVersionUID = -4460635653614468618L;
 
     @Column(name = "read_able_")
     private Boolean readable;
@@ -33,5 +29,25 @@ public class ResourceOperation implements Serializable {
 
     @Column(name = "patch_able_")
     private Boolean patchable;
+
+    public static ResourceOperation accessAll() {
+        ResourceOperation operation = new ResourceOperation();
+        operation.setDeleteable(Boolean.TRUE);
+        operation.setPatchable(Boolean.TRUE);
+        operation.setReadable(Boolean.TRUE);
+        operation.setSaveable(Boolean.TRUE);
+        operation.setUpdateable(Boolean.TRUE);
+        return operation;
+    }
+
+    public static ResourceOperation denyAll() {
+        ResourceOperation operation = new ResourceOperation();
+        operation.setDeleteable(Boolean.FALSE);
+        operation.setPatchable(Boolean.FALSE);
+        operation.setReadable(Boolean.FALSE);
+        operation.setSaveable(Boolean.FALSE);
+        operation.setUpdateable(Boolean.FALSE);
+        return operation;
+    }
 
 }

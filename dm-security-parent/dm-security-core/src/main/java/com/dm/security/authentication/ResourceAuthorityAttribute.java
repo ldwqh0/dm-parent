@@ -1,5 +1,6 @@
 package com.dm.security.authentication;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,10 @@ import org.springframework.security.core.Authentication;
  * @since 0.2.1
  *
  */
-public class ResourceAuthorityAttribute {
+public class ResourceAuthorityAttribute implements Serializable {
+  
+    private static final long serialVersionUID = -5073142461362078685L;
+
     /**
      * 资源的匹配器
      */
