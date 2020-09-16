@@ -15,7 +15,6 @@ public class ScopeController {
 
     private final ResourceService resourceService;
 
-    @Autowired
     public ScopeController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }

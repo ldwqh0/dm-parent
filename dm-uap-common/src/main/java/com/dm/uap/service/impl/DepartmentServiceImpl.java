@@ -1,16 +1,5 @@
 package com.dm.uap.service.impl;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dm.uap.converter.DepartmentConverter;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.entity.Department;
@@ -18,17 +7,31 @@ import com.dm.uap.entity.QDepartment;
 import com.dm.uap.repository.DepartmentRepository;
 import com.dm.uap.service.DepartmentService;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final QDepartment qDepartment = QDepartment.department;
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
+    private final DepartmentRepository departmentRepository;
+
+    private final DepartmentConverter departmentConverter;
 
     @Autowired
-    private DepartmentConverter departmentConverter;
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository, DepartmentConverter departmentConverter) {
+        this.departmentRepository = departmentRepository;
+        this.departmentConverter = departmentConverter;
+    }
 
     @Override
     @Transactional
@@ -59,9 +62,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = departmentRepository.getOne(id);
         departmentConverter.copyProperties(department, data);
         Department parent = Optional.ofNullable(data.getParent())
-                .map(DepartmentDto::getId)
-                .map(departmentRepository::getOne)
-                .orElse(null);
+            .map(DepartmentDto::getId)
+            .map(departmentRepository::getOne)
+            .orElse(null);
         department.setParent(parent);
         return departmentRepository.save(department);
     }
@@ -78,8 +81,8 @@ public class DepartmentServiceImpl implements DepartmentService {
             return departmentRepository.findAll(pageable);
         } else {
             BooleanExpression query = qDepartment.fullname.containsIgnoreCase(key)
-                    .or(qDepartment.shortname.containsIgnoreCase(key))
-                    .or(qDepartment.description.containsIgnoreCase(key));
+                .or(qDepartment.shortname.containsIgnoreCase(key))
+                .or(qDepartment.description.containsIgnoreCase(key));
             return departmentRepository.findAll(query, pageable);
         }
     }

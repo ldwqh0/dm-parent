@@ -33,7 +33,6 @@ public class ResourceController {
 
     private final ResourceConverter resourceConverter;
 
-    @Autowired
     public ResourceController(ResourceService resourceService, ResourceConverter resourceConverter) {
         this.resourceService = resourceService;
         this.resourceConverter = resourceConverter;

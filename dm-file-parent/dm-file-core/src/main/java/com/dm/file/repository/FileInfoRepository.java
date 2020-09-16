@@ -7,9 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dm.common.repository.IdentifiableDtoRepository;
 import com.dm.file.entity.FileInfo;
+import org.springframework.data.jpa.repository.Query;
 
 public interface FileInfoRepository extends JpaRepository<FileInfo, UUID>, IdentifiableDtoRepository<FileInfo, UUID> {
 
-    public Optional<UUID> findMaxId();
+    Optional<UUID> findMaxId();
 
 }

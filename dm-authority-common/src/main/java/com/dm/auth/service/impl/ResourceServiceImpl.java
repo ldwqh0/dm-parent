@@ -22,16 +22,19 @@ import java.util.*;
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
-    @Autowired
-    private ResourceRepository resourceRepository;
+    private final ResourceRepository resourceRepository;
 
-    @Autowired
-    private ResourceConverter resourceConverter;
+    private final ResourceConverter resourceConverter;
 
-    @Autowired
-    private AuthorityRepository authorityRepository;
+    private final AuthorityRepository authorityRepository;
 
     private final QAuthResource qResource = QAuthResource.authResource;
+
+    public ResourceServiceImpl(ResourceRepository resourceRepository, ResourceConverter resourceConverter, AuthorityRepository authorityRepository) {
+        this.resourceRepository = resourceRepository;
+        this.resourceConverter = resourceConverter;
+        this.authorityRepository = authorityRepository;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

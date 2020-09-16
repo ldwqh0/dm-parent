@@ -45,7 +45,6 @@ public class MenuController {
 
     private final MenuConverter menuConverter;
 
-    @Autowired
     public MenuController(MenuService menuService, MenuConverter menuConverter) {
         this.menuService = menuService;
         this.menuConverter = menuConverter;
@@ -85,7 +84,7 @@ public class MenuController {
     @ApiOperation("根据关键字查询菜单")
     @GetMapping(params = { "draw" })
     public Page<MenuDto> list(
-            @PageableDefault(page = 0, size = 10, direction = Direction.ASC, sort = "order") Pageable pageable,
+            @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable,
             @RequestParam(value = "search", required = false) String key,
             @RequestParam(value = "parentId", required = false) Long parentId) {
         return menuService.search(parentId, key, pageable).map(menuConverter::toDto);

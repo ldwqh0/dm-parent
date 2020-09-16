@@ -1,22 +1,5 @@
 package com.dm.uap.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
@@ -24,24 +7,34 @@ import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.entity.Role;
 import com.dm.uap.service.RoleService;
-
 import io.swagger.annotations.ApiOperation;
-
-import static org.springframework.http.HttpStatus.*;
-
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("roles")
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
+
+    private final RoleConverter roleConverter;
 
     @Autowired
-    private RoleConverter roleConverter;
+    public RoleController(RoleService roleService, RoleConverter roleConverter) {
+        this.roleService = roleService;
+        this.roleConverter = roleConverter;
+    }
 
     @ApiOperation("保存角色")
     @PostMapping
@@ -62,14 +55,14 @@ public class RoleController {
 
     /**
      * 修改角色信息<br>
-     * 
+     * <p>
      * 角色最小ID为4，1、2、3是系统内置角色，禁止修改 <br>
-     * 
+     * <p>
      * 禁止修改
-     * 
-     * @param id
-     * @param roleDto
-     * @return
+     *
+     * @param id      角色ID
+     * @param roleDto 角色信息
+     * @return 修改后的角色信息
      */
     @ApiOperation("更新角色")
     @PutMapping("{id}")
@@ -78,10 +71,10 @@ public class RoleController {
     public RoleDto update(@PathVariable("id") @Min(4) long id, @RequestBody @Validated RoleDto roleDto) {
         // 内置分组角色不允许修改
         roleService.get(id)
-                .filter(role -> "内置分组".equals(role.getGroup().getName()))
-                .ifPresent(role -> {
-                    throw new DataValidateException("不允许修改内置分组");
-                });
+            .filter(role -> "内置分组".equals(role.getGroup().getName()))
+            .ifPresent(role -> {
+                throw new DataValidateException("不允许修改内置分组");
+            });
         if (roleService.nameExist(id, roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
@@ -103,19 +96,19 @@ public class RoleController {
     public void delete(@PathVariable("id") @Min(4) long id) {
         // 内置分组角色不允许修改
         roleService.get(id)
-                .filter(role -> "内置分组".equals(role.getGroup().getName()))
-                .ifPresent(role -> {
-                    throw new DataValidateException("不允许修改内置分组");
-                });
+            .filter(role -> "内置分组".equals(role.getGroup().getName()))
+            .ifPresent(role -> {
+                throw new DataValidateException("不允许修改内置分组");
+            });
         roleService.delete(id);
     }
 
     @ApiOperation("查询角色")
-    @GetMapping(params = { "page", "size" })
+    @GetMapping(params = {"page", "size"})
     public Page<RoleDto> list(
-            @RequestParam(value = "groupId", required = false) Long groupId,
-            @RequestParam(value = "search", required = false) String key,
-            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        @RequestParam(value = "groupId", required = false) Long groupId,
+        @RequestParam(value = "search", required = false) String key,
+        @PageableDefault Pageable pageable) {
         return roleService.search(groupId, key, pageable).map(roleConverter::toDto);
     }
 

@@ -1,16 +1,5 @@
 package com.dm.uap.service.impl;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dm.collections.CollectionUtils;
 import com.dm.uap.converter.LoginLogConverter;
 import com.dm.uap.dto.LoginLogDto;
@@ -19,17 +8,31 @@ import com.dm.uap.entity.QLoginLog;
 import com.dm.uap.repository.LoginLogRepository;
 import com.dm.uap.service.LoginLogService;
 import com.querydsl.core.BooleanBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LoginLogServiceImpl implements LoginLogService {
 
-    @Autowired
-    private LoginLogRepository loginLogRepository;
+    private final LoginLogRepository loginLogRepository;
 
-    @Autowired
-    private LoginLogConverter loginLogConverter;
+    private final LoginLogConverter loginLogConverter;
 
     private final QLoginLog qLoginLog = QLoginLog.loginLog;
+
+    @Autowired
+    public LoginLogServiceImpl(LoginLogRepository loginLogRepository, LoginLogConverter loginLogConverter) {
+        this.loginLogRepository = loginLogRepository;
+        this.loginLogConverter = loginLogConverter;
+    }
 
     @Override
     @Transactional
@@ -64,7 +67,7 @@ public class LoginLogServiceImpl implements LoginLogService {
         BooleanBuilder query = new BooleanBuilder();
         if (StringUtils.isNotBlank(key)) {
             query.and(qLoginLog.ip.containsIgnoreCase(key)
-                    .or(qLoginLog.loginName.containsIgnoreCase(key)));
+                .or(qLoginLog.loginName.containsIgnoreCase(key)));
         }
         return loginLogRepository.findAll(query, pageable);
     }

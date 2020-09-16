@@ -1,35 +1,31 @@
 package com.dm.uap.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.dm.common.exception.DataNotExistException;
 import com.dm.uap.converter.RoleGroupConverter;
 import com.dm.uap.dto.RoleGroupDto;
 import com.dm.uap.service.RoleGroupService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("roleGroups")
 public class RoleGroupController {
 
-    @Autowired
-    private RoleGroupService roleGroupService;
+    private final RoleGroupService roleGroupService;
+
+    private final RoleGroupConverter roleGroupConverter;
 
     @Autowired
-    private RoleGroupConverter roleGroupConverter;
+    public RoleGroupController(RoleGroupService roleGroupService, RoleGroupConverter roleGroupConverter) {
+        this.roleGroupService = roleGroupService;
+        this.roleGroupConverter = roleGroupConverter;
+    }
 
     @GetMapping
     public Page<RoleGroupDto> listAll(@PageableDefault(size = 1000) Pageable pageable) {
@@ -48,11 +44,9 @@ public class RoleGroupController {
         roleGroupService.deleteById(id);
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     @ResponseStatus(CREATED)
-    public RoleGroupDto update(
-            @PathVariable("id") Long id,
-            @RequestBody RoleGroupDto data) {
+    public RoleGroupDto update(@PathVariable("id") Long id, @RequestBody RoleGroupDto data) {
         return roleGroupConverter.toDto(roleGroupService.update(id, data));
     }
 

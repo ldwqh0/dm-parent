@@ -1,16 +1,5 @@
 package com.dm.file.service.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.dto.FileInfoDto;
 import com.dm.file.entity.FileInfo;
@@ -19,18 +8,28 @@ import com.dm.file.repository.FileInfoRepository;
 import com.dm.file.service.FileInfoService;
 import com.dm.file.service.FileStorageService;
 import com.dm.file.util.DmFileUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class FileServiceImpl implements FileInfoService {
 
-    @Autowired
-    private FileInfoConverter fileInfoConverter;
+    private final FileInfoConverter fileInfoConverter;
 
-    @Autowired
-    private FileStorageService storageService;
+    private final FileStorageService storageService;
 
-    @Autowired
-    private FileInfoRepository fileInfoRepository;
+    private final FileInfoRepository fileInfoRepository;
+
+    public FileServiceImpl(FileInfoConverter fileInfoConverter, FileStorageService storageService, FileInfoRepository fileInfoRepository) {
+        this.fileInfoConverter = fileInfoConverter;
+        this.storageService = storageService;
+        this.fileInfoRepository = fileInfoRepository;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -40,7 +39,7 @@ public class FileServiceImpl implements FileInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FileInfo save(MultipartFile file, FileInfoDto _info) throws Exception {
+    public FileInfo save(MultipartFile file, FileInfoDto _info) {
         FileInfo fileInfo = save(_info);
         if (storageService.save(file, fileInfo.getPath())) {
             return fileInfo;
@@ -51,12 +50,11 @@ public class FileServiceImpl implements FileInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(UUID id) throws Exception {
-        Optional<FileInfo> fileInfo = fileInfoRepository.findById(id);
-        if (fileInfo.isPresent()) {
-            storageService.delete(fileInfo.get().getPath());
-        }
-        fileInfoRepository.deleteById(id);
+    public void delete(UUID id) {
+        fileInfoRepository.findById(id).ifPresent(file -> {
+            storageService.delete(file.getPath());
+            fileInfoRepository.deleteById(id);
+        });
     }
 
     private FileInfo save(FileInfoDto _info) {
@@ -72,7 +70,7 @@ public class FileServiceImpl implements FileInfoService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException {
+    public FileInfo save(Path[] src, FileInfoDto fileInfo) {
         FileInfo file = save(fileInfo);
         if (storageService.save(src, file.getPath())) {
             return file;

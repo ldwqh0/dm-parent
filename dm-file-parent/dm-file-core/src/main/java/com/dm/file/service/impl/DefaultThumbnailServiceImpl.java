@@ -19,17 +19,16 @@ import java.io.OutputStream;
 @Slf4j
 public class DefaultThumbnailServiceImpl implements ThumbnailService {
 
-    private FileStorageService storageService;
-
-    @Autowired
-    public void setStorageService(FileStorageService storageService) {
-        this.storageService = storageService;
-    }
+    private final FileStorageService storageService;
 
     private static final String[] imgExt = {"jpg", "png", "bmp", "jpeg"};
     private final int[][] levelScales = {{128, 128}, {256, 256}, {512, 512}, {1080, 1920}};
 
-    private void createThumbnail(Image image, String filename, int level) throws FileNotFoundException, IOException {
+    public DefaultThumbnailServiceImpl(FileStorageService storageService) {
+        this.storageService = storageService;
+    }
+
+    private void createThumbnail(Image image, String filename, int level) throws IOException {
         try (OutputStream oStream = storageService.getOutputStream(filename, "th" + level)) {
             int o_w = image.getWidth(null);
             int o_h = image.getHeight(null);

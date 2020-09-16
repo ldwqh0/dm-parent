@@ -23,10 +23,9 @@ import java.util.Objects;
 @Slf4j
 public class LocalFileStorageServiceImpl implements FileStorageService {
 
-    private FileConfig config;
+    private final FileConfig config;
 
-    @Autowired
-    public void setConfig(FileConfig config) {
+    public LocalFileStorageServiceImpl(FileConfig config) {
         this.config = config;
     }
 
@@ -60,10 +59,10 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     /**
      * 将多个文件合并保存为一个文件
      *
-     * @param paths 源文件的路径集合
+     * @param paths    源文件的路径集合
      * @param filename 目标文件名
-     * @param parents 目录的前缀路径
-     * @return 保存成功返还true,保存失败返还false
+     * @param parents  目录的前缀路径
+     * @return 保存成功返还true, 保存失败返还false
      */
     @Override
     public boolean save(Path[] paths, String filename, String... parents) {
