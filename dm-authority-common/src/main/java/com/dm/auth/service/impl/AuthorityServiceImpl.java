@@ -5,7 +5,7 @@ import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
-import com.dm.auth.entity.Resource;
+import com.dm.auth.entity.AuthResource;
 import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
@@ -154,7 +154,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
         authority.setId(authorityDto.getRoleId());
         authority.setRoleName(roleName);
         authority = authorityRepository.save(authority);
-        Map<Resource, ResourceOperation> resultOperations = Maps.transformKeys(
+        Map<AuthResource, ResourceOperation> resultOperations = Maps.transformKeys(
             authorityDto.getResourceAuthorities(),
             resourceReopsitory::getOne);
         authority.setResourceOperations(resultOperations);
@@ -190,7 +190,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     }
 
     private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map,
-                              Resource resource,
+                              AuthResource resource,
                               HttpMethod method,
                               ResourceOperation operation,
                               String authority) {

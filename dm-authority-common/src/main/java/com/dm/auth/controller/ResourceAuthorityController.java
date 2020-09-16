@@ -2,8 +2,8 @@ package com.dm.auth.controller;
 
 import com.dm.auth.converter.AuthorityConverter;
 import com.dm.auth.dto.ResourceAuthorityDto;
+import com.dm.auth.entity.AuthResource;
 import com.dm.auth.entity.Authority;
-import com.dm.auth.entity.Resource;
 import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.service.AuthorityService;
 import com.dm.collections.Maps;
@@ -61,7 +61,7 @@ public class ResourceAuthorityController {
         ResourceAuthorityDto dto = new ResourceAuthorityDto();
         dto.setRoleId(authority.getId());
         dto.setRoleName(authority.getRoleName());
-        Map<Long, ResourceOperation> result = Maps.transformKeys(authority.getResourceOperations(), Resource::getId);
+        Map<Long, ResourceOperation> result = Maps.transformKeys(authority.getResourceOperations(), AuthResource::getId);
         dto.setResourceAuthorities(result);
         return dto;
     }

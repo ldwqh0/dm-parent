@@ -1,12 +1,12 @@
 package com.dm.auth.converter;
 
+import com.dm.auth.entity.AuthResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.entity.Authority;
-import com.dm.auth.entity.Resource;
 import com.dm.collections.Maps;
 import com.dm.collections.Sets;
 
@@ -19,7 +19,7 @@ public class AuthorityConverter {
     public ResourceAuthorityDto toResourceAuthorityDto(Authority authority) {
         ResourceAuthorityDto dto = new ResourceAuthorityDto();
         dto.setRoleName(authority.getRoleName());
-        dto.setResourceAuthorities(Maps.transformKeys(authority.getResourceOperations(), Resource::getId));
+        dto.setResourceAuthorities(Maps.transformKeys(authority.getResourceOperations(), AuthResource::getId));
         return dto;
     }
 

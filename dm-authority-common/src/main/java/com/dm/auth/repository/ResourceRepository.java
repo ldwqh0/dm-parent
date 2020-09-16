@@ -4,16 +4,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import com.dm.auth.entity.AuthResource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-import com.dm.auth.entity.Resource;
+public interface ResourceRepository extends JpaRepository<AuthResource, Long>, QuerydslPredicateExecutor<AuthResource> {
 
-public interface ResourceRepository extends JpaRepository<Resource, Long>, QuerydslPredicateExecutor<Resource> {
+    public Optional<AuthResource> findByName(String name);
 
-    public Optional<Resource> findByName(String name);
-
-    public List<Resource> findByIdNotIn(Collection<Long> ids);
+    public List<AuthResource> findByIdNotIn(Collection<Long> ids);
 
     /**
      * 获取所有资源的Scope

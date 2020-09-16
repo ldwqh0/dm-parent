@@ -2,8 +2,8 @@ package com.dm.auth.service.impl;
 
 import com.dm.auth.converter.ResourceConverter;
 import com.dm.auth.dto.ResourceDto;
-import com.dm.auth.entity.QResource;
-import com.dm.auth.entity.Resource;
+import com.dm.auth.entity.AuthResource;
+import com.dm.auth.entity.QAuthResource;
 import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.ResourceRepository;
@@ -31,12 +31,12 @@ public class ResourceServiceImpl implements ResourceService {
     @Autowired
     private AuthorityRepository authorityRepository;
 
-    private final QResource qResource = QResource.resource;
+    private final QAuthResource qResource = QAuthResource.authResource;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Resource save(ResourceDto dto) {
-        Resource resource = new Resource();
+    public AuthResource save(ResourceDto dto) {
+        AuthResource resource = new AuthResource();
         resourceConverter.copyProperties(resource, dto);
         return resourceRepository.save(resource);
     }
@@ -45,7 +45,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public void deleteById(long id) {
         authorityRepository.findByResourceOperationsResourceId(id).forEach(authority -> {
-            Map<Resource, ResourceOperation> iterator = authority.getResourceOperations();
+            Map<AuthResource, ResourceOperation> iterator = authority.getResourceOperations();
             iterator.keySet().stream().filter(resource -> Objects.equals(resource.getId(), id))
                 .forEach(iterator::remove);
         });
@@ -54,15 +54,15 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Resource update(long id, ResourceDto dto) {
-        Resource resource = resourceRepository.getOne(id);
+    public AuthResource update(long id, ResourceDto dto) {
+        AuthResource resource = resourceRepository.getOne(id);
         resourceConverter.copyProperties(resource, dto);
         return resource;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Resource> search(String keywords, Pageable pageable) {
+    public Page<AuthResource> search(String keywords, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (StringUtils.isNotBlank(keywords)) {
             query.or(qResource.name.containsIgnoreCase(keywords))
@@ -74,13 +74,13 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Resource> findById(long id) {
+    public Optional<AuthResource> findById(long id) {
         return resourceRepository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Resource> listAll() {
+    public List<AuthResource> listAll() {
         return resourceRepository.findAll();
     }
 
@@ -91,13 +91,13 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Resource> findByName(String name) {
+    public Optional<AuthResource> findByName(String name) {
         return resourceRepository.findByName(name);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Resource> findByIdNotIn(Collection<Long> ids) {
+    public List<AuthResource> findByIdNotIn(Collection<Long> ids) {
         return resourceRepository.findByIdNotIn(ids);
     }
 

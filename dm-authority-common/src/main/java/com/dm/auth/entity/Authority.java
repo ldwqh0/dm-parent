@@ -58,6 +58,6 @@ public class Authority {
     })
     @OrderColumn(name = "order_by_")
     @MapKeyJoinColumn(name = "resource_id_")
-    private Map<Resource, ResourceOperation> resourceOperations;
+    private Map<AuthResource, ResourceOperation> resourceOperations;
 
 }
