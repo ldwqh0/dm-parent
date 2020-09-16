@@ -12,7 +12,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <guava.version>29.0-jre</guava.version>
-    <spring.cloud.version>Hoxton.SR7</spring.cloud.version>
+    <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
     <springboot.version>2.3.2.RELEASE</springboot.version>
     <springfox.version>2.9.2</springfox.version>
     <hibernate.version>5.4.18.Final</hibernate.version>
