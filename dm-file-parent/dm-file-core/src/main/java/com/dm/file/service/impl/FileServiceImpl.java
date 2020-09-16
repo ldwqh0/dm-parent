@@ -2,6 +2,7 @@ package com.dm.file.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -71,7 +72,7 @@ public class FileServiceImpl implements FileInfoService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public FileInfo save(File[] src, FileInfoDto fileInfo) throws IOException {
+    public FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException {
         FileInfo file = save(fileInfo);
         if (storageService.save(src, file.getPath())) {
             return file;

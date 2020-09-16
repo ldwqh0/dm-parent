@@ -1,23 +1,20 @@
 package com.dm.file.service.impl;
 
-import java.awt.Image;
+import com.dm.file.service.FileStorageService;
+import com.dm.file.service.ThumbnailService;
+import com.dm.file.util.DmFileUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-
-import com.dm.file.service.FileStorageService;
-import com.dm.file.service.ThumbnailService;
-import com.dm.file.util.DmFileUtils;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultThumbnailServiceImpl implements ThumbnailService {
@@ -29,8 +26,8 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
         this.storageService = storageService;
     }
 
-    private static final String[] imgExt = { "jpg", "png", "bmp", "jpeg" };
-    private final int[][] levelScales = { { 128, 128 }, { 256, 256 }, { 512, 512 }, { 1080, 1920 } };
+    private static final String[] imgExt = {"jpg", "png", "bmp", "jpeg"};
+    private final int[][] levelScales = {{128, 128}, {256, 256}, {512, 512}, {1080, 1920}};
 
     private void createThumbnail(Image image, String filename, int level) throws FileNotFoundException, IOException {
         try (OutputStream oStream = storageService.getOutputStream(filename, "th" + level)) {
@@ -60,6 +57,11 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
                 log.error("创建文件缩略图时出错", e);
             }
         }
+    }
+
+    @Override
+    public boolean exists(String filename, int level) {
+        return storageService.exist(filename, "th" + level);
     }
 
     @Override

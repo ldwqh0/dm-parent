@@ -1,13 +1,16 @@
 package com.dm.file.util;
 
-import org.apache.commons.io.FileUtils;
+
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
 import java.util.Locale;
+import java.util.Objects;
+
+import static java.nio.file.StandardOpenOption.*;
 
 public class DmFileUtils {
 
@@ -36,17 +39,26 @@ public class DmFileUtils {
     }
 
     /**
-     * 将所有的片段文件组合到目标文件
+     * 连接多个文件为一个文件
      *
-     * @param dist 目标文件
-     * @param src  源文件的列表
-     * @throws IOException
+     * @param dist    最终保存的目标文件
+     * @param sources 文件源
+     * @return
      */
-    public static void concatFile(File dist, File[] src) throws IOException {
-        try (OutputStream oStream = new FileOutputStream(dist)) {
-            for (File file : src) {
-                FileUtils.copyFile(file, oStream);
+    public static boolean concatFile(@NotNull Path dist, Path... sources) {
+        try (FileChannel out = FileChannel.open(dist, CREATE, APPEND, WRITE)) {
+            if (Objects.isNull(out)) {
+                return false;
+            } else {
+                for (Path path : sources) {
+                    try (FileChannel in = FileChannel.open(path, READ)) {
+                        in.transferTo(0, 1000, out);
+                    }
+                }
+                return true;
             }
+        } catch (IOException e) {
+            return false;
         }
     }
 }
