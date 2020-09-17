@@ -15,20 +15,20 @@ public interface ProcessDefinition {
      *
      * @return
      */
-    public <ID> ID getId();
+    <ID> ID getId();
 
     /**
      * 获取流程定义名称
      *
      * @return
      */
-    public String getName();
+    String getName();
 
     /**
      * 获取流程节点
      *
      * @return
      */
-    public <StepId> List<StepDefine<StepId>> getSteps();
+    <StepId> List<StepDefine<StepId>> getSteps();
 
 }

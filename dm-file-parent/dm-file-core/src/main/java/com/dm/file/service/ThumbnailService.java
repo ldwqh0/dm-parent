@@ -10,7 +10,7 @@ public interface ThumbnailService {
      *
      * @param filename 给指定的文件创建缩略图
      */
-    public void createThumbnail(String filename);
+    void createThumbnail(String filename);
 
     /**
      * 检测某个文件的缩略图是否存在
@@ -19,7 +19,7 @@ public interface ThumbnailService {
      * @param level    缩略图等级
      * @return
      */
-    public boolean exists(String filename, int level);
+    boolean exists(String filename, int level);
 
     /**
      * 根据文件ID和缩略图级别获取缩略图
@@ -29,5 +29,5 @@ public interface ThumbnailService {
      * @return
      * @throws IOException
      */
-    public Resource getResource(String filename, int level);
+    Resource getResource(String filename, int level);
 }

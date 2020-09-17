@@ -79,7 +79,7 @@ public class DefaultRedirectResolver implements RedirectResolver {
      * @param redirectGrantTypes the redirect grant types to set
      */
     public void setRedirectGrantTypes(Collection<String> redirectGrantTypes) {
-        this.redirectGrantTypes = new HashSet<String>(redirectGrantTypes);
+        this.redirectGrantTypes = new HashSet<>(redirectGrantTypes);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class DefaultRedirectResolver implements RedirectResolver {
         boolean schemeMatch = isEqual(registeredRedirectUri.getScheme(), requestedRedirectUri.getScheme());
         boolean userInfoMatch = isEqual(registeredRedirectUri.getUserInfo(), requestedRedirectUri.getUserInfo());
         boolean hostMatch = hostMatches(registeredRedirectUri.getHost(), requestedRedirectUri.getHost());
-        boolean portMatch = matchPorts ? registeredRedirectUri.getPort() == requestedRedirectUri.getPort() : true;
+        boolean portMatch = !matchPorts || registeredRedirectUri.getPort() == requestedRedirectUri.getPort();
         boolean pathMatch = isEqual(registeredRedirectUri.getPath(),
                 StringUtils.cleanPath(requestedRedirectUri.getPath()));
         boolean queryParamMatch = matchQueryParams(registeredRedirectUri.getQueryParams(),
@@ -161,17 +161,13 @@ public class DefaultRedirectResolver implements RedirectResolver {
     private boolean matchQueryParams(MultiValueMap<String, String> registeredRedirectUriQueryParams,
             MultiValueMap<String, String> requestedRedirectUriQueryParams) {
 
-        Iterator<String> iter = registeredRedirectUriQueryParams.keySet().iterator();
-        while (iter.hasNext()) {
-            String key = iter.next();
+        for (String key : registeredRedirectUriQueryParams.keySet()) {
             List<String> registeredRedirectUriQueryParamsValues = registeredRedirectUriQueryParams.get(key);
             List<String> requestedRedirectUriQueryParamsValues = requestedRedirectUriQueryParams.get(key);
-
             if (!registeredRedirectUriQueryParamsValues.equals(requestedRedirectUriQueryParamsValues)) {
                 return false;
             }
         }
-
         return true;
     }
 

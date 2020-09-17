@@ -18,7 +18,7 @@ public interface UserService extends UserDetailsService {
      * 
      * @return
      */
-    public boolean exist();
+    boolean exist();
 
     /**
      * 保存一个用户
@@ -26,25 +26,25 @@ public interface UserService extends UserDetailsService {
      * @param user
      * @return
      */
-    public User save(UserDto user);
+    User save(UserDto user);
 
-    public Optional<User> get(Long id);
+    Optional<User> get(Long id);
 
-    public User delete(Long id);
+    User delete(Long id);
 
-    public User update(long id, UserDto userDto);
+    User update(long id, UserDto userDto);
 
-    public Page<User> search(String key, Pageable pageable);
+    Page<User> search(String key, Pageable pageable);
 
-    public boolean checkPassword(Long id, String password);
+    boolean checkPassword(Long id, String password);
 
-    public User repassword(Long id, String password);
+    User repassword(Long id, String password);
 
-    public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable);
+    Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable);
 
-    public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException;
+    UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException;
 
-    public Optional<User> findByMobile(String mobile);
+    Optional<User> findByMobile(String mobile);
 
     /**
      * 检测是否存在同名用户<br>
@@ -54,7 +54,7 @@ public interface UserService extends UserDetailsService {
      * @param id
      * @param username
      */
-    public boolean userExistsByUsername(Long id, String username);
+    boolean userExistsByUsername(Long id, String username);
 
     /**
      * 检测是否存在同名用户<br>
@@ -64,7 +64,7 @@ public interface UserService extends UserDetailsService {
      * @param id
      * @param username
      */
-    public boolean userExistsByEmail(Long id, String email);
+    boolean userExistsByEmail(Long id, String email);
 
     /**
      * 检测是否存在同名用户<br>
@@ -74,6 +74,6 @@ public interface UserService extends UserDetailsService {
      * @param id
      * @param username
      */
-    public boolean userExistsByMobile(Long id, String mobile);
+    boolean userExistsByMobile(Long id, String mobile);
 
 }

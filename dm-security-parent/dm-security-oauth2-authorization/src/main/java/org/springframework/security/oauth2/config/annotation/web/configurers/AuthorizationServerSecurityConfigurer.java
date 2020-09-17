@@ -80,7 +80,7 @@ public final class AuthorizationServerSecurityConfigurer extends
      * Custom authentication filters for the TokenEndpoint. Filters will be set
      * upstream of the default BasicAuthenticationFilter.
      */
-    private List<Filter> tokenEndpointAuthenticationFilters = new ArrayList<Filter>();
+    private List<Filter> tokenEndpointAuthenticationFilters = new ArrayList<>();
 
     public AuthorizationServerSecurityConfigurer sslOnly() {
         this.sslOnly = true;
@@ -157,8 +157,7 @@ public final class AuthorizationServerSecurityConfigurer extends
 
             @Override
             public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                return StringUtils.hasText(encodedPassword) ? passwordEncoder.matches(rawPassword, encodedPassword)
-                        : true;
+                return !StringUtils.hasText(encodedPassword) || passwordEncoder.matches(rawPassword, encodedPassword);
             }
 
             @Override
@@ -248,6 +247,6 @@ public final class AuthorizationServerSecurityConfigurer extends
      */
     public void tokenEndpointAuthenticationFilters(List<Filter> filters) {
         Assert.notNull(filters, "Custom authentication filter list must not be null");
-        this.tokenEndpointAuthenticationFilters = new ArrayList<Filter>(filters);
+        this.tokenEndpointAuthenticationFilters = new ArrayList<>(filters);
     }
 }

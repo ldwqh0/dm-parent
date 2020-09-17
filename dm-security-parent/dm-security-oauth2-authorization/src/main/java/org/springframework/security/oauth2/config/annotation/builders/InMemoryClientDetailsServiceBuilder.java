@@ -34,7 +34,7 @@ import org.springframework.security.oauth2.provider.client.InMemoryClientDetails
 public class InMemoryClientDetailsServiceBuilder extends
         ClientDetailsServiceBuilder<InMemoryClientDetailsServiceBuilder> {
 
-    private Map<String, ClientDetails> clientDetails = new HashMap<String, ClientDetails>();
+    private Map<String, ClientDetails> clientDetails = new HashMap<>();
 
     @Override
     protected void addClient(String clientId, ClientDetails value) {

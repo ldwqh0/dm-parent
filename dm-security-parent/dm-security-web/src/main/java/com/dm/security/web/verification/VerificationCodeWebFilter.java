@@ -43,15 +43,15 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
     /**
      * 指定哪些请求需要进行验证码过滤
      */
-    private List<ServerWebExchangeMatcher> requestMathcers = new LinkedList<>();
+    private final List<ServerWebExchangeMatcher> requestMathcers = new LinkedList<>();
 
     private VerificationCodeStorage storage = null;
 
     private ObjectMapper om = new ObjectMapper();
 
-    private String verifyIdParameterName = "verifyId";
+    private final String verifyIdParameterName = "verifyId";
 
-    private String verifyCodeParameterName = "verifyCode";
+    private final String verifyCodeParameterName = "verifyCode";
 
     @Autowired(required = false)
     public void setObjectMapper(ObjectMapper om) {
@@ -121,7 +121,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
         return Mono.defer(() -> {
             URI uri = exchange.getRequest().getURI();
             ServerHttpResponse response = exchange.getResponse();
-            Map<String, Object> result = new HashMap<String, Object>();
+            Map<String, Object> result = new HashMap<>();
             result.put("path", uri);
             result.put("error", HttpStatus.FORBIDDEN.getReasonPhrase());
             result.put("message", "验证码输入错误");
@@ -138,7 +138,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Assert.notNull(storage, "the storage can not be null");
         if (Objects.isNull(om)) {
             this.om = new ObjectMapper();

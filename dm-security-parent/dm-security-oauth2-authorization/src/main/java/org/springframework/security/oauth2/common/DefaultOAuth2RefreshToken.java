@@ -1,6 +1,7 @@
 package org.springframework.security.oauth2.common;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -65,7 +66,7 @@ public class DefaultOAuth2RefreshToken implements Serializable, OAuth2RefreshTok
 
         DefaultOAuth2RefreshToken that = (DefaultOAuth2RefreshToken) o;
 
-        if (value != null ? !value.equals(that.value) : that.value != null) {
+        if (!Objects.equals(value, that.value)) {
             return false;
         }
 

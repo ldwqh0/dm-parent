@@ -88,8 +88,8 @@ public class DmAuthorizationCodeTokenGranter extends AbstractTokenGranter {
         // provided
         // in the token request, but that happens elsewhere.
 
-        Map<String, String> combinedParameters = new HashMap<String, String>(pendingOAuth2Request
-                .getRequestParameters());
+        Map<String, String> combinedParameters = new HashMap<>(pendingOAuth2Request
+            .getRequestParameters());
         // Combine the parameters adding the new ones last so they override if there are
         // any clashes
         combinedParameters.putAll(parameters);

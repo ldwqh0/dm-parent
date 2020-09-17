@@ -47,7 +47,7 @@ public abstract class AbstractOAuth2SecurityExceptionHandler {
     private OAuth2ExceptionRenderer exceptionRenderer = new DefaultOAuth2ExceptionRenderer();
 
     // This is from Spring MVC.
-    private HandlerExceptionResolver handlerExceptionResolver = new DefaultHandlerExceptionResolver();
+    private final HandlerExceptionResolver handlerExceptionResolver = new DefaultHandlerExceptionResolver();
 
     public void setExceptionTranslator(WebResponseExceptionTranslator<?> exceptionTranslator) {
         this.exceptionTranslator = exceptionTranslator;

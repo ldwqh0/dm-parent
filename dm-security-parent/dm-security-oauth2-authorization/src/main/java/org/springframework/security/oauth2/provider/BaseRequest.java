@@ -52,7 +52,7 @@ abstract class BaseRequest implements Serializable {
      * set of scopes that is finally granted and stored when the request processing
      * is complete.
      */
-    private Set<String> scope = new HashSet<String>();
+    private Set<String> scope = new HashSet<>();
 
     /**
      * Map of parameters passed in to the Authorization Endpoint or Token Endpoint,
@@ -66,7 +66,7 @@ abstract class BaseRequest implements Serializable {
      * 
      */
     private Map<String, String> requestParameters = Collections
-            .unmodifiableMap(new HashMap<String, String>());
+            .unmodifiableMap(new HashMap<>());
 
     public String getClientId() {
         return clientId;
@@ -144,14 +144,14 @@ abstract class BaseRequest implements Serializable {
             }
         }
         this.scope = Collections
-                .unmodifiableSet(scope == null ? new LinkedHashSet<String>()
-                        : new LinkedHashSet<String>(scope));
+                .unmodifiableSet(scope == null ? new LinkedHashSet<>()
+                        : new LinkedHashSet<>(scope));
     }
 
     protected void setRequestParameters(Map<String, String> requestParameters) {
         if (requestParameters != null) {
             this.requestParameters = Collections
-                    .unmodifiableMap(new HashMap<String, String>(requestParameters));
+                    .unmodifiableMap(new HashMap<>(requestParameters));
         }
     }
 

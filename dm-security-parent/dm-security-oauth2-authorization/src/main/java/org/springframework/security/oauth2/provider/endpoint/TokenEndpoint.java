@@ -71,7 +71,7 @@ public class TokenEndpoint extends AbstractEndpoint {
 
     private OAuth2RequestValidator oAuth2RequestValidator = new DefaultOAuth2RequestValidator();
 
-    private Set<HttpMethod> allowedRequestMethods = new HashSet<HttpMethod>(Arrays.asList(HttpMethod.POST));
+    private Set<HttpMethod> allowedRequestMethods = new HashSet<>(Arrays.asList(HttpMethod.POST));
 
     @RequestMapping(value = "/oauth/token", method = RequestMethod.GET)
     public ResponseEntity<OAuth2AccessToken> getAccessToken(Principal principal,
@@ -200,7 +200,7 @@ public class TokenEndpoint extends AbstractEndpoint {
         headers.set("Cache-Control", "no-store");
         headers.set("Pragma", "no-cache");
         headers.set("Content-Type", "application/json;charset=UTF-8");
-        return new ResponseEntity<OAuth2AccessToken>(accessToken, headers, HttpStatus.OK);
+        return new ResponseEntity<>(accessToken, headers, HttpStatus.OK);
     }
 
     private boolean isRefreshTokenRequest(Map<String, String> parameters) {

@@ -20,7 +20,6 @@ yarn-error.log*
 target
 .classpath
 .springBeans
-.factorypath
 rebel.xml
 .rebel.xml
 .rebel.xml.bak

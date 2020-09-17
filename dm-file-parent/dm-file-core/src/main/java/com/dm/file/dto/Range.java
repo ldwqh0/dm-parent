@@ -20,13 +20,13 @@ import lombok.Data;
 
 public interface Range {
 
-    public long getStart();
+    long getStart();
 
-    public long getEnd();
+    long getEnd();
 
-    public long getContentLength();
+    long getContentLength();
 
-    public static Range of(String str, long count) throws RangeNotSatisfiableException {
+    static Range of(String str, long count) throws RangeNotSatisfiableException {
         try {
             if (StringUtils.equals(str, "-")) {
                 throw new RangeNotSatisfiableException();
@@ -73,12 +73,12 @@ public interface Range {
         }
     }
 
-    public static List<Range> of(List<String> strs, long count) throws RangeNotSatisfiableException {
+    static List<Range> of(List<String> strs, long count) throws RangeNotSatisfiableException {
         return of(strs.toArray(new String[] {}), count);
     }
 
-    public static List<Range> of(String[] strs, long count) throws RangeNotSatisfiableException {
-        List<Range> result = new ArrayList<Range>();
+    static List<Range> of(String[] strs, long count) throws RangeNotSatisfiableException {
+        List<Range> result = new ArrayList<>();
         for (String range : strs) {
             result.add(Range.of(StringUtils.trim(range), count));
         }
@@ -86,7 +86,7 @@ public interface Range {
     }
 
     @Data
-    static class RangeImpl implements Range {
+    class RangeImpl implements Range {
         private long start;
         private long end;
 

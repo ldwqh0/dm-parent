@@ -10,7 +10,6 @@ import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.service.ResourceService;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

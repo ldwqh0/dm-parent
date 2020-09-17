@@ -26,7 +26,7 @@ import com.dm.security.authentication.UriResource.MatchType;
  * @author ldwqh0@outlook.com
  *
  */
-public class DefaultAuthenticaionDecisionMaker implements AuthenticaionDecisionMaker {
+public class DefaultAuthenticaionDecisionMaker implements AuthenticationDecisionMaker {
 
     private ResourceAuthorityService authorityService = null;
 

@@ -48,11 +48,11 @@ public class FrameworkEndpointHandlerMapping extends RequestMappingHandlerMappin
 
     private static final String FORWARD = UrlBasedViewResolver.FORWARD_URL_PREFIX;
 
-    private Map<String, String> mappings = new HashMap<String, String>();
+    private Map<String, String> mappings = new HashMap<>();
 
     private String approvalParameter = OAuth2Utils.USER_OAUTH_APPROVAL;
 
-    private Set<String> paths = new HashSet<String>();
+    private Set<String> paths = new HashSet<>();
 
     private String prefix;
 
@@ -77,7 +77,7 @@ public class FrameworkEndpointHandlerMapping extends RequestMappingHandlerMappin
      * @param patternMap the mappings to set
      */
     public void setMappings(Map<String, String> patternMap) {
-        this.mappings = new HashMap<String, String>(patternMap);
+        this.mappings = new HashMap<>(patternMap);
         for (String key : mappings.keySet()) {
             String result = mappings.get(key);
             if (result.startsWith(FORWARD)) {

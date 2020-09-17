@@ -17,7 +17,7 @@ public class DingtalkConfigurerAdpater {
 
     private String url;
 
-    private Map<String, Consumer<Event>> consumers = new HashMap<String, Consumer<Event>>();
+    private final Map<String, Consumer<Event>> consumers = new HashMap<>();
 
     public Map<String, Consumer<Event>> getConsumers() {
         return consumers;

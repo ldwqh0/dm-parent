@@ -40,7 +40,7 @@ class RangePageImpl<T, M> extends PageImpl<T> implements RangePage<T, M> {
 
     private static final long serialVersionUID = -2418518649668788225L;
 
-    private M max;
+    private final M max;
 
     RangePageImpl(M max, List<T> content, Pageable pageable, long total) {
         super(content, pageable, total);

@@ -16,5 +16,5 @@ public interface ResourceAuthorityService {
      * 
      * @return
      */
-    public Collection<ResourceAuthorityAttribute> listAll();
+    Collection<ResourceAuthorityAttribute> listAll();
 }

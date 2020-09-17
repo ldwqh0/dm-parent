@@ -15,22 +15,22 @@ public interface ProcessInstance {
      * 
      * @return
      */
-    public Long getId();
+    Long getId();
 
     /**
      * 获取该流程实例对应的流程定义
      * 
      * @return
      */
-    public ProcessDefinition getProcessDefinition();
+    ProcessDefinition getProcessDefinition();
 
-    public List<History> getHistories();
+    List<History> getHistories();
 
     /**
      * 获取流程当前节点
      * 
      * @return
      */
-    public State getState();
+    State getState();
 
 }

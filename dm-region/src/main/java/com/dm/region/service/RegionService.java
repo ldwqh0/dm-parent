@@ -38,7 +38,7 @@ public interface RegionService {
      */
     List<Region> save(List<RegionDto> regions);
 
-    public boolean existAny();
+    boolean existAny();
 
     /**
      * 获取指定节点的所有子代
@@ -46,9 +46,9 @@ public interface RegionService {
      * @param parentCode
      * @return
      */
-    public List<Region> findAllChildren(String code);
+    List<Region> findAllChildren(String code);
 
-    public Optional<Region> findByCode(String parent);
+    Optional<Region> findByCode(String parent);
 
-    public Page<Region> find(String keywords, Pageable pageable);
+    Page<Region> find(String keywords, Pageable pageable);
 }

@@ -205,7 +205,7 @@ public class JdbcClientDetailsService implements ClientDetailsService, ClientReg
         if (clientDetails.isAutoApprove("true")) {
             return "true"; // all scopes autoapproved
         }
-        Set<String> scopes = new HashSet<String>();
+        Set<String> scopes = new HashSet<>();
         for (String scope : clientDetails.getScope()) {
             if (clientDetails.isAutoApprove(scope)) {
                 scopes.add(scope);

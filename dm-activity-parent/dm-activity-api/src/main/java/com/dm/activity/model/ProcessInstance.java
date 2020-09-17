@@ -13,13 +13,13 @@ public interface ProcessInstance<ID> {
      *
      * @return
      */
-    public ProcessDefinition getProcessDefinition();
+    ProcessDefinition getProcessDefinition();
 
     /**
      * 获取流程当前节点
      *
      * @return
      */
-    public <StepId> StepDefine<StepId> getStep();
+    <StepId> StepDefine<StepId> getStep();
 
 }

@@ -43,9 +43,7 @@ public class AuditingAutoConfiguration {
     @PostConstruct
     @Deprecated
     public void configAuditingHandler() {
-        handler.setDateTimeProvider(() -> {
-            return Optional.of(ZonedDateTime.now());
-        });
+        handler.setDateTimeProvider(() -> Optional.of(ZonedDateTime.now()));
     }
 
     @Configuration

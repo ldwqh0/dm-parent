@@ -14,7 +14,7 @@ public interface DUserService {
      * 
      * 在同步用户之前，会先同步组织机构信息和角色信息
      */
-    public void syncToUap(String corpid);
+    void syncToUap(String corpid);
 
     /**
      * 启动异步同步信息，并返回日志
@@ -23,7 +23,7 @@ public interface DUserService {
      * 
      * @return
      */
-    public CompletableFuture<DdSyncLog> asyncToUap(String corpid);
+    CompletableFuture<DdSyncLog> asyncToUap(String corpid);
 
     /**
      * 同步单个用户的信息到系统
@@ -31,7 +31,7 @@ public interface DUserService {
      * @param userid
      * @return
      */
-    public DUser syncToUap(String corpid, String userid);
+    DUser syncToUap(String corpid, String userid);
 
     /**
      * 
@@ -42,7 +42,7 @@ public interface DUserService {
      * @param userid 要同步的用户id
      * @return
      */
-    public CompletableFuture<DUser> asyncToUap(String corpid, String userid);
+    CompletableFuture<DUser> asyncToUap(String corpid, String userid);
 
     /**
      * 根据情况创建或更新一个钉钉用户信息,<br>
@@ -54,11 +54,11 @@ public interface DUserService {
      * @param dUser
      * @return
      */
-    public DUser save(DUser dUser);
+    DUser save(DUser dUser);
 
-    public Optional<DUser> findByUserid(String corpid, String userid);
+    Optional<DUser> findByUserid(String corpid, String userid);
 
-    public Optional<DUser> findById(DUserId id);
+    Optional<DUser> findById(DUserId id);
 
     /**
      * 删除指定的用户信息 <br>
@@ -67,13 +67,13 @@ public interface DUserService {
      * 
      * @param userId
      */
-    public void delete(String corpid, String unionid);
+    void delete(String corpid, String unionid);
 
     /**
      * 清理数据，尝试物理删除标记为删除的用户
      * 
      * @param corpid
      */
-    public void clear(String corpid);
+    void clear(String corpid);
 
 }

@@ -48,7 +48,7 @@ public class Approval {
 
     public enum ApprovalStatus {
         APPROVED,
-        DENIED;
+        DENIED
     }
 
     private ApprovalStatus status;

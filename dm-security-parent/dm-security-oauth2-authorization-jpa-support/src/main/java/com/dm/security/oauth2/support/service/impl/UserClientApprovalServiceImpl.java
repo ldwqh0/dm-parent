@@ -1,17 +1,16 @@
 package com.dm.security.oauth2.support.service.impl;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+import com.dm.security.oauth2.support.converter.UserApprovalConverter;
+import com.dm.security.oauth2.support.entity.UserClientApproval;
+import com.dm.security.oauth2.support.repository.UserClientApprovalRepository;
+import com.dm.security.oauth2.support.service.UserClientApprovalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.approval.Approval;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dm.security.oauth2.support.converter.UserApprovalConverter;
-import com.dm.security.oauth2.support.entity.UserClientApproval;
-import com.dm.security.oauth2.support.repository.UserClientApprovalRepository;
-import com.dm.security.oauth2.support.service.UserClientApprovalService;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class UserClientApprovalServiceImpl implements UserClientApprovalService {
@@ -26,7 +25,7 @@ public class UserClientApprovalServiceImpl implements UserClientApprovalService 
     @Transactional
     public boolean addApprovals(Collection<Approval> approvals) {
         Collection<UserClientApproval> results = approvals.stream().map(uacConverter::newModel)
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
         ucaRepository.saveAll(results);
         return true;
     }
@@ -34,17 +33,15 @@ public class UserClientApprovalServiceImpl implements UserClientApprovalService 
     @Override
     @Transactional
     public boolean revokeApprovals(Collection<Approval> approvals) {
-        approvals.forEach(app -> {
-            ucaRepository.deleteById(app.getClientId(), app.getUserId(), app.getScope());
-        });
+        approvals.forEach(app -> ucaRepository.deleteById(app.getClientId(), app.getUserId(), app.getScope()));
         return true;
     }
 
     @Override
     public Collection<Approval> getApprovals(String userId, String clientId) {
         return ucaRepository.findByClientIdAndUserId(clientId, userId)
-                .stream().map(uacConverter::toDto)
-                .collect(Collectors.toList());
+            .stream().map(uacConverter::toDto)
+            .collect(Collectors.toList());
     }
 
 }

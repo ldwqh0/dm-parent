@@ -22,7 +22,7 @@ public class DingTalkAuthcodeAuthenticationProcessingFilter extends AbstractAuth
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException {
         String authCode = request.getParameter("auth_code");
         log.debug("Get auth_code from parameter, auth_code=[" + authCode + "]");
         DingTalkAuthCodeAuthenticationToken token = new DingTalkAuthCodeAuthenticationToken(authCode);

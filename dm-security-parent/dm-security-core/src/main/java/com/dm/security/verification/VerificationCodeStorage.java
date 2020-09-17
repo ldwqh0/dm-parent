@@ -8,21 +8,21 @@ public interface VerificationCodeStorage {
      * @param id
      * @return
      */
-    public VerificationCode get(String id);
+    VerificationCode get(String id);
 
     /**
      * 获取默认的验证码信息
      * 
      * @return
      */
-    public VerificationCode get();
+    VerificationCode get();
 
     /**
      * 保存验证码信息
      * 
      * @param code
      */
-    public void save(VerificationCode code);
+    void save(VerificationCode code);
 
     /**
      * 从存储中移除验证码
@@ -30,7 +30,7 @@ public interface VerificationCodeStorage {
      * @param id
      * @return
      */
-    public VerificationCode remove(String id);
+    VerificationCode remove(String id);
 
     /**
      * 校验验证码是否正确

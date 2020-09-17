@@ -48,7 +48,7 @@ public class AuthorizationRequest extends BaseRequest implements Serializable {
      * signal approval of the token grant approval. Once set this should not be
      * modified.
      */
-    private Map<String, String> approvalParameters = Collections.unmodifiableMap(new HashMap<String, String>());
+    private Map<String, String> approvalParameters = Collections.unmodifiableMap(new HashMap<>());
 
     /**
      * The value of the "state" parameter sent by the client in the request, if sent
@@ -61,18 +61,18 @@ public class AuthorizationRequest extends BaseRequest implements Serializable {
      * Resolved requested response types initialized (by the OAuth2RequestFactory)
      * with the response types originally requested.
      */
-    private Set<String> responseTypes = new HashSet<String>();
+    private Set<String> responseTypes = new HashSet<>();
 
     /**
      * Resolved resource IDs. This set may change during request processing.
      */
-    private Set<String> resourceIds = new HashSet<String>();
+    private Set<String> resourceIds = new HashSet<>();
 
     /**
      * Resolved granted authorities for this request. May change during request
      * processing.
      */
-    private Collection<? extends GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+    private Collection<? extends GrantedAuthority> authorities = new HashSet<>();
 
     /**
      * Whether the request has been approved by the end user (or other process).
@@ -95,7 +95,7 @@ public class AuthorizationRequest extends BaseRequest implements Serializable {
      * a serializable OAuth2Request, all members of this extension map must be
      * serializable.
      */
-    private Map<String, Serializable> extensions = new HashMap<String, Serializable>();
+    private Map<String, Serializable> extensions = new HashMap<>();
 
     /**
      * Default constructor.
@@ -115,7 +115,7 @@ public class AuthorizationRequest extends BaseRequest implements Serializable {
                                                        // wrap the collection
         setScope(scope); // in case we need to parse
         if (resourceIds != null) {
-            this.resourceIds = new HashSet<String>(resourceIds);
+            this.resourceIds = new HashSet<>(resourceIds);
         }
         if (authorities != null) {
             this.authorities = new HashSet<GrantedAuthority>(authorities);

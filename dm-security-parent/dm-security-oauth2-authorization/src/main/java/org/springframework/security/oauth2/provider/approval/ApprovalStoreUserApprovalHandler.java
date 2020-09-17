@@ -51,7 +51,7 @@ import org.springframework.util.Assert;
  */
 public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, InitializingBean {
 
-    private static Log logger = LogFactory.getLog(ApprovalStoreUserApprovalHandler.class);
+    private static final Log logger = LogFactory.getLog(ApprovalStoreUserApprovalHandler.class);
 
     private String scopePrefix = OAuth2Utils.SCOPE_PREFIX;
 
@@ -114,8 +114,8 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
 
         String clientId = authorizationRequest.getClientId();
         Collection<String> requestedScopes = authorizationRequest.getScope();
-        Set<String> approvedScopes = new HashSet<String>();
-        Set<String> validUserApprovedScopes = new HashSet<String>();
+        Set<String> approvedScopes = new HashSet<>();
+        Set<String> validUserApprovedScopes = new HashSet<>();
 
         if (clientDetailsService != null) {
             try {
@@ -128,7 +128,7 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
                 if (approvedScopes.containsAll(requestedScopes)) {
                     // gh-877 - if all scopes are auto approved, approvals still need to be added to
                     // the approval store.
-                    Set<Approval> approvals = new HashSet<Approval>();
+                    Set<Approval> approvals = new HashSet<>();
                     ZonedDateTime expiry = computeExpiry();
                     for (String approvedScope : approvedScopes) {
                         approvals.add(new Approval(userAuthentication.getName(), authorizationRequest.getClientId(),
@@ -210,8 +210,8 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
             Authentication userAuthentication) {
         // Get the approved scopes
         Set<String> requestedScopes = authorizationRequest.getScope();
-        Set<String> approvedScopes = new HashSet<String>();
-        Set<Approval> approvals = new HashSet<Approval>();
+        Set<String> approvedScopes = new HashSet<>();
+        Set<Approval> approvals = new HashSet<>();
 
         ZonedDateTime expiry = computeExpiry();
 
@@ -246,9 +246,9 @@ public class ApprovalStoreUserApprovalHandler implements UserApprovalHandler, In
     @Override
     public Map<String, Object> getUserApprovalRequest(AuthorizationRequest authorizationRequest,
             Authentication userAuthentication) {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.putAll(authorizationRequest.getRequestParameters());
-        Map<String, String> scopes = new LinkedHashMap<String, String>();
+        Map<String, String> scopes = new LinkedHashMap<>();
         for (String scope : authorizationRequest.getScope()) {
             scopes.put(scopePrefix + scope, "false");
         }

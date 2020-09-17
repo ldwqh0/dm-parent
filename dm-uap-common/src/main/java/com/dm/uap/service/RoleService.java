@@ -10,22 +10,22 @@ import com.dm.uap.entity.Role;
 
 public interface RoleService {
 
-    public boolean exist();
+    boolean exist();
 
-    public Role save(RoleDto dto);
+    Role save(RoleDto dto);
 
-    public boolean nameExist(Long id, String name);
+    boolean nameExist(Long id, String name);
 
-    public Role update(long id, RoleDto roleDto);
+    Role update(long id, RoleDto roleDto);
 
-    public Optional<Role> get(long id);
+    Optional<Role> get(long id);
 
-    public void delete(long id);
+    void delete(long id);
 
-    public Page<Role> search(Long groupId, String key, Pageable pageable);
+    Page<Role> search(Long groupId, String key, Pageable pageable);
 
-    public List<Role> listAllEnabled();
+    List<Role> listAllEnabled();
 
-    public Optional<Role> findByName(String string);
+    Optional<Role> findByName(String string);
 
 }

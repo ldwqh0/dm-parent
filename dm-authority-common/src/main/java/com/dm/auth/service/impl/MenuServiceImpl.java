@@ -189,9 +189,8 @@ public class MenuServiceImpl implements MenuService {
     /**
      * 在保存前对菜单进行校验
      *
-     * @return 校验成功返回true, 校验失败返回false
      */
-    private boolean preCheck(MenuDto menu) {
+    private void preCheck(MenuDto menu) {
         if (!Objects.isNull(menu.getId()) && !Objects.isNull(menu.getParent())
             && !Objects.isNull(menu.getParent().getId())) {
             Menu parent = get(menu.getParent().getId()).orElse(null);
@@ -202,7 +201,6 @@ public class MenuServiceImpl implements MenuService {
                 parent = parent.getParent();
             }
         }
-        return true;
     }
 
     @Override

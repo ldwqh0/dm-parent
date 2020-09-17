@@ -21,7 +21,7 @@ public class WxAuthenticationToken extends AbstractAuthenticationToken implement
         this.code = code;
         this.userDetails = userDetails;
         setAuthenticated(true);
-    };
+    }
 
     private static final long serialVersionUID = -8573831337149756905L;
 

@@ -64,13 +64,13 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
     /**
      * 文件名
      */
-    @Column(name = "file_name_", length = 255, nullable = false)
+    @Column(name = "file_name_", nullable = false)
     private String filename;
 
     /**
      * 文件存储路径
      */
-    @Column(name = "path_", length = 255, unique = true)
+    @Column(name = "path_", unique = true)
     private String path;
 
     /**

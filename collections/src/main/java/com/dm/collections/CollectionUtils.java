@@ -1,10 +1,6 @@
 package com.dm.collections;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 public final class CollectionUtils {
@@ -74,7 +70,7 @@ public final class CollectionUtils {
             while (it.hasNext()) {
                 final Object p = it.next();
                 elementsAlreadySeen.add(p);
-                if (nextElement == null ? p == null : nextElement.equals(p)) {
+                if (Objects.equals(nextElement, p)) {
                     foundCurrentElement = true;
                     break;
                 }

@@ -14,9 +14,9 @@ import reactor.core.publisher.Mono;
 public class ReactiveUserInfoOpaqueTokenIntrospector implements ReactiveOpaqueTokenIntrospector {
     // TODO 这里需要处理
     private String url = "";
-    private WebClient webClient;
+    private final WebClient webClient;
 
-    private PrincipalExtractor principalExtractor = new UserDetailsDtoPrincipalExtractor();
+    private final PrincipalExtractor principalExtractor = new UserDetailsDtoPrincipalExtractor();
 
     public ReactiveUserInfoOpaqueTokenIntrospector(String introspectionUri) {
         this.url = introspectionUri;

@@ -14,7 +14,7 @@ public interface ActionDefine {
      *
      * @return
      */
-    public String getName();
+    String getName();
 
     /**
      * 动作的下一部
@@ -22,12 +22,12 @@ public interface ActionDefine {
      * @param <ID>
      * @return
      */
-    public <ID> StepDefine<ID> getNextStep();
+    <ID> StepDefine<ID> getNextStep();
 
-    public <ID> ProcessDefinition getProcessDefine();
+    <ID> ProcessDefinition getProcessDefine();
 
-    public <ID> StepDefine<ID> getStep();
+    <ID> StepDefine<ID> getStep();
 
     // 制定可以执行该动作的人员
-    public List<Principal> getPrincipal();
+    List<Principal> getPrincipal();
 }

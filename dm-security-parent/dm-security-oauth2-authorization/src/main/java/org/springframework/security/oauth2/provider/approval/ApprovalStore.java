@@ -31,10 +31,10 @@ import java.util.Collection;
  */
 public interface ApprovalStore {
 
-    public boolean addApprovals(Collection<Approval> approvals);
+    boolean addApprovals(Collection<Approval> approvals);
 
-    public boolean revokeApprovals(Collection<Approval> approvals);
+    boolean revokeApprovals(Collection<Approval> approvals);
 
-    public Collection<Approval> getApprovals(String userId, String clientId);
+    Collection<Approval> getApprovals(String userId, String clientId);
 
 }

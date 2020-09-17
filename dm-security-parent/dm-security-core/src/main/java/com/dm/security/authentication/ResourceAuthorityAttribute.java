@@ -54,8 +54,8 @@ public class ResourceAuthorityAttribute implements Serializable {
         super();
         this.resource = resource;
         this.authenticated = true;
-        this.accessAuthorities = new HashSet<String>();
-        this.denyAuthorities = new HashSet<String>();
+        this.accessAuthorities = new HashSet<>();
+        this.denyAuthorities = new HashSet<>();
     }
 
     /**

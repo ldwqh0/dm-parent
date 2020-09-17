@@ -58,16 +58,14 @@ public class DingAes {
      * @param value
      * @return
      * @throws InvalidKeyException
-     * @throws UnsupportedEncodingException
      * @throws NoSuchAlgorithmException
-     * @throws InvalidKeySpecException
      * @throws NoSuchPaddingException
      * @throws IllegalBlockSizeException
      * @throws BadPaddingException
      * @throws InvalidAlgorithmParameterException
      */
-    public byte[] decrypt(String value) throws InvalidKeyException, UnsupportedEncodingException,
-            NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, IllegalBlockSizeException,
+    public byte[] decrypt(String value) throws InvalidKeyException,
+        NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
             BadPaddingException, InvalidAlgorithmParameterException {
         // 钉钉的解密无补码，也是奇葩
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");

@@ -91,10 +91,10 @@ public class DefaultAccessTokenConverter implements AccessTokenConverter {
 
     @Override
     public Map<String, ?> convertAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication) {
-        Map<String, Object> response = new HashMap<String, Object>();
+        Map<String, Object> response = new HashMap<>();
         OAuth2Request clientToken = authentication.getOAuth2Request();
 
-        if (!authentication.isClientOnly()) {
+        if (authentication.isClientOnly()) {
             response.putAll(userTokenConverter.convertUserAuthentication(authentication.getUserAuthentication()));
         } else {
             if (clientToken.getAuthorities() != null && !clientToken.getAuthorities().isEmpty()) {
@@ -130,7 +130,7 @@ public class DefaultAccessTokenConverter implements AccessTokenConverter {
     @Override
     public OAuth2AccessToken extractAccessToken(String value, Map<String, ?> map) {
         DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(value);
-        Map<String, Object> info = new HashMap<String, Object>(map);
+        Map<String, Object> info = new HashMap<>(map);
         info.remove(EXP);
         info.remove(AUD);
         info.remove(clientIdAttribute);
@@ -148,7 +148,7 @@ public class DefaultAccessTokenConverter implements AccessTokenConverter {
 
     @Override
     public OAuth2Authentication extractAuthentication(Map<String, ?> map) {
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         Set<String> scope = extractScope(map);
         Authentication user = userTokenConverter.extractAuthentication(map);
         String clientId = (String) map.get(clientIdAttribute);
@@ -156,8 +156,8 @@ public class DefaultAccessTokenConverter implements AccessTokenConverter {
         if (includeGrantType && map.containsKey(GRANT_TYPE)) {
             parameters.put(GRANT_TYPE, (String) map.get(GRANT_TYPE));
         }
-        Set<String> resourceIds = new LinkedHashSet<String>(map.containsKey(AUD) ? getAudience(map)
-                : Collections.<String>emptySet());
+        Set<String> resourceIds = new LinkedHashSet<>(map.containsKey(AUD) ? getAudience(map)
+            : Collections.<String>emptySet());
 
         Collection<? extends GrantedAuthority> authorities = null;
         if (user == null && map.containsKey(AUTHORITIES)) {
@@ -186,11 +186,11 @@ public class DefaultAccessTokenConverter implements AccessTokenConverter {
         if (map.containsKey(scopeAttribute)) {
             Object scopeObj = map.get(scopeAttribute);
             if (String.class.isInstance(scopeObj)) {
-                scope = new LinkedHashSet<String>(Arrays.asList(String.class.cast(scopeObj).split(" ")));
+                scope = new LinkedHashSet<>(Arrays.asList(String.class.cast(scopeObj).split(" ")));
             } else if (Collection.class.isAssignableFrom(scopeObj.getClass())) {
                 @SuppressWarnings("unchecked")
                 Collection<String> scopeColl = (Collection<String>) scopeObj;
-                scope = new LinkedHashSet<String>(scopeColl); // Preserve ordering
+                scope = new LinkedHashSet<>(scopeColl); // Preserve ordering
             }
         }
         return scope;

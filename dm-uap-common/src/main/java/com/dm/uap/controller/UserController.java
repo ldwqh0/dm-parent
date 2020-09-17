@@ -99,7 +99,7 @@ public class UserController {
             throw new DataValidateException("不能修改系统内置匿名用户");
         }
         validRePassword(password, rePassword);
-        if (!userService.checkPassword(id, oldPassword)) {
+        if (userService.checkPassword(id, oldPassword)) {
             throw new DataValidateException("原始密码校验错误");
         }
         return userConverter.toDto(userService.repassword(id, password));
@@ -113,7 +113,7 @@ public class UserController {
         @Valid @RequestBody UpdatePasswordDto data) {
         Long id = user.getId();
         validRePassword(data.getPassword(), data.getRepassword());
-        if (!userService.checkPassword(id, data.getOldPassword())) {
+        if (userService.checkPassword(id, data.getOldPassword())) {
             throw new DataValidateException("原始密码校验错误");
         }
         return userConverter.toDto(userService.repassword(id, data.getPassword()));

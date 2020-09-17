@@ -3,7 +3,6 @@ package com.dm.dingtalk.api.callback;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
@@ -29,11 +28,7 @@ public class EncryptMessage implements Serializable {
      * @return 转换后的消息
      */
     public static EncryptMessage from(byte[] bytes) {
-        try {
-            return new EncryptMessage(bytes);
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
+        return new EncryptMessage(bytes);
     }
 
     public static EncryptMessage from(String base64Str) {

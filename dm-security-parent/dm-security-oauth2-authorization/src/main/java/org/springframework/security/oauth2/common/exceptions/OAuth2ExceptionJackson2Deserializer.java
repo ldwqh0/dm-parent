@@ -50,7 +50,7 @@ public class OAuth2ExceptionJackson2Deserializer extends StdDeserializer<OAuth2E
         if (t == JsonToken.START_OBJECT) {
             t = jp.nextToken();
         }
-        Map<String, Object> errorParams = new HashMap<String, Object>();
+        Map<String, Object> errorParams = new HashMap<>();
         for (; t == JsonToken.FIELD_NAME; t = jp.nextToken()) {
             // Must point to field name
             String fieldName = jp.getCurrentName();

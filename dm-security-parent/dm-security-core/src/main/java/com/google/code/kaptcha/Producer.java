@@ -12,10 +12,10 @@ public interface Producer {
      * @param text the distorted characters
      * @return image with the text
      */
-    public BufferedImage createImage(String text);
+    BufferedImage createImage(String text);
 
     /**
      * @return the text to be drawn
      */
-    public abstract String createText();
+    String createText();
 }

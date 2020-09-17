@@ -19,7 +19,7 @@ public class ReactiveUserDetailsServiceImpl implements ReactiveUserDetailsServic
             return null;
         });
         UserDetails ud = null;// userDetailsService.loadUserByUsername(username);
-        return Mono.fromFuture(CompletableFuture.completedFuture(ud));
+        return Mono.fromFuture(CompletableFuture.completedFuture(null));
     }
 
 }

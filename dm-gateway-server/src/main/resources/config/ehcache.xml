@@ -8,7 +8,7 @@
         http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
   <cache-template name="default">
     <expiry>
-      <ttl unit="seconds">60</ttl>
+      <ttl>60</ttl>
     </expiry>
     <resources>
       <heap unit="MB">30</heap>

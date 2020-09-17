@@ -75,9 +75,7 @@ public final class Maps {
             return Collections.emptyMap();
         }
         Map<K, V2> result = new HashMap<>();
-        input.forEach((key, value) -> {
-            result.put(key, valueConverter.apply(value));
-        });
+        input.forEach((key, value) -> result.put(key, valueConverter.apply(value)));
         return result;
     }
 
@@ -90,14 +88,12 @@ public final class Maps {
             return Collections.emptyMap();
         }
         Map<K2, V> result = new HashMap<>();
-        input.forEach((k, v) -> {
-            result.put(converter.apply(k), v);
-        });
+        input.forEach((k, v) -> result.put(converter.apply(k), v));
         return result;
     }
 
     public static <K, V> HashMapBuilder<K, V> entry(K key, V value) {
-        return new HashMapBuilder<K, V>(key, value);
+        return new HashMapBuilder<>(key, value);
     }
 
     public final static class HashMapBuilder<K, V> {

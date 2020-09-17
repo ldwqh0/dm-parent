@@ -25,7 +25,7 @@ public interface OAuth2RequestValidator {
      * @param client               the client that is making the request
      * @throws InvalidScopeException if a requested scope is invalid
      */
-    public void validateScope(AuthorizationRequest authorizationRequest, ClientDetails client)
+    void validateScope(AuthorizationRequest authorizationRequest, ClientDetails client)
             throws InvalidScopeException;
 
     /**
@@ -35,6 +35,6 @@ public interface OAuth2RequestValidator {
      * @param client       the client that is making the request
      * @throws InvalidScopeException if a requested scope is invalid
      */
-    public void validateScope(TokenRequest tokenRequest, ClientDetails client) throws InvalidScopeException;
+    void validateScope(TokenRequest tokenRequest, ClientDetails client) throws InvalidScopeException;
 
 }

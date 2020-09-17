@@ -89,8 +89,8 @@ public class DefaultWebResponseExceptionTranslator implements WebResponseExcepti
             headers.set("WWW-Authenticate", String.format("%s %s", OAuth2AccessToken.BEARER_TYPE, e.getSummary()));
         }
 
-        ResponseEntity<OAuth2Exception> response = new ResponseEntity<OAuth2Exception>(e, headers,
-                HttpStatus.valueOf(status));
+        ResponseEntity<OAuth2Exception> response = new ResponseEntity<>(e, headers,
+            HttpStatus.valueOf(status));
 
         return response;
 

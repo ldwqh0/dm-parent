@@ -10,5 +10,5 @@ public interface GimpyEngine {
      * @param baseImage the base image
      * @return the image with distortion applied to the base image
      */
-    public BufferedImage getDistortedImage(BufferedImage baseImage);
+    BufferedImage getDistortedImage(BufferedImage baseImage);
 }

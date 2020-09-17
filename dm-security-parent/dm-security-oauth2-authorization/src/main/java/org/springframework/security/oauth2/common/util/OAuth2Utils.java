@@ -91,7 +91,7 @@ public abstract class OAuth2Utils {
      * @return The set.
      */
     public static Set<String> parseParameterList(String values) {
-        Set<String> result = new TreeSet<String>();
+        Set<String> result = new TreeSet<>();
         if (values != null && values.trim().length() > 0) {
             // the spec says the scope is separated by spaces
             String[] tokens = values.split("[\\s+]");
@@ -119,7 +119,7 @@ public abstract class OAuth2Utils {
      * @return a Map of the values in the query
      */
     public static Map<String, String> extractMap(String query) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         Properties properties = StringUtils.splitArrayElementsIntoProperties(
                 StringUtils.delimitedListToStringArray(query, "&"), "=");
         if (properties != null) {
@@ -138,7 +138,7 @@ public abstract class OAuth2Utils {
      * @return true if all members are in the target
      */
     public static boolean containsAll(Set<String> target, Set<String> members) {
-        target = new HashSet<String>(target);
+        target = new HashSet<>(target);
         target.retainAll(members);
         return target.size() == members.size();
     }

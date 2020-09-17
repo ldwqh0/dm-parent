@@ -28,7 +28,7 @@ public class WhitelabelErrorEndpoint {
 
     @RequestMapping("/oauth/error")
     public ModelAndView handleError(HttpServletRequest request) {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         Object error = request.getAttribute("error");
         // The error summary may contain malicious user input,
         // it needs to be escaped to prevent XSS

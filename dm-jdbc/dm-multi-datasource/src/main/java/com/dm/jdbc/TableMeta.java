@@ -4,11 +4,11 @@ import java.util.List;
 
 public interface TableMeta {
 
-    public String getTableName();
+    String getTableName();
 
-    public String getType();
+    String getType();
 
-    public List<ColumnMeta> getColumns();
+    List<ColumnMeta> getColumns();
 
 
     static TableMeta of(String tableName, String type, List<ColumnMeta> columns) {
@@ -19,7 +19,7 @@ public interface TableMeta {
         return data;
     }
 
-    static class TableMetaImpl implements TableMeta {
+    class TableMetaImpl implements TableMeta {
 
         private String tableName;
 

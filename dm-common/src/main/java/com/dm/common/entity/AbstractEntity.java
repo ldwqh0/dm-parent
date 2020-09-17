@@ -16,7 +16,7 @@ import org.springframework.data.domain.Persistable;
 public abstract class AbstractEntity implements Persistable<Long> {
 
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGenerator")
-    @TableGenerator(name = "tableGenerator", pkColumnName = "table_name_", table = "auto_pk_support_", valueColumnName = "next_id_", allocationSize = 50)
+    @TableGenerator(name = "tableGenerator", pkColumnName = "table_name_", table = "auto_pk_support_", valueColumnName = "next_id_")
     @Id
     @Column(name = "id_", updatable = false)
     private Long id;
@@ -55,8 +55,7 @@ public abstract class AbstractEntity implements Persistable<Long> {
             return false;
         AbstractEntity other = (AbstractEntity) obj;
         if (id == null) {
-            if (other.id != null)
-                return false;
+            return other.id == null;
         } else if (!id.equals(other.id))
             return false;
         return true;

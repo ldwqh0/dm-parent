@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DmDataSourceService {
-    public DmDataSource save(DmDataSourceDto connection);
+    DmDataSource save(DmDataSourceDto connection);
 
-    public DmDataSource update(Long id, DmDataSourceDto connection);
+    DmDataSource update(Long id, DmDataSourceDto connection);
 
-    public Optional<DmDataSource> findById(Long id);
+    Optional<DmDataSource> findById(Long id);
 
-    public Page<DmDataSource> list(String keyword, Pageable pageable);
+    Page<DmDataSource> list(String keyword, Pageable pageable);
 
-    public List<DmDataSource> listAll();
+    List<DmDataSource> listAll();
 
-    public List<TableMeta> listTables(Long connection);
+    List<TableMeta> listTables(Long connection);
 }

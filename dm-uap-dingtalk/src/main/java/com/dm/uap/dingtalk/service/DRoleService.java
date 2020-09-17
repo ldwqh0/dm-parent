@@ -10,9 +10,9 @@ public interface DRoleService {
      * 
      * @param corpid
      */
-    public void clear(String corpid);
+    void clear(String corpid);
 
-    public void delete(String corpid, Long id);
+    void delete(String corpid, Long id);
 
     /**
      * 异步的同步指定角色到本地存储和本地用户
@@ -21,5 +21,5 @@ public interface DRoleService {
      * @param roleId
      * @return
      */
-    public CompletableFuture<DRole> asyncToUap(String corpid, Long roleId);
+    CompletableFuture<DRole> asyncToUap(String corpid, Long roleId);
 }

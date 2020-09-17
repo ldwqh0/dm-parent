@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkPassword(Long id, String password) {
         User user = userRepository.getOne(id);
-        return passwordEncoder.matches(password, user.getPassword());
+        return !passwordEncoder.matches(password, user.getPassword());
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.dm.auth.entity.AuthResource;
 import com.dm.auth.entity.Authority;
 import com.dm.collections.Maps;
 import com.dm.collections.Sets;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
