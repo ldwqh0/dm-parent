@@ -92,7 +92,6 @@ public class DUserServiceImpl implements DUserService {
     public void syncToUap(String corpid) {
         if (Boolean.TRUE.equals(this.syncing)) {
             log.info("一个同步进程在进行中，返回");
-            return;
         } else {
             // TODO　这个代码玩笑大了
             synchronized (lock) {
@@ -203,7 +202,7 @@ public class DUserServiceImpl implements DUserService {
      * 保存前根据userid判断是否在钉钉中已经存在相关用户, <br>
      * 以便区别是新增还是修改
      *
-     * @param dUser
+     * @param dUser 钉钉用户信息
      * @return 创建成功之后的DUser对象，主要是更新创建的userid
      */
     private DUser saveToDingTalk(DUser dUser) {
@@ -224,17 +223,14 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 将钉钉用户信息同步到系统uap
      *
-     * @param dUsers
-     * @return
+     * @param dUsers 钉钉用户信息
+     * @return 用户列表
      */
     private List<User> syncToUap(List<DUser> dUsers) {
         log.info("开始同步用户信息到UAP");
         List<User> users = dUsers.stream().map(this::toUser).collect(Collectors.toList());
         try {
             return userRepository.saveAll(users);
-        } catch (Exception e) {
-            // do nothing here;
-            throw e;
         } finally {
             log.info("同步用户信息到UAP完成");
         }
@@ -244,8 +240,8 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 同步指定钉钉用户到系统用户
      *
-     * @param dUser
-     * @return
+     * @param dUser 钉钉用户信息
+     * @return 系统用户信息
      */
     private User syncToUap(DUser dUser) {
         return userRepository.save(this.toUser(dUser));
@@ -267,25 +263,19 @@ public class DUserServiceImpl implements DUserService {
         Map<DDepartment, Long> _orders = dUser.getOrderInDepts();
         if (Maps.isNotEmpty(_orders)) {
             Map<Department, Long> orders = new HashMap<>();
-            _orders.entrySet().forEach(e -> {
-                orders.put(e.getKey().getDepartment(), e.getValue());
-            });
+            _orders.forEach((key, value) -> orders.put(key.getDepartment(), value));
             user.setOrders(orders);
         }
 
         // 设置职务信息
-        Map<Department, String> post = new HashMap<Department, String>();
+        Map<Department, String> post = new HashMap<>();
         Map<DDepartment, String> _post = dUser.getPosts();
         if (Maps.isNotEmpty(_post)) {
             Set<Entry<DDepartment, String>> postEntry = _post.entrySet();
-            postEntry.forEach(e -> {
-                post.put(e.getKey().getDepartment(), e.getValue());
-            });
+            postEntry.forEach(e -> post.put(e.getKey().getDepartment(), e.getValue()));
         } else if (CollectionUtils.isNotEmpty(dUser.getDepartments())) {
             String pos = dUser.getPosition();
-            dUser.getDepartments().forEach(d -> {
-                post.put(d.getDepartment(), pos);
-            });
+            dUser.getDepartments().forEach(d -> post.put(d.getDepartment(), pos));
         }
 
         user.setPosts(post);
@@ -301,7 +291,8 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 从服务器拉取钉钉用户信息，并将信息保存到本地
      *
-     * @return
+     * @param corpid 企业号
+     * @return 用户信息的列表
      */
     private List<DUser> fetch(final String corpid) {
         List<DDepartment> dDepartments = dDepartmentRepository.findByCorpId(corpid);
@@ -342,8 +333,8 @@ public class DUserServiceImpl implements DUserService {
 
         List<String> unionids = users.stream().map(DUser::getUnionid).collect(Collectors.toList());
         // 将存在于本地用户，但不存在于钉钉的用户，将本地状态设置为删除，
-        dUserRepository.setDeletedByCorpidAndUnionidNotIn(corpid, unionids, TRUE);
-        List<Long> deleteUsers = dUserRepository.findUserIdsByCorpidAndDUserDeleted(corpid, TRUE);
+        dUserRepository.setDeletedByCorpIdAndUnionidNotIn(corpid, unionids, TRUE);
+        List<Long> deleteUsers = dUserRepository.findUserIdsByCorpIdAndDUserDeleted(corpid, TRUE);
         if (CollectionUtils.isNotEmpty(deleteUsers)) {
             userRepository.batchSetEnabled(deleteUsers, FALSE);
         }
@@ -355,9 +346,9 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 将从服务上获取到的用户信息，映射到本地数据模型
      *
-     * @param dUser
-     * @param rsp
-     * @return
+     * @param dUser 钉钉用户信息
+     * @param rsp   远程用户信息
+     * @return 保存合并后的钉钉用户
      */
     private DUser copyProperties(DUser dUser, OapiUserGetResponse rsp) {
         dUserConverter.copyProperties(dUser, rsp);
@@ -384,7 +375,7 @@ public class DUserServiceImpl implements DUserService {
         try {
             Map<Long, Long> orderMap = parseOrderMap(rsp.getOrderInDepts());
             if (Maps.isNotEmpty(orderMap)) {
-                Map<DDepartment, Long> dOrderMap = new HashMap<DDepartment, Long>();
+                Map<DDepartment, Long> dOrderMap = new HashMap<>();
                 for (Entry<Long, Long> orderEntry : orderMap.entrySet()) {
                     dOrderMap.put(dDepartmentRepository.getOne(corpid, orderEntry.getKey()), orderEntry.getValue());
                 }
@@ -412,7 +403,7 @@ public class DUserServiceImpl implements DUserService {
      *
      * @param v 表示用户是否部门领导的字符串 ，格式如 "{1:false,2:true}"
      *          的形式的形式，数组是部门的id,true表示是部门领导，false表示不是部门领导
-     * @return
+     * @return 解析结果
      */
     private Map<Long, Boolean> parseLeaderMap(String v) {
         try {
@@ -435,9 +426,8 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 解析用户排序信息字符串 {@link parseLeaderMap}
      *
-     * @param str
-     * @return
-     * @see
+     * @param str 要解析的字符串
+     * @return 解析后的排序信息
      */
     private Map<Long, Long> parseOrderMap(String str) {
         try {
@@ -460,8 +450,8 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 新增用户信息到钉钉
      *
-     * @param dUser
-     * @return
+     * @param dUser 钉钉用户信息
+     * @return 保存后的钉钉用户信息
      */
     private DUser createToDingTalk(String corpid, DUser dUser) {
         OapiUserCreateRequest request = dUserConverter.toOapiUserCreateRequest(dUser);
@@ -482,8 +472,8 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 更新用信息到钉钉服务器
      *
-     * @param dUser
-     * @return
+     * @param dUser 钉钉用户信息
+     * @return 钉钉用户信息
      */
     private DUser updateToDingTalk(String corpid, DUser dUser) {
         OapiUserUpdateRequest request = dUserConverter.toOapiUserUpdateRequest(dUser);
@@ -512,11 +502,11 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 尝试物理删除
      *
-     * @param duser
+     * @param dUser 要删除的钉钉用户
      */
-    private void deletePhysical(DUser du) {
-        User user = du.getUser();
+    private void deletePhysical(DUser dUser) {
+        User user = dUser.getUser();
         userRepository.delete(user);
-        dUserRepository.delete(du);
+        dUserRepository.delete(dUser);
     }
 }

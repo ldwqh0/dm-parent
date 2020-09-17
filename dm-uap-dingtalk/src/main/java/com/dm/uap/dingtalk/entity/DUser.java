@@ -1,32 +1,16 @@
 package com.dm.uap.dingtalk.entity;
 
+import com.dm.uap.entity.User;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyJoinColumn;
-import javax.persistence.MapKeyJoinColumns;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.dm.uap.entity.User;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import static javax.persistence.CascadeType.*;
 
@@ -34,8 +18,8 @@ import static javax.persistence.CascadeType.*;
 @Getter
 @Setter
 @Table(name = "dd_user_", indexes = {
-        @Index(columnList = "deleted_", name = "idx_dd_user_deleted_"),
-        @Index(columnList = "corp_id_,userid_", name = "uk_dd_user_corpid_userid_")
+    @Index(columnList = "deleted_", name = "idx_dd_user_deleted_"),
+    @Index(columnList = "corp_id_,userid_", name = "uk_dd_user_corpid_userid_")
 })
 @IdClass(DUserId.class)
 public class DUser {
@@ -88,13 +72,13 @@ public class DUser {
 
     @Column(name = "order_")
     @JoinTable(name = "dd_department_user_order_", joinColumns = {
-            @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
-            @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
+        @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
+        @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     })
     @ElementCollection
     @MapKeyJoinColumns({
-            @MapKeyJoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
-            @MapKeyJoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
+        @MapKeyJoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
+        @MapKeyJoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
     })
     private Map<DDepartment, Long> orderInDepts;
 
@@ -111,12 +95,12 @@ public class DUser {
     @Column(name = "is_leader_")
     @ElementCollection
     @JoinTable(name = "dd_department_user_leader_", joinColumns = {
-            @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
-            @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
+        @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
+        @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     })
     @MapKeyJoinColumns({
-            @MapKeyJoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
-            @MapKeyJoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
+        @MapKeyJoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
+        @MapKeyJoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
     })
     private Map<DDepartment, Boolean> leaderInDepts;
 
@@ -125,11 +109,11 @@ public class DUser {
 
     @ManyToMany
     @JoinTable(name = "dd_department_dd_user_", joinColumns = {
-            @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
-            @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
+        @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
+        @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     }, inverseJoinColumns = {
-            @JoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
-            @JoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
+        @JoinColumn(name = "dd_department_id_", referencedColumnName = "id_"),
+        @JoinColumn(name = "dd_department_corp_id_", referencedColumnName = "corp_id_")
     })
     private Set<DDepartment> departments;
 
@@ -153,15 +137,15 @@ public class DUser {
 
     @ManyToMany
     @JoinTable(name = "dd_role_user_", joinColumns = {
-            @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
-            @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
+        @JoinColumn(name = "dd_user_unionid_", referencedColumnName = "unionid_"),
+        @JoinColumn(name = "dd_user_corp_id_", referencedColumnName = "corp_id_")
     }, inverseJoinColumns = {
-            @JoinColumn(name = "dd_role_id_", referencedColumnName = "id_"),
-            @JoinColumn(name = "dd_role_corp_id_", referencedColumnName = "corp_id_")
+        @JoinColumn(name = "dd_role_id_", referencedColumnName = "id_"),
+        @JoinColumn(name = "dd_role_corp_id_", referencedColumnName = "corp_id_")
     })
     private Set<DRole> roles;
 
-    @OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
+    @OneToOne(cascade = {MERGE, PERSIST, REFRESH, DETACH})
     @JoinColumn(name = "dm_user_id_")
     private User user;
 
@@ -175,7 +159,7 @@ public class DUser {
         this.posts = posts;
         Set<Entry<DDepartment, String>> postEntry = posts.entrySet();
         String pos = null;
-        Set<DDepartment> departments = new HashSet<DDepartment>();
+        Set<DDepartment> departments = new HashSet<>();
         for (Entry<DDepartment, String> entry : postEntry) {
             if (StringUtils.isBlank(pos)) {
                 pos = entry.getValue();
@@ -186,7 +170,7 @@ public class DUser {
         this.departments = departments;
     }
 
-    DUser() {
+    public DUser() {
     }
 
     private void setCorpId(String corpid) {

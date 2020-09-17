@@ -8,19 +8,20 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.dm.security.oauth2.support.entity.UserClientApproval;
 import com.dm.security.oauth2.support.entity.UserClientApprovalPK;
+import org.springframework.data.repository.query.Param;
 
 public interface UserClientApprovalRepository extends JpaRepository<UserClientApproval, UserClientApprovalPK> {
 
-    public List<UserClientApproval> findByClientIdAndUserId(String clientId, String userId);
+    List<UserClientApproval> findByClientIdAndUserId(String clientId, String userId);
 
-    @Query("DELETE FROM UserClientApproval uca WHERE uca.clientId=?1")
+    @Query("DELETE FROM UserClientApproval uca WHERE uca.clientId=:clientId")
     @Modifying
-    public int deleteByClientId(String clientId);
+    int deleteByClientId(@Param("clientId") String clientId);
 
-    @Query("DELETE FROM UserClientApproval uca WHERE uca.userId=?1")
-    public int deleteByUserId(String userid);
+    @Query("DELETE FROM UserClientApproval uca WHERE uca.userId=:userid")
+    int deleteByUserId(@Param("userid") String userid);
 
-    public default void deleteById(String client, String userid, String scope) {
+    default void deleteById(String client, String userid, String scope) {
         deleteById(new UserClientApprovalPK(userid, client, scope));
     }
 

@@ -1,40 +1,42 @@
 package com.dm.uap.dingtalk.repository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
+import com.dm.uap.dingtalk.entity.CorpLongId;
+import com.dm.uap.dingtalk.entity.DDepartment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import com.dm.uap.dingtalk.entity.CorpLongId;
-import com.dm.uap.dingtalk.entity.DDepartment;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public interface DDepartmentRepository extends JpaRepository<DDepartment, CorpLongId> {
 
     /**
      * 根据部门信息查找相关的钉钉部门信息
-     * 
-     * @param id
-     * @return
+     *
+     * @param id 部门ID
+     * @return 查找到的部门
      */
-    public Optional<DDepartment> findByDepartmentId(Long id);
+    Optional<DDepartment> findByDepartmentId(@NotNull Long id);
 
-    public List<DDepartment> findByCorpId(String corpid);
+    List<DDepartment> findByCorpId(@NotEmpty String corpId);
 
-    @Query("update DDepartment set deleted=?3 where corpId=?1 and (deleted !=?3 or deleted is null) and id not in (?2)")
+    @Query("update DDepartment set deleted=:deleted where corpId=:corpId and id not in :ids")
     @Modifying
-    public int setDeletedByCorpidAndIdNotIn(String corpid, Collection<Long> ids, Boolean deleted);
+    int setDeletedByCorpidAndIdNotIn(@NotNull @Param("corpId") String corpId, @NotNull @Param("ids") Collection<Long> ids, @NotNull @Param("deleted") Boolean deleted);
 
-    public default DDepartment getOne(String corpid, Long departmentid) {
-        return getOne(new CorpLongId(corpid, departmentid));
+    default DDepartment getOne(@NotNull String corpId, @NotNull Long departmentId) {
+        return getOne(new CorpLongId(corpId, departmentId));
     }
 
-    public default boolean existsById(String corpid, Long id) {
-        return existsById(new CorpLongId(corpid, id));
+    default boolean existsById(@NotNull String corpId, @NotNull Long id) {
+        return existsById(new CorpLongId(corpId, id));
     }
 
-    public List<DDepartment> findByCorpIdAndDeleted(String corpid, Boolean deleted);
+    List<DDepartment> findByCorpIdAndDeleted(@NotNull String corpId, @NotNull Boolean deleted);
 
 }

@@ -16,6 +16,8 @@ package org.springframework.security.oauth2.provider.implicit;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.TokenRequest;
 
+import java.util.Objects;
+
 /**
  * <p>
  * See the <a href=
@@ -23,18 +25,16 @@ import org.springframework.security.oauth2.provider.TokenRequest;
  * 2.0 Migration Guide</a> for Spring Security 5.
  *
  * @author Dave Syer
- * 
  * @since 2.0.2
- *
  */
-@SuppressWarnings("serial")
 public class ImplicitTokenRequest extends TokenRequest {
 
+    private static final long serialVersionUID = -804755042492229934L;
     private OAuth2Request oauth2Request;
 
     public ImplicitTokenRequest(TokenRequest tokenRequest, OAuth2Request oauth2Request) {
         super(tokenRequest.getRequestParameters(), tokenRequest.getClientId(), tokenRequest.getScope(),
-                tokenRequest.getGrantType());
+            tokenRequest.getGrantType());
         this.oauth2Request = oauth2Request;
     }
 
@@ -42,4 +42,17 @@ public class ImplicitTokenRequest extends TokenRequest {
         return oauth2Request;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ImplicitTokenRequest that = (ImplicitTokenRequest) o;
+        return Objects.equals(oauth2Request, that.oauth2Request);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), oauth2Request);
+    }
 }

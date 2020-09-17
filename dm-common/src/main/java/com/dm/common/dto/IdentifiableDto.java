@@ -12,6 +12,6 @@ import java.io.Serializable;
  */
 public interface IdentifiableDto<ID extends Serializable> extends Serializable {
 
-    public ID getId();
+    ID getId();
 
 }

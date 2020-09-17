@@ -13,7 +13,7 @@ public class AuthorityRepositoryImpl {
 
     private final JPAQueryFactory queryFactory;
 
-    private final QAuthority qAuthroity = QAuthority.authority;
+    private final QAuthority qAuthority = QAuthority.authority;
 
     public AuthorityRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
@@ -26,8 +26,8 @@ public class AuthorityRepositoryImpl {
      * @return 权限配置列表
      */
     public List<Authority> findByMenu(Menu menu) {
-        JPAQuery<Authority> query = queryFactory.select(qAuthroity).from(qAuthroity)
-            .where(qAuthroity.menus.any().eq(menu));
+        JPAQuery<Authority> query = queryFactory.select(qAuthority).from(qAuthority)
+            .where(qAuthority.menus.any().eq(menu));
         return query.fetch();
     }
 
