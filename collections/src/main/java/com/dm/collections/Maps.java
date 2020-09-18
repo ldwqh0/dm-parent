@@ -22,7 +22,7 @@ public final class Maps {
     }
 
     @SafeVarargs
-    public static <K, V> HashMap<K, V> newHashMap(Map<K, V>... maps) {
+    public static <K, V> HashMap<K, V> hashMap(Map<K, V>... maps) {
         HashMap<K, V> result = hashMap();
         for (Map<K, V> map : maps) {
             if (isNotEmpty(map)) {
@@ -80,7 +80,7 @@ public final class Maps {
     }
 
     public static <K1, K2, V> Map<K2, V> transformKeys(Map<K1, V> input,
-            Function<? super K1, K2> converter) {
+                                                       Function<? super K1, K2> converter) {
         if (input == null) {
             return null;
         }

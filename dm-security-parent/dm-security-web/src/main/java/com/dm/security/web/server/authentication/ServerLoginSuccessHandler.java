@@ -1,5 +1,7 @@
 package com.dm.security.web.server.authentication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
@@ -31,8 +33,9 @@ public class ServerLoginSuccessHandler extends RedirectServerAuthenticationSucce
         this.mediaMatcher = matcher;
     }
 
-    public void setJsonEncoder(Jackson2JsonEncoder jsonEncoder) {
-        this.jsonEncoder = jsonEncoder;
+    @Autowired
+    public void setJsonEncoder(ObjectMapper objectMapper) {
+        this.jsonEncoder = new Jackson2JsonEncoder(objectMapper);
     }
 
     @Override

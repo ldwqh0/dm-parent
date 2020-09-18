@@ -31,6 +31,7 @@ import com.dm.common.entity.ModifyAudit;
 @Entity
 @Table(name = "dm_client_")
 @EntityListeners(AuditingEntityListener.class)
+@Deprecated
 public class Client implements Auditable<Audit, String, ZonedDateTime> {
 
     @Id
