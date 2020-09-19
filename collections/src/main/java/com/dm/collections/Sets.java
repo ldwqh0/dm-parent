@@ -41,4 +41,21 @@ public final class Sets {
             return fromeSet.stream().map(converter).collect(Collectors.toSet());
         }
     }
+
+    public static <T> Set<T> merge(Set<T> origin, T... e) {
+        HashSet<T> result = hashSet(origin);
+        if (e != null) {
+            result.addAll(Arrays.asList(e));
+        }
+        return result;
+    }
+
+    public static <T> Set<T> merge(Collection<T> origin, Collection<T> elements) {
+        HashSet<T> hashSet = hashSet(origin);
+        if (CollectionUtils.isNotEmpty(elements)) {
+            hashSet.addAll(elements);
+        }
+        return hashSet;
+    }
+
 }
