@@ -122,7 +122,7 @@ public class AuthorizationEndpoint extends AbstractEndpoint {
 
     private String errorPage = "forward:/oauth/error";
 
-    private Object implicitLock = new Object();
+    private final Object implicitLock = new Object();
 
     public void setSessionAttributeStore(SessionAttributeStore sessionAttributeStore) {
         this.sessionAttributeStore = sessionAttributeStore;
@@ -216,23 +216,23 @@ public class AuthorizationEndpoint extends AbstractEndpoint {
     }
 
     Map<String, Object> unmodifiableMap(AuthorizationRequest authorizationRequest) {
-        Map<String, Object> authorizationRequestMap = new HashMap<String, Object>();
+        Map<String, Object> authorizationRequestMap = new HashMap<>();
 
         authorizationRequestMap.put(OAuth2Utils.CLIENT_ID, authorizationRequest.getClientId());
         authorizationRequestMap.put(OAuth2Utils.STATE, authorizationRequest.getState());
         authorizationRequestMap.put(OAuth2Utils.REDIRECT_URI, authorizationRequest.getRedirectUri());
         if (authorizationRequest.getResponseTypes() != null) {
             authorizationRequestMap.put(OAuth2Utils.RESPONSE_TYPE,
-                    Collections.unmodifiableSet(new HashSet<String>(authorizationRequest.getResponseTypes())));
+                    Collections.unmodifiableSet(new HashSet<>(authorizationRequest.getResponseTypes())));
         }
         if (authorizationRequest.getScope() != null) {
             authorizationRequestMap.put(OAuth2Utils.SCOPE,
-                    Collections.unmodifiableSet(new HashSet<String>(authorizationRequest.getScope())));
+                    Collections.unmodifiableSet(new HashSet<>(authorizationRequest.getScope())));
         }
         authorizationRequestMap.put("approved", authorizationRequest.isApproved());
         if (authorizationRequest.getResourceIds() != null) {
             authorizationRequestMap.put("resourceIds",
-                    Collections.unmodifiableSet(new HashSet<String>(authorizationRequest.getResourceIds())));
+                    Collections.unmodifiableSet(new HashSet<>(authorizationRequest.getResourceIds())));
         }
         if (authorizationRequest.getAuthorities() != null) {
             authorizationRequestMap.put("authorities",
@@ -410,8 +410,8 @@ public class AuthorizationEndpoint extends AbstractEndpoint {
 
     private String appendAccessToken(AuthorizationRequest authorizationRequest, OAuth2AccessToken accessToken) {
 
-        Map<String, Object> vars = new LinkedHashMap<String, Object>();
-        Map<String, String> keys = new HashMap<String, String>();
+        Map<String, Object> vars = new LinkedHashMap<>();
+        Map<String, String> keys = new HashMap<>();
 
         if (accessToken == null) {
             throw new InvalidRequestException("An implicit grant could not be made");
@@ -474,7 +474,7 @@ public class AuthorizationEndpoint extends AbstractEndpoint {
             throw new IllegalStateException("No authorization code found in the current request scope.");
         }
 
-        Map<String, String> query = new LinkedHashMap<String, String>();
+        Map<String, String> query = new LinkedHashMap<>();
         query.put("code", authorizationCode);
 
         String state = authorizationRequest.getState();
@@ -493,7 +493,7 @@ public class AuthorizationEndpoint extends AbstractEndpoint {
             throw new UnapprovedClientAuthenticationException("Authorization failure, and no redirect URI.", failure);
         }
 
-        Map<String, String> query = new LinkedHashMap<String, String>();
+        Map<String, String> query = new LinkedHashMap<>();
 
         query.put("error", failure.getOAuth2ErrorCode());
         query.put("error_description", failure.getMessage());
@@ -657,7 +657,7 @@ public class AuthorizationEndpoint extends AbstractEndpoint {
             return authorizationRequest;
         }
 
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         Map<String, String[]> map = webRequest.getParameterMap();
         for (String key : map.keySet()) {
             String[] values = map.get(key);

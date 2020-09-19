@@ -1,39 +1,33 @@
 package com.dm.uap.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.uap.converter.DepartmentConverter;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.service.DepartmentService;
-
-import static org.springframework.http.HttpStatus.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("departments")
 public class DepartmentController {
 
-    @Autowired
-    private DepartmentService departmentService;
+    private final DepartmentService departmentService;
+
+    private final DepartmentConverter departmentConverter;
 
     @Autowired
-    private DepartmentConverter departmentConverter;
+    public DepartmentController(DepartmentService departmentService, DepartmentConverter departmentConverter) {
+        this.departmentService = departmentService;
+        this.departmentConverter = departmentConverter;
+    }
 
     @PostMapping
     @ResponseStatus(CREATED)
@@ -57,9 +51,9 @@ public class DepartmentController {
         departmentService.deleteById(id);
     }
 
-    @GetMapping(params = { "draw" })
+    @GetMapping(params = {"draw"})
     public Page<DepartmentDto> search(@RequestParam("draw") Long draw,
-            @RequestParam(value = "keywords", required = false) String key, @PageableDefault Pageable pageable) {
+                                      @RequestParam(value = "keywords", required = false) String key, @PageableDefault Pageable pageable) {
         return departmentService.find(key, pageable).map(departmentConverter::toDto);
     }
 

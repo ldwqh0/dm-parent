@@ -118,7 +118,7 @@ public class JwtTokenStore implements TokenStore {
                 String userId = authentication.getUserAuthentication().getName();
                 String clientId = authentication.getOAuth2Request().getClientId();
                 Collection<Approval> approvals = approvalStore.getApprovals(userId, clientId);
-                Collection<String> approvedScopes = new HashSet<String>();
+                Collection<String> approvedScopes = new HashSet<>();
                 for (Approval approval : approvals) {
                     if (approval.isApproved()) {
                         approvedScopes.add(approval.getScope());
@@ -186,7 +186,7 @@ public class JwtTokenStore implements TokenStore {
             String clientId = auth.getOAuth2Request().getClientId();
             Authentication user = auth.getUserAuthentication();
             if (user != null) {
-                Collection<Approval> approvals = new ArrayList<Approval>();
+                Collection<Approval> approvals = new ArrayList<>();
                 for (String scope : auth.getOAuth2Request().getScope()) {
                     approvals.add(new Approval(user.getName(), clientId, scope, ZonedDateTime.now(),
                             ApprovalStatus.APPROVED));

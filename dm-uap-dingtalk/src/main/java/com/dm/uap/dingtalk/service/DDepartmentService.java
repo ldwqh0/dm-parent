@@ -12,7 +12,7 @@ public interface DDepartmentService {
      * @param dDepartment
      * @return
      */
-    public DDepartment save(Department dDepartment);
+    DDepartment save(Department dDepartment);
 
     /**
      * 保存一批钉钉部门信息
@@ -20,18 +20,18 @@ public interface DDepartmentService {
      * @param dDepartments
      * @return
      */
-    public Collection<DDepartment> save(Collection<Department> dDepartments);
+    Collection<DDepartment> save(Collection<Department> dDepartments);
 
     /**
      * 将钉钉用户信息同步到系统中
      */
-    public void syncToUap(String corpid);
+    void syncToUap(String corpid);
 
     /**
      * 尝试清理
      * 
      * @param corpid
      */
-    public void clear(String corpid);
+    void clear(String corpid);
 
 }

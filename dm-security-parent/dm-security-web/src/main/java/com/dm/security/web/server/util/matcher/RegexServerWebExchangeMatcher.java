@@ -11,8 +11,8 @@ import reactor.core.publisher.Mono;
 
 public class RegexServerWebExchangeMatcher implements ServerWebExchangeMatcher {
 
-    private Pattern pattern;
-    private HttpMethod httpMethod;
+    private final Pattern pattern;
+    private final HttpMethod httpMethod;
 
     public RegexServerWebExchangeMatcher(String pattern, String httpMethod) {
         this(pattern, httpMethod, false);

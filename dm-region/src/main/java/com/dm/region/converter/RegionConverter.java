@@ -40,7 +40,7 @@ public class RegionConverter implements Converter<Region, RegionDto> {
     }
 
     public List<String> toRegionCodeList(Region region) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         Region current = region;
         while (!Objects.isNull(current)) {
             result.add(0, current.getCode());

@@ -66,7 +66,7 @@ public class ResourceOwnerPasswordTokenGranter extends AbstractTokenGranter {
     @Override
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
 
-        Map<String, String> parameters = new LinkedHashMap<String, String>(tokenRequest.getRequestParameters());
+        Map<String, String> parameters = new LinkedHashMap<>(tokenRequest.getRequestParameters());
         String username = parameters.get("username");
         String password = parameters.get("password");
         // Protect from downstream leaks of password

@@ -6,9 +6,8 @@ import com.dm.datasource.dto.DmDataSourceDto;
 import com.dm.datasource.entity.DmDataSource;
 import com.dm.datasource.provider.DataSourceProperties;
 
-import java.util.Map;
-
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSourceDto> {
 
@@ -38,13 +37,14 @@ public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSour
     }
 
     public DataSourceProperties toDataSourceProperties(DmDataSourceDto from) {
-        DataSourceProperties properties = new DataSourceProperties();
-        properties.setDatabase(from.getDatabase());
-        properties.setDbType(from.getDbType());
-        properties.setPassword(from.getPassword());
-        properties.setPort(from.getPort());
-        properties.setHost(from.getHost());
-        properties.setUsername(from.getUsername());
+        DataSourceProperties properties = new DataSourceProperties(
+            from.getDbType(),
+            from.getHost(),
+            from.getPort(),
+            from.getUsername(),
+            from.getPassword(),
+            from.getDatabase()
+        );
         Map<String, String> additionalProperties = from.getProperties();
         if (Maps.isNotEmpty(additionalProperties)) {
             additionalProperties.forEach(properties::setProperty);
@@ -53,13 +53,14 @@ public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSour
     }
 
     public DataSourceProperties toDataSourceProperties(DmDataSource model) {
-        DataSourceProperties properties = new DataSourceProperties();
-        properties.setDatabase(model.getDatabase());
-        properties.setDbType(model.getDbType());
-        properties.setPassword(model.getPassword());
-        properties.setPort(model.getPort());
-        properties.setHost(model.getHost());
-        properties.setUsername(model.getUsername());
+        DataSourceProperties properties = new DataSourceProperties(
+            model.getDbType(),
+            model.getHost(),
+            model.getPort(),
+            model.getUsername(),
+            model.getPassword(),
+            model.getDatabase()
+        );
         Map<String, String> additionalProperties = model.getProperties();
         if (Maps.isNotEmpty(additionalProperties)) {
             additionalProperties.forEach(properties::setProperty);

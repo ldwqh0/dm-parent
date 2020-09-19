@@ -18,6 +18,6 @@ public interface ProcessService {
      * @param step
      * @return
      */
-    public <ID, StepId> ProcessInstance<ID> goTo(ProcessInstance<ID> instance, StepDefine<StepId> step);
+    <ID, StepId> ProcessInstance<ID> goTo(ProcessInstance<ID> instance, StepDefine<StepId> step);
 
 }

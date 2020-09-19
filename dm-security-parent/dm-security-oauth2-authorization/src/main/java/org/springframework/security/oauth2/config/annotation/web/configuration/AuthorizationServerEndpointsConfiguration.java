@@ -13,17 +13,10 @@
 
 package org.springframework.security.oauth2.config.annotation.web.configuration;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -42,19 +35,17 @@ import org.springframework.security.oauth2.provider.OAuth2RequestValidator;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint;
-import org.springframework.security.oauth2.provider.endpoint.CheckTokenEndpoint;
-import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpointHandlerMapping;
-import org.springframework.security.oauth2.provider.endpoint.RedirectResolver;
-import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
-import org.springframework.security.oauth2.provider.endpoint.TokenKeyEndpoint;
-import org.springframework.security.oauth2.provider.endpoint.WhitelabelApprovalEndpoint;
-import org.springframework.security.oauth2.provider.endpoint.WhitelabelErrorEndpoint;
+import org.springframework.security.oauth2.provider.endpoint.*;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -63,19 +54,25 @@ import org.springframework.stereotype.Component;
  * 2.0 Migration Guide</a> for Spring Security 5.
  *
  * @author Dave Syer
- *
  */
 @Configuration
 @Import(TokenKeyEndpointRegistrar.class)
 public class AuthorizationServerEndpointsConfiguration {
 
-    private AuthorizationServerEndpointsConfigurer endpoints = new AuthorizationServerEndpointsConfigurer();
+    private final AuthorizationServerEndpointsConfigurer endpoints = new AuthorizationServerEndpointsConfigurer();
 
-    @Autowired
-    private ClientDetailsService clientDetailsService;
+    private final ClientDetailsService clientDetailsService;
 
-    @Autowired
-    private List<AuthorizationServerConfigurer> configurers = Collections.emptyList();
+    private final List<AuthorizationServerConfigurer> configurers;
+
+    public AuthorizationServerEndpointsConfiguration(ClientDetailsService clientDetailsService, List<AuthorizationServerConfigurer> configurers) {
+        this.clientDetailsService = clientDetailsService;
+        if (configurers == null) {
+            this.configurers = new ArrayList<>();
+        } else {
+            this.configurers = configurers;
+        }
+    }
 
     @PostConstruct
     public void init() {
@@ -163,7 +160,7 @@ public class AuthorizationServerEndpointsConfiguration {
      * are overriding the token services in an {@link AuthorizationServerConfigurer}
      * consider making it a <code>@Bean</code> for the same reason (assuming you
      * need transactions, e.g. for a JDBC token store).
-     * 
+     *
      * @return an AuthorizationServerTokenServices
      */
     @Bean
@@ -223,7 +220,7 @@ public class AuthorizationServerEndpointsConfiguration {
     }
 
     protected static class AuthorizationServerTokenServicesFactoryBean
-            extends AbstractFactoryBean<AuthorizationServerTokenServices> {
+        extends AbstractFactoryBean<AuthorizationServerTokenServices> {
 
         private AuthorizationServerEndpointsConfigurer endpoints;
 
@@ -231,7 +228,7 @@ public class AuthorizationServerEndpointsConfiguration {
         }
 
         public AuthorizationServerTokenServicesFactoryBean(
-                AuthorizationServerEndpointsConfigurer endpoints) {
+            AuthorizationServerEndpointsConfigurer endpoints) {
             this.endpoints = endpoints;
         }
 
@@ -254,7 +251,7 @@ public class AuthorizationServerEndpointsConfiguration {
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
             String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory,
-                    JwtAccessTokenConverter.class, false, false);
+                JwtAccessTokenConverter.class, false, false);
             if (names.length > 0) {
                 BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(TokenKeyEndpoint.class);
                 builder.addConstructorArgReference(names[0]);

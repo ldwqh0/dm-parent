@@ -30,9 +30,9 @@ import org.springframework.security.core.Authentication;
  */
 public interface UserAuthenticationConverter {
 
-    final String AUTHORITIES = AccessTokenConverter.AUTHORITIES;
+    String AUTHORITIES = AccessTokenConverter.AUTHORITIES;
 
-    final String USERNAME = "user_name";
+    String USERNAME = "user_name";
 
     /**
      * Extract information about the user to be used in an access token (i.e. for

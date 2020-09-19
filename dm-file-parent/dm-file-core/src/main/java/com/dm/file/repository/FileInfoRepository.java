@@ -10,6 +10,6 @@ import com.dm.file.entity.FileInfo;
 
 public interface FileInfoRepository extends JpaRepository<FileInfo, UUID>, IdentifiableDtoRepository<FileInfo, UUID> {
 
-    public Optional<UUID> findMaxId();
+    Optional<UUID> findMaxId();
 
 }

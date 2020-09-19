@@ -66,7 +66,7 @@ public final class OAuth2AccessTokenJackson2Deserializer extends StdDeserializer
         String refreshToken = null;
         Long expiresIn = null;
         Set<String> scope = null;
-        Map<String, Object> additionalInformation = new LinkedHashMap<String, Object>();
+        Map<String, Object> additionalInformation = new LinkedHashMap<>();
 
         // TODO What should occur if a parameter exists twice
         while (jp.nextToken() != JsonToken.END_OBJECT) {
@@ -111,7 +111,7 @@ public final class OAuth2AccessTokenJackson2Deserializer extends StdDeserializer
     private Set<String> parseScope(JsonParser jp) throws JsonParseException, IOException {
         Set<String> scope;
         if (jp.getCurrentToken() == JsonToken.START_ARRAY) {
-            scope = new TreeSet<String>();
+            scope = new TreeSet<>();
             while (jp.nextToken() != JsonToken.END_ARRAY) {
                 scope.add(jp.getValueAsString());
             }

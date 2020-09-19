@@ -1,16 +1,16 @@
 package com.dm.dingtalk.api.callback;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 
 /**
  * 加密消息
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public class EncryptMessage implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -23,16 +23,12 @@ public class EncryptMessage implements Serializable {
 
     /**
      * 从byte[]中转换一个消息
-     * 
-     * @param bytes
-     * @return
+     *
+     * @param bytes 输入的消息
+     * @return 转换后的消息
      */
     public static EncryptMessage from(byte[] bytes) {
-        try {
-            return new EncryptMessage(bytes);
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
+        return new EncryptMessage(bytes);
     }
 
     public static EncryptMessage from(String base64Str) {
@@ -40,16 +36,12 @@ public class EncryptMessage implements Serializable {
     }
 
     public static EncryptMessage of(String random, String msg, String key) {
-        try {
-            EncryptMessage r = new EncryptMessage();
-            r.key = key;
-            r.msg = msg;
-            r.random = random;
-            r.msgLength = msg.getBytes("UTF-8").length;
-            return r;
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
+        EncryptMessage r = new EncryptMessage();
+        r.key = key;
+        r.msg = msg;
+        r.random = random;
+        r.msgLength = msg.getBytes(StandardCharsets.UTF_8).length;
+        return r;
     }
 
     public byte[] toBytes() {
@@ -66,16 +58,16 @@ public class EncryptMessage implements Serializable {
             byteStream.write(msgb);
             byteStream.write(keyb);
             return byteStream.toByteArray();
-        } catch (Exception e) {
+        } catch (RuntimeException | IOException e) {
             return new byte[0];
         }
     }
 
-    private EncryptMessage(byte[] bytes) throws UnsupportedEncodingException {
-        random = new String(Arrays.copyOfRange(bytes, 0, 16), "UTF-8");
+    private EncryptMessage(byte[] bytes) {
+        random = new String(Arrays.copyOfRange(bytes, 0, 16), StandardCharsets.UTF_8);
         msgLength = toInt(Arrays.copyOfRange(bytes, 16, 20));
-        msg = new String(Arrays.copyOfRange(bytes, 20, 20 + msgLength), "UTF-8");
-        key = new String(Arrays.copyOfRange(bytes, 20 + msgLength, bytes.length), "UTF-8");
+        msg = new String(Arrays.copyOfRange(bytes, 20, 20 + msgLength), StandardCharsets.UTF_8);
+        key = new String(Arrays.copyOfRange(bytes, 20 + msgLength, bytes.length), StandardCharsets.UTF_8);
     }
 
     private EncryptMessage() {
@@ -116,7 +108,7 @@ public class EncryptMessage implements Serializable {
     private int toInt(byte[] bytes) {
         int num = bytes[0];
         for (int i = 0; i < 4 && i < bytes.length; i++) {
-            num = (num << 8) | (bytes[i] & 255);
+            num = (num << 8) | (bytes[i] & 0xFF);
         }
         return num;
     }
@@ -124,7 +116,7 @@ public class EncryptMessage implements Serializable {
     private byte[] intToByteArray(int num) {
         byte[] bytes = new byte[4];
         for (int i = 0; i < 4; i++) {
-            bytes[i] = (byte) (num >>> ((3 - i) * 8));
+            bytes[i] = (byte) ((num >>> ((3 - i) * 8)) & 0xFF);
         }
         return bytes;
     }

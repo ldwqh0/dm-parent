@@ -5,7 +5,7 @@ import com.dm.datasource.provider.DataSourceProperties;
 import javax.sql.DataSource;
 
 public interface DataSourceHolder {
-    public void closeAndRemove(DataSourceProperties properties);
+    void closeAndRemove(DataSourceProperties properties);
 
-    public DataSource add(DataSourceProperties properties);
+    DataSource add(DataSourceProperties properties);
 }

@@ -8,9 +8,9 @@ import java.util.Set;
 public interface DataSourceProvider {
     String getDriverClassName();
 
-    public String getUrl(DataSourceProperties info);
+    String getUrl(DataSourceProperties info);
 
-    public Dialect getDialect();
+    Dialect getDialect();
 
-    public Set<DbTypes> getSupportDbTypes();
+    Set<DbTypes> getSupportDbTypes();
 }

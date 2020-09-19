@@ -94,7 +94,7 @@ public class DefaultOAuth2ExceptionRenderer implements OAuth2ExceptionRenderer {
         }
         MediaType.sortByQualityValue(acceptedMediaTypes);
         Class<?> returnValueType = returnValue.getClass();
-        List<MediaType> allSupportedMediaTypes = new ArrayList<MediaType>();
+        List<MediaType> allSupportedMediaTypes = new ArrayList<>();
         for (MediaType acceptedMediaType : acceptedMediaTypes) {
             for (HttpMessageConverter messageConverter : messageConverters) {
                 if (messageConverter.canWrite(returnValueType, acceptedMediaType)) {
@@ -118,7 +118,7 @@ public class DefaultOAuth2ExceptionRenderer implements OAuth2ExceptionRenderer {
     }
 
     private List<HttpMessageConverter<?>> geDefaultMessageConverters() {
-        List<HttpMessageConverter<?>> result = new ArrayList<HttpMessageConverter<?>>();
+        List<HttpMessageConverter<?>> result = new ArrayList<>();
         result.addAll(new RestTemplate().getMessageConverters());
         result.add(new JaxbOAuth2ExceptionMessageConverter());
         return result;

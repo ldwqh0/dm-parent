@@ -1,6 +1,5 @@
 package com.dm.file.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -18,7 +17,7 @@ public interface FileInfoService {
      * @param id
      * @return
      */
-    public Optional<FileInfo> findById(UUID id);
+    Optional<FileInfo> findById(UUID id);
 
     /**
      * 保存文件，并返回文件信息
@@ -27,7 +26,7 @@ public interface FileInfoService {
      * @return
      * @throws Exception
      */
-    public FileInfo save(MultipartFile file, FileInfoDto fileInfo) throws Exception;
+    FileInfo save(MultipartFile file, FileInfoDto fileInfo) throws Exception;
 
     /**
      * 删除指定的文件
@@ -36,7 +35,7 @@ public interface FileInfoService {
      * @return
      * @throws Exception
      */
-    public void delete(UUID id) throws Exception;
+    void delete(UUID id) throws Exception;
 
     /**
      * 保存文件
@@ -57,6 +56,6 @@ public interface FileInfoService {
      * @return
      * @throws IOException
      */
-    public FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException;
+    FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException;
 
 }

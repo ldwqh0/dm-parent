@@ -157,7 +157,7 @@ public class DefaultOAuth2RequestFactory implements OAuth2RequestFactory {
         if (!securityContextAccessor.isUser()) {
             return scopes;
         }
-        Set<String> result = new LinkedHashSet<String>();
+        Set<String> result = new LinkedHashSet<>();
         Set<String> authorities = AuthorityUtils.authorityListToSet(securityContextAccessor.getAuthorities());
         for (String scope : scopes) {
             if (authorities.contains(scope) || authorities.contains(scope.toUpperCase())

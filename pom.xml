@@ -44,9 +44,9 @@
     <!-- 文件模块 -->
     <module>dm-file-parent/dm-file-core</module>
     <module>dm-file-parent/dm-file-spring-boot-starter</module>
-    <!--行政区划模块-->
+    <!--行政区划模块 -->
     <module>dm-code</module>
-    <!--多数据源模块-->
+    <!--多数据源模块 -->
     <module>dm-jdbc/dm-multi-datasource</module>
     <module>dm-jdbc/dm-multi-datasource-jpa-support</module>
     <module>dm-security-parent</module>
@@ -81,11 +81,6 @@
           </exclusion>
         </exclusions>
         <version>${springboot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-core</artifactId>
-        <version>${hibernate.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.persistence</groupId>

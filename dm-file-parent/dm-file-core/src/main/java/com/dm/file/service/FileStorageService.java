@@ -17,7 +17,7 @@ public interface FileStorageService {
      * @return true 保存成功<br>
      * false 保存失败
      */
-    public boolean save(MultipartFile from, String filename, String... parents);
+    boolean save(MultipartFile from, String filename, String... parents);
 
     /**
      * 删除指定的文件
@@ -26,7 +26,7 @@ public interface FileStorageService {
      * @return true 删除成功<br>
      * false 删除失败
      */
-    public boolean delete(String filename, String... parents);
+    boolean delete(String filename, String... parents);
 
     /**
      * 指定的文件是否存在
@@ -34,7 +34,7 @@ public interface FileStorageService {
      * @param filename 要查找的文件
      * @return 存在返回true, 不存在返回false
      */
-    public boolean exist(String filename, String... parents);
+    boolean exist(String filename, String... parents);
 
     /**
      * 根据文件名和前缀获取资源
@@ -44,7 +44,7 @@ public interface FileStorageService {
      * @return
      * @throws IOException
      */
-    public Resource getResource(String filename, String... parents);
+    Resource getResource(String filename, String... parents);
 
 //    /**
 //     * 获取指定文件名的Resource
@@ -63,7 +63,7 @@ public interface FileStorageService {
      * @return
      * @throws IOException
      */
-    public Resource getResource(String filename, Long start, Long end, String... parents);
+    Resource getResource(String filename, Long start, Long end, String... parents);
 
     /**
      * 将所有的文件块组合保存到一个文件
@@ -74,7 +74,7 @@ public interface FileStorageService {
      * false 保存失败
      * @throws IOException
      */
-    public boolean save(Path[] from, String filename, String... parents);
+    boolean save(Path[] from, String filename, String... parents);
 
-    public OutputStream getOutputStream(String filename, String... parents) throws IOException;
+    OutputStream getOutputStream(String filename, String... parents) throws IOException;
 }

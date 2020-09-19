@@ -97,7 +97,7 @@ public class TokenApprovalStore implements ApprovalStore {
      */
     @Override
     public Collection<Approval> getApprovals(String userId, String clientId) {
-        Collection<Approval> result = new HashSet<Approval>();
+        Collection<Approval> result = new HashSet<>();
         Collection<OAuth2AccessToken> tokens = store.findTokensByClientIdAndUserName(clientId, userId);
         for (OAuth2AccessToken token : tokens) {
             OAuth2Authentication authentication = store.readAuthentication(token);

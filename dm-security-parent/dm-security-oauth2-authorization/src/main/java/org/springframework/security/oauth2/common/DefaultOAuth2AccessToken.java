@@ -218,7 +218,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
         }
 
         if (tokenParams.containsKey(SCOPE)) {
-            Set<String> scope = new TreeSet<String>();
+            Set<String> scope = new TreeSet<>();
             for (StringTokenizer tokenizer = new StringTokenizer(tokenParams.get(SCOPE), " ,"); tokenizer
                     .hasMoreTokens();) {
                 scope.add(tokenizer.nextToken());
@@ -254,7 +254,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
      * @param additionalInformation the additional information to set
      */
     public void setAdditionalInformation(Map<String, Object> additionalInformation) {
-        this.additionalInformation = new LinkedHashMap<String, Object>(additionalInformation);
+        this.additionalInformation = new LinkedHashMap<>(additionalInformation);
     }
 
 }

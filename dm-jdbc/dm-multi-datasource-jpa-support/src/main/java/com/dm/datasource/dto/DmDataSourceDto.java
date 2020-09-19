@@ -24,7 +24,7 @@ public class DmDataSourceDto implements Serializable {
 
     public void setProperty(String key, String value) {
         if (properties == null) {
-            properties = new HashMap<String, String>();
+            properties = new HashMap<>();
         }
         properties.put(key, value);
     }

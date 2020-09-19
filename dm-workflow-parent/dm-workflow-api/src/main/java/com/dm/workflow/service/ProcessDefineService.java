@@ -16,6 +16,6 @@ public interface ProcessDefineService {
      * @param id
      * @return
      */
-    public ProcessDefinition findById(Long id);
+    ProcessDefinition findById(Long id);
 
 }

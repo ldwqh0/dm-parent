@@ -10,7 +10,7 @@ import com.dm.collections.Maps;
 
 public class FileConfig {
     private String path;
-    private Map<String, String> mime;
+    private final Map<String, String> mime;
     private String tempPath;
 
     /**

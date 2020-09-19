@@ -7,5 +7,5 @@ public interface VerificationCodeGenerator {
      * @param i
      * @return
      */
-    public VerificationCode generate(int i);
+    VerificationCode generate(int i);
 }

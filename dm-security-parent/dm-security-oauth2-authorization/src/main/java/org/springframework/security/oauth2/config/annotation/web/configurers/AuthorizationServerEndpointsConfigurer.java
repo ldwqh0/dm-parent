@@ -124,15 +124,15 @@ public final class AuthorizationServerEndpointsConfigurer {
 
     private String prefix;
 
-    private Map<String, String> patternMap = new HashMap<String, String>();
+    private final Map<String, String> patternMap = new HashMap<>();
 
-    private Set<HttpMethod> allowedTokenEndpointRequestMethods = new HashSet<HttpMethod>();
+    private final Set<HttpMethod> allowedTokenEndpointRequestMethods = new HashSet<>();
 
     private FrameworkEndpointHandlerMapping frameworkEndpointHandlerMapping;
 
     private boolean approvalStoreDisabled;
 
-    private List<Object> interceptors = new ArrayList<Object>();
+    private final List<Object> interceptors = new ArrayList<>();
 
     private DefaultTokenServices defaultTokenServices;
 
@@ -490,8 +490,8 @@ public final class AuthorizationServerEndpointsConfigurer {
         if (userDetailsService != null) {
             PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
             provider.setPreAuthenticatedUserDetailsService(
-                    new UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken>(
-                            userDetailsService));
+                new UserDetailsByNameServiceWrapper<>(
+                    userDetailsService));
             tokenServices
                     .setAuthenticationManager(new ProviderManager(Arrays.<AuthenticationProvider>asList(provider)));
         }
@@ -563,7 +563,7 @@ public final class AuthorizationServerEndpointsConfigurer {
         AuthorizationCodeServices authorizationCodeServices = authorizationCodeServices();
         OAuth2RequestFactory requestFactory = requestFactory();
 
-        List<TokenGranter> tokenGranters = new ArrayList<TokenGranter>();
+        List<TokenGranter> tokenGranters = new ArrayList<>();
         tokenGranters.add(new AuthorizationCodeTokenGranter(tokenServices, authorizationCodeServices, clientDetails,
                 requestFactory));
         tokenGranters.add(new RefreshTokenGranter(tokenServices, clientDetails, requestFactory));

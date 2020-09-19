@@ -34,7 +34,7 @@ public class ClientConverter implements AuditEntityConverter<Client, ClientDto> 
 
     public ClientDetails toClientDetails(Client model) {
         BaseClientDetails bcd = new BaseClientDetails();
-        bcd.setClientId(model.getId().toString());
+        bcd.setClientId(model.getId());
         bcd.setClientSecret(model.getSecret());
         bcd.setAccessTokenValiditySeconds(model.getAccessTokenValiditySeconds());
         bcd.setRegisteredRedirectUri(model.getRegisteredRedirectUri());

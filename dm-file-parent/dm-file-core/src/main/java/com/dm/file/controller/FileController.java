@@ -14,8 +14,6 @@ import com.dm.file.util.DmFileUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
@@ -30,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,21 +44,24 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class FileController {
 
-    @Autowired
-    private FileInfoService fileService;
+    private final FileInfoService fileService;
 
-    @Autowired
-    @Lazy
-    private ThumbnailService thumbnailService;
+    private final ThumbnailService thumbnailService;
 
-    @Autowired
-    private FileInfoConverter fileInfoConverter;
+    private final FileInfoConverter fileInfoConverter;
 
-    @Autowired
-    private FileConfig config;
+    private final FileConfig config;
 
-    @Autowired
-    private FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
+
+    public FileController(FileInfoService fileService, ThumbnailService thumbnailService, FileInfoConverter fileInfoConverter, FileConfig config, FileStorageService fileStorageService) {
+        this.fileService = fileService;
+        this.thumbnailService = thumbnailService;
+        this.fileInfoConverter = fileInfoConverter;
+        this.config = config;
+        this.fileStorageService = fileStorageService;
+    }
+
 
     @GetMapping(value = "{id}", produces = {
         MediaType.TEXT_PLAIN_VALUE,
@@ -86,12 +88,12 @@ public class FileController {
     /**
      * 分块上传文件
      *
-     * @param chunkIndex
-     * @param tempId
-     * @param chunkCount
-     * @param filename
-     * @return
-     * @throws Exception
+     * @param chunkIndex 当前块的索引
+     * @param tempId     临时文件ID
+     * @param chunkCount 文件分块总数
+     * @param filename   文件名
+     * @return 保存后的文件信息
+     * @throws Exception 保存异常
      */
     @PostMapping(headers = {"chunk-index"})
     @ApiOperation("文件分块上传文件")
@@ -149,7 +151,7 @@ public class FileController {
      * 包含X-Real-IP请求头的请求全部走这个地方<br >
      * 这代表是一个从nginx转发的请求
      *
-     * @return
+     * @return 重定向的响应信息
      */
     @GetMapping(value = "{id}", headers = {"X-Real-IP"}, produces = {
         MediaType.IMAGE_GIF_VALUE,
@@ -160,8 +162,7 @@ public class FileController {
         "*/*",
         "!application/json", "!text/plain"})
     public ResponseEntity<?> preview(
-        @PathVariable("id") UUID id,
-        WebRequest request) {
+        @PathVariable("id") UUID id) {
         return fileService.findById(id)
             .map(FileInfo::getPath)
             .map(this::buildAccessRedirectResponse)
@@ -171,9 +172,9 @@ public class FileController {
     /**
      * 基于Nginx的缩略图下载
      *
-     * @param id
-     * @param level
-     * @return
+     * @param id    文件ID
+     * @param level 缩略图等级
+     * @return 响应体
      */
     @GetMapping(value = "thumbnails/{id}", headers = {"X-Real-IP"}, produces = {
         MediaType.IMAGE_GIF_VALUE,
@@ -197,8 +198,8 @@ public class FileController {
     /**
      * 构建一个重定向，指定到前端配置的下载目录
      *
-     * @param path
-     * @return
+     * @param path 文件名称
+     * @return 重定向信息
      */
     private ResponseEntity<?> buildAccessRedirectResponse(String path) {
         return ResponseEntity.ok()
@@ -217,7 +218,7 @@ public class FileController {
         "*/*",
         "!application/json",
         "!text/plain"})
-    public ResponseEntity<? extends Object> preview(
+    public ResponseEntity<?> preview(
         @PathVariable("id") UUID id,
         @RequestParam(value = "download", required = false) String download,
         @RequestHeader(value = "range", required = false) String range,
@@ -252,7 +253,6 @@ public class FileController {
     public ResponseEntity<?> previewThumbnails(
         @PathVariable("id") UUID id,
         @RequestParam(value = "level", defaultValue = "1") int level,
-        @RequestHeader(value = "range", required = false) String range,
         WebRequest request) {
         return fileService.findById(id).filter(fileInfo -> thumbnailService.exists(fileInfo.getPath(), level)).map(
             file -> file.getLastModifiedDate()
@@ -275,10 +275,10 @@ public class FileController {
     /**
      * 根据Range Header获取Range
      *
-     * @param ranges
-     * @param file
-     * @return
-     * @throws RangeNotSatisfiableException
+     * @param ranges 文件分块的字符串
+     * @param file   文件信息
+     * @return 解析后的分块信息
+     * @throws RangeNotSatisfiableException 请求异常
      */
     private List<Range> getRanges(String ranges, FileInfo file) {
         if (StringUtils.isNotBlank(ranges) && StringUtils.startsWith(ranges, "bytes=")) {
@@ -295,9 +295,9 @@ public class FileController {
         try {
             String fileName = file.getFilename();
             long fileSize = file.getSize();
-            Resource body = null;
+            Resource body;
             long contentLength = fileSize; // 内容长度
-            String contentRange = ""; // 响应范围
+            String contentRange; // 响应范围
             String codeFileName = null;
             String path = file.getPath();
             String ext = DmFileUtils.getExt(fileName);
@@ -320,11 +320,11 @@ public class FileController {
                     || StringUtils.contains(userAgent, "MSIE")) {
                     codeFileName = URLEncoder.encode(fileName, "UTF-8");
                 } else {
-                    codeFileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+                    codeFileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
                 }
             }
             // -----------------计算文件名结束-----------------------
-            BodyBuilder bodyBuilder = null;
+            BodyBuilder bodyBuilder;
             if (range == null) {
                 body = fileStorageService.getResource(path);
             } else {
@@ -370,8 +370,8 @@ public class FileController {
     /**
      * 构建一个未修改的响应体
      *
-     * @param <T>
-     * @return
+     * @param <T> 响应体的类型
+     * @return 一个304响应体
      */
     private <T> ResponseEntity<T> buildNotModified() {
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

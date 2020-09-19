@@ -4,6 +4,8 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 
+import java.util.Objects;
+
 /**
  * An OAuth 2 authentication token can contain two authentications: one for the
  * client and one for the user. Since some OAuth authorization grants don't
@@ -57,7 +59,7 @@ public class OAuth2Authentication extends AbstractAuthenticationToken {
      *         user
      */
     public boolean isClientOnly() {
-        return userAuthentication == null;
+        return userAuthentication != null;
     }
 
     /**
@@ -89,7 +91,7 @@ public class OAuth2Authentication extends AbstractAuthenticationToken {
         super.eraseCredentials();
         if (this.userAuthentication != null
                 && CredentialsContainer.class.isAssignableFrom(this.userAuthentication.getClass())) {
-            CredentialsContainer.class.cast(this.userAuthentication).eraseCredentials();
+            ((CredentialsContainer) this.userAuthentication).eraseCredentials();
         }
     }
 
@@ -110,8 +112,7 @@ public class OAuth2Authentication extends AbstractAuthenticationToken {
         if (!storedRequest.equals(that.storedRequest)) {
             return false;
         }
-        if (userAuthentication != null ? !userAuthentication.equals(that.userAuthentication)
-                : that.userAuthentication != null) {
+        if (!Objects.equals(userAuthentication, that.userAuthentication)) {
             return false;
         }
 

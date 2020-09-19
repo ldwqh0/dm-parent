@@ -153,7 +153,7 @@ public class JwtAccessTokenConverter implements TokenEnhancer, AccessTokenConver
      * @return the key used to verify tokens
      */
     public Map<String, String> getKey() {
-        Map<String, String> result = new LinkedHashMap<String, String>();
+        Map<String, String> result = new LinkedHashMap<>();
         result.put("alg", signer.algorithm());
         result.put("value", verifierKey);
         return result;
@@ -223,7 +223,7 @@ public class JwtAccessTokenConverter implements TokenEnhancer, AccessTokenConver
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken);
-        Map<String, Object> info = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
+        Map<String, Object> info = new LinkedHashMap<>(accessToken.getAdditionalInformation());
         String tokenId = result.getValue();
         if (!info.containsKey(TOKEN_ID)) {
             info.put(TOKEN_ID, tokenId);
@@ -244,10 +244,10 @@ public class JwtAccessTokenConverter implements TokenEnhancer, AccessTokenConver
                 if (claims.containsKey(TOKEN_ID)) {
                     encodedRefreshToken.setValue(claims.get(TOKEN_ID).toString());
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException ignored) {
             }
-            Map<String, Object> refreshTokenInfo = new LinkedHashMap<String, Object>(
-                    accessToken.getAdditionalInformation());
+            Map<String, Object> refreshTokenInfo = new LinkedHashMap<>(
+                accessToken.getAdditionalInformation());
             refreshTokenInfo.put(TOKEN_ID, encodedRefreshToken.getValue());
             refreshTokenInfo.put(ACCESS_TOKEN_ID, tokenId);
             encodedRefreshToken.setAdditionalInformation(refreshTokenInfo);

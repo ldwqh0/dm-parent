@@ -71,8 +71,8 @@ public class OapiRoleAddrolesforempsRequest implements Serializable {
 
     public OapiRoleAddrolesforempsRequest() {
         super();
-        this.roles = Collections.synchronizedCollection(new ArrayList<Long>());
-        this.users = Collections.synchronizedCollection(new ArrayList<String>());
+        this.roles = Collections.synchronizedCollection(new ArrayList<>());
+        this.users = Collections.synchronizedCollection(new ArrayList<>());
     }
 
 }

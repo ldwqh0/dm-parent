@@ -20,6 +20,6 @@ public interface ProcessService {
      * @param step
      * @return
      */
-    public ProcessInstance goTo(ProcessInstance instance, State state);
+    ProcessInstance goTo(ProcessInstance instance, State state);
 
 }

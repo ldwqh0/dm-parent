@@ -1,35 +1,37 @@
 package com.dm.common.dto;
 
-import java.util.List;
-import java.util.function.Function;
-
+import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import lombok.EqualsAndHashCode;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * 有限范围内的分页
- * 
- * @author ldwqh0@outlook.com
  *
  * @param <T> 数据类型
  * @param <M> 最大值的类型
+ * @author ldwqh0@outlook.com
  */
 public interface RangePage<T, M> extends Page<T> {
     /**
      * 范围的上限
-     * 
-     * @return
+     *
+     * @return 返回上限信息
      */
-    public M getMax();
+    @Nullable
+    M getMax();
 
     @Override
-    public <U> RangePage<U, M> map(Function<? super T, ? extends U> converter);
+    @NotNull <U> RangePage<U, M> map(@NotNull Function<? super T, ? extends U> converter);
 
-    public static <T, M> RangePage<T, M> of(M max, Page<T> page) {
-        return new RangePageImpl<T, M>(max, page.getContent(), page.getPageable(), page.getTotalElements());
+    @NotNull
+    static <T, M> RangePage<T, M> of(M max, @NotNull Page<T> page) {
+        return new RangePageImpl<>(max, page.getContent(), page.getPageable(), page.getTotalElements());
     }
 }
 
@@ -38,12 +40,7 @@ class RangePageImpl<T, M> extends PageImpl<T> implements RangePage<T, M> {
 
     private static final long serialVersionUID = -2418518649668788225L;
 
-    private M max;
-
-    public RangePageImpl(M max, List<T> content) {
-        super(content);
-        this.max = max;
-    }
+    private final M max;
 
     RangePageImpl(M max, List<T> content, Pageable pageable, long total) {
         super(content, pageable, total);
@@ -56,8 +53,8 @@ class RangePageImpl<T, M> extends PageImpl<T> implements RangePage<T, M> {
     }
 
     @Override
-    public <R> RangePage<R, M> map(Function<? super T, ? extends R> converter) {
-        return new RangePageImpl<R, M>(max, getConvertedContent(converter), getPageable(), getTotalElements());
+    public <R> RangePage<R, M> map(@NotNull Function<? super T, ? extends R> converter) {
+        return new RangePageImpl<>(max, getConvertedContent(converter), getPageable(), getTotalElements());
     }
 
 }

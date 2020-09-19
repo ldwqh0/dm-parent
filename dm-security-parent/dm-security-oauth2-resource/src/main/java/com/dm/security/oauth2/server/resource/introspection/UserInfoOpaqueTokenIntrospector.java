@@ -1,8 +1,7 @@
 package com.dm.security.oauth2.server.resource.introspection;
 
-import java.net.URI;
-import java.util.Map;
-
+import com.dm.security.oauth2.core.PrincipalExtractor;
+import com.dm.security.oauth2.core.UserDetailsDtoPrincipalExtractor;
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
@@ -13,14 +12,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.dm.security.oauth2.core.PrincipalExtractor;
-import com.dm.security.oauth2.core.UserDetailsDtoPrincipalExtractor;
+import java.net.URI;
+import java.util.Map;
 
 public class UserInfoOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
     private String url = "";
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    private PrincipalExtractor principalExtractor = new UserDetailsDtoPrincipalExtractor();
+    private final PrincipalExtractor principalExtractor = new UserDetailsDtoPrincipalExtractor();
 
     public UserInfoOpaqueTokenIntrospector(String introspectionUri) {
         this.url = introspectionUri;

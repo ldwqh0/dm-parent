@@ -81,7 +81,7 @@ public class OAuth2Exception extends RuntimeException {
      */
     public void addAdditionalInformation(String key, String value) {
         if (this.additionalInformation == null) {
-            this.additionalInformation = new TreeMap<String, String>();
+            this.additionalInformation = new TreeMap<>();
         }
 
         this.additionalInformation.put(key, value);
@@ -132,8 +132,7 @@ public class OAuth2Exception extends RuntimeException {
      */
     public static OAuth2Exception valueOf(Map<String, String> errorParams) {
         String errorCode = errorParams.get(ERROR);
-        String errorMessage = errorParams.containsKey(DESCRIPTION) ? errorParams.get(DESCRIPTION)
-                : null;
+        String errorMessage = errorParams.getOrDefault(DESCRIPTION, null);
         OAuth2Exception ex = create(errorCode, errorMessage);
         Set<Map.Entry<String, String>> entries = errorParams.entrySet();
         for (Map.Entry<String, String> entry : entries) {

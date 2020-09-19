@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
  */
 public class DelegatingServerLogoutSuccessHandler implements ServerLogoutSuccessHandler {
     private final List<DelegateLogoutSuccessEntry> delegateLogoutSuccessHandler;
-    private ServerLogoutSuccessHandler defaultLogoutSuccessHandler;
+    private final ServerLogoutSuccessHandler defaultLogoutSuccessHandler;
 
     public DelegatingServerLogoutSuccessHandler(DelegateLogoutSuccessEntry... entry) {
         this.delegateLogoutSuccessHandler = Arrays.asList(entry);
@@ -32,7 +32,7 @@ public class DelegatingServerLogoutSuccessHandler implements ServerLogoutSuccess
     public Mono<Void> onLogoutSuccess(WebFilterExchange exchange, Authentication authentication) {
         return Flux.fromIterable(this.delegateLogoutSuccessHandler)
                 .filterWhen(entry -> isMatch(exchange.getExchange(), entry))
-                .map(entry -> entry.getLogoutSuccessHandler())
+                .map(DelegateLogoutSuccessEntry::getLogoutSuccessHandler)
                 .defaultIfEmpty(this.defaultLogoutSuccessHandler)
                 .flatMap(entryPoint -> entryPoint.onLogoutSuccess(exchange, authentication))
                 .next();
@@ -41,6 +41,6 @@ public class DelegatingServerLogoutSuccessHandler implements ServerLogoutSuccess
     private Mono<Boolean> isMatch(ServerWebExchange exchange, DelegateLogoutSuccessEntry entry) {
         ServerWebExchangeMatcher matcher = entry.getMatcher();
         return matcher.matches(exchange)
-                .map(result -> result.isMatch());
+                .map(ServerWebExchangeMatcher.MatchResult::isMatch);
     }
 }

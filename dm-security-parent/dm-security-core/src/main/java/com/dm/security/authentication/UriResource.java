@@ -17,7 +17,7 @@ public interface UriResource extends Serializable {
      * @author ldwqh0@outlook.com
      *
      */
-    public enum MatchType {
+    enum MatchType {
         /**
          * 路径匹配
          */
@@ -28,15 +28,15 @@ public interface UriResource extends Serializable {
         REGEXP,
     }
 
-    public String getMethod();
+    String getMethod();
 
-    public String getPath();
+    String getPath();
 
-    public MatchType getMatchType();
+    MatchType getMatchType();
 
-    public Set<String> getScopes();
+    Set<String> getScopes();
 
-    public static UriResource of(String method, String path, MatchType matchType, Set<String> scopes) {
+    static UriResource of(String method, String path, MatchType matchType, Set<String> scopes) {
         return new UriResourceImpl(method, path, matchType, scopes);
     }
 
@@ -118,9 +118,7 @@ class UriResourceImpl implements UriResource {
                 return false;
         } else if (!scopes.equals(other.scopes))
             return false;
-        if (type != other.type)
-            return false;
-        return true;
+        return type == other.type;
     }
 
 }

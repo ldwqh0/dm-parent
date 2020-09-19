@@ -35,7 +35,7 @@ public class CompositeTokenGranter implements TokenGranter {
     private final List<TokenGranter> tokenGranters;
 
     public CompositeTokenGranter(List<TokenGranter> tokenGranters) {
-        this.tokenGranters = new ArrayList<TokenGranter>(tokenGranters);
+        this.tokenGranters = new ArrayList<>(tokenGranters);
     }
 
     @Override

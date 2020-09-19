@@ -22,7 +22,7 @@ public final class Maps {
     }
 
     @SafeVarargs
-    public static <K, V> HashMap<K, V> newHashMap(Map<K, V>... maps) {
+    public static <K, V> HashMap<K, V> hashMap(Map<K, V>... maps) {
         HashMap<K, V> result = hashMap();
         for (Map<K, V> map : maps) {
             if (isNotEmpty(map)) {
@@ -75,14 +75,12 @@ public final class Maps {
             return Collections.emptyMap();
         }
         Map<K, V2> result = new HashMap<>();
-        input.forEach((key, value) -> {
-            result.put(key, valueConverter.apply(value));
-        });
+        input.forEach((key, value) -> result.put(key, valueConverter.apply(value)));
         return result;
     }
 
     public static <K1, K2, V> Map<K2, V> transformKeys(Map<K1, V> input,
-            Function<? super K1, K2> converter) {
+                                                       Function<? super K1, K2> converter) {
         if (input == null) {
             return null;
         }
@@ -90,14 +88,12 @@ public final class Maps {
             return Collections.emptyMap();
         }
         Map<K2, V> result = new HashMap<>();
-        input.forEach((k, v) -> {
-            result.put(converter.apply(k), v);
-        });
+        input.forEach((k, v) -> result.put(converter.apply(k), v));
         return result;
     }
 
     public static <K, V> HashMapBuilder<K, V> entry(K key, V value) {
-        return new HashMapBuilder<K, V>(key, value);
+        return new HashMapBuilder<>(key, value);
     }
 
     public final static class HashMapBuilder<K, V> {

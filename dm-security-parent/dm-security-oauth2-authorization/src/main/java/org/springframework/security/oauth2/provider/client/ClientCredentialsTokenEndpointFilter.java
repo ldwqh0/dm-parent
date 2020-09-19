@@ -142,7 +142,7 @@ public class ClientCredentialsTokenEndpointFilter extends AbstractAuthentication
 
     protected static class ClientCredentialsRequestMatcher implements RequestMatcher {
 
-        private String path;
+        private final String path;
 
         public ClientCredentialsRequestMatcher(String path) {
             this.path = path;

@@ -37,7 +37,7 @@ import org.springframework.util.Assert;
  */
 public class JdbcClientDetailsServiceBuilder extends ClientDetailsServiceBuilder<JdbcClientDetailsServiceBuilder> {
 
-    private Set<ClientDetails> clientDetails = new HashSet<ClientDetails>();
+    private Set<ClientDetails> clientDetails = new HashSet<>();
 
     private DataSource dataSource;
 

@@ -145,7 +145,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange) {
         return this.authorizationRequestMatcher.matches(exchange)
-            .filter(matchResult -> matchResult.isMatch())
+            .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
             .map(ServerWebExchangeMatcher.MatchResult::getVariables)
             .map(variables -> variables.get(DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME))
             .cast(String.class)

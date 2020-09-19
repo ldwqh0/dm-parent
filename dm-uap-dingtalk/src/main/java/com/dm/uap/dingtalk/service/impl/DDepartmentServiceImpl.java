@@ -115,5 +115,5 @@ public class DDepartmentServiceImpl implements DDepartmentService {
                 log.info("尝试删除部门时出现错误 [corpid={},id={}]", dd.getCorpId(), dd.getId());
             }
         });
-    };
+    }
 }

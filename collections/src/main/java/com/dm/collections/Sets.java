@@ -1,13 +1,12 @@
 package com.dm.collections;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Set操作的工具类
+ */
 public final class Sets {
     private Sets() {
     }
@@ -18,7 +17,7 @@ public final class Sets {
     }
 
     public static <E> HashSet<E> hasSet(Iterable<E> iterable) {
-        HashSet<E> result = new HashSet<E>();
+        HashSet<E> result = new HashSet<>();
         if (Iterables.isNotEmpty(iterable)) {
             iterable.forEach(result::add);
         }
@@ -42,4 +41,21 @@ public final class Sets {
             return fromeSet.stream().map(converter).collect(Collectors.toSet());
         }
     }
+
+    public static <T> Set<T> merge(Set<T> origin, T... e) {
+        HashSet<T> result = hashSet(origin);
+        if (e != null) {
+            result.addAll(Arrays.asList(e));
+        }
+        return result;
+    }
+
+    public static <T> Set<T> merge(Collection<T> origin, Collection<T> elements) {
+        HashSet<T> hashSet = hashSet(origin);
+        if (CollectionUtils.isNotEmpty(elements)) {
+            hashSet.addAll(elements);
+        }
+        return hashSet;
+    }
+
 }

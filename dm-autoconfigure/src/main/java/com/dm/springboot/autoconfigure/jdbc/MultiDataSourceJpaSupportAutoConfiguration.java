@@ -19,8 +19,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class MultiDataSourceJpaSupportAutoConfiguration {
 
     @Bean
-    public DmDataSourceController dataSourceController() {
-        return new DmDataSourceController();
+    public DmDataSourceController dataSourceController(DmDataSourceRepository dmDataSourceRepository) {
+        return new DmDataSourceController(dmDataSourceService(dmDataSourceRepository), dmDataSourceConverter());
     }
 
     @Bean
@@ -29,8 +29,7 @@ public class MultiDataSourceJpaSupportAutoConfiguration {
     }
 
     @Bean
-    public DmDataSourceService dmDataSourceService(
-        DmDataSourceRepository dmDataSourceRepository
+    public DmDataSourceService dmDataSourceService(DmDataSourceRepository dmDataSourceRepository
     ) {
         return new DmDataSourceServiceImpl(
             dmDataSourceConverter(),

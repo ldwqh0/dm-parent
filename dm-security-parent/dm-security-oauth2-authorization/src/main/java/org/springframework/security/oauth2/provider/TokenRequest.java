@@ -98,7 +98,7 @@ public class TokenRequest extends BaseRequest {
 
     public OAuth2Request createOAuth2Request(ClientDetails client) {
         Map<String, String> requestParameters = getRequestParameters();
-        HashMap<String, String> modifiable = new HashMap<String, String>(requestParameters);
+        HashMap<String, String> modifiable = new HashMap<>(requestParameters);
         // Remove password if present to prevent leaks
         modifiable.remove("password");
         modifiable.remove("client_secret");

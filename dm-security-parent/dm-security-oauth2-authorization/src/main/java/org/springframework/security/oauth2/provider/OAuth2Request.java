@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.common.util.OAuth2Utils;
  *
  * @author Amanda Anganes
  * @author Dave Syer
- * 
  */
 public class OAuth2Request extends BaseRequest implements Serializable {
 
@@ -32,13 +31,13 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     /**
      * Resolved resource IDs. This set may change during request processing.
      */
-    private Set<String> resourceIds = new HashSet<String>();
+    private Set<String> resourceIds = new HashSet<>();
 
     /**
      * Resolved granted authorities for this request. May change during request
      * processing.
      */
-    private Collection<? extends GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+    private Collection<? extends GrantedAuthority> authorities = new HashSet<>();
 
     /**
      * Whether the request has been approved by the end user (or other process).
@@ -65,31 +64,31 @@ public class OAuth2Request extends BaseRequest implements Serializable {
      * Resolved requested response types initialized (by the OAuth2RequestFactory)
      * with the response types originally requested.
      */
-    private Set<String> responseTypes = new HashSet<String>();
+    private Set<String> responseTypes = new HashSet<>();
 
     /**
      * Extension point for custom processing classes which may wish to store
      * additional information about the OAuth2 request. Since this class is
      * serializable, all members of this map must also be serializable.
      */
-    private Map<String, Serializable> extensions = new HashMap<String, Serializable>();
+    private Map<String, Serializable> extensions = new HashMap<>();
 
     public OAuth2Request(Map<String, String> requestParameters, String clientId,
-            Collection<? extends GrantedAuthority> authorities, boolean approved, Set<String> scope,
-            Set<String> resourceIds, String redirectUri, Set<String> responseTypes,
-            Map<String, Serializable> extensionProperties) {
+                         Collection<? extends GrantedAuthority> authorities, boolean approved, Set<String> scope,
+                         Set<String> resourceIds, String redirectUri, Set<String> responseTypes,
+                         Map<String, Serializable> extensionProperties) {
         setClientId(clientId);
         setRequestParameters(requestParameters);
         setScope(scope);
         if (resourceIds != null) {
-            this.resourceIds = new HashSet<String>(resourceIds);
+            this.resourceIds = new HashSet<>(resourceIds);
         }
         if (authorities != null) {
             this.authorities = new HashSet<GrantedAuthority>(authorities);
         }
         this.approved = approved;
         if (responseTypes != null) {
-            this.responseTypes = new HashSet<String>(responseTypes);
+            this.responseTypes = new HashSet<>(responseTypes);
         }
         this.redirectUri = redirectUri;
         if (extensionProperties != null) {
@@ -100,8 +99,8 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     protected OAuth2Request(OAuth2Request other) {
         this(other.getRequestParameters(), other.getClientId(), other.getAuthorities(), other.isApproved(), other
                 .getScope(), other.getResourceIds(), other.getRedirectUri(), other.getResponseTypes(),
-                other
-                        .getExtensions());
+            other
+                .getExtensions());
     }
 
     protected OAuth2Request(String clientId) {
@@ -139,32 +138,32 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     /**
      * Update the request parameters and return a new object with the same
      * properties except the parameters.
-     * 
+     *
      * @param parameters new parameters replacing the existing ones
      * @return a new OAuth2Request
      */
     public OAuth2Request createOAuth2Request(Map<String, String> parameters) {
         return new OAuth2Request(parameters, getClientId(), authorities, approved, getScope(), resourceIds,
-                redirectUri, responseTypes, extensions);
+            redirectUri, responseTypes, extensions);
     }
 
     /**
      * Update the scope and create a new request. All the other properties are the
      * same (including the request parameters).
-     * 
+     *
      * @param scope the new scope
      * @return a new request with the narrowed scope
      */
     public OAuth2Request narrowScope(Set<String> scope) {
         OAuth2Request request = new OAuth2Request(getRequestParameters(), getClientId(), authorities, approved, scope,
-                resourceIds, redirectUri, responseTypes, extensions);
+            resourceIds, redirectUri, responseTypes, extensions);
         request.refresh = this.refresh;
         return request;
     }
 
     public OAuth2Request refresh(TokenRequest tokenRequest) {
         OAuth2Request request = new OAuth2Request(getRequestParameters(), getClientId(), authorities, approved,
-                getScope(), resourceIds, redirectUri, responseTypes, extensions);
+            getScope(), resourceIds, redirectUri, responseTypes, extensions);
         request.refresh = tokenRequest;
         return request;
     }
@@ -180,7 +179,7 @@ public class OAuth2Request extends BaseRequest implements Serializable {
      * If this request was for an access token to be refreshed, then the
      * {@link TokenRequest} that led to the refresh <i>may</i> be available here if
      * it is known.
-     * 
+     *
      * @return the refresh token request (may be null)
      */
     public TokenRequest getRefreshTokenRequest() {
@@ -190,7 +189,7 @@ public class OAuth2Request extends BaseRequest implements Serializable {
     /**
      * Tries to discover the grant type requested for the token associated with this
      * request.
-     * 
+     *
      * @return the grant type if known, or null otherwise
      */
     public String getGrantType() {

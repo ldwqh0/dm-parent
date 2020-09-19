@@ -67,7 +67,7 @@ public class BaseClientDetails implements ClientDetails {
     private Integer refreshTokenValiditySeconds;
 
     @com.fasterxml.jackson.annotation.JsonIgnore
-    private Map<String, Object> additionalInformation = new LinkedHashMap<String, Object>();
+    private Map<String, Object> additionalInformation = new LinkedHashMap<>();
 
     public BaseClientDetails() {
     }
@@ -116,8 +116,8 @@ public class BaseClientDetails implements ClientDetails {
             this.authorizedGrantTypes = StringUtils
                     .commaDelimitedListToSet(grantTypes);
         } else {
-            this.authorizedGrantTypes = new HashSet<String>(Arrays.asList(
-                    "authorization_code", "refresh_token"));
+            this.authorizedGrantTypes = new HashSet<>(Arrays.asList(
+                "authorization_code", "refresh_token"));
         }
 
         if (StringUtils.hasText(authorities)) {
@@ -142,7 +142,7 @@ public class BaseClientDetails implements ClientDetails {
     }
 
     public void setAutoApproveScopes(Collection<String> autoApproveScopes) {
-        this.autoApproveScopes = new HashSet<String>(autoApproveScopes);
+        this.autoApproveScopes = new HashSet<>(autoApproveScopes);
     }
 
     @Override
@@ -192,7 +192,7 @@ public class BaseClientDetails implements ClientDetails {
 
     public void setScope(Collection<String> scope) {
         this.scope = scope == null ? Collections.<String>emptySet()
-                : new LinkedHashSet<String>(scope);
+                : new LinkedHashSet<>(scope);
     }
 
     @Override
@@ -203,7 +203,7 @@ public class BaseClientDetails implements ClientDetails {
 
     public void setResourceIds(Collection<String> resourceIds) {
         this.resourceIds = resourceIds == null ? Collections
-                .<String>emptySet() : new LinkedHashSet<String>(resourceIds);
+                .<String>emptySet() : new LinkedHashSet<>(resourceIds);
     }
 
     @Override
@@ -213,8 +213,8 @@ public class BaseClientDetails implements ClientDetails {
     }
 
     public void setAuthorizedGrantTypes(Collection<String> authorizedGrantTypes) {
-        this.authorizedGrantTypes = new LinkedHashSet<String>(
-                authorizedGrantTypes);
+        this.authorizedGrantTypes = new LinkedHashSet<>(
+            authorizedGrantTypes);
     }
 
     @Override
@@ -225,13 +225,13 @@ public class BaseClientDetails implements ClientDetails {
 
     public void setRegisteredRedirectUri(Set<String> registeredRedirectUris) {
         this.registeredRedirectUris = registeredRedirectUris == null ? null
-                : new LinkedHashSet<String>(registeredRedirectUris);
+                : new LinkedHashSet<>(registeredRedirectUris);
     }
 
     @com.fasterxml.jackson.annotation.JsonProperty("authorities")
     private List<String> getAuthoritiesAsStrings() {
-        return new ArrayList<String>(
-                AuthorityUtils.authorityListToSet(authorities));
+        return new ArrayList<>(
+            AuthorityUtils.authorityListToSet(authorities));
     }
 
     @com.fasterxml.jackson.annotation.JsonProperty("authorities")
@@ -250,7 +250,7 @@ public class BaseClientDetails implements ClientDetails {
     @com.fasterxml.jackson.annotation.JsonIgnore
     public void setAuthorities(
             Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = new ArrayList<GrantedAuthority>(authorities);
+        this.authorities = new ArrayList<>(authorities);
     }
 
     @Override
@@ -275,8 +275,8 @@ public class BaseClientDetails implements ClientDetails {
     }
 
     public void setAdditionalInformation(Map<String, ?> additionalInformation) {
-        this.additionalInformation = new LinkedHashMap<String, Object>(
-                additionalInformation);
+        this.additionalInformation = new LinkedHashMap<>(
+            additionalInformation);
     }
 
     @Override

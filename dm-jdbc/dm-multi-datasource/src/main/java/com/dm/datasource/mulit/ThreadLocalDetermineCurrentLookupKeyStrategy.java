@@ -4,7 +4,7 @@ import com.dm.datasource.provider.DataSourceProperties;
 
 public final class ThreadLocalDetermineCurrentLookupKeyStrategy implements DetermineCurrentLookupKeyStrategy {
 
-    private static ThreadLocal<DataSourceProperties> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<DataSourceProperties> threadLocal = new ThreadLocal<>();
 
     @Override
     public DataSourceProperties determineCurrentLookupKey() {

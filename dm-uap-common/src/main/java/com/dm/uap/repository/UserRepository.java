@@ -1,35 +1,35 @@
 package com.dm.uap.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-
 import com.dm.common.repository.IdentifiableDtoRepository;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.User;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends IdentifiableDtoRepository<User, Long>, QuerydslPredicateExecutor<User> {
 
-    public Optional<User> findOneByUsernameIgnoreCase(String username);
+    Optional<User> findOneByUsernameIgnoreCase(String username);
 
-    public Optional<User> findByMobileIgnoreCase(String mobile);
+    Optional<User> findByMobileIgnoreCase(String mobile);
 
-    public List<User> findByDepartment(Department dp);
+    List<User> findByDepartment(Department dp);
 
     /**
      * 获取指定部门的用户
-     * 
+     *
      * @param dp        要获取用户的部门
      * @param recursive 是否递归的获取下级部门的用户
-     * @return
+     * @return 查找到的用户
      */
-    public List<User> findByDepartment(Department dp, boolean recursive);
+    List<User> findByDepartment(Department dp, boolean recursive);
 
     @Modifying
-    @Query("update User set enabled = ?2 where id in (?1)")
-    public int batchSetEnabled(List<Long> deleteUsers, boolean b);
+    @Query("update User u set u.enabled = :enabled where u.id in (:deleteUsers)")
+    int batchSetEnabled(@Param("deleteUsers") List<Long> deleteUsers, @Param("enabled") boolean b);
 
 }

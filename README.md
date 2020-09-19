@@ -16,11 +16,13 @@
 ## 版本对应规则
 构建版本号|Spring Boot|Spring Cloud|
 :-|:-|:-|:-
-1.0.x|2.2.7.RELEASE|Hoxton.SRx|持续中
+1.0.x|2.2.7.RELEASE|Hoxton.SR6|终止
 1.1.x|2.2.x.RELEASE|Hoxton.SRx|持续中
-1.1.0|2.2.9.RELEASE|Hoxton.SR6|持续中
-1.1.1|2.2.9.RELEASE|Hoxton.SR8|计划中
+1.1.0|2.2.9.RELEASE|Hoxton.SR6|终止
+1.1.1|2.2.9.RELEASE|Hoxton.SR8|持续中
+
 1.2.x|2.3.x.RELEASE|Hoxton.SR8|持续中
-1.2.0|2.3.3.RELEASE|Hoxton.SR8|持续中
+1.2.0|2.3.3.RELEASE|Hoxton.SR8|终止
+1.2.1|2.3.4.RELEASE|Hoxton.SR8|终止
 ## 模块说明
 * dm-authority-common

@@ -15,14 +15,7 @@
  */
 package org.springframework.security.oauth2.config.annotation.builders;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -47,7 +40,7 @@ import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 public class ClientDetailsServiceBuilder<B extends ClientDetailsServiceBuilder<B>> extends
         SecurityConfigurerAdapter<ClientDetailsService, B> implements SecurityBuilder<ClientDetailsService> {
 
-    private List<ClientBuilder> clientBuilders = new ArrayList<ClientBuilder>();
+    private List<ClientBuilder> clientBuilders = new ArrayList<>();
 
     public InMemoryClientDetailsServiceBuilder inMemory() throws Exception {
         return new InMemoryClientDetailsServiceBuilder();
@@ -91,27 +84,27 @@ public class ClientDetailsServiceBuilder<B extends ClientDetailsServiceBuilder<B
     public final class ClientBuilder {
         private final String clientId;
 
-        private Collection<String> authorizedGrantTypes = new LinkedHashSet<String>();
+        private Collection<String> authorizedGrantTypes = new LinkedHashSet<>();
 
-        private Collection<String> authorities = new LinkedHashSet<String>();
+        private Collection<String> authorities = new LinkedHashSet<>();
 
         private Integer accessTokenValiditySeconds;
 
         private Integer refreshTokenValiditySeconds;
 
-        private Collection<String> scopes = new LinkedHashSet<String>();
+        private Collection<String> scopes = new LinkedHashSet<>();
 
-        private Collection<String> autoApproveScopes = new HashSet<String>();
+        private Collection<String> autoApproveScopes = new HashSet<>();
 
         private String secret;
 
-        private Set<String> registeredRedirectUris = new HashSet<String>();
+        private Set<String> registeredRedirectUris = new HashSet<>();
 
-        private Set<String> resourceIds = new HashSet<String>();
+        private Set<String> resourceIds = new HashSet<>();
 
         private boolean autoApprove;
 
-        private Map<String, Object> additionalInformation = new LinkedHashMap<String, Object>();
+        private Map<String, Object> additionalInformation = new LinkedHashMap<>();
 
         private ClientDetails build() {
             BaseClientDetails result = new BaseClientDetails();
@@ -149,9 +142,7 @@ public class ClientDetailsServiceBuilder<B extends ClientDetailsServiceBuilder<B
         }
 
         public ClientBuilder authorizedGrantTypes(String... authorizedGrantTypes) {
-            for (String grant : authorizedGrantTypes) {
-                this.authorizedGrantTypes.add(grant);
-            }
+            this.authorizedGrantTypes.addAll(Arrays.asList(authorizedGrantTypes));
             return this;
         }
 
@@ -178,9 +169,7 @@ public class ClientDetailsServiceBuilder<B extends ClientDetailsServiceBuilder<B
         }
 
         public ClientBuilder authorities(String... authorities) {
-            for (String authority : authorities) {
-                this.authorities.add(authority);
-            }
+            this.authorities.addAll(Arrays.asList(authorities));
             return this;
         }
 
@@ -190,9 +179,7 @@ public class ClientDetailsServiceBuilder<B extends ClientDetailsServiceBuilder<B
         }
 
         public ClientBuilder autoApprove(String... scopes) {
-            for (String scope : scopes) {
-                this.autoApproveScopes.add(scope);
-            }
+            this.autoApproveScopes.addAll(Arrays.asList(scopes));
             return this;
         }
 

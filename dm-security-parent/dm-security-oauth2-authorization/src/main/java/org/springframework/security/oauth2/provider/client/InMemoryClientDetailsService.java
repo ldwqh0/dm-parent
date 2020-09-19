@@ -36,7 +36,7 @@ import org.springframework.security.oauth2.provider.NoSuchClientException;
  */
 public class InMemoryClientDetailsService implements ClientDetailsService {
 
-    private Map<String, ClientDetails> clientDetailsStore = new HashMap<String, ClientDetails>();
+    private Map<String, ClientDetails> clientDetailsStore = new HashMap<>();
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
@@ -48,7 +48,7 @@ public class InMemoryClientDetailsService implements ClientDetailsService {
     }
 
     public void setClientDetailsStore(Map<String, ? extends ClientDetails> clientDetailsStore) {
-        this.clientDetailsStore = new HashMap<String, ClientDetails>(clientDetailsStore);
+        this.clientDetailsStore = new HashMap<>(clientDetailsStore);
     }
 
 }

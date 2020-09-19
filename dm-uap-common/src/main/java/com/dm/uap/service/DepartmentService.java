@@ -11,16 +11,16 @@ import com.dm.uap.entity.Department;
 
 public interface DepartmentService {
 
-    public Department save(DepartmentDto data);
+    Department save(DepartmentDto data);
 
-    public Optional<Department> findById(Long id);
+    Optional<Department> findById(Long id);
 
-    public Department update(Long id, DepartmentDto data);
+    Department update(Long id, DepartmentDto data);
 
-    public void deleteById(Long id);
+    void deleteById(Long id);
 
-    public Page<Department> find(String key, Pageable pageable);
+    Page<Department> find(String key, Pageable pageable);
 
-    public List<Department> findAll();
+    List<Department> findAll();
 
 }

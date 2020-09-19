@@ -11,15 +11,15 @@ import com.dm.security.oauth2.support.entity.Client;
 
 public interface ClientService extends ClientDetailsService {
 
-    public Client save(ClientDto app);
+    Client save(ClientDto app);
 
-    public boolean existAnyClient();
+    boolean existAnyClient();
 
-    public void delete(String clientId);
+    void delete(String clientId);
 
-    public Optional<Client> findById(String id);
+    Optional<Client> findById(String id);
 
-    public Client update(String id, ClientDto client);
+    Client update(String id, ClientDto client);
 
-    public Page<Client> find(String key, Pageable pageable);
+    Page<Client> find(String key, Pageable pageable);
 }

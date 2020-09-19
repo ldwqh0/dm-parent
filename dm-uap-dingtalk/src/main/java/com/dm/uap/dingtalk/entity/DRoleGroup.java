@@ -45,11 +45,13 @@ public class DRoleGroup extends CorpLongEntity {
     @Column(name = "deleted_")
     private Boolean deleted = false;
 
-    DRoleGroup() {
+
+
+    public DRoleGroup(String corpId, Long id) {
+        super(corpId, id);
     }
 
-    public DRoleGroup(String corpid, Long id) {
-        super(corpid, id);
-    }
+    public DRoleGroup() {
 
+    }
 }

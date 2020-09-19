@@ -39,9 +39,7 @@ public class DingtalkCallbackServiceImpl implements DingtalkCallbackService {
         log.info("编辑用户 {}", event);
         @SuppressWarnings("unchecked")
         List<String> users = (List<String>) event.get("UserId");
-        users.forEach(userid -> {
-            dUserService.asyncToUap(userid);
-        });
+        users.forEach(userid -> dUserService.asyncToUap(userid));
     }
 
     @Override
@@ -82,9 +80,7 @@ public class DingtalkCallbackServiceImpl implements DingtalkCallbackService {
         String corpid = String.valueOf(event.get("CorpId"));
         @SuppressWarnings("unchecked")
         List<Integer> labelList = (List<Integer>) event.get("LabelIdList");
-        labelList.forEach(roleId -> {
-            dRoleService.asyncToUap(corpid, roleId.longValue());
-        });
+        labelList.forEach(roleId -> dRoleService.asyncToUap(corpid, roleId.longValue()));
     }
 
     @Override

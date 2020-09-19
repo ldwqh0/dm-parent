@@ -31,21 +31,21 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
  */
 public interface AccessTokenConverter {
 
-    final String AUD = "aud";
+    String AUD = "aud";
 
-    final String CLIENT_ID = "client_id";
+    String CLIENT_ID = "client_id";
 
-    final String EXP = "exp";
+    String EXP = "exp";
 
-    final String JTI = "jti";
+    String JTI = "jti";
 
-    final String GRANT_TYPE = "grant_type";
+    String GRANT_TYPE = "grant_type";
 
-    final String ATI = "ati";
+    String ATI = "ati";
 
-    final String SCOPE = OAuth2AccessToken.SCOPE;
+    String SCOPE = OAuth2AccessToken.SCOPE;
 
-    final String AUTHORITIES = "authorities";
+    String AUTHORITIES = "authorities";
 
     /**
      * @param token          an access token

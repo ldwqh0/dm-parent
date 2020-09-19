@@ -1,9 +1,12 @@
 package com.dm.common.entity;
 
+import lombok.Getter;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@Getter
 public class ModifyAudit implements Audit {
 
     private static final long serialVersionUID = 5546618897219690297L;
@@ -15,29 +18,15 @@ public class ModifyAudit implements Audit {
     private String username;
 
     public ModifyAudit() {
-        super();
     }
 
     public ModifyAudit(Long lastModifiedUserId, String lastModifiedUserName) {
-        super();
         this.userid = lastModifiedUserId;
         this.username = lastModifiedUserName;
     }
 
     public ModifyAudit(Audit audit) {
-        super();
-        this.userid = audit.getUserid();
-        this.username = audit.getUsername();
-    }
-
-    @Override
-    public Long getUserid() {
-        return this.userid;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
+        this(audit.getUserid(), audit.getUsername());
     }
 
 }

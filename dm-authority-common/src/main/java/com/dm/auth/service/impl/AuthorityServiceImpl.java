@@ -3,9 +3,9 @@ package com.dm.auth.service.impl;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
+import com.dm.auth.entity.AuthResource;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
-import com.dm.auth.entity.AuthResource;
 import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.MenuRepository;
@@ -15,7 +15,6 @@ import com.dm.collections.Maps;
 import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpMethod;
@@ -28,14 +27,11 @@ import java.util.stream.Collectors;
 @Service("authorityService")
 public class AuthorityServiceImpl implements AuthorityService, ResourceAuthorityService {
 
-    @Autowired
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
 
-    @Autowired
-    private AuthorityRepository authorityRepository;
+    private final AuthorityRepository authorityRepository;
 
-    @Autowired
-    private ResourceRepository resourceReopsitory;
+    private final ResourceRepository resourceReopsitory;
 
     // 进行请求限定的请求类型
     private final HttpMethod[] methods = {
@@ -46,13 +42,19 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
         HttpMethod.PATCH
     };
 
+    public AuthorityServiceImpl(MenuRepository menuRepository, AuthorityRepository authorityRepository, ResourceRepository resourceReopsitory) {
+        this.menuRepository = menuRepository;
+        this.authorityRepository = authorityRepository;
+        this.resourceReopsitory = resourceReopsitory;
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "AuthorityMenus", key = "#p0.roleName")
     public Authority save(MenuAuthorityDto authorityDto) {
         Long roleId = authorityDto.getRoleId();
         String roleName = authorityDto.getRoleName();
-        Authority authority = null;
+        Authority authority;
         if (authorityRepository.existsById(roleName)) {
             authority = authorityRepository.getOne(roleName);
         } else {
@@ -70,15 +72,15 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     /**
      * 根据角色查询菜单项目
      *
-     * @param auth
-     * @return
+     * @param auth 角色名称
+     * @return 角色的授权菜单列表
      */
     // TODO 不能缓存实体
     @Override
     @Cacheable(cacheNames = "AuthorityMenus")
     @Transactional(readOnly = true)
     public Set<Menu> findByAuthority(String auth) {
-        Set<Menu> parents = new HashSet<Menu>();
+        Set<Menu> parents = new HashSet<>();
         Set<Menu> menus = authorityRepository.findById(auth)
             .map(Authority::getMenus)
             .orElseGet(Collections::emptySet);
@@ -87,21 +89,15 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
             addParent(menu, parents);
         }
         menus.addAll(parents);
-        Iterator<Menu> menusIteraotr = menus.iterator();
-        while (menusIteraotr.hasNext()) {
-            Menu next = menusIteraotr.next();
-            if (!isEnabled(next)) {
-                menusIteraotr.remove();
-            }
-        }
+        menus.removeIf(next -> !isEnabled(next));
         return menus;
     }
 
     /**
      * 循环的将某个菜单的父级菜单添加到指定列表
      *
-     * @param menu
-     * @param collection
+     * @param menu       被添加子菜单父菜单项目
+     * @param collection 子菜单列表
      */
     private void addParent(Menu menu, Set<Menu> collection) {
         Menu parent = menu.getParent();
@@ -114,8 +110,8 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     /**
      * 判断某个菜单是否被禁用，判断的标准是依次判断父级菜单是否被禁用，如果某个菜单的父级菜单被禁用，那么该菜单的子菜单也是被禁用的
      *
-     * @param menu
-     * @return
+     * @param menu 要判断的菜单项
+     * @return 返回是否会被禁用
      */
     private boolean isEnabled(Menu menu) {
         if (menu == null) {
@@ -145,7 +141,7 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     @CacheEvict(cacheNames = {"AuthorityAttributes"}, key = "'all_resource'")
     public Authority save(ResourceAuthorityDto authorityDto) {
         String roleName = authorityDto.getRoleName();
-        Authority authority = null;
+        Authority authority;
         if (authorityRepository.existsById(roleName)) {
             authority = authorityRepository.getOne(roleName);
         } else {
@@ -178,15 +174,15 @@ public class AuthorityServiceImpl implements AuthorityService, ResourceAuthority
     public Collection<ResourceAuthorityAttribute> listAll() {
         List<Authority> authorities = authorityRepository.findAll();
         // 一个资源的权限配置
-        final Map<UriResource, ResourceAuthorityAttribute> resourceAuhtorityMap = new HashMap<>();
-        authorities.forEach(authority -> {
-            authority.getResourceOperations().forEach((resource, operation) -> {
+        final Map<UriResource, ResourceAuthorityAttribute> resourceAuthorityMap = new HashMap<>();
+        
+        authorities.forEach(authority -> authority.getResourceOperations().forEach((resource, operation) -> {
                 for (HttpMethod method : methods) {
-                    addAuthority(resourceAuhtorityMap, resource, method, operation, authority.getRoleName());
+                    addAuthority(resourceAuthorityMap, resource, method, operation, authority.getRoleName());
                 }
-            });
-        });
-        return Collections.unmodifiableCollection(resourceAuhtorityMap.values());
+            })
+        );
+        return Collections.unmodifiableCollection(resourceAuthorityMap.values());
     }
 
     private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map,

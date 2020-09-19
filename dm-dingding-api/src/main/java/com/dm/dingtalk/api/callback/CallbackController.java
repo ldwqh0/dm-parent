@@ -89,9 +89,7 @@ public class CallbackController {
             @RequestParam("signature") String signature,
             @RequestParam("timestamp") Long timestamp,
             @RequestParam("nonce") String nonce,
-            @RequestBody CallbackRequest rsp)
-            throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+            @RequestBody CallbackRequest rsp) {
         log.debug("接收到回调请求，signature={},timestamp={},nonce={}", signature, timestamp, nonce);
         String encrypt = rsp.getEncrypt();
         try {
@@ -154,7 +152,6 @@ public class CallbackController {
      * 构建一个表示处理成功的响应
      * 
      * @return
-     * @throws UnsupportedEncodingException
      * @throws InvalidKeyException
      * @throws NoSuchAlgorithmException
      * @throws NoSuchPaddingException
@@ -163,7 +160,7 @@ public class CallbackController {
      * @throws BadPaddingException
      */
     private CallbackResponse okResponse()
-            throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+            throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         String time = String.valueOf(ZonedDateTime.now().toEpochSecond());
         String nonce = getRandomStr(RANDOM_LENGTH);
@@ -209,8 +206,7 @@ public class CallbackController {
             try {
                 EncryptMessage msg = EncryptMessage.from(aes.decrypt(encrypt));
                 String msgBody = msg.getMsg();
-                Event event = om.readValue(msgBody, Event.class);
-                return event;
+                return om.readValue(msgBody, Event.class);
             } catch (Exception e) {
                 log.error("解码回调请求体时发生错误", e);
                 throw e;

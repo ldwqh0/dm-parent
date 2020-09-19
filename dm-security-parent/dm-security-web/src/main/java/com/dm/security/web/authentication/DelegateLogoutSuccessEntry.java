@@ -4,8 +4,8 @@ import org.springframework.security.web.server.authentication.logout.ServerLogou
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 
 public class DelegateLogoutSuccessEntry {
-    private ServerWebExchangeMatcher matcher;
-    private ServerLogoutSuccessHandler sucessHandler;
+    private final ServerWebExchangeMatcher matcher;
+    private final ServerLogoutSuccessHandler sucessHandler;
 
     public DelegateLogoutSuccessEntry(ServerWebExchangeMatcher matcher, ServerLogoutSuccessHandler sucessHandler) {
         super();

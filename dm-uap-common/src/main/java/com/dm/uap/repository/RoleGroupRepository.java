@@ -9,5 +9,5 @@ import com.dm.uap.entity.RoleGroup;
 
 public interface RoleGroupRepository extends JpaRepository<RoleGroup, Long>, QuerydslPredicateExecutor<RoleGroup> {
 
-    public Optional<RoleGroup> findByName(String name);
+    Optional<RoleGroup> findByName(String name);
 }

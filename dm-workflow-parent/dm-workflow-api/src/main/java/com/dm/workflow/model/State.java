@@ -13,13 +13,13 @@ public interface State {
      * 
      * @return
      */
-    public Long getId();
+    Long getId();
 
     /**
      * 获取节点的名称
      * 
      * @return
      */
-    public String getName();
+    String getName();
 
 }

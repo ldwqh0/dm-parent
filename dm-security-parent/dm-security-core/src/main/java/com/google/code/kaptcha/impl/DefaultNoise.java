@@ -38,7 +38,7 @@ public class DefaultNoise extends Configurable implements NoiseProducer {
         int height = image.getHeight();
 
         // the points where the line changes the stroke and direction
-        Point2D[] pts = null;
+        Point2D[] pts;
         Random rand = new Random();
 
         // the curve from where the points are taken
