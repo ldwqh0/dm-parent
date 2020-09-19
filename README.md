@@ -15,8 +15,8 @@
 :-|:-|:-|:-
 1.0.x|2.2.7.RELEASE|Hoxton.SR6|终止
 1.1.x|2.2.x.RELEASE|Hoxton.SRx|持续中
-1.1.0|2.2.9.RELEASE|Hoxton.SR6|持续中
-1.1.1|2.2.9.RELEASE|Hoxton.SR8|计划中
+1.1.0|2.2.9.RELEASE|Hoxton.SR6|终止
+1.1.1|2.2.9.RELEASE|Hoxton.SR8|持续中
 
 ## 模块说明
 * dm-authority-common
