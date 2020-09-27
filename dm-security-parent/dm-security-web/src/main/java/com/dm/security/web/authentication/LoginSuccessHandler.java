@@ -36,7 +36,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
         String redirect = request.getParameter("redirect_uri");
         if (isJsonRequest(request)) {
             Object principal = authentication.getPrincipal();
-            if (!Objects.isNull(principal)) {
+            if (Objects.nonNull(principal)) {
                 String result = objectMapper.writeValueAsString(principal);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write(result);

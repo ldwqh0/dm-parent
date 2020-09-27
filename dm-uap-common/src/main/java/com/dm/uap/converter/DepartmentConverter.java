@@ -20,7 +20,7 @@ public class DepartmentConverter implements Converter<Department, DepartmentDto>
         result.setDescription(model.getDescription());
         result.setType(model.getType());
         Department parent = model.getParent();
-        if (!Objects.isNull(parent)) {
+        if (Objects.nonNull(parent)) {
             result.setParent(toDtoActual(model.getParent()));
         }
         return result;

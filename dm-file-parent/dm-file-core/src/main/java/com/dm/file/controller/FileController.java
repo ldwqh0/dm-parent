@@ -137,7 +137,7 @@ public class FileController {
     private Path getTempChunkPath(String tempId, int chunkIndex) {
         Path target = Paths.get(config.getTempPath(), StringUtils.join(tempId, ".", chunkIndex));
         Path parent = target.getParent();
-        if (!Objects.isNull(parent) && !Files.exists(parent)) {
+        if (Objects.nonNull(parent) && !Files.exists(parent)) {
             try {
                 Files.createDirectories(parent);
             } catch (IOException e) {

@@ -117,7 +117,7 @@ public class VerificationCodeController {
 
     private boolean validate(String verifyId, String verifyCode) {
         VerificationCode savedCode = codeStorage.get(verifyId);
-        return (!Objects.isNull(savedCode))
+        return (Objects.nonNull(savedCode))
                 && StringUtils.isNotBlank(savedCode.getCode())
                 && StringUtils.equals(savedCode.getCode(), verifyCode);
     }

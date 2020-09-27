@@ -39,9 +39,9 @@ public class AuthorizationTokenIntrospector implements OpaqueTokenIntrospector {
     public OAuth2AuthenticatedPrincipal introspect(String token) {
         OAuth2Authentication au = tokenService.loadAuthentication(token);
         Object principal = au.getPrincipal();
-        if (!Objects.isNull(principalConverter)) {
+        if (Objects.nonNull(principalConverter)) {
             return principalConverter.apply(au);
-        } else if (!Objects.isNull(principal) &&
+        } else if (Objects.nonNull(principal) &&
                 (principal instanceof OAuth2AuthenticatedPrincipal)) {
             return (OAuth2AuthenticatedPrincipal) principal;
         } else {

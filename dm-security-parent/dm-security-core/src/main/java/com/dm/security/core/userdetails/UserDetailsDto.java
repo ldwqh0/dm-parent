@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -16,7 +17,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @JsonInclude(Include.NON_NULL)
-public class UserDetailsDto implements UserDetails, OAuth2User {
+public class UserDetailsDto implements UserDetails, CredentialsContainer, OAuth2User {
     private static final long serialVersionUID = -4337846050031244208L;
 
     private Long id;
@@ -180,4 +181,8 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
         return username;
     }
 
+    @Override
+    public void eraseCredentials() {
+        this.password = null;
+    }
 }

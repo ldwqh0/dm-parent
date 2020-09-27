@@ -64,7 +64,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
         OapiRoleListResponse response = restTemplate.getForObject(url, OapiRoleListResponse.class,
             accessTokenService.getAccessToken(corpid));
         checkResponse(response);
-        if (!Objects.isNull(response) && !Objects.isNull(response.getResult())
+        if (Objects.nonNull(response) && Objects.nonNull(response.getResult())
             && CollectionUtils.isNotEmpty(response.getResult().getList())) {
             List<OpenRoleGroup> groups = response.getResult().getList();
             groups.forEach(i -> i.setCorpid(corpid));
@@ -81,7 +81,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
         OapiUserCreateResponse response = restTemplate.postForObject(url, request, OapiUserCreateResponse.class,
             accessTokenService.getAccessToken(corpid));
         // 创建用户，如果用户已经存在于钉钉系统中了,不会做任何修改，但会返回返回已经存在的用户的userid
-        if (!Objects.isNull(response) && StringUtils.isNotEmpty(response.getUserid())) {
+        if (Objects.nonNull(response) && StringUtils.isNotEmpty(response.getUserid())) {
         } else {
             checkResponse(response);
         }

@@ -42,9 +42,9 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         result.setExpiration(ZonedDateTime.ofInstant(token.getExpiration().toInstant(), ZoneId.systemDefault()));
         result.setScope(token.getScope());
         result.setTokenType(token.getTokenType());
-        if (!Objects.isNull(authentication)) {
+        if (Objects.nonNull(authentication)) {
             Object principal = authentication.getPrincipal();
-            if (!Objects.isNull(principal) && principal instanceof UserDetails) {
+            if (Objects.nonNull(principal) && principal instanceof UserDetails) {
                 result.setUsername(((UserDetails) principal).getUsername());
             }
         }

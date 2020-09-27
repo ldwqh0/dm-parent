@@ -227,12 +227,12 @@ public class DmServerOAuth2AuthorizationRequestResolver
         uriVariables.put("registrationId", clientRegistration.getRegistrationId());
         List<String> xForwardedHost = request.getHeaders().get("x-forwarded-host");
         List<String> xForwardedProto = request.getHeaders().get("x-forwarded-proto");
-        if (!Objects.isNull(xForwardedHost) && xForwardedHost.size() > 0) {
+        if (Objects.nonNull(xForwardedHost) && xForwardedHost.size() > 0) {
             uriVariables.put("xForwardedHost", xForwardedHost.get(0));
         } else {
             uriVariables.put("xForwardedHost", "");
         }
-        if (!Objects.isNull(xForwardedProto) && xForwardedProto.size() > 0) {
+        if (Objects.nonNull(xForwardedProto) && xForwardedProto.size() > 0) {
             uriVariables.put("xForwardedProto", xForwardedProto.get(0));
         } else {
             uriVariables.put("xForwardedProto", "");

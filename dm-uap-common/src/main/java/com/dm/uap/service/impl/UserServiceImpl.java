@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkUsernameExists(Long id, String username) {
         BooleanBuilder builder = new BooleanBuilder();
-        if (!Objects.isNull(id)) {
+        if (Objects.nonNull(id)) {
             builder.and(qUser.id.ne(id));
         }
 
@@ -180,14 +180,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
-        if (!Objects.isNull(department)) {
+        if (Objects.nonNull(department)) {
             Department dep = dpr.getOne(department);
             query.and(qUser.posts.containsKey(dep));
         }
-        if (!Objects.isNull(role)) {
+        if (Objects.nonNull(role)) {
             query.and(qUser.roles.any().id.eq(role));
         }
-        if (!Objects.isNull(roleGroup)) {
+        if (Objects.nonNull(roleGroup)) {
             query.and(qUser.roles.any().group.id.eq(roleGroup));
         }
         if (StringUtils.isNotBlank(key)) {
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
     public boolean userExistsByUsername(Long id, String username) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.username.equalsIgnoreCase(username));
-        if (!Objects.isNull(id)) {
+        if (Objects.nonNull(id)) {
             query.and(qUser.id.ne(id));
         }
         return userRepository.exists(query);
@@ -231,7 +231,7 @@ public class UserServiceImpl implements UserService {
     public boolean userExistsByEmail(Long id, String email) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.email.equalsIgnoreCase(email));
-        if (!Objects.isNull(id)) {
+        if (Objects.nonNull(id)) {
             query.and(qUser.id.ne(id));
         }
         return userRepository.exists(query);
@@ -241,7 +241,7 @@ public class UserServiceImpl implements UserService {
     public boolean userExistsByMobile(Long id, String mobile) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.mobile.equalsIgnoreCase(mobile));
-        if (!Objects.isNull(id)) {
+        if (Objects.nonNull(id)) {
             query.and(qUser.id.ne(id));
         }
         return userRepository.exists(query);

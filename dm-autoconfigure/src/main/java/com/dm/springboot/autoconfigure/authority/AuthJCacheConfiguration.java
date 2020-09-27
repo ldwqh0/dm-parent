@@ -25,7 +25,7 @@ public class AuthJCacheConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        if (!Objects.isNull(jCacheManager)) {
+        if (Objects.nonNull(jCacheManager)) {
             MutableConfiguration<String, Object> configuration = new MutableConfiguration<String, Object>()
                 .setTypes(String.class, Object.class)
                 .setStoreByValue(false)

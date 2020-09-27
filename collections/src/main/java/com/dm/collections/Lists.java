@@ -93,7 +93,7 @@ public final class Lists {
      * @param <E>      元素类型
      */
     public static <E> void addAll(List<E> list, E... elements) {
-        if (!Objects.isNull(elements)) {
+        if (Objects.nonNull(elements)) {
             list.addAll(Arrays.asList(elements));
         }
     }

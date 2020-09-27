@@ -24,7 +24,7 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
     protected DataSource determineTargetDataSource() {
         DataSourceProperties key = determineCurrentLookupKey();
         DataSource resolved = null;
-        if (!Objects.isNull(key)) {
+        if (Objects.nonNull(key)) {
             resolved = dataSources.get(key);
             if (resolved == null) {
                 resolved = add(key);
@@ -82,7 +82,7 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
         DataSource exist = dataSources.get(properties);
         if (exist == null) {
             DataSource dataSource = createDataSource(properties);
-            if (!Objects.isNull(dataSource)) {
+            if (Objects.nonNull(dataSource)) {
                 dataSources.put(properties, dataSource);
                 return dataSource;
             }
