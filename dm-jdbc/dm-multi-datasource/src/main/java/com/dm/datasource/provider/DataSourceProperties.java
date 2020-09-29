@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public final class DataSourceProperties implements Serializable {
 
@@ -69,4 +70,26 @@ public final class DataSourceProperties implements Serializable {
         this.additionalProperties.put(key, value);
     }
 
+//    public String getStringKey() {
+//
+//    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DataSourceProperties that = (DataSourceProperties) o;
+        return dbType == that.dbType &&
+            Objects.equals(host, that.host) &&
+            Objects.equals(port, that.port) &&
+            Objects.equals(username, that.username) &&
+            Objects.equals(password, that.password) &&
+            Objects.equals(database, that.database) &&
+            Objects.equals(additionalProperties, that.additionalProperties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dbType, host, port, username, password, database, additionalProperties);
+    }
 }
