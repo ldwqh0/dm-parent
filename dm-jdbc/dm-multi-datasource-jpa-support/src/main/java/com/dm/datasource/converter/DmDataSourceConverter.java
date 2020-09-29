@@ -37,35 +37,27 @@ public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSour
     }
 
     public DataSourceProperties toDataSourceProperties(DmDataSourceDto from) {
-        DataSourceProperties properties = new DataSourceProperties(
+        return new DataSourceProperties(
             from.getDbType(),
             from.getHost(),
             from.getPort(),
             from.getUsername(),
             from.getPassword(),
-            from.getDatabase()
+            from.getDatabase(),
+            from.getProperties()
         );
-        Map<String, String> additionalProperties = from.getProperties();
-        if (Maps.isNotEmpty(additionalProperties)) {
-            additionalProperties.forEach(properties::setProperty);
-        }
-        return properties;
     }
 
     public DataSourceProperties toDataSourceProperties(DmDataSource model) {
-        DataSourceProperties properties = new DataSourceProperties(
+        return new DataSourceProperties(
             model.getDbType(),
             model.getHost(),
             model.getPort(),
             model.getUsername(),
             model.getPassword(),
-            model.getDatabase()
+            model.getDatabase(),
+            model.getProperties()
         );
-        Map<String, String> additionalProperties = model.getProperties();
-        if (Maps.isNotEmpty(additionalProperties)) {
-            additionalProperties.forEach(properties::setProperty);
-        }
-        return properties;
     }
 
     public DmDataSourceDto toSimpleDto(DmDataSource model) {

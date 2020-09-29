@@ -18,16 +18,20 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
 
     private DataSource defaultTargetDataSource;
 
-    private final Map<DataSourceProperties, DataSource> dataSources = new ConcurrentHashMap<>();
+    private final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
 
     @Override
     protected DataSource determineTargetDataSource() {
-        DataSourceProperties key = determineCurrentLookupKey();
+        DataSourceProperties properties = determineCurrentLookupKey();
+        String key = properties.getKey().intern();
         DataSource resolved = null;
         if (Objects.nonNull(key)) {
-            resolved = dataSources.get(key);
-            if (resolved == null) {
-                resolved = add(key);
+            if ((resolved = dataSources.get(key)) == null) {
+                synchronized (key) {
+                    if ((resolved = dataSources.get(key)) == null) {
+                        resolved = add(properties);
+                    }
+                }
             }
         }
         return Objects.isNull(resolved) ? defaultTargetDataSource : resolved;
@@ -78,13 +82,17 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
     }
 
     @Override
-    public synchronized DataSource add(DataSourceProperties properties) {
-        DataSource exist = dataSources.get(properties);
+    public DataSource add(DataSourceProperties properties) {
+        final String key = properties.getKey().intern();
+        DataSource exist = dataSources.get(key);
         if (exist == null) {
-            DataSource dataSource = createDataSource(properties);
-            if (Objects.nonNull(dataSource)) {
-                dataSources.put(properties, dataSource);
-                return dataSource;
+            synchronized (key) {
+                exist = dataSources.get(key);
+                if (exist == null) {
+                    DataSource dataSource = createDataSource(properties);
+                    dataSources.put(key, dataSource);
+                    return dataSource;
+                }
             }
         }
         return null;
