@@ -35,10 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -89,6 +86,28 @@ public class FileController {
         return fileInfoConverter.toDto(file_);
     }
 
+    @GetMapping(params = {"filename", "sha256", "md5"})
+    public FileInfoDto findByNameAndHash(@RequestParam("filename") String filename,
+                                         @RequestParam("sha256") String sha256,
+                                         @RequestParam("md5") String md5) {
+        return fileService.findByNameAndHash(filename, sha256, md5).map(fileInfoConverter::toDto).orElse(null);
+    }
+
+    @PostMapping(params = {"filename", "sha256", "md5"})
+    public FileInfoDto upload(@RequestParam("md5") String md5,
+                              @RequestParam("sha256") String sha256,
+                              @RequestParam("filename") String filename,
+                              @RequestParam("file") MultipartFile chunkFile) {
+        // TODO 待处理
+        Optional<FileInfo> file = fileService.findByNameAndHash(filename, sha256, md5);
+        if (file.isPresent()) {
+            // TODO 如果文件已经存在，将上传的信息添加到文件的尾部
+        } else {
+            // TODO　如果文件不存在，保存新的文件
+        }
+        return null;
+    }
+
     /**
      * 分块上传文件
      *
@@ -106,9 +125,9 @@ public class FileController {
         @RequestHeader("file-id") String tempId,
         @RequestHeader("chunk-count") int chunkCount,
         @RequestParam("filename") String filename,
-        @RequestParam("file") MultipartFile mFile) throws Exception {
+        @RequestParam("file") MultipartFile chunkFile) throws Exception {
         // 保存临时文件
-        mFile.transferTo(getTempChunkPath(tempId, chunkIndex));
+        chunkFile.transferTo(getTempChunkPath(tempId, chunkIndex));
         // 如果临时文件上传完成，组装所有的文件
         if (chunkIndex == chunkCount - 1) {
             long length = 0;
@@ -151,6 +170,10 @@ public class FileController {
         return target;
     }
 
+    // X-Forwarded-For: <client>, <proxy1>, <proxy2> 获取到请求发起的最初ip地址
+    // X-Forwarded-Host: <host> The X-Forwarded-Host (XFH) 是一个事实上的标准首部，用来确定客户端发起的请求中使用  Host  指定的初始域名。
+    // X-Forwarded-Proto: <protocol> 是一个事实上的标准首部，用来确定客户端与代理服务器或者负载均衡服务器之间的连接所采用的传输协议（HTTP 或 HTTPS）
+
     /**
      * 包含X-Real-IP请求头的请求全部走这个地方<br >
      * 这代表是一个从nginx转发的请求
@@ -164,7 +187,8 @@ public class FileController {
         "image/webp",
         "image/*",
         "*/*",
-        "!application/json", "!text/plain"})
+        "!application/json",
+        "!text/plain"})
     public ResponseEntity<?> preview(
         @PathVariable("id") UUID id) {
         return fileService.findById(id)

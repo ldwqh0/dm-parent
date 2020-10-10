@@ -75,7 +75,7 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
 
     @Override
     public Resource getResource(String filename, Long start, Long end, String... parents) {
-        return new FileSystemResource(getPath(filename, parents));
+        return getResource(filename, parents);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
      * 初始化的时候，创建目录
      */
     @PostConstruct
-    public void initStorage() throws Exception {
+    public void init() throws Exception {
         String path = config.getPath();
         String tempPath = config.getTempPath();
         Files.createDirectories(Paths.get(path));

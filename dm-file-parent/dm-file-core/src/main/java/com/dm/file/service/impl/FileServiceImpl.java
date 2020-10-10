@@ -81,6 +81,11 @@ public class FileServiceImpl implements FileInfoService {
     }
 
     @Override
+    public Optional<FileInfo> findByNameAndHash(String filename, String sha256, String md5) {
+        return fileInfoRepository.findByFilenameAndSha256AndMd5(filename, sha256, md5);
+    }
+
+    @Override
     public List<FileInfo> findById(List<UUID> files) {
         return fileInfoRepository.findAllById(files);
     }

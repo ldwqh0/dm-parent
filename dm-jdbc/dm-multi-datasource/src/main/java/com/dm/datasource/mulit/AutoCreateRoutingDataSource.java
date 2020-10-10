@@ -47,6 +47,7 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
             dataSource.setJdbcUrl(provider.getUrl(properties));
             dataSource.setUsername(properties.getUsername());
             dataSource.setPassword(properties.getPassword());
+            dataSource.setMinimumIdle(0);
             dataSource.setConnectionTestQuery("select 1");
             return dataSource;
         }

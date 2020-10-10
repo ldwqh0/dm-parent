@@ -58,5 +58,7 @@ public interface FileInfoService {
      */
     FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException;
 
+    Optional<FileInfo> findByNameAndHash(String filename, String sha256, String md5);
+
     List<FileInfo> findById(List<UUID> files);
 }

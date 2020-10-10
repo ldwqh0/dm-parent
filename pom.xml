@@ -206,11 +206,6 @@
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
-        <artifactId>dm-security-oauth2-authorization-jpa-support</artifactId>
-        <version>${dm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dm</groupId>
         <artifactId>dm-security-oauth2-resource</artifactId>
         <version>${dm.version}</version>
       </dependency>
