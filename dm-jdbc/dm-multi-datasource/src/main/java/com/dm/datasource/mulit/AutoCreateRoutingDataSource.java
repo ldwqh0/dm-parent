@@ -23,9 +23,9 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
     @Override
     protected DataSource determineTargetDataSource() {
         DataSourceProperties properties = determineCurrentLookupKey();
-        String key = properties.getKey().intern();
         DataSource resolved = null;
-        if (Objects.nonNull(key)) {
+        if (Objects.nonNull(properties)) {
+            String key = properties.getKey().intern();
             if ((resolved = dataSources.get(key)) == null) {
                 synchronized (key) {
                     if ((resolved = dataSources.get(key)) == null) {
@@ -70,11 +70,13 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
 
     @Override
     public void closeAndRemove(DataSourceProperties properties) {
-        DataSource dataSource = dataSources.get(properties);
         try {
-            dataSources.remove(properties);
-            if (dataSource instanceof HikariDataSource) {
-                ((HikariDataSource) dataSource).close();
+            if (properties != null) {
+                String key = properties.getKey();
+                DataSource dataSource = dataSources.remove(key);
+                if (Objects.nonNull(dataSource) && dataSource instanceof HikariDataSource) {
+                    ((HikariDataSource) dataSource).close();
+                }
             }
         } catch (Exception e) {
             // 尝试关闭连接
