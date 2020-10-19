@@ -1,12 +1,11 @@
 package com.dm.uap.dto;
 
-import java.io.Serializable;
-
-import javax.validation.constraints.Min;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Data;
+
+import javax.validation.constraints.Min;
+import java.io.Serializable;
 
 @Data
 @JsonInclude(value = Include.NON_EMPTY)

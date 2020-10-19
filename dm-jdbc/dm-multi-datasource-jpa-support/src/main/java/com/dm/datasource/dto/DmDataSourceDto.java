@@ -1,7 +1,9 @@
 package com.dm.datasource.dto;
 
 import com.dm.datasource.provider.DataSourceProperties.DbTypes;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -16,6 +18,8 @@ public class DmDataSourceDto implements Serializable {
     private String host;
     private Integer port;
     private String username;
+
+    @Setter(onMethod_ = {@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)})
     private String password;
     private String database;
     private Long version;

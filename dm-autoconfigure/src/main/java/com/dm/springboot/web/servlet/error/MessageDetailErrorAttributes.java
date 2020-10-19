@@ -1,15 +1,5 @@
 package com.dm.springboot.web.servlet.error;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.core.Ordered;
@@ -22,14 +12,22 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * 异常处理类，代码源自{@link DefaultErrorAttributes}这里调整了一下异常信息的产生顺序<br>
  * 因为undertow和tomcat处理异常信息的逻辑不一致，导致前端显示的异常信息也不一致，<br>
  * 这里通过调整解析异常信息的顺序来处理两者的不一致<br>
  * 具体在 line 114
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public class MessageDetailErrorAttributes implements ErrorAttributes, HandlerExceptionResolver, Ordered {
 
@@ -47,7 +45,7 @@ public class MessageDetailErrorAttributes implements ErrorAttributes, HandlerExc
 
     /**
      * Create a new {@link DefaultErrorAttributes} instance.
-     * 
+     *
      * @param includeException whether to include the "exception" attribute
      */
     public MessageDetailErrorAttributes(boolean includeException) {
@@ -61,7 +59,7 @@ public class MessageDetailErrorAttributes implements ErrorAttributes, HandlerExc
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
-            Exception ex) {
+                                         Exception ex) {
         storeErrorAttributes(request, ex);
         return null;
     }
@@ -97,7 +95,7 @@ public class MessageDetailErrorAttributes implements ErrorAttributes, HandlerExc
     }
 
     private void addErrorDetails(Map<String, Object> errorAttributes, WebRequest webRequest,
-            boolean includeStackTrace) {
+                                 boolean includeStackTrace) {
         Throwable error = getError(webRequest);
         if (error != null) {
             while (error instanceof ServletException && error.getCause() != null) {
@@ -115,7 +113,7 @@ public class MessageDetailErrorAttributes implements ErrorAttributes, HandlerExc
         if (errorAttributes.get("message") == null) {
             Object message = getAttribute(webRequest, "javax.servlet.error.message");
             if ((!StringUtils.isEmpty(message) || errorAttributes.get("message") == null)
-                    && !(error instanceof BindingResult)) {
+                && !(error instanceof BindingResult)) {
                 errorAttributes.put("message", StringUtils.isEmpty(message) ? "No message available" : message);
             }
         }
@@ -130,7 +128,7 @@ public class MessageDetailErrorAttributes implements ErrorAttributes, HandlerExc
         if (result.hasErrors()) {
             errorAttributes.put("errors", result.getAllErrors());
             errorAttributes.put("message", "Validation failed for object='" + result.getObjectName()
-                    + "'. Error count: " + result.getErrorCount());
+                + "'. Error count: " + result.getErrorCount());
         } else {
             errorAttributes.put("message", "No errors");
         }

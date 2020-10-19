@@ -127,14 +127,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> get(Long id) {
+    public Optional<User> get(long id) {
         return userRepository.findById(id);
     }
 
     @Override
     @Transactional
     @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
-    public User delete(Long id) {
+    public User delete(long id) {
         Optional<User> user = userRepository.findById(id);
         user.ifPresent(a -> userRepository.deleteById(id));
         return user.orElseThrow(DataNotExistException::new);
@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkPassword(Long id, String password) {
+    public boolean checkPassword(long id, String password) {
         User user = userRepository.getOne(id);
         return !passwordEncoder.matches(password, user.getPassword());
     }
@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
-    public User repassword(Long id, String password) {
+    public User repassword(long id, String password) {
         User user = userRepository.getOne(id);
         user.setPassword(passwordEncoder.encode(password));
         return user;
@@ -245,6 +245,16 @@ public class UserServiceImpl implements UserService {
             query.and(qUser.id.ne(id));
         }
         return userRepository.exists(query);
+    }
+
+    @Override
+    @Transactional
+    public User patch(long id, UserDto user) {
+        User originUser = userRepository.getOne(id);
+        if (Objects.nonNull(user.getEnabled())) {
+            originUser.setEnabled(user.getEnabled());
+        }
+        return userRepository.save(originUser);
     }
 
     @Override
