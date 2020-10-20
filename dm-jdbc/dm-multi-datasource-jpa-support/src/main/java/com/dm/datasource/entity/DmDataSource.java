@@ -47,8 +47,4 @@ public class DmDataSource extends AbstractEntity {
     @Basic(fetch = FetchType.LAZY)
     private String remark;
 
-    @Column(name = "version_")
-    @Version
-    private Long version;
-
 }

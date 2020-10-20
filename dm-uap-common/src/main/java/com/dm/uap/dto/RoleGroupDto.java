@@ -12,6 +12,10 @@ import java.io.Serializable;
 public class RoleGroupDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public interface ReferenceBy {
+
+    }
+
     /**
      * 任何时候，不能修改或者编辑内置角色组
      */

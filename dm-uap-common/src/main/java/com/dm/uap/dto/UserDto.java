@@ -2,7 +2,6 @@ package com.dm.uap.dto;
 
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
-import com.dm.common.validation.groups.ReferenceGroup;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -34,11 +33,15 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
 
     }
 
+    public interface ReferenceBy {
+
+    }
+
     private static final long serialVersionUID = 3115204474399309007L;
     /**
      * 用户Id
      */
-    @NotNull(groups = ReferenceGroup.class)
+    @NotNull(groups = ReferenceBy.class)
     private Long id;
 
     @NotNull(groups = {New.class, Update.class})

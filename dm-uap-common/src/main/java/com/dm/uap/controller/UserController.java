@@ -9,7 +9,6 @@ import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -34,7 +33,6 @@ public class UserController {
 
     private final UserConverter userConverter;
 
-    @Autowired
     public UserController(UserService userService, UserConverter userConverter) {
         this.userService = userService;
         this.userConverter = userConverter;
@@ -58,7 +56,7 @@ public class UserController {
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable("id") @Min(3) Long id) {
+    public void delete(@PathVariable("id") @Min(value = 3, message = "不能删除内置用户") Long id) {
         userService.delete(id);
     }
 
@@ -123,7 +121,7 @@ public class UserController {
     @PutMapping("{id}")
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
-    public UserDto update(@PathVariable("id") long id, @Validated({UserDto.Update.class}) @RequestBody UserDto userDto) {
+    public UserDto update(@PathVariable("id") long id, @Validated({UserDto.Update.class, DepartmentDto.ReferenceBy.class, RoleDto.ReferenceBy.class}) @RequestBody UserDto userDto) {
         if (id == 2) {
             throw new DataValidateException("不能修改系统内置匿名用户");
         }
@@ -136,9 +134,9 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     public UserDto patchUpdate(@PathVariable("id") @Min(value = 3, message = "不能修改系统内置匿名用户") long id,
                                @Validated({UserDto.Patch.class, DepartmentDto.ReferenceBy.class, RoleDto.ReferenceBy.class}) @RequestBody UserDto user) {
-        if (id == 2) {
-            throw new DataValidateException("不能修改系统内置匿名用户");
-        }
+//        if (id == 2) {
+//            throw new DataValidateException("不能修改系统内置匿名用户");
+//        }
         return userConverter.toDto(userService.patch(id, user));
     }
 

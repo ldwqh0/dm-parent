@@ -79,8 +79,9 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
                 }
             }
         } catch (Exception e) {
-            // 尝试关闭连接
-            e.printStackTrace();
+            if (logger.isErrorEnabled()) {
+                logger.error("尝试关闭连接池时发生错误", e);
+            }
         }
     }
 

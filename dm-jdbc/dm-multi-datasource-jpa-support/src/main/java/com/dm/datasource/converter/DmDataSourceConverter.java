@@ -32,7 +32,6 @@ public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSour
         model.setProperties(source.getProperties());
         model.setRemark(source.getRemark());
         model.setUsername(source.getUsername());
-        model.setVersion(source.getVersion());
         return model;
     }
 

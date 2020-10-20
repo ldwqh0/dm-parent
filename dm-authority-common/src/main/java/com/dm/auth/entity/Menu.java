@@ -53,7 +53,7 @@ public class Menu extends AbstractEntity {
     /**
      * 菜单表示的地址
      */
-    @Column(name = "url_")
+    @Column(name = "url_", length = 1000)
     private String url;
 
     /**
