@@ -1,20 +1,5 @@
 package com.dm.springboot.autoconfigure.authority;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
@@ -27,11 +12,24 @@ import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
 import com.dm.collections.Maps;
 import com.dm.security.authentication.UriResource.MatchType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@ConditionalOnClass({ Authority.class })
-@EntityScan({ "com.dm.auth" })
-@EnableJpaRepositories({ "com.dm.auth" })
-@ComponentScan({ "com.dm.auth" })
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@ConditionalOnClass({Authority.class})
+@EntityScan({"com.dm.auth"})
+@EnableJpaRepositories({"com.dm.auth"})
+@ComponentScan({"com.dm.auth"})
 @Import(AuthJCacheConfiguration.class)
 public class AuthAutoConfiguration {
 
@@ -88,8 +86,8 @@ public class AuthAutoConfiguration {
                 resourceAuthority.setRoleId(roleId);
                 resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
                 Map<Long, ResourceOperation> operations = Maps
-                        .entry(resource.getId(), ResourceOperation.accessAll())
-                        .build();
+                    .entry(resource.getId(), ResourceOperation.accessAll())
+                    .build();
                 resourceAuthority.setResourceAuthorities(operations);
                 authorityService.save(resourceAuthority);
             });
@@ -106,6 +104,7 @@ public class AuthAutoConfiguration {
             menu.setEnabled(Boolean.TRUE);
             menu.setTitle("首页");
             menu.setUrl("/");
+            menu.setType(Menu.MenuType.COMPONENT);
             menuService.save(menu);
         }
     }
