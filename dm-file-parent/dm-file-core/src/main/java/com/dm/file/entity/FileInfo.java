@@ -1,42 +1,35 @@
 package com.dm.file.entity;
 
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.Parameter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.domain.Auditable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.dm.common.entity.Audit;
 import com.dm.common.entity.CreateAudit;
 import com.dm.common.entity.ModifyAudit;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Auditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "dm_file_", indexes = {
-        @Index(name = "idx_dm_file_created_date_", columnList = "created_date_"),
-        @Index(name = "idx_dm_file_created_user_id_", columnList = "created_user_id_"),
-        @Index(name = "idx_dm_file_created_user_name_", columnList = "created_user_name_")
+    @Index(name = "idx_dm_file_created_date_", columnList = "created_date_"),
+    @Index(name = "idx_dm_file_created_user_id_", columnList = "created_user_id_"),
+    @Index(name = "idx_dm_file_created_user_name_", columnList = "created_user_name_"),
+    @Index(name = "idx_dm_file_hash", columnList = "file_name_,sha256_,md5_")
 })
-@JsonIgnoreProperties(value = { "lastModifiedBy", "createdBy", "createdDate", "lastModifiedDate" }, allowGetters = true)
+@JsonIgnoreProperties(value = {"lastModifiedBy", "createdBy", "createdDate", "lastModifiedDate"}, allowGetters = true)
 public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializable {
     private static final long serialVersionUID = -914974010332311193L;
 
@@ -45,7 +38,7 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
     @Type(type = "uuid-char")
     @Column(name = "id_", length = 36)
     @GenericGenerator(name = "ordered-uuid", strategy = "org.hibernate.id.UUIDGenerator", parameters = {
-            @Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy")
+        @Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy")
     })
     private UUID id;
 
@@ -72,6 +65,18 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
      */
     @Column(name = "path_", unique = true)
     private String path;
+
+    /**
+     * 文件的sha256校验码
+     */
+    @Column(name = "sha256_", length = 64)
+    private String sha256;
+
+    /**
+     * 文件的md5校验码
+     */
+    @Column(name = "md5_", length = 32)
+    private String md5;
 
     /**
      * 文件大小
@@ -159,5 +164,21 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getSha256() {
+        return sha256;
+    }
+
+    public void setSha256(String sha256) {
+        this.sha256 = sha256;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -25,7 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping({"menuAuthorities", "p/menuAuthorities"})
+    @RequestMapping({"menuAuthorities", "p/menuAuthorities"})
 public class MenuAuthorityController {
 
     private final AuthorityService authorityService;
@@ -69,6 +70,7 @@ public class MenuAuthorityController {
      * @return 角色的菜单授权
      */
     @GetMapping("{roleName}")
+    @Transactional(readOnly = true)
     public MenuAuthorityDto get(@PathVariable("roleName") String roleName) {
         return authorityService.findByRoleName(roleName).map(authorityConverter::toMenuAuthorityDto)
             .orElseThrow(DataNotExistException::new);

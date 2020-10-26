@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -77,6 +78,16 @@ public class FileServiceImpl implements FileInfoService {
         } else {
             throw new FileStorageException();
         }
+    }
+
+    @Override
+    public Optional<FileInfo> findByNameAndHash(String filename, String sha256, String md5) {
+        return fileInfoRepository.findByFilenameAndSha256AndMd5(filename, sha256, md5);
+    }
+
+    @Override
+    public List<FileInfo> findById(List<UUID> files) {
+        return fileInfoRepository.findAllById(files);
     }
 
 }

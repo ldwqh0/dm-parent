@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
  * @author LiDong
  *
  */
-public class ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerHttpRequestReactiveAuthorizationManager {
+public class  ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerHttpRequestReactiveAuthorizationManager {
 
     private ServerOAuth2AuthorizedClientRepository authorizedClientRepository = null;
 

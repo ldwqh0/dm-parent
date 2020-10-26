@@ -24,6 +24,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("roles")
+@Validated
 public class RoleController {
 
     private final RoleService roleService;
@@ -40,7 +41,7 @@ public class RoleController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
-    public RoleDto save(@RequestBody @Validated RoleDto roleDto) {
+    public RoleDto save(@RequestBody @Validated(RoleDto.New.class) RoleDto roleDto) {
         // 不允许将角色添加到内置分组
 //        if ("内置分组".equals(roleDto.getGroup().getName())) {
 //            throw new DataValidateException("不允许修改内置组定义");
@@ -68,7 +69,7 @@ public class RoleController {
     @PutMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
-    public RoleDto update(@PathVariable("id") @Min(4) long id, @RequestBody @Validated RoleDto roleDto) {
+    public RoleDto update(@PathVariable("id") @Min(4) long id, @RequestBody @Validated({RoleDto.Update.class}) RoleDto roleDto) {
         // 内置分组角色不允许修改
         roleService.get(id)
             .filter(role -> "内置分组".equals(role.getGroup().getName()))
@@ -89,17 +90,18 @@ public class RoleController {
         return roleConverter.toDto(roleService.get(id).orElseThrow(DataNotExistException::new));
     }
 
+    /**
+     * 删除指定的角色，不能删除系统内置的角色<br>
+     * 内置的三个角色不允许被修改
+     *
+     * @param id 待删除的角色的ID
+     */
     @ApiOperation("删除角色")
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable("id") @Min(4) long id) {
         // 内置分组角色不允许修改
-        roleService.get(id)
-            .filter(role -> "内置分组".equals(role.getGroup().getName()))
-            .ifPresent(role -> {
-                throw new DataValidateException("不允许修改内置分组");
-            });
         roleService.delete(id);
     }
 

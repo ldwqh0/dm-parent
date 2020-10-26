@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkUsernameExists(Long id, String username) {
         BooleanBuilder builder = new BooleanBuilder();
-        if (!Objects.isNull(id)) {
+        if (Objects.nonNull(id)) {
             builder.and(qUser.id.ne(id));
         }
 
@@ -127,14 +127,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> get(Long id) {
+    public Optional<User> get(long id) {
         return userRepository.findById(id);
     }
 
     @Override
     @Transactional
     @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
-    public User delete(Long id) {
+    public User delete(long id) {
         Optional<User> user = userRepository.findById(id);
         user.ifPresent(a -> userRepository.deleteById(id));
         return user.orElseThrow(DataNotExistException::new);
@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkPassword(Long id, String password) {
+    public boolean checkPassword(long id, String password) {
         User user = userRepository.getOne(id);
         return !passwordEncoder.matches(password, user.getPassword());
     }
@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
-    public User repassword(Long id, String password) {
+    public User repassword(long id, String password) {
         User user = userRepository.getOne(id);
         user.setPassword(passwordEncoder.encode(password));
         return user;
@@ -180,14 +180,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
-        if (!Objects.isNull(department)) {
+        if (Objects.nonNull(department)) {
             Department dep = dpr.getOne(department);
             query.and(qUser.posts.containsKey(dep));
         }
-        if (!Objects.isNull(role)) {
+        if (Objects.nonNull(role)) {
             query.and(qUser.roles.any().id.eq(role));
         }
-        if (!Objects.isNull(roleGroup)) {
+        if (Objects.nonNull(roleGroup)) {
             query.and(qUser.roles.any().group.id.eq(roleGroup));
         }
         if (StringUtils.isNotBlank(key)) {
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
     public boolean userExistsByUsername(Long id, String username) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.username.equalsIgnoreCase(username));
-        if (!Objects.isNull(id)) {
+        if (Objects.nonNull(id)) {
             query.and(qUser.id.ne(id));
         }
         return userRepository.exists(query);
@@ -231,7 +231,7 @@ public class UserServiceImpl implements UserService {
     public boolean userExistsByEmail(Long id, String email) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.email.equalsIgnoreCase(email));
-        if (!Objects.isNull(id)) {
+        if (Objects.nonNull(id)) {
             query.and(qUser.id.ne(id));
         }
         return userRepository.exists(query);
@@ -241,10 +241,20 @@ public class UserServiceImpl implements UserService {
     public boolean userExistsByMobile(Long id, String mobile) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.mobile.equalsIgnoreCase(mobile));
-        if (!Objects.isNull(id)) {
+        if (Objects.nonNull(id)) {
             query.and(qUser.id.ne(id));
         }
         return userRepository.exists(query);
+    }
+
+    @Override
+    @Transactional
+    public User patch(long id, UserDto user) {
+        User originUser = userRepository.getOne(id);
+        if (Objects.nonNull(user.getEnabled())) {
+            originUser.setEnabled(user.getEnabled());
+        }
+        return userRepository.save(originUser);
     }
 
     @Override

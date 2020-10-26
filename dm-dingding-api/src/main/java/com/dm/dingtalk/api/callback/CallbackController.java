@@ -100,7 +100,7 @@ public class CallbackController {
                 return ResponseEntity.ok(okResponse());
             } else if (Maps.isNotEmpty(handlers)) {
                 Consumer<Event> consumer = handlers.get(eventType);
-                if (!Objects.isNull(consumer)) {
+                if (Objects.nonNull(consumer)) {
                     consumer.accept(event);
                 }
             }

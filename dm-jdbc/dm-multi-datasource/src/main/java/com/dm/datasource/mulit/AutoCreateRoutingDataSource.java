@@ -18,16 +18,20 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
 
     private DataSource defaultTargetDataSource;
 
-    private final Map<DataSourceProperties, DataSource> dataSources = new ConcurrentHashMap<>();
+    private final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
 
     @Override
     protected DataSource determineTargetDataSource() {
-        DataSourceProperties key = determineCurrentLookupKey();
+        DataSourceProperties properties = determineCurrentLookupKey();
         DataSource resolved = null;
-        if (!Objects.isNull(key)) {
-            resolved = dataSources.get(key);
-            if (resolved == null) {
-                resolved = add(key);
+        if (Objects.nonNull(properties)) {
+            String key = properties.getKey().intern();
+            if ((resolved = dataSources.get(key)) == null) {
+                synchronized (key) {
+                    if ((resolved = dataSources.get(key)) == null) {
+                        resolved = add(properties);
+                    }
+                }
             }
         }
         return Objects.isNull(resolved) ? defaultTargetDataSource : resolved;
@@ -43,6 +47,7 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
             dataSource.setJdbcUrl(provider.getUrl(properties));
             dataSource.setUsername(properties.getUsername());
             dataSource.setPassword(properties.getPassword());
+            dataSource.setMinimumIdle(0);
             dataSource.setConnectionTestQuery("select 1");
             return dataSource;
         }
@@ -65,26 +70,33 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
 
     @Override
     public void closeAndRemove(DataSourceProperties properties) {
-        DataSource dataSource = dataSources.get(properties);
         try {
-            dataSources.remove(properties);
-            if (dataSource instanceof HikariDataSource) {
-                ((HikariDataSource) dataSource).close();
+            if (properties != null) {
+                String key = properties.getKey();
+                DataSource dataSource = dataSources.remove(key);
+                if (Objects.nonNull(dataSource) && dataSource instanceof HikariDataSource) {
+                    ((HikariDataSource) dataSource).close();
+                }
             }
         } catch (Exception e) {
-            // 尝试关闭连接
-            e.printStackTrace();
+            if (logger.isErrorEnabled()) {
+                logger.error("尝试关闭连接池时发生错误", e);
+            }
         }
     }
 
     @Override
-    public synchronized DataSource add(DataSourceProperties properties) {
-        DataSource exist = dataSources.get(properties);
+    public DataSource add(DataSourceProperties properties) {
+        final String key = properties.getKey().intern();
+        DataSource exist = dataSources.get(key);
         if (exist == null) {
-            DataSource dataSource = createDataSource(properties);
-            if (!Objects.isNull(dataSource)) {
-                dataSources.put(properties, dataSource);
-                return dataSource;
+            synchronized (key) {
+                exist = dataSources.get(key);
+                if (exist == null) {
+                    DataSource dataSource = createDataSource(properties);
+                    dataSources.put(key, dataSource);
+                    return dataSource;
+                }
             }
         }
         return null;

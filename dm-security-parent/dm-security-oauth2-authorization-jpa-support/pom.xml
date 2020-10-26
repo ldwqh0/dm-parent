@@ -21,7 +21,6 @@
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>com.dm</groupId>
       <artifactId>dm-common</artifactId>

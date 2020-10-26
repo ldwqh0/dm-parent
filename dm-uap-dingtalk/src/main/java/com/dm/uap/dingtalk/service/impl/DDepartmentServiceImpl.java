@@ -87,7 +87,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         });
         // 构建系统组织机构的层级关系
         dDepartments.forEach(dDep -> {
-            if (!Objects.isNull(dDep.getParentid())) {
+            if (Objects.nonNull(dDep.getParentid())) {
                 DDepartment dParent = dDepartmentRepository.getOne(dDep.getCorpId(), dDep.getParentid());
                 dDep.getDepartment().setParent(dParent.getDepartment());
             }

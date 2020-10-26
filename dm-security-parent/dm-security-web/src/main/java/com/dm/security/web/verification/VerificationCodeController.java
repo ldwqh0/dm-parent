@@ -1,5 +1,9 @@
 package com.dm.security.web.verification;
 
+import com.dm.security.verification.VerificationCode;
+import com.dm.security.verification.VerificationCodeGenerator;
+import com.dm.security.verification.VerificationCodeStorage;
+import com.google.code.kaptcha.Producer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -9,13 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dm.security.verification.VerificationCode;
-import com.dm.security.verification.VerificationCodeGenerator;
-import com.dm.security.verification.VerificationCodeStorage;
-import com.google.code.kaptcha.Producer;
-
-import static org.springframework.http.MediaType.*;
-
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.imageio.ImageIO;
+import static org.springframework.http.MediaType.*;
 
 @RestController
 @RequestMapping("verificationCode")
@@ -44,14 +42,14 @@ public class VerificationCodeController {
 
     /**
      * 生成验证码，将验证码数据以Base64格式输出
-     * 
+     *
      * @return
      */
     @GetMapping(produces = {
-            TEXT_PLAIN_VALUE,
-            APPLICATION_JSON_VALUE
+        TEXT_PLAIN_VALUE,
+        APPLICATION_JSON_VALUE
     })
-    public VerificationCode generate() {
+    public VerificationCode generate() throws IOException {
         VerificationCode code = validateCodeGenerator.generate(6);
         BufferedImage img = generateImage(code.getCode());
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
@@ -60,18 +58,17 @@ public class VerificationCodeController {
             code.setImgData(imgData);
             codeStorage.save(code);
             return code;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
     @GetMapping(produces = {
-            IMAGE_GIF_VALUE,
-            IMAGE_JPEG_VALUE,
-            IMAGE_PNG_VALUE,
-            "image/*"
+        IMAGE_GIF_VALUE,
+        IMAGE_JPEG_VALUE,
+        IMAGE_PNG_VALUE,
+        "image/*"
     })
-    public ResponseEntity<InputStreamResource> generate2() {
+    public ResponseEntity<InputStreamResource> generate2() throws IOException {
+        // TODO 这里也不对
         VerificationCode code = validateCodeGenerator.generate(6);
         code.setId(null);
         BufferedImage img = generateImage(code.getCode());
@@ -80,8 +77,6 @@ public class VerificationCodeController {
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             codeStorage.save(code);
             return ResponseEntity.ok(new InputStreamResource(is));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -99,8 +94,8 @@ public class VerificationCodeController {
 
     @GetMapping("validation")
     public Map<String, Object> checkCode(
-            @RequestParam(value = "id", required = false) String verifyId,
-            @RequestParam("code") String verifyCode) {
+        @RequestParam(value = "id", required = false) String verifyId,
+        @RequestParam("code") String verifyCode) {
         Map<String, Object> result = new HashMap<>();
         VerificationCode code = codeStorage.get(verifyId);
         if (Objects.isNull(code) || ZonedDateTime.now().isAfter(code.getInvalidateTime())) {
@@ -117,8 +112,8 @@ public class VerificationCodeController {
 
     private boolean validate(String verifyId, String verifyCode) {
         VerificationCode savedCode = codeStorage.get(verifyId);
-        return (!Objects.isNull(savedCode))
-                && StringUtils.isNotBlank(savedCode.getCode())
-                && StringUtils.equals(savedCode.getCode(), verifyCode);
+        return (Objects.nonNull(savedCode))
+            && StringUtils.isNotBlank(savedCode.getCode())
+            && StringUtils.equals(savedCode.getCode(), verifyCode);
     }
 }

@@ -52,17 +52,18 @@ public class MenuServiceImpl implements MenuService {
         preCheck(menuDto);
         final Menu menu = new Menu();
         menuConverter.copyProperties(menu, menuDto);
-        MenuDto parentDto = menuDto.getParent();
+
         // 在保存新菜单时，继承父菜单的权限设置
-        if (!Objects.isNull(parentDto) && !Objects.isNull(parentDto.getId())) {
-            Menu parent = menuRepository.getOne(parentDto.getId());
-            menu.setParent(parent);
-            // 添加权限信息
-            List<Authority> authorities = authorityRepository.findByMenu(parent);
-            if (CollectionUtils.isNotEmpty(authorities)) {
-                authorities.stream().map(Authority::getMenus).forEach(menus -> menus.add(menu));
-            }
-        }
+        menuDto.getParent().map(MenuDto::getId)
+            .map(menuRepository::getOne)
+            .ifPresent(parent -> {
+                menu.setParent(parent);
+                // 添加权限信息
+                List<Authority> authorities = authorityRepository.findByMenu(parent);
+                if (CollectionUtils.isNotEmpty(authorities)) {
+                    authorities.stream().map(Authority::getMenus).forEach(menus -> menus.add(menu));
+                }
+            });
         Menu menuResult = menuRepository.save(menu);
         menuResult.setOrder(menu.getId());
         return menuResult;
@@ -75,11 +76,11 @@ public class MenuServiceImpl implements MenuService {
         preCheck(menuDto);
         Menu menu = menuRepository.getOne(id);
         menuConverter.copyProperties(menu, menuDto);
-        if (!Objects.isNull(menuDto.getParent()) && !Objects.isNull(menuDto.getParent().getId())) {
-            menu.setParent(menuRepository.getOne(menuDto.getParent().getId()));
-        } else {
-            menu.setParent(null);
-        }
+        menu.setParent(null);
+        menuDto.getParent()
+            .map(MenuDto::getId)
+            .map(menuRepository::getOne)
+            .ifPresent(menu::setParent);
         menuRepository.save(menu);
         return menu;
     }
@@ -129,7 +130,7 @@ public class MenuServiceImpl implements MenuService {
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu patch(long id, MenuDto _menu) {
         Menu menu = menuRepository.getOne(id);
-        if (!Objects.isNull(_menu.getEnabled())) {
+        if (Objects.nonNull(_menu.getEnabled())) {
             menu.setEnabled(_menu.getEnabled());
         }
         return menu;
@@ -188,13 +189,11 @@ public class MenuServiceImpl implements MenuService {
 
     /**
      * 在保存前对菜单进行校验
-     *
      */
     private void preCheck(MenuDto menu) {
-        if (!Objects.isNull(menu.getId()) && !Objects.isNull(menu.getParent())
-            && !Objects.isNull(menu.getParent().getId())) {
-            Menu parent = get(menu.getParent().getId()).orElse(null);
-            while (!Objects.isNull(parent)) {
+        if (Objects.nonNull(menu.getId())) {
+            Menu parent = menu.getParent().map(MenuDto::getId).flatMap(menuRepository::findById).orElse(null);
+            while (Objects.nonNull(parent)) {
                 if (menu.getId().equals(parent.getId())) {
                     throw new DataValidateException("不能将一个节点的父级节点设置为它自身或它的叶子节点");
                 }

@@ -76,7 +76,7 @@ public class UserConverter implements Converter<User, UserDto> {
 
     @Override
     public User copyProperties(User user, UserDto userDto) {
-        if (!Objects.isNull(user) && !Objects.isNull(userDto)) {
+        if (Objects.nonNull(user) && Objects.nonNull(userDto)) {
             user.setEnabled(userDto.getEnabled());
             user.setUsername(userDto.getUsername());
             user.setFullname(userDto.getFullname());

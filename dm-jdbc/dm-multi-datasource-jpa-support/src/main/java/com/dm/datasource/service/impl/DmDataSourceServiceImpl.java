@@ -57,7 +57,9 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
     public DmDataSource update(Long id, DmDataSourceDto connection) {
         return dmDataSourceRepository.findById(id).map(cnn -> {
             closeConnection(cnn);
-            return dmDataSourceConverter.copyProperties(cnn, connection);
+            DmDataSource result = dmDataSourceConverter.copyProperties(cnn, connection);
+            result.checkVersion(connection.getVersion());
+            return dmDataSourceRepository.saveAndFlush(result);
         }).orElseThrow(DataNotExistException::new);
     }
 

@@ -21,9 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,11 +35,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @RequestMapping("files")
@@ -85,6 +86,28 @@ public class FileController {
         return fileInfoConverter.toDto(file_);
     }
 
+    @GetMapping(params = {"filename", "sha256", "md5"})
+    public FileInfoDto findByNameAndHash(@RequestParam("filename") String filename,
+                                         @RequestParam("sha256") String sha256,
+                                         @RequestParam("md5") String md5) {
+        return fileService.findByNameAndHash(filename, sha256, md5).map(fileInfoConverter::toDto).orElse(null);
+    }
+
+    @PostMapping(params = {"filename", "sha256", "md5"})
+    public FileInfoDto upload(@RequestParam("md5") String md5,
+                              @RequestParam("sha256") String sha256,
+                              @RequestParam("filename") String filename,
+                              @RequestParam("file") MultipartFile chunkFile) {
+        // TODO 待处理
+        Optional<FileInfo> file = fileService.findByNameAndHash(filename, sha256, md5);
+        if (file.isPresent()) {
+            // TODO 如果文件已经存在，将上传的信息添加到文件的尾部
+        } else {
+            // TODO　如果文件不存在，保存新的文件
+        }
+        return null;
+    }
+
     /**
      * 分块上传文件
      *
@@ -102,9 +125,9 @@ public class FileController {
         @RequestHeader("file-id") String tempId,
         @RequestHeader("chunk-count") int chunkCount,
         @RequestParam("filename") String filename,
-        @RequestParam("file") MultipartFile mFile) throws Exception {
+        @RequestParam("file") MultipartFile chunkFile) throws Exception {
         // 保存临时文件
-        mFile.transferTo(getTempChunkPath(tempId, chunkIndex));
+        chunkFile.transferTo(getTempChunkPath(tempId, chunkIndex));
         // 如果临时文件上传完成，组装所有的文件
         if (chunkIndex == chunkCount - 1) {
             long length = 0;
@@ -137,7 +160,7 @@ public class FileController {
     private Path getTempChunkPath(String tempId, int chunkIndex) {
         Path target = Paths.get(config.getTempPath(), StringUtils.join(tempId, ".", chunkIndex));
         Path parent = target.getParent();
-        if (!Objects.isNull(parent) && !Files.exists(parent)) {
+        if (Objects.nonNull(parent) && !Files.exists(parent)) {
             try {
                 Files.createDirectories(parent);
             } catch (IOException e) {
@@ -146,6 +169,10 @@ public class FileController {
         }
         return target;
     }
+
+    // X-Forwarded-For: <client>, <proxy1>, <proxy2> 获取到请求发起的最初ip地址
+    // X-Forwarded-Host: <host> The X-Forwarded-Host (XFH) 是一个事实上的标准首部，用来确定客户端发起的请求中使用  Host  指定的初始域名。
+    // X-Forwarded-Proto: <protocol> 是一个事实上的标准首部，用来确定客户端与代理服务器或者负载均衡服务器之间的连接所采用的传输协议（HTTP 或 HTTPS）
 
     /**
      * 包含X-Real-IP请求头的请求全部走这个地方<br >
@@ -160,7 +187,8 @@ public class FileController {
         "image/webp",
         "image/*",
         "*/*",
-        "!application/json", "!text/plain"})
+        "!application/json",
+        "!text/plain"})
     public ResponseEntity<?> preview(
         @PathVariable("id") UUID id) {
         return fileService.findById(id)
@@ -193,6 +221,39 @@ public class FileController {
             .map(path -> StringUtils.join("th", level, "/", path, ".jpg"))
             .map(this::buildAccessRedirectResponse)
             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * 文件zip打包下载
+     *
+     * @param files     要下载的文件的id
+     * @param userAgent 浏览器de user agent
+     * @param filename  下载的默认保存文件名
+     * @throws IOException IO错误
+     */
+    @GetMapping(params = {"type=zip", "file"})
+    public ResponseEntity<StreamingResponseBody> zip(@RequestParam("file") List<UUID> files,
+                                                     @RequestHeader(value = "user-agent") String userAgent,
+                                                     @RequestParam(value = "filename", required = false, defaultValue = "package.zip") String filename) throws IOException {
+        // 如果没有找到所有文件，返回404
+        List<FileInfo> fileInfos = fileService.findById(files);
+        if (fileInfos.size() < files.size()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            StreamingResponseBody body = outputStream -> {
+                try (ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
+                    for (FileInfo file : fileInfos) {
+                        ZipEntry entry = new ZipEntry(file.getFilename());
+                        zipOutputStream.putNextEntry(entry);
+                        StreamUtils.copy(fileStorageService.getResource(file.getPath()).getInputStream(), zipOutputStream);
+                    }
+                }
+            };
+            return ResponseEntity.ok()
+                .header("Content-Type", config.getMime("zip"))
+                .header("Content-Disposition", generateAttachmentFilename(userAgent, filename))
+                .body(body);
+        }
     }
 
     /**
@@ -293,14 +354,13 @@ public class FileController {
     // 构建下载响应体
     private ResponseEntity<Resource> buildDownloadBody(FileInfo file, List<Range> ranges, String userAgent) {
         try {
-            String fileName = file.getFilename();
+            String filename = file.getFilename();
             long fileSize = file.getSize();
             Resource body;
             long contentLength = fileSize; // 内容长度
             String contentRange; // 响应范围
-            String codeFileName = null;
             String path = file.getPath();
-            String ext = DmFileUtils.getExt(fileName);
+            String ext = DmFileUtils.getExt(filename);
             String contentType = config.getMime(ext);
             Range range = null;
             // 计算range
@@ -313,24 +373,12 @@ public class FileController {
                 log.info("multi range not implement");
                 // TODO 返回多个range待实现
             }
-            // -----------------计算文件名开始-----------------------
-            if (StringUtils.isNotBlank(userAgent)) {
-                if (StringUtils.contains(userAgent, "Trident")
-                    || StringUtils.contains(userAgent, "Edge")
-                    || StringUtils.contains(userAgent, "MSIE")) {
-                    codeFileName = URLEncoder.encode(fileName, "UTF-8");
-                } else {
-                    codeFileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
-                }
-            }
-            // -----------------计算文件名结束-----------------------
             BodyBuilder bodyBuilder;
             if (range == null) {
                 body = fileStorageService.getResource(path);
             } else {
                 body = fileStorageService.getResource(path, range.getStart(), range.getEnd() + 1);
             }
-
             if (body instanceof FileSystemResource) {
                 bodyBuilder = ResponseEntity.ok().header("Content-Type", contentType);
             } else {
@@ -345,14 +393,28 @@ public class FileController {
                 bodyBuilder.header("Accept-Ranges", "bytes")
                     .contentLength(contentLength);
             }
-            if (StringUtils.isNotBlank(codeFileName)) {
-                bodyBuilder.header("Content-Disposition", "attachment; filename=" + codeFileName);
+            if (StringUtils.isNotBlank(userAgent)) {
+                bodyBuilder.header("Content-Disposition", generateAttachmentFilename(userAgent, filename));
             }
             file.getLastModifiedDate().ifPresent(bodyBuilder::lastModified);
             return bodyBuilder.body(body);
         } catch (UnsupportedEncodingException e) {
             log.error("构建响应体时发生异常", e);
             throw new RuntimeException(e);
+        }
+    }
+
+    private String generateAttachmentFilename(String userAgent, String filename) throws UnsupportedEncodingException {
+        return "attachment; filename=" + generateFilename(userAgent, filename) + "; filename*=utf-8''" + URLEncoder.encode(filename, "UTF-8");
+    }
+
+    private String generateFilename(String userAgent, String filename) throws UnsupportedEncodingException {
+        if (StringUtils.isNotBlank(userAgent) && (StringUtils.contains(userAgent, "Trident")
+            || StringUtils.contains(userAgent, "Edge")
+            || StringUtils.contains(userAgent, "MSIE"))) {
+            return URLEncoder.encode(filename, "UTF-8");
+        } else {
+            return new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         }
     }
 

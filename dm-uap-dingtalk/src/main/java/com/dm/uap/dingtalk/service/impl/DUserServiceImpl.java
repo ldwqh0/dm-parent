@@ -322,7 +322,7 @@ public class DUserServiceImpl implements DUserService {
                     return null;
                 }
             })
-            .filter(item -> !Objects.isNull(item))
+            .filter(item -> Objects.nonNull(item))
             .map(item -> {
                 String unionid = item.getUnionid();
                 DUser du = dUserRepository.findByCorpIdAndUnionid(corpid, unionid)

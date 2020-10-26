@@ -94,7 +94,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> search(Long groupId, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
-        if (!Objects.isNull(groupId)) {
+        if (Objects.nonNull(groupId)) {
             query.and(qRole.group.id.eq(groupId));
         }
         if (StringUtils.isNotBlank(key)) {
@@ -118,7 +118,7 @@ public class RoleServiceImpl implements RoleService {
         } else {
             Long groupId = _group.getId();
             String groupName = _group.getName();
-            if (!Objects.isNull(groupId)) {
+            if (Objects.nonNull(groupId)) {
                 data.setGroup(roleGroupRepository.getOne(groupId));
             } else if (StringUtils.isNotBlank(groupName)) {
                 RoleGroup group = new RoleGroup(groupName);
