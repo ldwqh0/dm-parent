@@ -7,12 +7,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 
     @Override
-    public OAuth2User extract(Map<String, Object> map) {
+    public OAuth2UserDetailsDto extract(Map<String, Object> map) {
         OAuth2UserDetailsDto userDetailsDto = new OAuth2UserDetailsDto();
         userDetailsDto.setId(((Integer) map.get("id")).longValue());
         userDetailsDto.setUsername((String) map.get("username"));
