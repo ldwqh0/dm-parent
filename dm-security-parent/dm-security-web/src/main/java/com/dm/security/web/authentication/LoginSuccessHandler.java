@@ -31,12 +31,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
+            Authentication authentication) throws IOException {
         // 是否重定向,如果参数中有redirect参数，系统会自动跳转到相应的地址
         String redirect = request.getParameter("redirect_uri");
         if (isJsonRequest(request)) {
             Object principal = authentication.getPrincipal();
-            if (!Objects.isNull(principal)) {
+            if (Objects.nonNull(principal)) {
                 String result = objectMapper.writeValueAsString(principal);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write(result);
@@ -52,7 +52,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (Objects.isNull(objectMapper)) {
             objectMapper = new ObjectMapper();
         }

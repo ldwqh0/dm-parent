@@ -1,13 +1,9 @@
 package com.dm.security.web.verification;
 
-import java.net.URI;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
+import com.dm.collections.CollectionUtils;
+import com.dm.security.verification.DeviceVerificationCodeStorage;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +18,18 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-
-import com.dm.collections.CollectionUtils;
-import com.dm.security.verification.DeviceVerificationCodeStorage;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 /**
  * 设备验证过滤器<br>
  * 用于验证向设备发送的验证码
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingBean {
 
@@ -81,9 +74,9 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         return requiresValidation(exchange)
-                .filter(Boolean.TRUE::equals)
-                .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
-                .flatMap(i -> render(exchange, chain));
+            .filter(Boolean.TRUE::equals)
+            .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
+            .flatMap(i -> render(exchange, chain));
     }
 
     private Mono<Void> render(ServerWebExchange exchange, WebFilterChain chain) {
@@ -110,18 +103,17 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
         result.put("message", "验证码输入错误");
         result.put("status", HttpStatus.FORBIDDEN.value());
         result.put("timestamp", ZonedDateTime.now());
-        byte[] bf = null;
         try {
-            bf = om.writeValueAsBytes(result);
+            // TODO 这里不对
+            return Mono.just(response.bufferFactory().wrap(om.writeValueAsBytes(result)));
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return Mono.error(e);
         }
-        return Mono.just(response.bufferFactory().wrap(bf));
     }
 
     /**
      * 验证参数
-     * 
+     *
      * @param id
      * @param key
      * @param code
@@ -130,14 +122,14 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
     private boolean validate(String id, String key, String code) {
         if (StringUtils.isNotBlank(id) && StringUtils.isNotBlank(key) && StringUtils.isNotBlank(code)) {
             return storage.findById(id)
-                    .map(i -> {
-                        ZonedDateTime expireAt = i.getExpireAt();
-                        String savedKey = i.getKey();
-                        String savedCode = i.getCode();
-                        return ZonedDateTime.now().isBefore(expireAt)
-                                && StringUtils.equals(key, savedKey)
-                                && StringUtils.equals(code, savedCode);
-                    }).orElse(false);
+                .map(i -> {
+                    ZonedDateTime expireAt = i.getExpireAt();
+                    String savedKey = i.getKey();
+                    String savedCode = i.getCode();
+                    return ZonedDateTime.now().isBefore(expireAt)
+                        && StringUtils.equals(key, savedKey)
+                        && StringUtils.equals(code, savedCode);
+                }).orElse(false);
         } else {
             return false;
         }
@@ -146,19 +138,19 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
 
     /**
      * 判断该请求是否需要验证
-     * 
+     *
      * @param exchange
      * @return
      */
     private Mono<Boolean> requiresValidation(ServerWebExchange exchange) {
         return Flux.fromIterable(requestMathcers)
-                .flatMap(i -> i.matches(exchange))
-                .any(MatchResult::isMatch);
+            .flatMap(i -> i.matches(exchange))
+            .any(MatchResult::isMatch);
     }
 
     /**
      * 从请求中解析参数
-     * 
+     *
      * @param exchange
      * @param parameter
      * @return
@@ -174,7 +166,7 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Assert.notNull(storage, "this storage can not be null");
         if (Objects.isNull(om)) {
             om = new ObjectMapper();

@@ -1,42 +1,42 @@
 package com.dm.auth.service;
 
-import java.util.Optional;
-import java.util.Set;
-
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 
+import java.util.Optional;
+import java.util.Set;
+
 public interface AuthorityService {
 
     /**
      * 保存菜单授权信息
-     * 
-     * @param authorityDto
-     * @return
+     *
+     * @param authorityDto 菜单授权信息
+     * @return 保存后的授权信息
      */
-    public Authority save(MenuAuthorityDto authorityDto);
+    Authority save(MenuAuthorityDto authorityDto);
 
-    public Optional<Authority> findByRoleName(String rolename);
+    Optional<Authority> findByRoleName(String roleName);
 
-    public boolean exists();
+    boolean exists();
 
     /**
      * 保存资源授权信息
-     * 
-     * @param resourceAuthority
-     * @return
+     *
+     * @param resourceAuthority 要保存的信息
+     * @return 保存之后的资源授权
      */
-    public Authority save(ResourceAuthorityDto resourceAuthority);
+    Authority save(ResourceAuthorityDto resourceAuthority);
 
     /**
      * 根据角色，删除资源权限配置
-     * 
-     * @param roleId
+     *
+     * @param roleName 角色名称
      */
-    public void deleteResourceAuthoritiesByRoleName(String rolenamme);
+    void deleteResourceAuthoritiesByRoleName(String roleName);
 
-    public Set<Menu> findByAuthority(String auth);
+    Set<Menu> findByAuthority(String auth);
 
 }

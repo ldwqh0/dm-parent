@@ -1,5 +1,17 @@
 package com.dm.springboot.autoconfigure.file;
 
+import com.dm.file.config.FileConfig;
+import com.dm.file.controller.FileController;
+import com.dm.file.converter.FileInfoConverter;
+import com.dm.file.entity.FileInfo;
+import com.dm.file.repository.FileInfoRepository;
+import com.dm.file.service.FileInfoService;
+import com.dm.file.service.FileStorageService;
+import com.dm.file.service.ThumbnailService;
+import com.dm.file.service.impl.DefaultThumbnailServiceImpl;
+import com.dm.file.service.impl.FileServiceImpl;
+import com.dm.file.service.impl.LocalFileStorageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -9,17 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.dm.file.config.FileConfig;
-import com.dm.file.controller.FileController;
-import com.dm.file.converter.FileInfoConverter;
-import com.dm.file.entity.FileInfo;
-import com.dm.file.service.FileInfoService;
-import com.dm.file.service.FileStorageService;
-import com.dm.file.service.ThumbnailService;
-import com.dm.file.service.impl.FileServiceImpl;
-import com.dm.file.service.impl.LocalFileStorageServiceImpl;
-import com.dm.file.service.impl.DefaultThumbnailServiceImpl;
-
 @Configuration
 @ConditionalOnClass(FileInfo.class)
 @EnableConfigurationProperties(FileConfiguration.class)
@@ -28,13 +29,23 @@ import com.dm.file.service.impl.DefaultThumbnailServiceImpl;
 public class FileConfiguration {
 
     @Bean
-    public FileInfoService fileInfoService() {
-        return new FileServiceImpl();
+    public FileInfoService fileInfoService(@Autowired FileInfoRepository fileInfoRepository) {
+        return new FileServiceImpl(
+            fileInfoConverter(),
+            fileStorageService(),
+            fileInfoRepository
+        );
     }
 
     @Bean
-    public FileController fileController() {
-        return new FileController();
+    public FileController fileController(@Autowired FileInfoRepository fileInfoRepository) {
+        return new FileController(
+            fileInfoService(fileInfoRepository),
+            thumbnailService(),
+            fileInfoConverter(),
+            fileConfig(),
+            fileStorageService()
+        );
     }
 
     @Bean
@@ -51,13 +62,13 @@ public class FileConfiguration {
     @Bean
     @ConditionalOnMissingBean(FileStorageService.class)
     public FileStorageService fileStorageService() {
-        return new LocalFileStorageServiceImpl();
+        return new LocalFileStorageServiceImpl(fileConfig());
     }
 
     @Bean
     @ConditionalOnMissingBean(ThumbnailService.class)
     public ThumbnailService thumbnailService() {
-        return new DefaultThumbnailServiceImpl();
+        return new DefaultThumbnailServiceImpl(fileStorageService());
     }
 
 }

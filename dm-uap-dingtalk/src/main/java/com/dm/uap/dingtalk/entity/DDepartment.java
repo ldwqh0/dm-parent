@@ -1,24 +1,17 @@
 package com.dm.uap.dingtalk.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.IdClass;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import com.dm.uap.entity.Department;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 import static javax.persistence.CascadeType.*;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "dd_department_", indexes = { @Index(columnList = "deleted_", name = "idx_dd_department_deleted_") })
+@Table(name = "dd_department_", indexes = {@Index(columnList = "deleted_", name = "idx_dd_department_deleted_")})
 @IdClass(CorpLongId.class)
 public class DDepartment extends CorpLongEntity {
 
@@ -48,7 +41,7 @@ public class DDepartment extends CorpLongEntity {
     /**
      * 一个钉钉部门对应的系统部门
      */
-    @OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
+    @OneToOne(cascade = {MERGE, PERSIST, REFRESH, DETACH})
     @JoinColumn(name = "dm_department_id_")
     public Department department;
 
@@ -58,12 +51,12 @@ public class DDepartment extends CorpLongEntity {
     @Column(name = "deleted_")
     private Boolean deleted = false;
 
-    DDepartment() {
 
+    public DDepartment(String corpId, Long id) {
+        super(corpId, id);
     }
 
-    public DDepartment(String corpid, Long id) {
-        super(corpid, id);
-    }
+    public DDepartment() {
 
+    }
 }

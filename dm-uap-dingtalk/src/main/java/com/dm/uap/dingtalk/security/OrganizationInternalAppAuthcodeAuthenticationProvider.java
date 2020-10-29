@@ -87,7 +87,7 @@ public class OrganizationInternalAppAuthcodeAuthenticationProvider implements Au
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Assert.notNull(corpid, "the corpid can not be null");
         Assert.notNull(userDetailsService, "the userDetailsServices can not be null");
         Assert.notEmpty(dingTalkServices, "the dingTalkServices can not be empty");

@@ -28,7 +28,7 @@ public class DUserConverter {
         // dUser.setDepartments(departments);
         dUser.setEmail(rsp.getEmail());
         dUser.setHide(rsp.getIsHide());
-        if (!Objects.isNull(rsp.getHiredDate())) {
+        if (Objects.nonNull(rsp.getHiredDate())) {
             dUser.setHiredDate(ZonedDateTime.ofInstant(rsp.getHiredDate().toInstant(), ZoneId.systemDefault()));
         }
         // dUser.setIsLeaderInDepts(isLeaderInDepts);

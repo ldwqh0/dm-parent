@@ -1,16 +1,7 @@
 package com.dm.uap.converter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.dm.collections.CollectionUtils;
+import com.dm.collections.Lists;
 import com.dm.collections.Maps;
 import com.dm.common.converter.Converter;
 import com.dm.security.core.userdetails.UserDetailsDto;
@@ -19,16 +10,23 @@ import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
-import com.dm.collections.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 @Component
 public class UserConverter implements Converter<User, UserDto> {
 
-    @Autowired
-    private RoleConverter roleConverter;
+    private final RoleConverter roleConverter;
+
+    private final DepartmentConverter departmentConverter;
 
     @Autowired
-    private DepartmentConverter departmentConverter;
+    public UserConverter(RoleConverter roleConverter, DepartmentConverter departmentConverter) {
+        this.roleConverter = roleConverter;
+        this.departmentConverter = departmentConverter;
+    }
 
     public <T extends User> UserDetailsDto toUserDetailsDto(T user) {
         UserDetailsDto dto = new UserDetailsDto();
@@ -66,9 +64,7 @@ public class UserConverter implements Converter<User, UserDto> {
         Map<Department, String> _posts = user.getPosts();
         if (Maps.isNotEmpty(_posts)) {
             List<UserPostDto> posts = new ArrayList<>();
-            _posts.entrySet().forEach(a -> {
-                posts.add(new UserPostDto(departmentConverter.toDto(a.getKey()), a.getValue()));
-            });
+            _posts.forEach((key, value) -> posts.add(new UserPostDto(departmentConverter.toDto(key), value)));
             dto.setPosts(posts);
         }
         List<Role> roles = user.getRoles();
@@ -80,7 +76,7 @@ public class UserConverter implements Converter<User, UserDto> {
 
     @Override
     public User copyProperties(User user, UserDto userDto) {
-        if (!Objects.isNull(user) && !Objects.isNull(userDto)) {
+        if (Objects.nonNull(user) && Objects.nonNull(userDto)) {
             user.setEnabled(userDto.getEnabled());
             user.setUsername(userDto.getUsername());
             user.setFullname(userDto.getFullname());

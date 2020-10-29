@@ -1,26 +1,23 @@
 package com.dm.security.web.verification;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+import com.dm.security.verification.VerificationCode;
+import com.dm.security.verification.VerificationCodeGenerator;
+import com.dm.security.verification.VerificationCodeStorage;
+import com.google.code.kaptcha.Producer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-import javax.imageio.ImageIO;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.dm.security.verification.VerificationCode;
-import com.dm.security.verification.VerificationCodeGenerator;
-import com.dm.security.verification.VerificationCodeStorage;
-import com.google.code.kaptcha.Producer;
-
-import reactor.core.publisher.Mono;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 @RestController
 @RequestMapping("verificationCode")
@@ -37,12 +34,12 @@ public class VerificationReactiveController {
 
     /**
      * 生成验证码，将验证码数据以Base64格式输出
-     * 
+     *
      * @return
      */
     @GetMapping(produces = {
-            TEXT_PLAIN_VALUE,
-            APPLICATION_JSON_VALUE
+        TEXT_PLAIN_VALUE,
+        APPLICATION_JSON_VALUE
     })
     public Mono<VerificationCode> generate() {
         return Mono.<VerificationCode>defer(() -> {
@@ -55,7 +52,7 @@ public class VerificationReactiveController {
                 codeStorage.save(code);
                 return Mono.just(code);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                return Mono.error(e);
             }
         });
     }

@@ -13,7 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
  */
 public class DingTalkAuthCodeAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = -1002298305299878178L;
-    private Object principal;
+    private final Object principal;
 
     public DingTalkAuthCodeAuthenticationToken(Object principal) {
         super(null);

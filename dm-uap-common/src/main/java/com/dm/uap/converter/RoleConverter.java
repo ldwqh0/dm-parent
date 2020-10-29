@@ -1,30 +1,33 @@
 package com.dm.uap.converter;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.dm.collections.CollectionUtils;
 import com.dm.common.converter.Converter;
 import com.dm.security.core.userdetails.GrantedAuthorityDto;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.entity.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class RoleConverter implements Converter<Role, RoleDto> {
 
+    private final RoleGroupConverter roleGroupConverter;
+
     @Autowired
-    private RoleGroupConverter roleGroupConverter;
+    public RoleConverter(RoleGroupConverter roleGroupConverter) {
+        this.roleGroupConverter = roleGroupConverter;
+    }
 
     /**
      * 转换为简单的角色数据对象，不包含用户信息
-     * 
-     * @param role
-     * @return
+     *
+     * @param role 要转的角色信息
+     * @return 角色信息，不包括角色的用户等关联信息
      */
     private RoleDto toDtoActual(Role role) {
         RoleDto dto = new RoleDto();

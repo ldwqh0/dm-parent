@@ -12,10 +12,10 @@ import com.dm.auth.entity.Menu;
 
 public interface AuthorityRepository extends JpaRepository<Authority, String>, QuerydslPredicateExecutor<Authority> {
 
-    public List<Authority> findByMenu(Menu menu);
+    List<Authority> findByMenu(Menu menu);
 
     @Query("select a from Authority a join a.resourceOperations ro where KEY(ro).id=:resourceId")
-    public List<Authority> findByResourceOperationsResourceId(@Param("resourceId") Long resourceId);
+    List<Authority> findByResourceOperationsResourceId(@Param("resourceId") Long resourceId);
 
-    public List<Authority> findByRoleNameIn(List<String> roleName);
+    List<Authority> findByRoleNameIn(List<String> roleName);
 }

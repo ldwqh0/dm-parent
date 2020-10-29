@@ -12,9 +12,9 @@ public interface DetermineCurrentLookupKeyStrategy {
      * 
      * @return
      */
-    public DataSourceProperties determineCurrentLookupKey();
+    DataSourceProperties determineCurrentLookupKey();
 
-    public void setKey(DataSourceProperties properties);
+    void setKey(DataSourceProperties properties);
 
-    public void clear();
+    void clear();
 }

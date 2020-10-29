@@ -1,13 +1,10 @@
 package com.dm.security.web.verification;
 
-import java.net.URI;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
+import com.dm.collections.CollectionUtils;
+import com.dm.security.verification.VerificationCode;
+import com.dm.security.verification.VerificationCodeStorage;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,36 +19,32 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-
-import com.dm.collections.CollectionUtils;
-import com.dm.security.verification.VerificationCode;
-import com.dm.security.verification.VerificationCodeStorage;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+import java.time.ZonedDateTime;
+import java.util.*;
+
 /**
  * 验证码验证过滤器
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
 
     /**
      * 指定哪些请求需要进行验证码过滤
      */
-    private List<ServerWebExchangeMatcher> requestMathcers = new LinkedList<>();
+    private final List<ServerWebExchangeMatcher> requestMathcers = new LinkedList<>();
 
     private VerificationCodeStorage storage = null;
 
     private ObjectMapper om = new ObjectMapper();
 
-    private String verifyIdParameterName = "verifyId";
+    private final String verifyIdParameterName = "verifyId";
 
-    private String verifyCodeParameterName = "verifyCode";
+    private final String verifyCodeParameterName = "verifyCode";
 
     @Autowired(required = false)
     public void setObjectMapper(ObjectMapper om) {
@@ -70,39 +63,39 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         return requiresValidation(exchange)
-                .filter(Boolean.TRUE::equals)
-                .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
-                .flatMap(i -> {
-                    String verifyId = parseParameter(exchange, verifyIdParameterName);
-                    String verifyCode = parseParameter(exchange, verifyCodeParameterName);
-                    if (validate(verifyId, verifyCode)) {
-                        storage.remove(verifyId);
-                        return chain.filter(exchange);
-                    } else {
-                        ServerHttpResponse response = exchange.getResponse();
-                        response.setStatusCode(HttpStatus.FORBIDDEN);
-                        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-                        return response.writeWith(createBuffer(exchange));
-                    }
-                });
+            .filter(Boolean.TRUE::equals)
+            .switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
+            .flatMap(i -> {
+                String verifyId = parseParameter(exchange, verifyIdParameterName);
+                String verifyCode = parseParameter(exchange, verifyCodeParameterName);
+                if (validate(verifyId, verifyCode)) {
+                    storage.remove(verifyId);
+                    return chain.filter(exchange);
+                } else {
+                    ServerHttpResponse response = exchange.getResponse();
+                    response.setStatusCode(HttpStatus.FORBIDDEN);
+                    response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                    return response.writeWith(createBuffer(exchange));
+                }
+            });
     }
 
     private boolean validate(String verifyId, String verifyCode) {
         VerificationCode savedCode = storage.get(verifyId);
-        return (!Objects.isNull(savedCode))
-                && StringUtils.isNotBlank(savedCode.getCode())
-                && StringUtils.equals(savedCode.getCode(), verifyCode);
+        return (Objects.nonNull(savedCode))
+            && StringUtils.isNotBlank(savedCode.getCode())
+            && StringUtils.equals(savedCode.getCode(), verifyCode);
     }
 
     private Mono<Boolean> requiresValidation(ServerWebExchange exchange) {
         return Flux.fromIterable(requestMathcers)
-                .flatMap(i -> i.matches(exchange))
-                .any(MatchResult::isMatch);
+            .flatMap(i -> i.matches(exchange))
+            .any(MatchResult::isMatch);
     }
 
     /**
      * 从请求中解析参数
-     * 
+     *
      * @param exchange
      * @param parameter
      * @return
@@ -121,7 +114,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
         return Mono.defer(() -> {
             URI uri = exchange.getRequest().getURI();
             ServerHttpResponse response = exchange.getResponse();
-            Map<String, Object> result = new HashMap<String, Object>();
+            Map<String, Object> result = new HashMap<>();
             result.put("path", uri);
             result.put("error", HttpStatus.FORBIDDEN.getReasonPhrase());
             result.put("message", "验证码输入错误");
@@ -129,16 +122,18 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
             result.put("timestamp", ZonedDateTime.now());
             byte[] bf = null;
             try {
+                // TODO 这里不对
                 bf = om.writeValueAsBytes(result);
+                return Mono.just(response.bufferFactory().wrap(bf));
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                return Mono.error(e);
             }
-            return Mono.just(response.bufferFactory().wrap(bf));
+
         });
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Assert.notNull(storage, "the storage can not be null");
         if (Objects.isNull(om)) {
             this.om = new ObjectMapper();

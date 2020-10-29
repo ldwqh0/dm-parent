@@ -2,7 +2,6 @@ package com.dm.dingtalk.api.request;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

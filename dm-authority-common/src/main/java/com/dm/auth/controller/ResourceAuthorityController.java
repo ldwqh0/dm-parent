@@ -7,7 +7,6 @@ import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.service.AuthorityService;
 import com.dm.collections.Maps;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,6 @@ public class ResourceAuthorityController {
 
     private final AuthorityConverter authorityConverter;
 
-    @Autowired
     public ResourceAuthorityController(AuthorityService authorityService, AuthorityConverter authorityConverter) {
         this.authorityService = authorityService;
         this.authorityConverter = authorityConverter;
@@ -31,8 +29,8 @@ public class ResourceAuthorityController {
     /**
      * 保存一组资源授权设置
      *
-     * @param resourceAuthority
-     * @return
+     * @param resourceAuthority 资源授权配置
+     * @return 保存后的资源授权配置
      */
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -44,8 +42,8 @@ public class ResourceAuthorityController {
     /**
      * 获取指定角色的资源授权设置
      *
-     * @param roleName
-     * @return
+     * @param roleName 角色名称
+     * @return 角色的资源授权信息
      */
     // 增加事务的目的是为了在序列化的过程中，某些延迟加载的对象能找到连接
     // 否则会抛出 org.hibernate.LazyInitializationException 异常
@@ -69,7 +67,7 @@ public class ResourceAuthorityController {
     /**
      * 删除指定角色的资源授权设置
      *
-     * @param roleId
+     * @param rolename 角色名称
      */
     @DeleteMapping("{rolename}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

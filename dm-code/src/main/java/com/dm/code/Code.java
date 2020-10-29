@@ -1,10 +1,6 @@
 package com.dm.code;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "dm_code_")
@@ -14,6 +10,7 @@ public class Code {
     @JoinColumn(name = "code_type_")
     private CodeType type;
 
+    @Id
     @Column(name = "code_")
     private String code;
 }

@@ -69,14 +69,14 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
                 .flatMap(List::stream).map(OpenRole::getId).collect(Collectors.toList());
         // 逻辑删除已经在钉钉中被删除的角色
         if (CollectionUtils.isNotEmpty(roleIds)) {
-            dRoleRepository.setDeletedByCorpidAndIdNotIn(corpid, roleIds, TRUE);
+            dRoleRepository.setDeletedByCorpIdAndIdNotIn(corpid, roleIds, TRUE);
         }
         // 设置逻辑删除钉钉角色组
         if (CollectionUtils.isNotEmpty(roleGroupIds)) {
             dRoleGroupRepository.setDeletedByCorpidAndIdNotIn(corpid, roleGroupIds, Boolean.TRUE);
         }
         // 禁用系统角色
-        List<Long> deletedIds = dRoleRepository.findRoleIdByCorpidAndDRoleDeleted(corpid, TRUE);
+        List<Long> deletedIds = dRoleRepository.findRoleIdByCorpIdAndDRoleDeleted(corpid, TRUE);
         if (CollectionUtils.isNotEmpty(deletedIds)) {
             roleRepository.batchSetState(deletedIds, Status.DISABLED);
         }

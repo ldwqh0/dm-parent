@@ -10,11 +10,11 @@ import com.dm.uap.entity.LoginLog;
 
 public interface LoginLogService {
 
-    public LoginLog save(LoginLogDto log);
+    LoginLog save(LoginLogDto log);
 
-    public List<LoginLog> save(List<LoginLogDto> logs);
+    List<LoginLog> save(List<LoginLogDto> logs);
 
-    public LoginLog save(LoginLog log);
+    LoginLog save(LoginLog log);
 
-    public Page<LoginLog> list(String query, Pageable pageable);
+    Page<LoginLog> list(String query, Pageable pageable);
 }

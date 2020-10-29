@@ -1,16 +1,5 @@
 package com.dm.uap.service.impl;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.RoleGroupDto;
@@ -23,23 +12,37 @@ import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.RoleService;
 import com.querydsl.core.BooleanBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    @Autowired
-    private RoleConverter roleConverter;
+    private final RoleConverter roleConverter;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleGroupRepository roleGroupRepository;
+    private final RoleGroupRepository roleGroupRepository;
 
     private final QRole qRole = QRole.role;
+
+    @Autowired
+    public RoleServiceImpl(RoleConverter roleConverter, RoleRepository roleRepository, UserRepository userRepository, RoleGroupRepository roleGroupRepository) {
+        this.roleConverter = roleConverter;
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+        this.roleGroupRepository = roleGroupRepository;
+    }
 
     @Override
     public boolean exist() {
@@ -91,7 +94,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> search(Long groupId, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
-        if (!Objects.isNull(groupId)) {
+        if (Objects.nonNull(groupId)) {
             query.and(qRole.group.id.eq(groupId));
         }
         if (StringUtils.isNotBlank(key)) {
@@ -115,7 +118,7 @@ public class RoleServiceImpl implements RoleService {
         } else {
             Long groupId = _group.getId();
             String groupName = _group.getName();
-            if (!Objects.isNull(groupId)) {
+            if (Objects.nonNull(groupId)) {
                 data.setGroup(roleGroupRepository.getOne(groupId));
             } else if (StringUtils.isNotBlank(groupName)) {
                 RoleGroup group = new RoleGroup(groupName);

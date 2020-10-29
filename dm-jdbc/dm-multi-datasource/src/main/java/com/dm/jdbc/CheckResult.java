@@ -16,6 +16,7 @@ public interface CheckResult {
     }
 
     class CheckResultImpl implements CheckResult, Serializable {
+        private static final long serialVersionUID = 3836161032556759081L;
         private final Boolean result;
         private final String message;
 

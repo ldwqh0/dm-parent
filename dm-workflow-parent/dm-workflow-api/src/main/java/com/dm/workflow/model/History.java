@@ -15,27 +15,27 @@ public interface History {
      * 
      * @return
      */
-    public ProcessInstance getProcessInstance();
+    ProcessInstance getProcessInstance();
 
     /**
      * 获取该操作的流程开始节点
      * 
      * @return
      */
-    public String getFrom();
+    String getFrom();
 
     /**
      * 获取该操作的流程结束节点
      * 
      * @return
      */
-    public String getTo();
+    String getTo();
 
     /**
      * 操作产生的时间
      * 
      * @return
      */
-    public ZonedDateTime getCreatedDate();
+    ZonedDateTime getCreatedDate();
 
 }

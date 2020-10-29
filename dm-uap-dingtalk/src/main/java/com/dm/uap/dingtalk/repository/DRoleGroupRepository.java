@@ -1,37 +1,37 @@
 package com.dm.uap.dingtalk.repository;
 
+import com.dm.uap.dingtalk.entity.CorpLongId;
+import com.dm.uap.dingtalk.entity.DRoleGroup;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-
-import com.dm.uap.dingtalk.entity.CorpLongId;
-import com.dm.uap.dingtalk.entity.DRoleGroup;
-
 public interface DRoleGroupRepository extends JpaRepository<DRoleGroup, CorpLongId> {
 
-    @Query("update DRoleGroup set deleted=?3 where corpId=?1 and (deleted != ?3 or deleted is null) and id not in (?2)")
+    @Query("update DRoleGroup set deleted=:deleted where corpId=:corpId and id not in (:ids)")
     @Modifying
-    public int setDeletedByCorpidAndIdNotIn(String corpid, Collection<Long> ids, Boolean deleted);
+    int setDeletedByCorpidAndIdNotIn(@Param("corpId") String corpId, @Param("ids") Collection<Long> ids, @Param("deleted") Boolean deleted);
 
-    public default void deleteById(String corpid, Long id) {
-        deleteById(new CorpLongId(corpid, id));
+    default void deleteById(String corpId, Long id) {
+        deleteById(new CorpLongId(corpId, id));
     }
 
-    public default DRoleGroup getOne(String corpid, Long id) {
-        return getOne(new CorpLongId(corpid, id));
+    default DRoleGroup getOne(String corpId, Long id) {
+        return getOne(new CorpLongId(corpId, id));
     }
 
-    public default Optional<DRoleGroup> findById(String corpid, Long id) {
-        return findById(new CorpLongId(corpid, id));
+    default Optional<DRoleGroup> findById(String corpId, Long id) {
+        return findById(new CorpLongId(corpId, id));
     }
 
-    public default boolean existsById(String corpid, Long id) {
-        return existsById(new CorpLongId(corpid, id));
+    default boolean existsById(String corpId, Long id) {
+        return existsById(new CorpLongId(corpId, id));
     }
 
-    public List<DRoleGroup> findByCorpIdAndDeleted(String corpid, Boolean deleted);
+    List<DRoleGroup> findByCorpIdAndDeleted(String corpId, Boolean deleted);
 }

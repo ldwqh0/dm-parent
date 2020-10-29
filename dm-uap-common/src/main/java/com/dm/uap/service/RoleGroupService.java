@@ -15,17 +15,17 @@ public interface RoleGroupService {
      * 
      * @return
      */
-    public boolean exist();
+    boolean exist();
 
-    public RoleGroup save(RoleGroupDto data);
+    RoleGroup save(RoleGroupDto data);
 
-    public Optional<RoleGroup> findById(Long id);
+    Optional<RoleGroup> findById(Long id);
 
-    public void deleteById(Long id);
+    void deleteById(Long id);
 
-    public RoleGroup update(Long id, RoleGroupDto data);
+    RoleGroup update(Long id, RoleGroupDto data);
 
-    public Page<RoleGroup> search(String key, Pageable pageable);
+    Page<RoleGroup> search(String key, Pageable pageable);
 
-    public Optional<RoleGroup> findByName(String string);
+    Optional<RoleGroup> findByName(String string);
 }

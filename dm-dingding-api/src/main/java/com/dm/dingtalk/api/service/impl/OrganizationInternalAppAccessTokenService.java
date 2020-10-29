@@ -80,14 +80,11 @@ public class OrganizationInternalAppAccessTokenService implements DingtalkAccess
             return false;
         }
         ZonedDateTime now = ZonedDateTime.now();
-        if (now.isAfter(token.getExpireDate())) {
-            return false;
-        }
-        return true;
+        return !now.isAfter(token.getExpireDate());
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (Objects.isNull(restTemplate)) {
             this.restTemplate = new RestTemplate();
         }

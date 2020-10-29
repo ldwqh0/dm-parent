@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.util.Locale;
-import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.*;
 
@@ -43,20 +42,16 @@ public class DmFileUtils {
      *
      * @param dist    最终保存的目标文件
      * @param sources 文件源
-     * @return 合并成功返还true,合并失败返还false
+     * @return 合并成功返还true, 合并失败返还false
      */
     public static boolean concatFile(@NotNull Path dist, Path... sources) {
         try (FileChannel out = FileChannel.open(dist, CREATE, APPEND, WRITE)) {
-            if (Objects.isNull(out)) {
-                return false;
-            } else {
-                for (Path path : sources) {
-                    try (FileChannel in = FileChannel.open(path, READ)) {
-                        in.transferTo(0, in.size(), out);
-                    }
+            for (Path path : sources) {
+                try (FileChannel in = FileChannel.open(path, READ)) {
+                    in.transferTo(0, in.size(), out);
                 }
-                return true;
             }
+            return true;
         } catch (IOException e) {
             return false;
         }

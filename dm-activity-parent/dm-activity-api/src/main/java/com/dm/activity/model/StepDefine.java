@@ -14,14 +14,14 @@ public interface StepDefine<ID> {
      *
      * @return
      */
-    public ID getId();
+    ID getId();
 
     /**
      * 获取节点的名称
      *
      * @return
      */
-    public String getName();
+    String getName();
 
-    public List<ActionDefine> getActions();
+    List<ActionDefine> getActions();
 }

@@ -10,12 +10,12 @@ import java.util.Optional;
  */
 public interface DeviceVerificationCodeStorage {
 
-    public void remove(String verifyId);
+    void remove(String verifyId);
 
-    public Optional<DeviceVerificationCode> findById(String id);
+    Optional<DeviceVerificationCode> findById(String id);
 
-    public DeviceVerificationCode save(DeviceVerificationCode code);
+    DeviceVerificationCode save(DeviceVerificationCode code);
 
-    public Optional<DeviceVerificationCode> findTopByKeyOrderByCreatedDateDesc(String key);
+    Optional<DeviceVerificationCode> findTopByKeyOrderByCreatedDateDesc(String key);
 
 }

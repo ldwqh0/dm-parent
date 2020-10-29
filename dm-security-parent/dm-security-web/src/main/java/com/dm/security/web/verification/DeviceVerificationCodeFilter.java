@@ -41,7 +41,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
     private DeviceVerificationCodeStorage storage;
 
-    private ObjectMapper om = new ObjectMapper();
+    private final ObjectMapper om = new ObjectMapper();
 
     public void requestMatcher(RequestMatcher requestMatcher) {
         this.requestMathcers.add(requestMatcher);
@@ -79,7 +79,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
                 storage.remove(verifyId);
                 chain.doFilter(req, res);
             } else {
-                Map<String, Object> result = new HashMap<String, Object>();
+                Map<String, Object> result = new HashMap<>();
                 result.put("path", request.getRequestURI());
                 result.put("error", HttpStatus.FORBIDDEN.getReasonPhrase());
                 result.put("message", "验证码输入错误");

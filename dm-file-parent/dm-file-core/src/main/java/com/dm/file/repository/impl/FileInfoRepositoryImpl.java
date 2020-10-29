@@ -1,30 +1,28 @@
 package com.dm.file.repository.impl;
 
-import java.util.Optional;
-import java.util.UUID;
-
+import com.dm.file.entity.QFileInfo;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dm.file.entity.QFileInfo;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.Optional;
+import java.util.UUID;
 
 public class FileInfoRepositoryImpl {
 
-    @Autowired
-    private final JPAQueryFactory jqf;
+    private final JPAQueryFactory queryFactory;
 
     private final QFileInfo qFileInfo = QFileInfo.fileInfo;
 
     public FileInfoRepositoryImpl(@Autowired JPAQueryFactory queryFactory) {
-        this.jqf = queryFactory;
+        this.queryFactory = queryFactory;
     }
 
     @Transactional(readOnly = true)
     public Optional<UUID> findMaxId() {
         return Optional.ofNullable(
-                jqf.select(qFileInfo.id).from(qFileInfo)
-                        .orderBy(qFileInfo.id.desc())
-                        .fetchFirst());
+            queryFactory.select(qFileInfo.id).from(qFileInfo)
+                .orderBy(qFileInfo.id.desc())
+                .fetchFirst());
     }
 }

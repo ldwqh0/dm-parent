@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dm</groupId>
   <artifactId>dm-parent</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.1-SNAPSHOT</version>
   <properties>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,7 +13,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <guava.version>29.0-jre</guava.version>
     <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
-    <springboot.version>2.3.3.RELEASE</springboot.version>
+    <springboot.version>2.3.4.RELEASE</springboot.version>
     <springfox.version>2.9.2</springfox.version>
     <hibernate.version>5.4.20.Final</hibernate.version>
     <commons-lang3.version>3.11</commons-lang3.version>
@@ -22,7 +22,7 @@
     <commons-collections4.version>4.4</commons-collections4.version>
     <querydsl.version>4.3.1</querydsl.version>
     <lombok.version>1.18.12</lombok.version>
-    <dm.version>1.2.0-SNAPSHOT</dm.version>
+    <dm.version>1.2.1-SNAPSHOT</dm.version>
   </properties>
   <modules>
     <!-- 集合工具类 -->
@@ -44,9 +44,9 @@
     <!-- 文件模块 -->
     <module>dm-file-parent/dm-file-core</module>
     <module>dm-file-parent/dm-file-spring-boot-starter</module>
-    <!--行政区划模块-->
+    <!--行政区划模块 -->
     <module>dm-code</module>
-    <!--多数据源模块-->
+    <!--多数据源模块 -->
     <module>dm-jdbc/dm-multi-datasource</module>
     <module>dm-jdbc/dm-multi-datasource-jpa-support</module>
     <module>dm-security-parent</module>
@@ -81,11 +81,6 @@
           </exclusion>
         </exclusions>
         <version>${springboot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-core</artifactId>
-        <version>${hibernate.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.persistence</groupId>
@@ -207,11 +202,6 @@
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-oauth2-authorization</artifactId>
-        <version>${dm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dm</groupId>
-        <artifactId>dm-security-oauth2-authorization-jpa-support</artifactId>
         <version>${dm.version}</version>
       </dependency>
       <dependency>

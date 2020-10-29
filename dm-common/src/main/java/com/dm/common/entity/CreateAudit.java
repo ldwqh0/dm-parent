@@ -1,9 +1,12 @@
 package com.dm.common.entity;
 
+import lombok.Getter;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@Getter
 public class CreateAudit implements Audit {
 
     private static final long serialVersionUID = 379407708683930698L;
@@ -20,16 +23,6 @@ public class CreateAudit implements Audit {
     @Column(name = "created_user_name_", updatable = false)
     private String username;
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public Long getUserid() {
-        return userid;
-    }
-
     public CreateAudit(Long createUserId, String createUserName) {
         super();
         this.userid = createUserId;
@@ -37,12 +30,10 @@ public class CreateAudit implements Audit {
     }
 
     public CreateAudit() {
-        super();
     }
 
     public CreateAudit(Audit audit) {
-        this.userid = audit.getUserid();
-        this.username = audit.getUsername();
+        this(audit.getUserid(), audit.getUsername());
     }
 
 }

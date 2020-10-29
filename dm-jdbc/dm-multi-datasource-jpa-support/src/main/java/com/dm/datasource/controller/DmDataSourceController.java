@@ -11,7 +11,6 @@ import com.dm.datasource.service.DmDataSourceService;
 import com.dm.jdbc.CheckResult;
 import com.dm.jdbc.ConnectionUtils;
 import com.dm.jdbc.TableMeta;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,73 +19,68 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.groups.Default;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
 @RequestMapping({"/connections", "/dataSources"})
 public class DmDataSourceController {
 
-    private DmDataSourceService cnnService;
-    private DmDataSourceConverter cnnConverter;
+    private final DmDataSourceService dataSourceService;
+    private final DmDataSourceConverter dataSourceConverter;
 
-    @Autowired
-    public void setDataSourceConverter(DmDataSourceConverter cnnConverter) {
-        this.cnnConverter = cnnConverter;
+    public DmDataSourceController(DmDataSourceService dataSourceService, DmDataSourceConverter cnnConverter) {
+        this.dataSourceService = dataSourceService;
+        this.dataSourceConverter = cnnConverter;
     }
 
-    @Autowired
-    public void setDataSourceService(DmDataSourceService cnnService) {
-        this.cnnService = cnnService;
-    }
 
     /**
      * 新增一条连接信息
      *
-     * @param connection
-     * @return
+     * @param connection 连接信息
+     * @return 生成的连接信息
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DmDataSourceDto save(@Validated(Default.class) @RequestBody DmDataSourceDto connection) {
-        return cnnConverter.toDto(cnnService.save(connection));
+        return dataSourceConverter.toDto(dataSourceService.save(connection));
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public DmDataSourceDto update(@PathVariable("id") Long id,
                                   @RequestBody @Validated(Default.class) DmDataSourceDto connection) {
-        return cnnConverter.toDto(cnnService.update(id, connection));
+        return dataSourceConverter.toDto(dataSourceService.update(id, connection));
     }
 
     @GetMapping("{id}")
     public DmDataSourceDto get(@PathVariable("id") Long id) {
-        return cnnService.findById(id).map(cnnConverter::toDto).orElseThrow(DataNotExistException::new);
+        return dataSourceService.findById(id).map(dataSourceConverter::toDto).orElseThrow(DataNotExistException::new);
     }
 
     @GetMapping(params = {"page", "size"})
     public Page<DmDataSourceDto> list(
         @RequestParam(value = "keyword", required = false) String keyword,
         @PageableDefault Pageable pageable) {
-        return cnnService.list(keyword, pageable).map(cnnConverter::toSimpleDto);
+        return dataSourceService.list(keyword, pageable).map(dataSourceConverter::toSimpleDto);
     }
 
     @GetMapping(params = {"!page", "!size"})
     public List<DmDataSourceDto> list() {
-        return Lists.transform(cnnService.listAll(), cnnConverter::toDto);
+        return Lists.transform(dataSourceService.listAll(), dataSourceConverter::toDto);
     }
 
     @GetMapping("{cnn}/state")
-    public CheckResult state(@PathVariable("cnn") Long id) throws SQLException {
-        return cnnService.findById(id)
-            .map(cnnConverter::toDataSourceProperties)
+    public CheckResult state(@PathVariable("cnn") Long id) {
+        return dataSourceService.findById(id)
+            .map(dataSourceConverter::toDataSourceProperties)
             .map(this::checkState)
             .orElseThrow(DataNotExistException::new);
     }
 
     @PostMapping(value = "state")
-    public CheckResult state(@RequestBody DmDataSourceDto cnn) throws SQLException {
-        return checkState(cnnConverter.toDataSourceProperties(cnn));
+    public CheckResult state(@RequestBody DmDataSourceDto cnn) {
+        return checkState(dataSourceConverter.toDataSourceProperties(cnn));
     }
 
     private CheckResult checkState(DataSourceProperties properties) {
@@ -100,6 +94,6 @@ public class DmDataSourceController {
 
     @GetMapping("{connection}/tables")
     public List<TableMeta> listTables(@PathVariable("connection") Long connection) {
-        return cnnService.listTables(connection);
+        return dataSourceService.listTables(connection);
     }
 }

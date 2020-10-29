@@ -44,7 +44,7 @@ public class DeviceVerificationCode implements Serializable {
      */
     public String getId() {
         return this.id;
-    };
+    }
 
     /**
      * 要验证的第三方工具，通常是手机号，邮箱地址等
@@ -54,7 +54,7 @@ public class DeviceVerificationCode implements Serializable {
     @JsonIgnore
     public String getKey() {
         return this.key;
-    };
+    }
 
     /**
      * 生成的验证码
@@ -64,7 +64,7 @@ public class DeviceVerificationCode implements Serializable {
     @JsonIgnore
     public String getCode() {
         return this.code;
-    };
+    }
 
     /**
      * 验证码生成时间
@@ -73,7 +73,7 @@ public class DeviceVerificationCode implements Serializable {
      */
     public ZonedDateTime getCreatedDate() {
         return this.createdDate;
-    };
+    }
 
     /**
      * 失效时间

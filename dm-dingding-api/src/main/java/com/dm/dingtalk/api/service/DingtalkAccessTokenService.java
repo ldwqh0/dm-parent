@@ -8,6 +8,6 @@ public interface DingtalkAccessTokenService {
      * @param corpid
      * @return
      */
-    public String getAccessToken(String corpid);
+    String getAccessToken(String corpid);
 
 }

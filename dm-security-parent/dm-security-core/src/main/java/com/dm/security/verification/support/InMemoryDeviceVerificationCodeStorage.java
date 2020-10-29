@@ -37,7 +37,7 @@ public class InMemoryDeviceVerificationCodeStorage implements DeviceVerification
     @Override
     public synchronized void remove(String verifyId) {
         DeviceVerificationCode code = idKeyMap.remove(verifyId);
-        if (!Objects.isNull(code)) {
+        if (Objects.nonNull(code)) {
             String key = code.getKey();
             Set<DeviceVerificationCode> keySet = keyMap.get(key);
             if (CollectionUtils.isNotEmpty(keySet)) {

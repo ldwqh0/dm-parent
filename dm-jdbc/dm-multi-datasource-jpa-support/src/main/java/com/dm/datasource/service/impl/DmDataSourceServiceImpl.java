@@ -37,10 +37,9 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
         this.dataSourceHolder = dataSourceHolder;
     }
 
-    @Autowired
     public DmDataSourceServiceImpl(
-            DmDataSourceConverter dataSourceConverter,
-            DmDataSourceRepository dataSourceRepository) {
+        DmDataSourceConverter dataSourceConverter,
+        DmDataSourceRepository dataSourceRepository) {
         this.dmDataSourceConverter = dataSourceConverter;
         this.dmDataSourceRepository = dataSourceRepository;
     }
@@ -58,7 +57,9 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
     public DmDataSource update(Long id, DmDataSourceDto connection) {
         return dmDataSourceRepository.findById(id).map(cnn -> {
             closeConnection(cnn);
-            return dmDataSourceConverter.copyProperties(cnn, connection);
+            DmDataSource result = dmDataSourceConverter.copyProperties(cnn, connection);
+            result.checkVersion(connection.getVersion());
+            return dmDataSourceRepository.saveAndFlush(result);
         }).orElseThrow(DataNotExistException::new);
     }
 
@@ -73,8 +74,8 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
         if (StringUtils.isNotBlank(keyword)) {
             keyword = keyword.trim();
             query.and(qDataSource.name.containsIgnoreCase(keyword)
-                    .or(qDataSource.host.containsIgnoreCase(keyword))
-                    .or(qDataSource.username.containsIgnoreCase(keyword)));
+                .or(qDataSource.host.containsIgnoreCase(keyword))
+                .or(qDataSource.username.containsIgnoreCase(keyword)));
         }
         return dmDataSourceRepository.findAll(query, pageable);
     }
@@ -87,25 +88,24 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
     @Override
     public List<TableMeta> listTables(Long connection) {
         return dmDataSourceRepository.findById(connection)
-                .map(dmDataSourceConverter::toDataSourceProperties)
-                .map(properties -> {
-                    try (Connection cnn = DataSourceProviderHolder.getConnection(properties)) {
-                        return ConnectionUtils.listTables(cnn);
-                    } catch (Exception throwables) {
-                        throw new RuntimeException(throwables);
-                    }
-                }).orElseThrow(DataNotExistException::new);
+            .map(dmDataSourceConverter::toDataSourceProperties)
+            .map(properties -> {
+                try (Connection cnn = DataSourceProviderHolder.getConnection(properties)) {
+                    return ConnectionUtils.listTables(cnn);
+                } catch (Exception throwables) {
+                    throw new RuntimeException(throwables);
+                }
+            }).orElseThrow(DataNotExistException::new);
     }
 
     /**
      * 将连接从池中移除,并关闭连接池
      *
-     * @param dataSource
+     * @param dataSource 要移除的数据源
      */
     private void closeConnection(DmDataSource dataSource) {
         if (this.dataSourceHolder != null) {
             dataSourceHolder.closeAndRemove(dmDataSourceConverter.toDataSourceProperties(dataSource));
         }
-        // TODO 尝试关闭连接
     }
 }

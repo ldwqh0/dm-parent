@@ -13,12 +13,6 @@ import java.util.List;
 
 public class UapAnonymousCustomizer implements Customizer<AnonymousConfigurer<HttpSecurity>> {
 
-    /**
-     * 这个没有什么用，仅仅表示本类需要 {@link UapAutoConfiguration}加载并执行完成之后才能执行
-     */
-    @SuppressWarnings("unused")
-    private UapAutoConfiguration uac;
-
     private UserService userService = null;
 
     public UapAnonymousCustomizer() {
@@ -32,13 +26,15 @@ public class UapAnonymousCustomizer implements Customizer<AnonymousConfigurer<Ht
 
     @Autowired
     public void setUapAutoConfiguration(UapAutoConfiguration uac) {
-        this.uac = uac;
+        /**
+         * 这个没有什么用，仅仅表示本类需要 {@link UapAutoConfiguration}加载并执行完成之后才能执行
+         */
     }
 
     @Override
     public void customize(AnonymousConfigurer<HttpSecurity> http) {
         UserDetails anonymousDetails = userService.loadUserByUsername("ANONYMOUS");
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.addAll(anonymousDetails.getAuthorities());
         http.authorities(authorities).principal(anonymousDetails);
     }

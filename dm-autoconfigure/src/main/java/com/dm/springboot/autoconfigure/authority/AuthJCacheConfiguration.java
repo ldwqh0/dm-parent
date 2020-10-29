@@ -1,17 +1,16 @@
 package com.dm.springboot.autoconfigure.authority;
 
-import java.util.Objects;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Configuration;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Configuration;
+import java.util.Objects;
 
 @ConditionalOnClass(CacheManager.class)
 @Configuration
@@ -25,12 +24,12 @@ public class AuthJCacheConfiguration implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        if (!Objects.isNull(jCacheManager)) {
+    public void afterPropertiesSet() {
+        if (Objects.nonNull(jCacheManager)) {
             MutableConfiguration<String, Object> configuration = new MutableConfiguration<String, Object>()
-                    .setTypes(String.class, Object.class)
-                    .setStoreByValue(false)
-                    .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
+                .setTypes(String.class, Object.class)
+                .setStoreByValue(false)
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
             // 设置默认的AuthorityAttributes配置
             Cache<String, Object> cache = jCacheManager.getCache("AuthorityAttributes");
             Cache<String, Object> menuCache = jCacheManager.getCache("AuthorityMenus");

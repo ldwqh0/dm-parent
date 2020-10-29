@@ -1,17 +1,15 @@
 package com.dm.common.entity;
 
-import java.time.ZonedDateTime;
-import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import org.springframework.data.domain.Auditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-
-import org.springframework.data.domain.Auditable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -27,7 +25,8 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
     private ModifyAudit lastModifiedBy;
 
     /**
-     * 创建时间字段不能被更新
+     * 创建时间 <br>
+     * 字段不能被更新
      */
     @Column(name = "created_date_", updatable = false)
     @JsonProperty(access = Access.READ_ONLY)

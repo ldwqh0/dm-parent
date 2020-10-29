@@ -18,7 +18,7 @@ public class InMemoryVerificationCodeStorage implements VerificationCodeStorage 
     private final ConcurrentHashMap<String, VerificationCode> storage;
 
     public InMemoryVerificationCodeStorage() {
-        this.storage = new ConcurrentHashMap<String, VerificationCode>();
+        this.storage = new ConcurrentHashMap<>();
     }
 
     @Override

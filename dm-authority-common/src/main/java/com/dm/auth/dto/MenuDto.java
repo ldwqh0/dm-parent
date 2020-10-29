@@ -1,19 +1,18 @@
 package com.dm.auth.dto;
 
-import java.io.Serializable;
-
 import com.dm.auth.entity.Menu.MenuType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * 菜单结构
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 @Data
 @JsonInclude(Include.NON_NULL)
@@ -27,8 +26,13 @@ public class MenuDto implements Serializable {
     private String icon;
     private String description;
     private MenuType type;
-    @JsonIgnoreProperties(value = { "parent", "url", "description", "openInNewWindow" })
+    @JsonIgnoreProperties(value = {"parent", "url", "description", "openInNewWindow"})
     private MenuDto parent;
+
+
     private Boolean openInNewWindow;
 
+    public Optional<MenuDto> getParent() {
+        return Optional.ofNullable(parent);
+    }
 }

@@ -1,11 +1,11 @@
 package com.dm.springboot.web.reactive.error;
 
-import java.util.Map;
-import java.util.Objects;
-
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
+import java.util.Objects;
 
 public class MessageDetailErrorAttributes extends DefaultErrorAttributes {
 
@@ -22,7 +22,7 @@ public class MessageDetailErrorAttributes extends DefaultErrorAttributes {
     }
 
     private String determineMessage(Throwable error) {
-        if (!Objects.isNull(error)) {
+        if (Objects.nonNull(error)) {
             if (error instanceof ResponseStatusException) {
                 return ((ResponseStatusException) error).getReason();
             }

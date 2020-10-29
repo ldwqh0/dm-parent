@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.dm</groupId>
     <artifactId>dm-parent</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.1-SNAPSHOT</version>
   </parent>
   <artifactId>dm-security-parent</artifactId>
   <packaging>pom</packaging>
@@ -16,18 +16,16 @@
     <module>dm-security-oauth2-core</module>
     <module>dm-security-oauth2-client</module>
     <module>dm-security-oauth2-resource</module>
-    <module>dm-security-oauth2-authorization</module>
     <module>dm-security-spring-boot-starter</module>
     <module>dm-oauth2-resource-server-spring-boot-starter</module>
     <module>dm-oauth2-client-spring-boot-starter</module>
-    <module>dm-security-oauth2-authorization-jpa-support</module>
   </modules>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-oauth2-authorization</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>1.2.1-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

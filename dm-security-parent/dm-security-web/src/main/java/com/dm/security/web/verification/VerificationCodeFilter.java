@@ -73,7 +73,7 @@ public class VerificationCodeFilter extends GenericFilterBean {
                 storage.remove(verifyId);
                 chain.doFilter(req, res);
             } else {
-                Map<String, Object> result = new HashMap<String, Object>();
+                Map<String, Object> result = new HashMap<>();
                 result.put("path", request.getRequestURI());
                 result.put("error", HttpStatus.FORBIDDEN.getReasonPhrase());
                 result.put("message", "验证码输入错误");
@@ -118,7 +118,7 @@ public class VerificationCodeFilter extends GenericFilterBean {
 
     private boolean validate(String verifyId, String verifyCode) {
         VerificationCode savedCode = storage.get(verifyId);
-        return (!Objects.isNull(savedCode))
+        return (Objects.nonNull(savedCode))
                 && StringUtils.isNotBlank(savedCode.getCode())
                 && StringUtils.equals(savedCode.getCode(), verifyCode);
     }

@@ -1,15 +1,16 @@
 package com.dm.springboot.autoconfigure.uap;
 
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
-
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.CreatedExpiryPolicy;
-import javax.cache.expiry.Duration;
-
+import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapBeanConfiguration;
+import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapJCacheConfiguration;
+import com.dm.uap.dto.RoleDto;
+import com.dm.uap.dto.RoleGroupDto;
+import com.dm.uap.dto.UserDto;
+import com.dm.uap.entity.Role.Status;
+import com.dm.uap.entity.RoleGroup;
+import com.dm.uap.entity.User;
+import com.dm.uap.service.RoleGroupService;
+import com.dm.uap.service.RoleService;
+import com.dm.uap.service.UserService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -24,24 +25,21 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapJCacheConfiguration;
-import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapBeanConfiguration;
-import com.dm.uap.dto.RoleDto;
-import com.dm.uap.dto.RoleGroupDto;
-import com.dm.uap.dto.UserDto;
-import com.dm.uap.entity.User;
-import com.dm.uap.entity.Role.Status;
-import com.dm.uap.entity.RoleGroup;
-import com.dm.uap.service.RoleGroupService;
-import com.dm.uap.service.RoleService;
-import com.dm.uap.service.UserService;
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.configuration.MutableConfiguration;
+import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.Duration;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 
 @ConditionalOnClass(User.class)
-@EntityScan({ "com.dm.uap" })
-@EnableJpaRepositories({ "com.dm.uap" })
-@ComponentScan({ "com.dm.uap" })
-@EnableConfigurationProperties({ DefaultUserProperties.class })
-@Import({ UapJCacheConfiguration.class, UapBeanConfiguration.class })
+@EntityScan({"com.dm.uap"})
+@EnableJpaRepositories({"com.dm.uap"})
+@ComponentScan({"com.dm.uap"})
+@EnableConfigurationProperties({DefaultUserProperties.class})
+@Import({UapJCacheConfiguration.class, UapBeanConfiguration.class})
 public class UapAutoConfiguration implements InitializingBean {
 
     @Autowired
@@ -140,7 +138,7 @@ public class UapAutoConfiguration implements InitializingBean {
      * 初始化默认用户
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // 初始化角色组
         initRoleGroup();
         // 初始化角色
@@ -163,9 +161,9 @@ public class UapAutoConfiguration implements InitializingBean {
         @Autowired(required = false)
         public void setCacheManager(CacheManager cacheManager) {
             MutableConfiguration<String, Object> configuration = new MutableConfiguration<String, Object>()
-                    .setTypes(String.class, Object.class)
-                    .setStoreByValue(false)
-                    .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
+                .setTypes(String.class, Object.class)
+                .setStoreByValue(false)
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
             // 创建默认的用户cache
             Cache<String, Object> userCache = cacheManager.getCache("users");
             if (Objects.isNull(userCache)) {

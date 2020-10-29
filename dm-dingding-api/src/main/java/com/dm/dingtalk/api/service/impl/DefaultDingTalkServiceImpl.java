@@ -1,47 +1,21 @@
 package com.dm.dingtalk.api.service.impl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
+import com.dm.collections.CollectionUtils;
+import com.dm.dingtalk.api.callback.CallbackProperties;
+import com.dm.dingtalk.api.request.*;
+import com.dm.dingtalk.api.response.*;
+import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
+import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
+import com.dm.dingtalk.api.service.DingTalkService;
+import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
-import com.dm.dingtalk.api.response.OapiRoleGetroleResponse;
-import com.dm.collections.CollectionUtils;
-import com.dm.dingtalk.api.callback.CallbackProperties;
-import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
-import com.dm.dingtalk.api.request.OapiUserCreateRequest;
-import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
-import com.dm.dingtalk.api.request.OapiWorkrecordAddRequest;
-import com.dm.dingtalk.api.request.OapiWorkrecordGetbyuseridRequest;
-import com.dm.dingtalk.api.request.OapiWorkrecordUpdateRequest;
-import com.dm.dingtalk.api.response.OapiDepartmentListResponse;
-import com.dm.dingtalk.api.response.OapiRoleListResponse;
-import com.dm.dingtalk.api.response.TaobaoResponse;
-import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
-import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
-import com.dm.dingtalk.api.response.OapiUserCreateResponse;
-import com.dm.dingtalk.api.response.OapiUserDeleteResponse;
-import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
-import com.dm.dingtalk.api.response.OapiUserGetResponse;
-import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
-import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
-import com.dm.dingtalk.api.response.OapiWorkrecordAddResponse;
-import com.dm.dingtalk.api.response.OapiWorkrecordGetbyuseridResponse;
-import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
-import com.dm.dingtalk.api.response.OpenRole;
-import com.dm.dingtalk.api.service.DingTalkService;
-import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
 
 @Slf4j
 public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
@@ -73,15 +47,13 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public List<Department> fetchDepartments(String corpid) {
         String url = SERVER + "/department/list?access_token={0}";
         OapiDepartmentListResponse response = restTemplate.getForObject(url, OapiDepartmentListResponse.class,
-                accessTokenService.getAccessToken(corpid));
+            accessTokenService.getAccessToken(corpid));
         checkResponse(response);
         if (Objects.isNull(response) || CollectionUtils.isEmpty(response.getDepartment())) {
             return Collections.emptyList();
         } else {
             List<Department> departments = response.getDepartment();
-            departments.forEach(department -> {
-                department.setCorpId(corpid);
-            });
+            departments.forEach(department -> department.setCorpId(corpid));
             return departments;
         }
     }
@@ -90,10 +62,10 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public List<OpenRoleGroup> fetchRoleGroups(String corpid) {
         String url = SERVER + "/topapi/role/list?access_token={0}";
         OapiRoleListResponse response = restTemplate.getForObject(url, OapiRoleListResponse.class,
-                accessTokenService.getAccessToken(corpid));
+            accessTokenService.getAccessToken(corpid));
         checkResponse(response);
-        if (!Objects.isNull(response) && !Objects.isNull(response.getResult())
-                && CollectionUtils.isNotEmpty(response.getResult().getList())) {
+        if (Objects.nonNull(response) && Objects.nonNull(response.getResult())
+            && CollectionUtils.isNotEmpty(response.getResult().getList())) {
             List<OpenRoleGroup> groups = response.getResult().getList();
             groups.forEach(i -> i.setCorpid(corpid));
             return groups;
@@ -107,9 +79,9 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public OapiUserCreateResponse createUser(String corpid, OapiUserCreateRequest request) {
         String url = SERVER + "/user/create?access_token={0}";
         OapiUserCreateResponse response = restTemplate.postForObject(url, request, OapiUserCreateResponse.class,
-                accessTokenService.getAccessToken(corpid));
+            accessTokenService.getAccessToken(corpid));
         // 创建用户，如果用户已经存在于钉钉系统中了,不会做任何修改，但会返回返回已经存在的用户的userid
-        if (!Objects.isNull(response) && StringUtils.isNotEmpty(response.getUserid())) {
+        if (Objects.nonNull(response) && StringUtils.isNotEmpty(response.getUserid())) {
         } else {
             checkResponse(response);
         }
@@ -120,7 +92,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public OapiUserUpdateResponse updateUser(String corpid, OapiUserUpdateRequest request) {
         String url = SERVER + "/user/update?access_token={0}";
         OapiUserUpdateResponse response = restTemplate.postForObject(url, request, OapiUserUpdateResponse.class,
-                accessTokenService.getAccessToken(corpid));
+            accessTokenService.getAccessToken(corpid));
         checkResponse(response);
         return response;
     }
@@ -129,7 +101,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public OapiUserGetuserinfoResponse getUserByAuthCode(String corpid, String authCode) {
         String url = SERVER + "/user/getuserinfo?access_token={0}&code={1}";
         OapiUserGetuserinfoResponse response = restTemplate.getForObject(url, OapiUserGetuserinfoResponse.class,
-                accessTokenService.getAccessToken(corpid), authCode);
+            accessTokenService.getAccessToken(corpid), authCode);
         response.setCorpid(corpid);
         checkResponse(response);
         return response;
@@ -144,7 +116,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
         log.info("获取部门的用户信息在线程{}", +Thread.currentThread().getId());
         String url = SERVER + "/user/getDeptMember?access_token={0}&deptId={1}";
         OapiUserGetDeptMemberResponse response = restTemplate.getForObject(url, OapiUserGetDeptMemberResponse.class,
-                accessTokenService.getAccessToken(corpid), depId);
+            accessTokenService.getAccessToken(corpid), depId);
         checkResponse(response);
         return response;
     }
@@ -153,8 +125,8 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public OapiUserGetResponse fetchUserById(String corpid, String userid) {
         String url = SERVER + "/user/get?access_token={0}&userid={1}";
         OapiUserGetResponse response = restTemplate.getForObject(url, OapiUserGetResponse.class,
-                accessTokenService.getAccessToken(corpid),
-                userid);
+            accessTokenService.getAccessToken(corpid),
+            userid);
         if (Objects.isNull(response)) {
             throw new RuntimeException("the response is null");
         } else if (Objects.equals(USER_NOT_FOUND_CODE, response.getErrcode())) {
@@ -167,12 +139,12 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
     @Override
     public OapiRoleAddrolesforempsResponse batchSetUserRole(String corpid, Collection<String> userIds,
-            Collection<Long> roleIds) {
+                                                            Collection<Long> roleIds) {
         if (CollectionUtils.isNotEmpty(roleIds)) {
             String url = SERVER + "/topapi/role/addrolesforemps?access_token={0}";
             OapiRoleAddrolesforempsRequest request = new OapiRoleAddrolesforempsRequest(userIds, roleIds);
             OapiRoleAddrolesforempsResponse response = restTemplate.postForObject(url, request,
-                    OapiRoleAddrolesforempsResponse.class, accessTokenService.getAccessToken(corpid));
+                OapiRoleAddrolesforempsResponse.class, accessTokenService.getAccessToken(corpid));
             checkResponse(response);
             return response;
         } else {
@@ -182,8 +154,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
     /**
      * 校验响应是否正确
-     * 
-     * 
+     *
      * @param response
      */
     private void checkResponse(TaobaoResponse response) {
@@ -197,7 +168,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Assert.notNull(accessTokenService, "the dingtalk access token service can not be null!");
         // 配置一个默认的restTemplate
         if (Objects.isNull(restTemplate)) {
@@ -209,8 +180,8 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public void deleteUser(String corpid, String userid) {
         String url = SERVER + "/user/delete?access_token={0}&userid={1}";
         OapiUserDeleteResponse response = restTemplate.getForObject(url, OapiUserDeleteResponse.class,
-                accessTokenService.getAccessToken(corpid),
-                userid);
+            accessTokenService.getAccessToken(corpid),
+            userid);
         checkResponse(response);
     }
 
@@ -218,7 +189,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public OapiWorkrecordAddResponse addWorkRecord(String corpid, OapiWorkrecordAddRequest request) {
         String url = SERVER + "/topapi/workrecord/add?access_token={0}";
         OapiWorkrecordAddResponse response = restTemplate.postForObject(url, request, OapiWorkrecordAddResponse.class,
-                accessTokenService.getAccessToken(corpid));
+            accessTokenService.getAccessToken(corpid));
         checkResponse(response);
         return response;
     }
@@ -227,18 +198,18 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     public OapiWorkrecordUpdateResponse updateWorkRecord(String corpid, OapiWorkrecordUpdateRequest request) {
         String url = SERVER + "/topapi/workrecord/update?access_token={0}";
         OapiWorkrecordUpdateResponse response = restTemplate.postForObject(url, request,
-                OapiWorkrecordUpdateResponse.class,
-                accessTokenService.getAccessToken(corpid));
+            OapiWorkrecordUpdateResponse.class,
+            accessTokenService.getAccessToken(corpid));
         checkResponse(response);
         return response;
     }
 
     @Override
     public OapiWorkrecordGetbyuseridResponse getWorkRecordByUserid(String corpid,
-            OapiWorkrecordGetbyuseridRequest request) {
+                                                                   OapiWorkrecordGetbyuseridRequest request) {
         String url = SERVER + "/topapi/workrecord/getbyuserid?access_token={0}";
         OapiWorkrecordGetbyuseridResponse response = restTemplate.postForObject(url, request,
-                OapiWorkrecordGetbyuseridResponse.class, accessTokenService.getAccessToken(corpid));
+            OapiWorkrecordGetbyuseridResponse.class, accessTokenService.getAccessToken(corpid));
         checkResponse(response);
         return response;
     }
@@ -267,7 +238,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
         Map<String, Object> request = new HashMap<>();
         request.put("roleId", roleid);
         OapiRoleGetroleResponse rsp = restTemplate.postForObject(url, request, OapiRoleGetroleResponse.class,
-                accessTokenService.getAccessToken(corpid));
+            accessTokenService.getAccessToken(corpid));
         checkResponse(rsp);
         OpenRole or = rsp.getRole();
         or.setId(roleid);
