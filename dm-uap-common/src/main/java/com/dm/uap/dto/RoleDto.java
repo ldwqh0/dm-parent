@@ -51,7 +51,7 @@ public class RoleDto implements Serializable {
      */
     @NotBlank(groups = {New.class, Update.class})
     @Size(max = 100, groups = {Default.class})
-    private String name;
+    private String name;M
 
     @Size(max = 2000, groups = {Default.class})
     private String description;
