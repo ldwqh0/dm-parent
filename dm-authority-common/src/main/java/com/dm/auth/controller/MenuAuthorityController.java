@@ -10,12 +10,12 @@ import com.dm.auth.service.AuthorityService;
 import com.dm.collections.CollectionUtils;
 import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
-import com.dm.security.core.userdetails.UserDetailsDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-    @RequestMapping({"menuAuthorities", "p/menuAuthorities"})
+@RequestMapping({"menuAuthorities", "p/menuAuthorities"})
 public class MenuAuthorityController {
 
     private final AuthorityService authorityService;
@@ -81,13 +81,13 @@ public class MenuAuthorityController {
      * <p>
      * Description: 根据登录用户获取菜单
      *
-     * @param userDto 当前用户信息
+     * @param user 当前用户信息
      * @return 可见菜单项目的列表
      */
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
-    public List<MenuDto> systemMenu(@AuthenticationPrincipal UserDetailsDto userDto) {
-        Collection<GrantedAuthority> authorities = userDto.getRoles();
+    public List<MenuDto> systemMenu(@AuthenticationPrincipal UserDetails user) {
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         if (CollectionUtils.isNotEmpty(authorities)) {
             List<Menu> result = authorities.stream().map(GrantedAuthority::getAuthority)
                 .map(authorityService::findByAuthority)
