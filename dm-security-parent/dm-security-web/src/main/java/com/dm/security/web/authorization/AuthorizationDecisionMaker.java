@@ -1,4 +1,4 @@
-package com.dm.security.web.authentication;
+package com.dm.security.web.authorization;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,6 +10,6 @@ import org.springframework.security.core.Authentication;
  * @author ldwqh0@outlook.com
  *
  */
-public interface AuthenticationDecisionMaker {
+public interface AuthorizationDecisionMaker {
     boolean check(Authentication authentication, HttpServletRequest exchange);
 }

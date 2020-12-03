@@ -1,11 +1,12 @@
 package com.dm.security.web.verification;
 
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.dm.collections.CollectionUtils;
+import com.dm.security.verification.DeviceVerificationCodeStorage;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,23 +14,21 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.filter.GenericFilterBean;
-
-import com.dm.collections.CollectionUtils;
-import com.dm.security.verification.DeviceVerificationCodeStorage;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 第三方工具验证码认证，包括手机，邮箱等工具的验证码认证
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public class DeviceVerificationCodeFilter extends GenericFilterBean {
+
+    private String requestKey = "DeviceVerificationCode.key";
 
     private final List<RequestMatcher> requestMathcers = new ArrayList<>();
 
@@ -65,7 +64,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         if (requiresValidation(request)) {
@@ -73,10 +72,11 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
             String verifyCode = req.getParameter(verifyCodeParameterName);
             String key = req.getParameter(verifyCodeKeyParameterName);
             if (StringUtils.isNotBlank(verifyId) &&
-                    StringUtils.isNotBlank(key) &&
-                    StringUtils.isNotBlank(verifyCode) &&
-                    validate(verifyId, key, verifyCode)) {
+                StringUtils.isNotBlank(key) &&
+                StringUtils.isNotBlank(verifyCode) &&
+                validate(verifyId, key, verifyCode)) {
                 storage.remove(verifyId);
+                request.setAttribute(requestKey, key);
                 chain.doFilter(req, res);
             } else {
                 Map<String, Object> result = new HashMap<>();
@@ -108,14 +108,14 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
     private boolean validate(final String id, final String key, final String code) {
         return storage.findById(id)
-                .map(i -> {
-                    ZonedDateTime expireAt = i.getExpireAt();
-                    String savedKey = i.getKey();
-                    String savedCode = i.getCode();
-                    return ZonedDateTime.now().isBefore(expireAt)
-                            && StringUtils.equals(key, savedKey)
-                            && StringUtils.equalsIgnoreCase(code, savedCode);
-                }).orElse(false);
+            .map(i -> {
+                ZonedDateTime expireAt = i.getExpireAt();
+                String savedKey = i.getKey();
+                String savedCode = i.getCode();
+                return ZonedDateTime.now().isBefore(expireAt)
+                    && StringUtils.equals(key, savedKey)
+                    && StringUtils.equalsIgnoreCase(code, savedCode);
+            }).orElse(false);
     }
 
 }

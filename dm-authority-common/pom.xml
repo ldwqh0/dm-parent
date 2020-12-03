@@ -14,6 +14,10 @@
       <artifactId>dm-common</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.dm</groupId>
       <artifactId>dm-security-core</artifactId>
     </dependency>

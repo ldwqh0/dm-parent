@@ -29,7 +29,6 @@ public class MenuDto implements Serializable {
     @JsonIgnoreProperties(value = {"parent", "url", "description", "openInNewWindow"})
     private MenuDto parent;
 
-
     private Boolean openInNewWindow;
 
     public Optional<MenuDto> getParent() {
