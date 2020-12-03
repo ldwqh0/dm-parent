@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.auth.entity.Role;
 import com.dm.collections.CollectionUtils;
 import com.dm.collections.Maps;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
@@ -41,7 +42,6 @@ import com.dm.uap.dingtalk.service.DRoleGroupService;
 import com.dm.uap.dingtalk.service.DRoleService;
 import com.dm.uap.dingtalk.service.DUserService;
 import com.dm.uap.entity.Department;
-import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.UserRepository;
 

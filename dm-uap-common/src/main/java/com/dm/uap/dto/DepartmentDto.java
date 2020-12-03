@@ -1,6 +1,5 @@
 package com.dm.uap.dto;
 
-import com.dm.common.validation.groups.ReferenceGroup;
 import com.dm.uap.entity.Department.Types;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

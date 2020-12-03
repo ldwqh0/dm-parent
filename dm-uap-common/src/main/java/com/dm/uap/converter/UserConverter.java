@@ -1,5 +1,7 @@
 package com.dm.uap.converter;
 
+import com.dm.auth.converter.RoleConverter;
+import com.dm.auth.entity.Role;
 import com.dm.collections.CollectionUtils;
 import com.dm.collections.Lists;
 import com.dm.collections.Maps;
@@ -8,7 +10,6 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
-import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,19 +1,19 @@
 package com.dm.uap.service.impl;
 
+import com.dm.auth.dto.RoleDto;
+import com.dm.auth.entity.Role;
+import com.dm.auth.repository.RoleRepository;
 import com.dm.collections.CollectionUtils;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
-import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
-import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.DepartmentRepository;
-import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
 import com.querydsl.core.BooleanBuilder;
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable) {
+    public Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (Objects.nonNull(department)) {
             Department dep = dpr.getOne(department);
@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
             query.and(qUser.roles.any().id.eq(role));
         }
         if (Objects.nonNull(roleGroup)) {
-            query.and(qUser.roles.any().group.id.eq(roleGroup));
+            query.and(qUser.roles.any().group.eq(roleGroup));
         }
         if (StringUtils.isNotBlank(key)) {
             query.and(qUser.username.containsIgnoreCase(key)

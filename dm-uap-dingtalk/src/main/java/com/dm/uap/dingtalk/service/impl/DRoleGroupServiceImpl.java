@@ -1,7 +1,6 @@
 package com.dm.uap.dingtalk.service.impl;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -9,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.auth.entity.Role.Status;
+import com.dm.auth.repository.RoleRepository;
 import com.dm.collections.CollectionUtils;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.response.OpenRole;
@@ -20,14 +21,9 @@ import com.dm.uap.dingtalk.entity.DRoleGroup;
 import com.dm.uap.dingtalk.repository.DRoleGroupRepository;
 import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.service.DRoleGroupService;
-import com.dm.uap.entity.Role;
-import com.dm.uap.entity.Role.Status;
-import com.dm.uap.repository.RoleGroupRepository;
-import com.dm.uap.repository.RoleRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.dm.uap.entity.RoleGroup;
 import static java.lang.Boolean.*;
 
 @Service
@@ -49,8 +45,8 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
     @Autowired
     private DRoleRepository dRoleRepository;
 
-    @Autowired
-    private RoleGroupRepository uRoleGroupRepository;
+//    @Autowired
+//    private RoleGroupRepository uRoleGroupRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -109,34 +105,34 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
      * @param dRoleGroups
      * @return
      */
-    private List<RoleGroup> syncLocalToUap(List<DRoleGroup> dRoleGroups) {
-        List<RoleGroup> results = dRoleGroups.stream().map(dRoleGroup -> {
-            final RoleGroup uRoleGroup = Objects.isNull(dRoleGroup.getGroup()) ? new RoleGroup()
-                    : dRoleGroup.getGroup();
-            uRoleGroup.setName(dRoleGroup.getName());
-            dRoleGroup.setGroup(uRoleGroup);
-            Set<Role> roles = dRoleGroup.getRoles().stream().map(dRole -> {
-                Role uRole = dRole.getRole();
-                if (Objects.isNull(uRole)) {
-                    uRole = new Role();
-                    uRole.setState(Status.ENABLED);
-                }
-                uRole.setName(dRole.getName());
-                uRole.setGroup(uRoleGroup);
-                dRole.setRole(uRole);
-                return uRole;
-            }).collect(Collectors.toSet());
-            uRoleGroup.setRoles(roles);
-            return uRoleGroup;
-        }).collect(Collectors.toList());
-        return uRoleGroupRepository.saveAll(results);
-    }
+//    private List<RoleGroup> syncLocalToUap(List<DRoleGroup> dRoleGroups) {
+//        List<RoleGroup> results = dRoleGroups.stream().map(dRoleGroup -> {
+//            final RoleGroup uRoleGroup = Objects.isNull(dRoleGroup.getGroup()) ? new RoleGroup()
+//                    : dRoleGroup.getGroup();
+//            uRoleGroup.setName(dRoleGroup.getName());
+//            dRoleGroup.setGroup(uRoleGroup);
+//            Set<Role> roles = dRoleGroup.getRoles().stream().map(dRole -> {
+//                Role uRole = dRole.getRole();
+//                if (Objects.isNull(uRole)) {
+//                    uRole = new Role();
+//                    uRole.setState(Status.ENABLED);
+//                }
+//                uRole.setName(dRole.getName());
+//                uRole.setGroup(uRoleGroup);
+//                dRole.setRole(uRole);
+//                return uRole;
+//            }).collect(Collectors.toSet());
+//            uRoleGroup.setRoles(roles);
+//            return uRoleGroup;
+//        }).collect(Collectors.toList());
+//        return uRoleGroupRepository.saveAll(results);
+//    }
 
     @Override
     @Transactional
     public void syncToUap(String corpid) {
         log.info("开始同步角色信息");
-        syncLocalToUap(fetchRoleGroup(corpid));
+//        syncLocalToUap(fetchRoleGroup(corpid));
         log.info("同步角色信息完成");
     }
 
@@ -151,8 +147,8 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
         List<DRoleGroup> drgs = dRoleGroupRepository.findByCorpIdAndDeleted(corpid, TRUE);
         drgs.forEach(drg -> {
             try {
-                RoleGroup rg = drg.getGroup();
-                uRoleGroupRepository.delete(rg);
+//                RoleGroup rg = drg.getGroup();
+//                uRoleGroupRepository.delete(rg);
                 dRoleGroupRepository.delete(drg);
             } catch (Exception e) {
                 log.info("尝试物理删除角色组信息时出现错误,[corpid={},id={}]", drg.getCorpId(), drg.getId());

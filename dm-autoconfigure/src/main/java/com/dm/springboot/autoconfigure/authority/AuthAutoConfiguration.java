@@ -4,15 +4,16 @@ import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.dto.ResourceDto;
-import com.dm.auth.entity.Authority;
+import com.dm.auth.dto.RoleDto;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.ResourceOperation;
-import com.dm.auth.service.AuthorityService;
+import com.dm.auth.entity.Role;
+import com.dm.auth.entity.Role.Status;
 import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
+import com.dm.auth.service.RoleService;
 import com.dm.collections.Maps;
 import com.dm.security.authentication.UriResource.MatchType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,21 +27,29 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@ConditionalOnClass({Authority.class})
-@EntityScan({"com.dm.auth"})
-@EnableJpaRepositories({"com.dm.auth"})
-@ComponentScan({"com.dm.auth"})
+@ConditionalOnClass({ Role.class })
+@EntityScan({ "com.dm.auth" })
+@EnableJpaRepositories({ "com.dm.auth" })
+@ComponentScan({ "com.dm.auth" })
 @Import(AuthJCacheConfiguration.class)
 public class AuthAutoConfiguration {
 
-    @Autowired
-    private MenuService menuService;
+    private final MenuService menuService;
 
-    @Autowired
-    private ResourceService resourceService;
+    private final ResourceService resourceService;
 
-    @Autowired
-    private AuthorityService authorityService;
+    private final RoleService authorityService;
+
+    private final RoleService roleService;
+
+    public AuthAutoConfiguration(MenuService menuService, ResourceService resourceService, RoleService authorityService,
+            RoleService roleService) {
+        super();
+        this.menuService = menuService;
+        this.resourceService = resourceService;
+        this.authorityService = authorityService;
+        this.roleService = roleService;
+    }
 
     @PostConstruct
     public void init() {
@@ -50,7 +59,7 @@ public class AuthAutoConfiguration {
         initResource();
 
         // 初始化用户菜单授权信息
-        initAuthority();
+        initRole();
     }
 
     private void initResource() {
@@ -64,36 +73,65 @@ public class AuthAutoConfiguration {
         }
     }
 
-    private void initAuthority() {
+    private void initAuthority(Role role) {
         List<Menu> menus = menuService.listAllEnabled(Sort.by("order"));
+        Long roleId = role.getId();
         // 判断是否
-        if (!authorityService.exists()) {
-            // 默认角色ID
-            Long roleId = 1L;
-            MenuAuthorityDto menuAuthority = new MenuAuthorityDto();
-            menuAuthority.setRoleId(roleId);
-            menuAuthority.setRoleName("内置分组_ROLE_ADMIN");
-            Set<MenuDto> menus_ = menus.stream().map(m -> {
-                MenuDto md = new MenuDto();
-                md.setId(m.getId());
-                return md;
-            }).collect(Collectors.toSet());
+        // 默认角色ID
+        MenuAuthorityDto menuAuthority = new MenuAuthorityDto();
+        menuAuthority.setRoleName("内置分组_ROLE_ADMIN");
+        menuAuthority.setRoleId(roleId);
+        Set<MenuDto> menus_ = menus.stream().map(m -> {
+            MenuDto md = new MenuDto();
+            md.setId(m.getId());
+            return md;
+        }).collect(Collectors.toSet());
 
-            // 初始化管理员角色的资源权限，默认授予default资源的全部权限
-            resourceService.findByName("default").ifPresent(resource -> {
-                // 将知道的授权组装为一个授权对象
-                ResourceAuthorityDto resourceAuthority = new ResourceAuthorityDto();
-                resourceAuthority.setRoleId(roleId);
-                resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
-                Map<Long, ResourceOperation> operations = Maps
+        // 初始化管理员角色的资源权限，默认授予default资源的全部权限
+        resourceService.findByName("default").ifPresent(resource -> {
+            // 将知道的授权组装为一个授权对象
+            ResourceAuthorityDto resourceAuthority = new ResourceAuthorityDto();
+            resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
+            resourceAuthority.setRoleId(roleId);
+            Map<Long, ResourceOperation> operations = Maps
                     .entry(resource.getId(), ResourceOperation.accessAll())
                     .build();
-                resourceAuthority.setResourceAuthorities(operations);
-                authorityService.save(resourceAuthority);
-            });
+            resourceAuthority.setResourceAuthorities(operations);
+            roleService.saveAuthority(resourceAuthority);
+        });
 
-            menuAuthority.setAuthorityMenus(menus_);
-            authorityService.save(menuAuthority);
+        menuAuthority.setAuthorityMenus(menus_);
+        authorityService.saveAuthority(menuAuthority);
+    }
+
+    private void initRole() {
+        // 增加默认管理员角色
+        if (!roleService.findByFullName("内置分组_ROLE_ADMIN").isPresent()) {
+            RoleDto role = new RoleDto();
+            role.setName("ROLE_ADMIN");
+            role.setGroup("内置分组");
+            role.setDescription("系统内置管理员角色");
+            role.setState(Status.ENABLED);
+            Role admin = roleService.save(role);
+            initAuthority(admin);
+        }
+        // 增加默认普通用户角色
+        if (!roleService.findByFullName("内置分组_ROLE_USER").isPresent()) {
+            RoleDto role = new RoleDto();
+            role.setName("ROLE_USER");
+            role.setGroup("内置分组");
+            role.setState(Status.ENABLED);
+            role.setDescription("系统内置普通用户角色");
+            roleService.save(role);
+        }
+        // 增加默认匿名用户角色
+        if (!roleService.findByFullName("内置分组_ROLE_ANONYMOUS").isPresent()) {
+            RoleDto role = new RoleDto();
+            role.setName("ROLE_ANONYMOUS");
+            role.setGroup("内置分组");
+            role.setDescription("系统内置匿名角色");
+            role.setState(Status.ENABLED);
+            roleService.save(role);
         }
     }
 

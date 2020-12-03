@@ -1,10 +1,11 @@
 package com.dm.uap.dingtalk.entity;
 
-import com.dm.uap.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import com.dm.auth.entity.Role;
 
 import static javax.persistence.CascadeType.*;
 

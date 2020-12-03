@@ -39,7 +39,7 @@ public interface UserService extends UserDetailsService {
 
     User repassword(long id, String password);
 
-    Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable);
+    Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable);
 
     UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException;
 

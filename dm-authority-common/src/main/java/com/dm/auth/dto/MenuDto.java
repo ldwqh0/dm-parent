@@ -1,6 +1,7 @@
 package com.dm.auth.dto;
 
 import com.dm.auth.entity.Menu.MenuType;
+import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -16,7 +17,7 @@ import java.util.Optional;
  */
 @Data
 @JsonInclude(Include.NON_NULL)
-public class MenuDto implements Serializable {
+public class MenuDto implements Serializable, IdentifiableDto<Long> {
     private static final long serialVersionUID = 7184771144233410172L;
     private Long id;
     private String name;
@@ -26,7 +27,7 @@ public class MenuDto implements Serializable {
     private String icon;
     private String description;
     private MenuType type;
-    @JsonIgnoreProperties(value = {"parent", "url", "description", "openInNewWindow"})
+    @JsonIgnoreProperties(value = { "parent", "url", "description", "openInNewWindow" })
     private MenuDto parent;
 
     private Boolean openInNewWindow;

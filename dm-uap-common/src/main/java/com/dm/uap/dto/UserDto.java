@@ -1,5 +1,6 @@
 package com.dm.uap.dto;
 
+import com.dm.auth.dto.RoleDto;
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

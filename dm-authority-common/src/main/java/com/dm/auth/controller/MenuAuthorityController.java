@@ -1,12 +1,12 @@
 package com.dm.auth.controller;
 
-import com.dm.auth.converter.AuthorityConverter;
 import com.dm.auth.converter.MenuConverter;
+import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
-import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
-import com.dm.auth.service.AuthorityService;
+import com.dm.auth.entity.Role;
+import com.dm.auth.service.RoleService;
 import com.dm.collections.CollectionUtils;
 import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
@@ -26,22 +26,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping({"menuAuthorities", "p/menuAuthorities"})
+@RequestMapping({ "menuAuthorities", "p/menuAuthorities" })
 public class MenuAuthorityController {
 
-    private final AuthorityService authorityService;
+    private final RoleService roleService;
 
     private final MenuConverter menuConverter;
 
-    private final AuthorityConverter authorityConverter;
+    private final RoleConverter roleConverter;
 
-    public MenuAuthorityController(
-        AuthorityService authorityService,
-        MenuConverter menuConverter,
-        AuthorityConverter authorityConverter) {
-        this.authorityService = authorityService;
+    public MenuAuthorityController(RoleService authorityService, MenuConverter menuConverter,
+            RoleConverter roleConverter) {
+        this.roleService = authorityService;
         this.menuConverter = menuConverter;
-        this.authorityConverter = authorityConverter;
+        this.roleConverter = roleConverter;
     }
 
     /**
@@ -55,10 +53,10 @@ public class MenuAuthorityController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
     public MenuAuthorityDto save(@PathVariable("roleName") String roleName,
-                                 @RequestBody MenuAuthorityDto authorityDto) {
+            @RequestBody MenuAuthorityDto authorityDto) {
         authorityDto.setRoleName(roleName);
-        Authority menuAuthority = authorityService.save(authorityDto);
-        return authorityConverter.toMenuAuthorityDto(menuAuthority);
+        Role menuAuthority = roleService.saveAuthority(authorityDto);
+        return roleConverter.toMenuAuthorityDto(menuAuthority);
     }
 
     /**
@@ -69,11 +67,11 @@ public class MenuAuthorityController {
      * @param roleName 角色名称
      * @return 角色的菜单授权
      */
-    @GetMapping("{roleName}")
+    @GetMapping("{roleId}")
     @Transactional(readOnly = true)
-    public MenuAuthorityDto get(@PathVariable("roleName") String roleName) {
-        return authorityService.findByRoleName(roleName).map(authorityConverter::toMenuAuthorityDto)
-            .orElseThrow(DataNotExistException::new);
+    public MenuAuthorityDto get(@PathVariable("roleId") Long roleId) {
+        return roleService.findById(roleId).map(roleConverter::toMenuAuthorityDto)
+                .orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -90,10 +88,8 @@ public class MenuAuthorityController {
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         if (CollectionUtils.isNotEmpty(authorities)) {
             List<Menu> result = authorities.stream().map(GrantedAuthority::getAuthority)
-                .map(authorityService::findByAuthority)
-                .flatMap(Set::stream).distinct()
-                .sorted((o1, o2) -> (int) (o1.getOrder() - o2.getOrder()))
-                .collect(Collectors.toList());
+                    .map(roleService::findAuthorityMenus).flatMap(Set::stream).distinct()
+                    .sorted((o1, o2) -> (int) (o1.getOrder() - o2.getOrder())).collect(Collectors.toList());
             return Lists.transform(result, menuConverter::toDto);
         } else {
             return Collections.emptyList();

@@ -2,11 +2,11 @@ package com.dm.auth.service.impl;
 
 import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.dto.MenuDto;
-import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.QMenu;
-import com.dm.auth.repository.AuthorityRepository;
+import com.dm.auth.entity.Role;
 import com.dm.auth.repository.MenuRepository;
+import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.MenuService;
 import com.dm.collections.CollectionUtils;
 import com.dm.common.exception.DataValidateException;
@@ -35,19 +35,20 @@ public class MenuServiceImpl implements MenuService {
 
     private final MenuConverter menuConverter;
 
-    private final AuthorityRepository authorityRepository;
+    private final RoleRepository roleRepository;
 
     private final QMenu qMenu = QMenu.menu;
 
-    public MenuServiceImpl(MenuRepository menuRepository, MenuConverter menuConverter, AuthorityRepository authorityRepository) {
+    public MenuServiceImpl(MenuRepository menuRepository, MenuConverter menuConverter,
+            RoleRepository authorityRepository) {
         this.menuRepository = menuRepository;
         this.menuConverter = menuConverter;
-        this.authorityRepository = authorityRepository;
+        this.roleRepository = authorityRepository;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu save(MenuDto menuDto) {
         preCheck(menuDto);
         final Menu menu = new Menu();
@@ -55,15 +56,15 @@ public class MenuServiceImpl implements MenuService {
 
         // 在保存新菜单时，继承父菜单的权限设置
         menuDto.getParent().map(MenuDto::getId)
-            .map(menuRepository::getOne)
-            .ifPresent(parent -> {
-                menu.setParent(parent);
-                // 添加权限信息
-                List<Authority> authorities = authorityRepository.findByMenu(parent);
-                if (CollectionUtils.isNotEmpty(authorities)) {
-                    authorities.stream().map(Authority::getMenus).forEach(menus -> menus.add(menu));
-                }
-            });
+                .map(menuRepository::getOne)
+                .ifPresent(parent -> {
+                    menu.setParent(parent);
+                    // 添加权限信息
+                    List<Role> authorities = roleRepository.findByMenu(parent);
+                    if (CollectionUtils.isNotEmpty(authorities)) {
+                        authorities.stream().map(Role::getMenus).forEach(menus -> menus.add(menu));
+                    }
+                });
         Menu menuResult = menuRepository.save(menu);
         menuResult.setOrder(menu.getId());
         return menuResult;
@@ -71,16 +72,16 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu update(long id, MenuDto menuDto) {
         preCheck(menuDto);
         Menu menu = menuRepository.getOne(id);
         menuConverter.copyProperties(menu, menuDto);
         menu.setParent(null);
         menuDto.getParent()
-            .map(MenuDto::getId)
-            .map(menuRepository::getOne)
-            .ifPresent(menu::setParent);
+                .map(MenuDto::getId)
+                .map(menuRepository::getOne)
+                .ifPresent(menu::setParent);
         menuRepository.save(menu);
         return menu;
     }
@@ -93,16 +94,18 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public void delete(long id) {
         Menu menu = menuRepository.getOne(id);
-        List<Authority> authorities = authorityRepository.findByMenu(menu);
+        List<Role> roles = roleRepository.findByMenu(menu);
         // 删除菜单之前，先移除相关的权限配置信息
-        if (CollectionUtils.isNotEmpty(authorities)) {
-            for (Authority authority : authorities) {
-                authority.getMenus().remove(menu);
+        if (CollectionUtils.isNotEmpty(roles)) {
+            for (Role role : roles) {
+                role.getMenus().remove(menu);
             }
         }
+        // 保存修改的角色信息
+        roleRepository.saveAll(roles);
         // 删除菜单
         menuRepository.delete(menu);
     }
@@ -118,16 +121,16 @@ public class MenuServiceImpl implements MenuService {
         }
         if (StringUtils.isNotBlank(key)) {
             builder.and(qMenu.name.containsIgnoreCase(key)
-                .or(qMenu.title.containsIgnoreCase(key))
-                .or(qMenu.url.containsIgnoreCase(key))
-                .or(qMenu.description.containsIgnoreCase(key)));
+                    .or(qMenu.title.containsIgnoreCase(key))
+                    .or(qMenu.url.containsIgnoreCase(key))
+                    .or(qMenu.description.containsIgnoreCase(key)));
         }
         return menuRepository.findAll(builder, pageable);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu patch(long id, MenuDto _menu) {
         Menu menu = menuRepository.getOne(id);
         if (Objects.nonNull(_menu.getEnabled())) {
@@ -138,7 +141,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu moveUp(long id) {
         Menu one = menuRepository.getOne(id);
         Long order = one.getOrder();
@@ -164,7 +167,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
+    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
     public Menu moveDown(long id) {
         Menu one = menuRepository.getOne(id);
         Long order = one.getOrder();

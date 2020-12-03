@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import com.dm.auth.entity.Role;
 import com.dm.common.entity.AbstractEntity;
 
 import javax.persistence.JoinColumn;
