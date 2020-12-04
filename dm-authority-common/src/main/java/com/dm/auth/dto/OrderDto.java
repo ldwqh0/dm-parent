@@ -14,7 +14,7 @@ import lombok.Data;
  *
  */
 @Data
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_ABSENT)
 public class OrderDto implements Serializable {
     private static final long serialVersionUID = -6845318546617903755L;
 

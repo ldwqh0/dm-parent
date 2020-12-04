@@ -42,19 +42,28 @@ public class RoleDto implements Serializable {
     /**
      * 任何时候，角色名称不能为空
      */
-    @NotBlank(groups = {New.class, Update.class})
-    @Size(max = 100, groups = {Default.class})
+    @NotBlank(groups = { New.class, Update.class })
+    @Size(max = 100, groups = { Default.class })
     private String name;
 
-    @Size(max = 2000, groups = {Default.class})
+    @Size(max = 2000, groups = { Default.class })
     private String description;
 
-    @NotNull(groups = {New.class, Update.class})
+    @NotNull(groups = { New.class, Update.class })
     private Status state;
 
     @Valid
-    @NotNull(groups = {New.class, Update.class})
+    @NotNull(groups = { New.class, Update.class })
     private String group;
 
+    public String getFullname() {
+        return group + "_" + name;
+    }
+
+    public void setFullname(String fullname) {
+        String[] groupName = fullname.split("\\_", 2);
+        group = groupName[0];
+        name = groupName[1];
+    }
 
 }

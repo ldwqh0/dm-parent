@@ -14,12 +14,10 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 
 import com.dm.common.entity.AbstractEntity;
 
@@ -29,7 +27,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "dm_role_", uniqueConstraints = { @UniqueConstraint(columnNames = { "role_group_id_", "name_" }) })
+@Table(name = "dm_role_", uniqueConstraints = { @UniqueConstraint(columnNames = { "group_", "name_" }) })
 public class Role extends AbstractEntity {
 
     public enum Status {
@@ -44,11 +42,9 @@ public class Role extends AbstractEntity {
     }
 
     @Column(name = "name_", length = 100, nullable = false)
-    @NotNull
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "group_", nullable = false)
+    @Column(name = "group_", nullable = false)
     private String group;
 
     @Column(name = "state_", length = 50)
@@ -75,4 +71,6 @@ public class Role extends AbstractEntity {
     public String getFullName() {
         return group + "_" + name;
     }
+    
+    
 }

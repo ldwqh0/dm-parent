@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@JsonInclude(value = Include.NON_NULL)
+@JsonInclude(value = Include.NON_ABSENT)
 @JsonIgnoreProperties(allowSetters = true, value = {"password"})
 public class UserDto implements Serializable, IdentifiableDto<Long> {
 

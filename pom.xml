@@ -40,7 +40,7 @@
     <!-- 钉钉API模块 -->
     <module>dm-dingding-api</module>
     <!-- 钉钉API和用户鉴权模块 -->
-    <module>dm-uap-dingtalk</module>
+    <!-- <module>dm-uap-dingtalk</module> -->
     <!-- 文件模块 -->
     <module>dm-file-parent/dm-file-core</module>
     <module>dm-file-parent/dm-file-spring-boot-starter</module>

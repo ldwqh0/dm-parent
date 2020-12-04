@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author LiDong
  */
 @Data
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_ABSENT)
 public class MenuDto implements Serializable, IdentifiableDto<Long> {
     private static final long serialVersionUID = 7184771144233410172L;
     private Long id;

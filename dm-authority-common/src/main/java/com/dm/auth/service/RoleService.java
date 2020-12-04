@@ -44,11 +44,21 @@ public interface RoleService {
      * @param authority
      * @return
      */
-    Optional<Role> findByFullName(String authority);
+    Optional<Role> findByFullname(String authority);
+    
+    boolean existsByFullname(String authority);
+    
 
+    /**
+     * 保存角色的菜单授权信息
+     * 
+     * @param authorityDto
+     * @return
+     */
     Role saveAuthority(MenuAuthorityDto authorityDto);
 
     /**
+     * 保存角色的资源授权信息
      * 
      * @param authorityDto
      * @return

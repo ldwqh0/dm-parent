@@ -15,7 +15,7 @@ import java.util.Set;
  * @author LiDong
  */
 @Data
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_ABSENT)
 public class MenuAuthorityDto implements Serializable {
     private static final long serialVersionUID = 4813613447760388284L;
     private Long roleId;

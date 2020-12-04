@@ -59,7 +59,7 @@ public class UapAutoConfiguration implements InitializingBean {
             user.setFullname(fullname);
             user.setPassword(password);
             user.setEnabled(true);
-            roleService.findByFullName("内置分组_ROLE_ADMIN").ifPresent(_role -> {
+            roleService.findByFullname("内置分组_ROLE_ADMIN").ifPresent(_role -> {
                 RoleDto role = new RoleDto();
                 role.setId(_role.getId());
                 user.setRoles(Collections.singletonList(role));
@@ -73,7 +73,7 @@ public class UapAutoConfiguration implements InitializingBean {
             anonymous.setPassword("ANONYMOUS");
             anonymous.setEnabled(true);
             anonymous.setFullname("匿名用户");
-            roleService.findByFullName("内置分组_ROLE_ANONYMOUS").ifPresent(_role -> {
+            roleService.findByFullname("内置分组_ROLE_ANONYMOUS").ifPresent(_role -> {
                 RoleDto role = new RoleDto();
                 role.setId(_role.getId());
                 anonymous.setRoles(Collections.singletonList(role));

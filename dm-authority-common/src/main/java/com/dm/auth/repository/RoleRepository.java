@@ -18,6 +18,8 @@ public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredi
     List<Role> findByState(Status enabled);
 
     Optional<Role> findByGroupAndName(String group, String name);
+    
+    boolean existsByGroupAndName(String group, String name);
 
     List<Role> findByMenu(Menu menu);
 

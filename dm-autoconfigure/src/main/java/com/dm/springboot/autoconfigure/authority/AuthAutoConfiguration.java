@@ -106,7 +106,7 @@ public class AuthAutoConfiguration {
 
     private void initRole() {
         // 增加默认管理员角色
-        if (!roleService.findByFullName("内置分组_ROLE_ADMIN").isPresent()) {
+        if (!roleService.findByFullname("内置分组_ROLE_ADMIN").isPresent()) {
             RoleDto role = new RoleDto();
             role.setName("ROLE_ADMIN");
             role.setGroup("内置分组");
@@ -116,7 +116,7 @@ public class AuthAutoConfiguration {
             initAuthority(admin);
         }
         // 增加默认普通用户角色
-        if (!roleService.findByFullName("内置分组_ROLE_USER").isPresent()) {
+        if (!roleService.findByFullname("内置分组_ROLE_USER").isPresent()) {
             RoleDto role = new RoleDto();
             role.setName("ROLE_USER");
             role.setGroup("内置分组");
@@ -125,7 +125,7 @@ public class AuthAutoConfiguration {
             roleService.save(role);
         }
         // 增加默认匿名用户角色
-        if (!roleService.findByFullName("内置分组_ROLE_ANONYMOUS").isPresent()) {
+        if (!roleService.findByFullname("内置分组_ROLE_ANONYMOUS").isPresent()) {
             RoleDto role = new RoleDto();
             role.setName("ROLE_ANONYMOUS");
             role.setGroup("内置分组");
