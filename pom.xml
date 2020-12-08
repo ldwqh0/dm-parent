@@ -13,7 +13,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <guava.version>29.0-jre</guava.version>
     <spring.cloud.version>Hoxton.SR9</spring.cloud.version>
-    <springboot.version>2.3.4.RELEASE</springboot.version>
+    <springboot.version>2.3.6.RELEASE</springboot.version>
     <springfox.version>2.9.2</springfox.version>
     <hibernate.version>5.4.21.Final</hibernate.version>
     <commons-lang3.version>3.11</commons-lang3.version>
