@@ -4,6 +4,7 @@ import com.dm.file.config.FileConfig;
 import com.dm.file.controller.FileController;
 import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.entity.FileInfo;
+import com.dm.file.listener.FileListener;
 import com.dm.file.repository.FileInfoRepository;
 import com.dm.file.service.FileInfoService;
 import com.dm.file.service.FileStorageService;
@@ -57,6 +58,14 @@ public class FileConfiguration {
     @ConfigurationProperties(prefix = "file")
     public FileConfig fileConfig() {
         return new FileConfig();
+    }
+
+
+    @Bean
+    public FileListener fileListener() {
+        FileListener fileListener = new FileListener();
+        fileListener.setStorageService(fileStorageService());
+        return fileListener;
     }
 
     @Bean

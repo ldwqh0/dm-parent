@@ -12,10 +12,10 @@ public class FileConfig {
     private String path;
     private final Map<String, String> mime;
     private String tempPath;
+    private boolean deleteFromStorage = true;
 
     /**
      * 设置文件的下载路径，在配合nginx下载时有效 <br>
-     * 
      */
     private String accelRedirectPath = "/files/location/";
 
@@ -246,6 +246,17 @@ public class FileConfig {
 
     public void setAccelRedirectPath(String accelRedirectPath) {
         this.accelRedirectPath = accelRedirectPath;
+    }
+
+    /**
+     * 在从实体中删除文件时，是否从fileStorage中同时删除物理文件，默认为true
+     */
+    public void setDeleteFromStorage(boolean deleteFromStorage) {
+        this.deleteFromStorage = deleteFromStorage;
+    }
+
+    public boolean isDeleteFromStorage() {
+        return deleteFromStorage;
     }
 
     public void setMime(Map<String, String> mime) {
