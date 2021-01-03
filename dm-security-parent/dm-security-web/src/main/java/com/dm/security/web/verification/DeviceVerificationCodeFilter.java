@@ -38,7 +38,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
     private String verifyCodeKeyParameterName = "email";
 
-    private DeviceVerificationCodeStorage storage;
+    private DeviceVerificationCodeStorage storage = null;
 
     private final ObjectMapper om = new ObjectMapper();
 

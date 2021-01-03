@@ -57,16 +57,16 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     // 进行请求限定的请求类型
     private final HttpMethod[] methods = {
-            HttpMethod.GET,
-            HttpMethod.POST,
-            HttpMethod.PUT,
-            HttpMethod.DELETE,
-            HttpMethod.PATCH
+        HttpMethod.GET,
+        HttpMethod.POST,
+        HttpMethod.PUT,
+        HttpMethod.DELETE,
+        HttpMethod.PATCH
     };
 
     @Autowired
     public RoleServiceImpl(RoleConverter roleConverter, RoleRepository roleRepository, MenuRepository menuRepository,
-            ResourceRepository resourceRepository) {
+                           ResourceRepository resourceRepository) {
         this.roleConverter = roleConverter;
         this.roleRepository = roleRepository;
         this.menuRepository = menuRepository;
@@ -156,7 +156,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
     /**
      * 根据角色查询菜单项目
      *
-     * @param auth 角色名称
+     * @param authority 角色名称
      * @return 角色的授权菜单列表
      */
     @Override
@@ -165,25 +165,25 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
     public Set<Menu> findAuthorityMenus(String authority) {
         Set<Menu> parents = new HashSet<>();
         Set<Menu> menus = findByFullname(authority).map(Role::getMenus)
-                .orElseGet(Collections::emptySet);
+            .orElseGet(Collections::emptySet);
         // 递归添加所有父级菜单
         for (Menu menu : menus) {
             addParent(menu, parents);
         }
         menus.addAll(parents);
-        menus.removeIf(next -> !isEnabled(next));
+        menus.removeIf(this::isDisabled);
         return menus;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
+    @CacheEvict(cacheNames = {"AuthorityAttributes"}, key = "'all_resource'")
     public Role saveAuthority(ResourceAuthorityDto authorityDto) {
         Long roleId = authorityDto.getRoleId();
         if (roleRepository.existsById(roleId)) {
             Role role = roleRepository.getOne(roleId);
             Map<AuthResource, ResourceOperation> resultOperations = Maps
-                    .transformKeys(authorityDto.getResourceAuthorities(), resourceRepository::getOne);
+                .transformKeys(authorityDto.getResourceAuthorities(), resourceRepository::getOne);
             role.setResourceOperations(resultOperations);
             return roleRepository.save(role);
         } else {
@@ -191,15 +191,15 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         }
     }
 
-    @Override
-    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
-    @Transactional(rollbackFor = Throwable.class)
-    public void deleteResourceAuthoritiesByRoleName(String rolename) {
-        findByFullname(rolename).ifPresent(role -> {
-            role.setResourceOperations(null);
-            roleRepository.save(role);
-        });
-    }
+//    @Override
+//    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
+//    @Transactional(rollbackFor = Throwable.class)
+//    public void deleteResourceAuthoritiesByRoleName(String rolename) {
+//        findByFullname(rolename).ifPresent(role -> {
+//            role.setResourceOperations(null);
+//            roleRepository.save(role);
+//        });
+//    }
 
     @Override
     public Optional<Role> findById(Long id) {
@@ -218,6 +218,10 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
             collection.add(menu.getParent());
             addParent(parent, collection);
         }
+    }
+
+    private boolean isDisabled(Menu menu) {
+        return !isEnabled(menu);
     }
 
     /**
@@ -255,28 +259,28 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
     }
 
     private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map, AuthResource resource,
-            HttpMethod method, ResourceOperation operation, String authority) {
+                              HttpMethod method, ResourceOperation operation, String authority) {
         UriResource ur = UriResource.of(method.toString(), resource.getMatcher(), resource.getMatchType(),
-                resource.getScope());
+            resource.getScope());
         Boolean access = null;
         switch (method) {
-        case POST:
-            access = operation.getSaveable();
-            break;
-        case PUT:
-            access = operation.getUpdateable();
-            break;
-        case GET:
-            access = operation.getReadable();
-            break;
-        case DELETE:
-            access = operation.getDeleteable();
-            break;
-        case PATCH:
-            access = operation.getPatchable();
-            break;
-        default:
-            break;
+            case POST:
+                access = operation.getSaveable();
+                break;
+            case PUT:
+                access = operation.getUpdateable();
+                break;
+            case GET:
+                access = operation.getReadable();
+                break;
+            case DELETE:
+                access = operation.getDeleteable();
+                break;
+            case PATCH:
+                access = operation.getPatchable();
+                break;
+            default:
+                break;
         }
 
         ResourceAuthorityAttribute raa = map.get(ur);

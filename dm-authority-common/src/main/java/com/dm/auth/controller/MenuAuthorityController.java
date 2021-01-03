@@ -19,14 +19,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping({ "menuAuthorities", "p/menuAuthorities" })
+@RequestMapping({"menuAuthorities", "p/menuAuthorities"})
 public class MenuAuthorityController {
 
     private final RoleService roleService;
@@ -36,7 +33,7 @@ public class MenuAuthorityController {
     private final RoleConverter roleConverter;
 
     public MenuAuthorityController(RoleService authorityService, MenuConverter menuConverter,
-            RoleConverter roleConverter) {
+                                   RoleConverter roleConverter) {
         this.roleService = authorityService;
         this.menuConverter = menuConverter;
         this.roleConverter = roleConverter;
@@ -50,10 +47,10 @@ public class MenuAuthorityController {
      * @return 菜单授权配置
      */
     @PutMapping("{roleName}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('内置分组_ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
     public MenuAuthorityDto save(@PathVariable("roleName") String roleName,
-            @RequestBody MenuAuthorityDto authorityDto) {
+                                 @RequestBody MenuAuthorityDto authorityDto) {
         authorityDto.setRoleName(roleName);
         Role menuAuthority = roleService.saveAuthority(authorityDto);
         return roleConverter.toMenuAuthorityDto(menuAuthority);
@@ -64,14 +61,14 @@ public class MenuAuthorityController {
      * <p>
      * 只会列出明确标记为选中的菜单项。
      *
-     * @param roleName 角色名称
+     * @param roleId 角色名称
      * @return 角色的菜单授权
      */
     @GetMapping("{roleId}")
     @Transactional(readOnly = true)
     public MenuAuthorityDto get(@PathVariable("roleId") Long roleId) {
         return roleService.findById(roleId).map(roleConverter::toMenuAuthorityDto)
-                .orElseThrow(DataNotExistException::new);
+            .orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -88,8 +85,8 @@ public class MenuAuthorityController {
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         if (CollectionUtils.isNotEmpty(authorities)) {
             List<Menu> result = authorities.stream().map(GrantedAuthority::getAuthority)
-                    .map(roleService::findAuthorityMenus).flatMap(Set::stream).distinct()
-                    .sorted((o1, o2) -> (int) (o1.getOrder() - o2.getOrder())).collect(Collectors.toList());
+                .map(roleService::findAuthorityMenus).flatMap(Set::stream).distinct()
+                .sorted(Comparator.comparing(Menu::getOrder)).collect(Collectors.toList());
             return Lists.transform(result, menuConverter::toDto);
         } else {
             return Collections.emptyList();
