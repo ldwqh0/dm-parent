@@ -137,9 +137,8 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "AuthorityMenus", key = "#p0.roleName")
-    public Role saveAuthority(MenuAuthorityDto authorityDto) {
-        Long roleId = authorityDto.getRoleId();
+    @CacheEvict(cacheNames = "AuthorityMenus", allEntries = true)
+    public Role saveAuthority(Long roleId, MenuAuthorityDto authorityDto) {
         Role authority;
         if (roleRepository.existsById(roleId)) {
             authority = roleRepository.getOne(roleId);
@@ -160,7 +159,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
      * @return 角色的授权菜单列表
      */
     @Override
-    @Cacheable(cacheNames = "AuthorityMenus")
+    @Cacheable(cacheNames = "AuthorityMenus", sync = true)
     @Transactional(readOnly = true)
     public Set<Menu> findAuthorityMenus(String authority) {
         Set<Menu> parents = new HashSet<>();

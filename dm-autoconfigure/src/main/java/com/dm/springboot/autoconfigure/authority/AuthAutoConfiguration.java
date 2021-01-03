@@ -27,10 +27,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@ConditionalOnClass({ Role.class })
-@EntityScan({ "com.dm.auth" })
-@EnableJpaRepositories({ "com.dm.auth" })
-@ComponentScan({ "com.dm.auth" })
+@ConditionalOnClass({Role.class})
+@EntityScan({"com.dm.auth"})
+@EnableJpaRepositories({"com.dm.auth"})
+@ComponentScan({"com.dm.auth"})
 @Import(AuthJCacheConfiguration.class)
 public class AuthAutoConfiguration {
 
@@ -43,7 +43,7 @@ public class AuthAutoConfiguration {
     private final RoleService roleService;
 
     public AuthAutoConfiguration(MenuService menuService, ResourceService resourceService, RoleService authorityService,
-            RoleService roleService) {
+                                 RoleService roleService) {
         super();
         this.menuService = menuService;
         this.resourceService = resourceService;
@@ -94,14 +94,14 @@ public class AuthAutoConfiguration {
             resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
             resourceAuthority.setRoleId(roleId);
             Map<Long, ResourceOperation> operations = Maps
-                    .entry(resource.getId(), ResourceOperation.accessAll())
-                    .build();
+                .entry(resource.getId(), ResourceOperation.accessAll())
+                .build();
             resourceAuthority.setResourceAuthorities(operations);
             roleService.saveAuthority(resourceAuthority);
         });
 
         menuAuthority.setAuthorityMenus(menus_);
-        authorityService.saveAuthority(menuAuthority);
+        authorityService.saveAuthority(roleId, menuAuthority);
     }
 
     private void initRole() {

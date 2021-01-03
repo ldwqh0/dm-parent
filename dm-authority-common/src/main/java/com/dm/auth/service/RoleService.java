@@ -51,10 +51,11 @@ public interface RoleService {
     /**
      * 保存角色的菜单授权信息
      *
-     * @param authorityDto
+     * @param roleId 角色id
+     * @param authorityDto 角色菜单授权信息
      * @return
      */
-    Role saveAuthority(MenuAuthorityDto authorityDto);
+    Role saveAuthority(Long roleId, MenuAuthorityDto authorityDto);
 
     /**
      * 保存角色的资源授权信息
