@@ -1,11 +1,16 @@
 package com.dm.auth.entity;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.common.entity.AbstractEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -74,7 +79,7 @@ public class Menu extends AbstractEntity {
     @Column(name = "description_", length = 1000)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_")
     private Menu parent;
 
@@ -86,7 +91,38 @@ public class Menu extends AbstractEntity {
      * 是否在新窗口种打开链接
      */
     @Column(name = "open_in_new_window_")
-    private Boolean openInNewWindow;
+    private Boolean openInNewWindow = Boolean.FALSE;
 
+    @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Menu> children;
 
+    public void setChildren(List<Menu> children) {
+        if (CollectionUtils.isNotEmpty(children)) {
+            children.forEach(child -> child.setParent(this));
+        }
+        this.children = children;
+    }
+
+    public Menu(@NotNull String name) {
+        this(name, null);
+    }
+
+    public Menu(@NotNull String name, String url) {
+        this(name, name, url);
+    }
+
+    public Menu(@NotNull String name, String title, String url) {
+        this.name = name;
+        this.title = title;
+        this.url = url;
+    }
+
+    public Menu children(List<Menu> children) {
+        this.setChildren(children);
+        return this;
+    }
+
+    public Menu() {
+
+    }
 }

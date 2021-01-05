@@ -18,14 +18,10 @@ public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredi
     List<Role> findByState(Status enabled);
 
     Optional<Role> findByGroupAndName(String group, String name);
-    
+
     boolean existsByGroupAndName(String group, String name);
 
     List<Role> findByMenu(Menu menu);
-
-    @Query("update Role set state=:state where id in (:deletedIds)")
-    @Modifying
-    int batchSetState(@Param("deletedIds") List<Long> deletedIds, @Param("state") Status disabled);
 
     @Query("select r from Role r join r.resourceOperations ro where KEY(ro).id=:resourceId")
     List<Role> findByResourceOperationsResourceId(@Param("resourceId") Long resourceId);

@@ -21,6 +21,7 @@ import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
 import com.querydsl.core.BooleanBuilder;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -43,6 +44,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     private final RoleConverter roleConverter;
@@ -63,15 +65,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         HttpMethod.DELETE,
         HttpMethod.PATCH
     };
-
-    @Autowired
-    public RoleServiceImpl(RoleConverter roleConverter, RoleRepository roleRepository, MenuRepository menuRepository,
-                           ResourceRepository resourceRepository) {
-        this.roleConverter = roleConverter;
-        this.roleRepository = roleRepository;
-        this.menuRepository = menuRepository;
-        this.resourceRepository = resourceRepository;
-    }
 
     @Override
     public boolean exist() {

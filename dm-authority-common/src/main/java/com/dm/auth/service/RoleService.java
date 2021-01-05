@@ -14,12 +14,30 @@ import java.util.Set;
 
 public interface RoleService {
 
+    /**
+     * 判断系统中角色是否存在
+     *
+     * @return 如果系统中不存在任何角色，返回false，否则返回true
+     */
     boolean exist();
 
+    /**
+     * 保存角色信息
+     *
+     * @param dto 角色信息
+     * @return 保存后的角色实体
+     */
     Role save(RoleDto dto);
 
     Optional<Role> findById(Long id);
 
+    /**
+     * 判断是否存在指定名称的角色是否存在，需要排除掉指定的ID，用于前的段角色重名验证
+     *
+     * @param id   需要排除的角色id
+     * @param name 要验证的角色名称
+     * @return 存在返回true, 不存在返回false
+     */
     boolean nameExist(Long id, String name);
 
     Role update(long id, RoleDto roleDto);
@@ -33,35 +51,41 @@ public interface RoleService {
     /**
      * 列出所有可用角色
      *
-     * @return
+     * @return 可用的角色的列表
      */
     List<Role> listAllEnabled();
 
     /**
-     * 根据角色全面查找角色
+     * 根据角色全名查找角色
      *
-     * @param authority
-     * @return
+     * @param authority 角色全民
+     * @return 查找结果
      */
     Optional<Role> findByFullname(String authority);
 
+    /**
+     * 根据角色全民判断角色是否存在
+     *
+     * @param authority 角色全名
+     * @return 判断结果，如果存在返回true,否则返回false
+     */
     boolean existsByFullname(String authority);
 
 
     /**
      * 保存角色的菜单授权信息
      *
-     * @param roleId 角色id
+     * @param roleId       角色id
      * @param authorityDto 角色菜单授权信息
-     * @return
+     * @return 更新菜单信息后的角色信息
      */
     Role saveAuthority(Long roleId, MenuAuthorityDto authorityDto);
 
     /**
      * 保存角色的资源授权信息
      *
-     * @param authorityDto
-     * @return
+     * @param authorityDto 角色的资源授权信息
+     * @return 更新授权信息后的角色实体
      */
     Role saveAuthority(ResourceAuthorityDto authorityDto);
 

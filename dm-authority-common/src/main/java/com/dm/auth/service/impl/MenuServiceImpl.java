@@ -22,10 +22,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +37,7 @@ public class MenuServiceImpl implements MenuService {
     private final QMenu qMenu = QMenu.menu;
 
     public MenuServiceImpl(MenuRepository menuRepository, MenuConverter menuConverter,
-            RoleRepository authorityRepository) {
+                           RoleRepository authorityRepository) {
         this.menuRepository = menuRepository;
         this.menuConverter = menuConverter;
         this.roleRepository = authorityRepository;
@@ -48,40 +45,57 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
+    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu save(MenuDto menuDto) {
         preCheck(menuDto);
         final Menu menu = new Menu();
         menuConverter.copyProperties(menu, menuDto);
-
         // 在保存新菜单时，继承父菜单的权限设置
         menuDto.getParent().map(MenuDto::getId)
-                .map(menuRepository::getOne)
-                .ifPresent(parent -> {
-                    menu.setParent(parent);
-                    // 添加权限信息
-                    List<Role> authorities = roleRepository.findByMenu(parent);
-                    if (CollectionUtils.isNotEmpty(authorities)) {
-                        authorities.stream().map(Role::getMenus).forEach(menus -> menus.add(menu));
-                    }
-                });
+            .map(menuRepository::getOne)
+            .ifPresent(parent -> {
+                menu.setParent(parent);
+                // 添加权限信息
+                List<Role> authorities = roleRepository.findByMenu(parent);
+                if (CollectionUtils.isNotEmpty(authorities)) {
+                    authorities.stream().map(Role::getMenus).forEach(menus -> menus.add(menu));
+                }
+            });
         Menu menuResult = menuRepository.save(menu);
         menuResult.setOrder(menu.getId());
         return menuResult;
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public List<Menu> save(Collection<Menu> menus) {
+        List<Menu> result = menuRepository.saveAll(menus);
+        initOrder(result);
+        return menuRepository.saveAll(result);
+    }
+
+    private void initOrder(List<Menu> menus) {
+        if (CollectionUtils.isNotEmpty(menus)) {
+            menus.forEach(menu -> {
+                initOrder(menu.getChildren());
+                menu.setOrder(menu.getId());
+            });
+        }
+    }
+
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
+    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu update(long id, MenuDto menuDto) {
         preCheck(menuDto);
         Menu menu = menuRepository.getOne(id);
         menuConverter.copyProperties(menu, menuDto);
         menu.setParent(null);
         menuDto.getParent()
-                .map(MenuDto::getId)
-                .map(menuRepository::getOne)
-                .ifPresent(menu::setParent);
+            .map(MenuDto::getId)
+            .map(menuRepository::getOne)
+            .ifPresent(menu::setParent);
         menuRepository.save(menu);
         return menu;
     }
@@ -94,7 +108,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
+    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public void delete(long id) {
         Menu menu = menuRepository.getOne(id);
         List<Role> roles = roleRepository.findByMenu(menu);
@@ -121,16 +135,16 @@ public class MenuServiceImpl implements MenuService {
         }
         if (StringUtils.isNotBlank(key)) {
             builder.and(qMenu.name.containsIgnoreCase(key)
-                    .or(qMenu.title.containsIgnoreCase(key))
-                    .or(qMenu.url.containsIgnoreCase(key))
-                    .or(qMenu.description.containsIgnoreCase(key)));
+                .or(qMenu.title.containsIgnoreCase(key))
+                .or(qMenu.url.containsIgnoreCase(key))
+                .or(qMenu.description.containsIgnoreCase(key)));
         }
         return menuRepository.findAll(builder, pageable);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
+    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu patch(long id, MenuDto _menu) {
         Menu menu = menuRepository.getOne(id);
         if (Objects.nonNull(_menu.getEnabled())) {
@@ -141,7 +155,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
+    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu moveUp(long id) {
         Menu one = menuRepository.getOne(id);
         Long order = one.getOrder();
@@ -167,7 +181,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = { "AuthorityMenus" }, allEntries = true)
+    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu moveDown(long id) {
         Menu one = menuRepository.getOne(id);
         Long order = one.getOrder();
@@ -229,6 +243,10 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public boolean exists() {
         return menuRepository.count() > 0;
+    }
+
+    public long count() {
+        return menuRepository.count();
     }
 
 }

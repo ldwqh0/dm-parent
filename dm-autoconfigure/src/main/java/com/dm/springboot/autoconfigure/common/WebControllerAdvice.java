@@ -36,8 +36,6 @@ import java.util.Map;
 public class WebControllerAdvice {
     /**
      * 重新定义ErrorAttributes,使之可以包含详情
-     *
-     * @return
      */
     @Bean
     @ConditionalOnMissingBean(value = ErrorAttributes.class, search = SearchStrategy.CURRENT)
@@ -55,7 +53,7 @@ public class WebControllerAdvice {
             requestUri = ((ServletWebRequest) request).getRequest().getRequestURI();
         }
         List<Map<String, Object>> errors = new ArrayList<>();
-        for (ConstraintViolation v : ex.getConstraintViolations()) {
+        for (ConstraintViolation<?> v : ex.getConstraintViolations()) {
             v.getExecutableParameters();
             Map<String, Object> error = new HashMap<>();
             error.put("defaultMessage", v.getMessage());

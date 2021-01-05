@@ -6,12 +6,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 public interface MenuService {
 
     Menu save(MenuDto menuDto);
+
+    /**
+     * 批量保存菜单信息,用于菜单初始化,其它地方不用
+     *
+     * @param menus 要保存的菜单列表
+     * @return 保存后的菜单列表
+     */
+    List<Menu> save(Collection<Menu> menus);
 
     Menu update(long id, MenuDto menuDto);
 
@@ -30,5 +39,7 @@ public interface MenuService {
     List<Menu> listAllEnabled(Sort sort);
 
     boolean exists();
+
+    long count();
 
 }

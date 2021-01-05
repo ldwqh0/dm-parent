@@ -7,6 +7,7 @@ import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapJCacheConfigu
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -16,7 +17,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,22 +30,23 @@ import java.util.Collections;
 import java.util.Objects;
 
 @ConditionalOnClass(User.class)
-@EntityScan({ "com.dm.uap" })
-@EnableJpaRepositories({ "com.dm.uap" })
-@ComponentScan({ "com.dm.uap" })
-@EnableConfigurationProperties({ DefaultUserProperties.class })
-@Import({ UapJCacheConfiguration.class, UapBeanConfiguration.class })
+@EntityScan({"com.dm.uap"})
+@EnableJpaRepositories({"com.dm.uap"})
+@ComponentScan({"com.dm.uap"})
+@EnableConfigurationProperties({DefaultUserProperties.class})
+@Import({UapJCacheConfiguration.class, UapBeanConfiguration.class})
+@RequiredArgsConstructor
 public class UapAutoConfiguration implements InitializingBean {
 
-    @Autowired
-    private DefaultUserProperties defaultUser;
+    //    @Autowired
+    private final DefaultUserProperties defaultUser;
 
-    @Autowired
-    private RoleService roleService;
+    //    @Autowired
+    private final RoleService roleService;
 
-    @Autowired
-    @Lazy
-    private UserService userService;
+    //    @Autowired
+//    @Lazy
+    private final UserService userService;
 
     private void initUser() {
         String username = defaultUser.getUsername();
@@ -87,9 +88,6 @@ public class UapAutoConfiguration implements InitializingBean {
      */
     @Override
     public void afterPropertiesSet() {
-//        // 初始化角色
-//        initRole();
-
         // 初始化用户
         initUser();
     }
@@ -108,8 +106,8 @@ public class UapAutoConfiguration implements InitializingBean {
         @Autowired(required = false)
         public void setCacheManager(CacheManager cacheManager) {
             MutableConfiguration<String, Object> configuration = new MutableConfiguration<String, Object>()
-                    .setTypes(String.class, Object.class).setStoreByValue(false)
-                    .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
+                .setTypes(String.class, Object.class).setStoreByValue(false)
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
             // 创建默认的用户cache
             Cache<String, Object> userCache = cacheManager.getCache("users");
             if (Objects.isNull(userCache)) {

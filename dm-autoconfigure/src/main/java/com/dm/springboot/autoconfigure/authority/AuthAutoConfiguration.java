@@ -14,6 +14,7 @@ import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Maps;
 import com.dm.security.authentication.UriResource.MatchType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 @EnableJpaRepositories({"com.dm.auth"})
 @ComponentScan({"com.dm.auth"})
 @Import(AuthJCacheConfiguration.class)
+@RequiredArgsConstructor
 public class AuthAutoConfiguration {
 
     private final MenuService menuService;
@@ -42,23 +44,13 @@ public class AuthAutoConfiguration {
 
     private final RoleService roleService;
 
-    public AuthAutoConfiguration(MenuService menuService, ResourceService resourceService, RoleService authorityService,
-                                 RoleService roleService) {
-        super();
-        this.menuService = menuService;
-        this.resourceService = resourceService;
-        this.authorityService = authorityService;
-        this.roleService = roleService;
-    }
-
     @PostConstruct
     public void init() {
-        // 初始化菜单
-        initMenu();
 
+        // 初始化资源信息
         initResource();
 
-        // 初始化用户菜单授权信息
+        // 初始化角色信息
         initRole();
     }
 
@@ -106,7 +98,7 @@ public class AuthAutoConfiguration {
 
     private void initRole() {
         // 增加默认管理员角色
-        if (!roleService.findByFullname("内置分组_ROLE_ADMIN").isPresent()) {
+        if (!roleService.existsByFullname("内置分组_ROLE_ADMIN")) {
             RoleDto role = new RoleDto();
             role.setName("ROLE_ADMIN");
             role.setGroup("内置分组");
@@ -116,7 +108,7 @@ public class AuthAutoConfiguration {
             initAuthority(admin);
         }
         // 增加默认普通用户角色
-        if (!roleService.findByFullname("内置分组_ROLE_USER").isPresent()) {
+        if (!roleService.existsByFullname("内置分组_ROLE_USER")) {
             RoleDto role = new RoleDto();
             role.setName("ROLE_USER");
             role.setGroup("内置分组");
@@ -125,7 +117,7 @@ public class AuthAutoConfiguration {
             roleService.save(role);
         }
         // 增加默认匿名用户角色
-        if (!roleService.findByFullname("内置分组_ROLE_ANONYMOUS").isPresent()) {
+        if (!roleService.existsByFullname("内置分组_ROLE_ANONYMOUS")) {
             RoleDto role = new RoleDto();
             role.setName("ROLE_ANONYMOUS");
             role.setGroup("内置分组");
@@ -134,17 +126,4 @@ public class AuthAutoConfiguration {
             roleService.save(role);
         }
     }
-
-    private void initMenu() {
-        if (!menuService.exists()) {
-            MenuDto menu = new MenuDto();
-            menu.setName("home");
-            menu.setEnabled(Boolean.TRUE);
-            menu.setTitle("首页");
-            menu.setUrl("/");
-            menu.setType(Menu.MenuType.COMPONENT);
-            menuService.save(menu);
-        }
-    }
-
 }
