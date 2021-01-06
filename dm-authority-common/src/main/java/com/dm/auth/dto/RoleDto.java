@@ -1,9 +1,11 @@
 package com.dm.auth.dto;
 
 import com.dm.auth.entity.Role.Status;
+import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +19,7 @@ import java.io.Serializable;
  */
 @Data
 @JsonInclude(value = Include.NON_EMPTY)
-public class RoleDto implements Serializable {
+public class RoleDto implements IdentifiableDto<Long>, Serializable {
     private static final long serialVersionUID = 4725729366179649819L;
 
     public interface ReferenceBy {
@@ -42,18 +44,18 @@ public class RoleDto implements Serializable {
     /**
      * 任何时候，角色名称不能为空
      */
-    @NotBlank(groups = { New.class, Update.class })
-    @Size(max = 100, groups = { Default.class })
+    @NotBlank(groups = {New.class, Update.class})
+    @Size(max = 100, groups = {Default.class})
     private String name;
 
-    @Size(max = 2000, groups = { Default.class })
+    @Size(max = 2000, groups = {Default.class})
     private String description;
 
-    @NotNull(groups = { New.class, Update.class })
+    @NotNull(groups = {New.class, Update.class})
     private Status state;
 
     @Valid
-    @NotNull(groups = { New.class, Update.class })
+    @NotNull(groups = {New.class, Update.class})
     private String group;
 
     public String getFullname() {

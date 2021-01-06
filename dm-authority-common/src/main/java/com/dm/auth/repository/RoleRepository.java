@@ -1,5 +1,7 @@
 package com.dm.auth.repository;
 
+import com.dm.common.dto.IdentifiableDto;
+import com.dm.common.repository.IdentifiableDtoRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,7 @@ import com.dm.auth.entity.Role.Status;
 import java.util.List;
 import java.util.Optional;
 
-public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredicateExecutor<Role> {
+public interface RoleRepository extends IdentifiableDtoRepository<Role, Long>, QuerydslPredicateExecutor<Role> {
 
     List<Role> findByState(Status enabled);
 
