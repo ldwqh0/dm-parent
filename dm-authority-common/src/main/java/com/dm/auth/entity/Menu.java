@@ -52,7 +52,7 @@ public class Menu extends AbstractEntity {
     /**
      * 状态 启用true,禁用false
      */
-    @Column(name = "enabled_")
+    @Column(name = "enabled_", nullable = false)
     private boolean enabled = true;
 
     /**
@@ -90,7 +90,7 @@ public class Menu extends AbstractEntity {
     /**
      * 是否在新窗口种打开链接
      */
-    @Column(name = "open_in_new_window_")
+    @Column(name = "open_in_new_window_", nullable = false)
     private Boolean openInNewWindow = Boolean.FALSE;
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -65,7 +65,7 @@ public abstract class AbstractEntity implements Persistable<Long> {
      * hibernate的默认乐观锁实现仅仅在线程并发时才会生效。而我们需要的业务可能线程并没有并发，仅仅是人的并行编辑的动作，因此需要手动的对version进行检查<br>
      * 这个检查不是必须的，由各个实体根据自身的业务需求而定
      *
-     * @param version
+     * @param version 待检查的传入的版本号
      */
     public void checkVersion(Long version) {
         if (!Objects.equals(this.version, version)) {

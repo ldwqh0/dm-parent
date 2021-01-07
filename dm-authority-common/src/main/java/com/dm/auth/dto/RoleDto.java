@@ -52,7 +52,7 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
     private String description;
 
     @NotNull(groups = {New.class, Update.class})
-    private Status state;
+    private Status state = Status.ENABLED;
 
     @Valid
     @NotNull(groups = {New.class, Update.class})

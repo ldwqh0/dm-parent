@@ -22,15 +22,15 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
     private Long id;
     private String name;
     private String title;
-    private Boolean enabled;
+    private Boolean enabled = Boolean.TRUE;
     private String url;
     private String icon;
     private String description;
-    private MenuType type;
-    @JsonIgnoreProperties(value = { "parent", "url", "description", "openInNewWindow" })
+    private MenuType type = MenuType.COMPONENT;
+    @JsonIgnoreProperties(value = {"parent", "url", "description", "openInNewWindow"})
     private MenuDto parent;
 
-    private Boolean openInNewWindow;
+    private Boolean openInNewWindow = Boolean.FALSE;
 
     public Optional<MenuDto> getParent() {
         return Optional.ofNullable(parent);

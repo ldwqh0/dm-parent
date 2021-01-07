@@ -27,7 +27,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "dm_role_", uniqueConstraints = { @UniqueConstraint(columnNames = { "group_", "name_" }) })
+@Table(name = "dm_role_", uniqueConstraints = {@UniqueConstraint(columnNames = {"group_", "name_"})})
 public class Role extends AbstractEntity {
 
     public enum Status {
@@ -47,7 +47,7 @@ public class Role extends AbstractEntity {
     @Column(name = "group_", nullable = false)
     private String group;
 
-    @Column(name = "state_", length = 50)
+    @Column(name = "state_", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     private Status state;
 
@@ -56,14 +56,17 @@ public class Role extends AbstractEntity {
 
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "dm_role_menu_", joinColumns = {
-            @JoinColumn(name = "role_id_", referencedColumnName = "id_") }, inverseJoinColumns = {
-                    @JoinColumn(name = "menu_id_", referencedColumnName = "id_") }, indexes = {
-                            @Index(columnList = "role_id_", name = "IDX_dm_role_menu_role_id_") })
+        @JoinColumn(name = "role_id_", referencedColumnName = "id_")
+    }, inverseJoinColumns = {
+        @JoinColumn(name = "menu_id_", referencedColumnName = "id_")
+    }, indexes = {
+        @Index(columnList = "role_id_", name = "IDX_dm_role_menu_role_id_")
+    })
     private Set<Menu> menus;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @JoinTable(name = "dm_role_resource_operation_", joinColumns = {
-            @JoinColumn(name = "role_id_", referencedColumnName = "id_") })
+        @JoinColumn(name = "role_id_", referencedColumnName = "id_")})
     @OrderColumn(name = "order_by_")
     @MapKeyJoinColumn(name = "resource_id_")
     private Map<AuthResource, ResourceOperation> resourceOperations;
@@ -71,6 +74,4 @@ public class Role extends AbstractEntity {
     public String getFullName() {
         return group + "_" + name;
     }
-    
-    
 }
