@@ -8,6 +8,13 @@
 
 ## 升级日志
 
+1.2.3
+
+* 升级spring boot 至 2.3.7.release
+* 添加typescript-generator-maven-plugin
+* 升级querydsl至2.4.0
+* 升级hibernate至5.4.27
+
 1.2.2
 
 * 修改角色和菜单dto的定义，增加菜单初始化方法

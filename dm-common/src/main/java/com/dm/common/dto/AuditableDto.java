@@ -14,16 +14,16 @@ import lombok.Setter;
 public class AuditableDto implements Serializable {
     private static final long serialVersionUID = -5872361624625517456L;
 
-    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Audit createBy;
 
-    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Audit lastModifiedBy;
 
-    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ZonedDateTime createdDate;
 
-    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ZonedDateTime lastModifiedDate;
 
 }
