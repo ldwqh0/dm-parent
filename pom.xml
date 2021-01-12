@@ -515,14 +515,15 @@
           </executions>
           <configuration>
             <jsonLibrary>jackson2</jsonLibrary>
-            <outputKind>module</outputKind>
+            <optionalProperties>all</optionalProperties>
+            <outputFileType>implementationFile</outputFileType>
+            <mapEnum>asEnum</mapEnum>
             <customTypeMappings>
               <mapping>java.time.Instant:Date|string</mapping>
               <mapping>java.time.LocalDate:Date|string</mapping>
               <mapping>java.time.LocalDateTime:Date|string</mapping>
               <mapping>java.time.ZonedDateTime:Date|string</mapping>
             </customTypeMappings>
-            <optionalProperties>all</optionalProperties>
           </configuration>
         </plugin>
 
