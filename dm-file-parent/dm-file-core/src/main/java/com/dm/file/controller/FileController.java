@@ -4,14 +4,17 @@ import com.dm.common.exception.DataNotExistException;
 import com.dm.file.config.FileConfig;
 import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.dto.FileInfoDto;
+import com.dm.file.dto.PackageFileDto;
 import com.dm.file.dto.Range;
 import com.dm.file.entity.FileInfo;
 import com.dm.file.exception.RangeNotSatisfiableException;
 import com.dm.file.service.FileInfoService;
 import com.dm.file.service.FileStorageService;
+import com.dm.file.service.PackageFileService;
 import com.dm.file.service.ThumbnailService;
 import com.dm.file.util.DmFileUtils;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.FileSystemResource;
@@ -28,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -43,6 +47,7 @@ import java.util.zip.ZipOutputStream;
 @Slf4j
 @RequestMapping("files")
 @RestController
+@RequiredArgsConstructor
 public class FileController {
 
     private final FileInfoService fileService;
@@ -55,13 +60,7 @@ public class FileController {
 
     private final FileStorageService fileStorageService;
 
-    public FileController(FileInfoService fileService, ThumbnailService thumbnailService, FileInfoConverter fileInfoConverter, FileConfig config, FileStorageService fileStorageService) {
-        this.fileService = fileService;
-        this.thumbnailService = thumbnailService;
-        this.fileInfoConverter = fileInfoConverter;
-        this.config = config;
-        this.fileStorageService = fileStorageService;
-    }
+    private final PackageFileService packageFileService;
 
 
     @GetMapping(value = "{id}", produces = {
@@ -242,11 +241,33 @@ public class FileController {
         } else {
             StreamingResponseBody body = outputStream -> {
                 try (ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
+                    Map<String, Integer> fileCountMap = new HashMap<>();
                     for (FileInfo file : fileInfos) {
-                        ZipEntry entry = new ZipEntry(file.getFilename());
-                        zipOutputStream.putNextEntry(entry);
-                        StreamUtils.copy(fileStorageService.getResource(file.getPath()).getInputStream(), zipOutputStream);
+                        if (fileStorageService.exist(file.getPath())) {
+                            // 进行文件重名计数
+                            String entryName = file.getFilename();
+                            int count = fileCountMap.getOrDefault(entryName, 0);
+                            fileCountMap.put(entryName, count + 1);
+                            if (count > 0) {
+                                int extIndex = entryName.lastIndexOf('.');
+                                if (extIndex < 0) {
+                                    extIndex = entryName.length();
+                                }
+                                String originName = entryName.substring(0, extIndex);
+                                String ext = entryName.substring(extIndex);
+                                entryName = originName + "(" + count + ")" + ext;
+                            }
+                            ZipEntry entry = new ZipEntry(entryName);
+                            zipOutputStream.putNextEntry(entry);
+                            try (InputStream input = fileStorageService.getResource(file.getPath()).getInputStream()) {
+                                StreamUtils.copy(input, zipOutputStream);
+                            } catch (Exception e) {
+                                log.error("文件打包下载时发生错误", e);
+                            }
+                        }
                     }
+                } catch (Exception e) {
+                    log.error("文件打包下载时发生错误", e);
                 }
             };
             return ResponseEntity.ok()
@@ -254,6 +275,25 @@ public class FileController {
                 .header("Content-Disposition", generateAttachmentFilename(userAgent, filename))
                 .body(body);
         }
+    }
+
+    @PostMapping(value = "zip", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    public PackageFileDto save(@RequestBody PackageFileDto request) {
+        return packageFileService.save(request);
+    }
+
+    @GetMapping("zip/{id}")
+    public ResponseEntity<StreamingResponseBody> zip(@PathVariable("id") String id,
+                                                     @RequestHeader(value = "user-agent", required = false) String userAgent) {
+        return packageFileService.findAndRemoveById(id)
+            .map(request -> {
+                try {
+                    return zip(request.getFiles(), userAgent, request.getFilename());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            })
+            .orElse(ResponseEntity.notFound().build());
     }
 
     /**
