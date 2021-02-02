@@ -1,10 +1,9 @@
 package com.dm.springboot.autoconfigure.uap;
 
-import com.dm.auth.dto.RoleDto;
-import com.dm.auth.service.RoleService;
 import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapBeanConfiguration;
 import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapJCacheConfiguration;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -38,14 +37,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UapAutoConfiguration implements InitializingBean {
 
-    //    @Autowired
     private final DefaultUserProperties defaultUser;
 
-    //    @Autowired
-    private final RoleService roleService;
-
-    //    @Autowired
-//    @Lazy
     private final UserService userService;
 
     private void initUser() {
@@ -60,11 +53,11 @@ public class UapAutoConfiguration implements InitializingBean {
             user.setFullname(fullname);
             user.setPassword(password);
             user.setEnabled(true);
-            roleService.findByFullname("内置分组_ROLE_ADMIN").ifPresent(_role -> {
-                RoleDto role = new RoleDto();
-                role.setId(_role.getId());
-                user.setRoles(Collections.singletonList(role));
-            });
+            Role role = new Role();
+            role.setId(1L);
+            role.setGroup("内置分组");
+            role.setName("ROLE_ADMIN");
+            user.setRoles(Collections.singletonList(role));
             userService.save(user);
         }
         // 建立默认匿名账号
@@ -74,11 +67,11 @@ public class UapAutoConfiguration implements InitializingBean {
             anonymous.setPassword("ANONYMOUS");
             anonymous.setEnabled(true);
             anonymous.setFullname("匿名用户");
-            roleService.findByFullname("内置分组_ROLE_ANONYMOUS").ifPresent(_role -> {
-                RoleDto role = new RoleDto();
-                role.setId(_role.getId());
-                anonymous.setRoles(Collections.singletonList(role));
-            });
+            Role role = new Role();
+            role.setId(2L);
+            role.setGroup("内置分组");
+            role.setName("ROLE_ANONYMOUS");
+            anonymous.setRoles(Collections.singletonList(role));
             userService.save(anonymous);
         }
     }

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class RoleConverter implements Converter<Role, RoleDto> {
-    
+
     private final MenuConverter menuConverter;
 
     public RoleConverter(MenuConverter menuConverter) {
@@ -74,7 +74,8 @@ public class RoleConverter implements Converter<Role, RoleDto> {
     public RoleDto toDto(Role model) {
         return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
-    
+
+
     public ResourceAuthorityDto toResourceAuthorityDto(Role role) {
         ResourceAuthorityDto dto = new ResourceAuthorityDto();
         dto.setRoleName(role.getName());
@@ -89,6 +90,5 @@ public class RoleConverter implements Converter<Role, RoleDto> {
         dto.setAuthorityMenus(Sets.transform(role.getMenus(), menuConverter::toDto));
         return dto;
     }
-
 
 }

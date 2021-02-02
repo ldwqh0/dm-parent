@@ -5,11 +5,7 @@ import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.dto.RoleDto;
-import com.dm.auth.entity.AuthResource;
-import com.dm.auth.entity.Menu;
-import com.dm.auth.entity.QRole;
-import com.dm.auth.entity.ResourceOperation;
-import com.dm.auth.entity.Role;
+import com.dm.auth.entity.*;
 import com.dm.auth.entity.Role.Status;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.repository.ResourceRepository;
@@ -23,7 +19,6 @@ import com.dm.security.authentication.UriResource;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -32,15 +27,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -165,6 +152,11 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         menus.addAll(parents);
         menus.removeIf(this::isDisabled);
         return menus;
+    }
+
+    @Override
+    public List<String> listGroups() {
+        return roleRepository.listGroups();
     }
 
     @Override

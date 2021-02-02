@@ -18,10 +18,6 @@
       <artifactId>dm-security-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.dm</groupId>
-      <artifactId>dm-authority-common</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>

@@ -97,4 +97,10 @@ public interface RoleService {
      */
     Set<Menu> findAuthorityMenus(String authority);
 
+    /**
+     * 查询所有的角色组
+     *
+     * @return 角色组的列表
+     */
+    List<String> listGroups();
 }
