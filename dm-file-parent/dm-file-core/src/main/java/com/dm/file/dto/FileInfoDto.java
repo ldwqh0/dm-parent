@@ -30,13 +30,13 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
 
     private Long size;
 
-    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Audit createUser;
 
-    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Audit lastModifiedBy;
 
-    @Setter(onMethod_ = { @JsonProperty(access = Access.READ_ONLY) })
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ZonedDateTime createTime;
 
 }

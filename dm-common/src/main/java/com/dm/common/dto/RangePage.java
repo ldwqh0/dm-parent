@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 import java.util.function.Function;
 
@@ -17,7 +18,7 @@ import java.util.function.Function;
  * @param <M> 最大值的类型
  * @author ldwqh0@outlook.com
  */
-public interface RangePage<T, M> extends Page<T> {
+public interface RangePage<T, M extends Comparable<?> & Serializable> extends Page<T> {
     /**
      * 范围的上限
      *
@@ -30,13 +31,13 @@ public interface RangePage<T, M> extends Page<T> {
     @NotNull <U> RangePage<U, M> map(@NotNull Function<? super T, ? extends U> converter);
 
     @NotNull
-    static <T, M> RangePage<T, M> of(M max, @NotNull Page<T> page) {
+    static <T, M extends Comparable<?> & Serializable> RangePage<T, M> of(M max, @NotNull Page<T> page) {
         return new RangePageImpl<>(max, page.getContent(), page.getPageable(), page.getTotalElements());
     }
 }
 
-@EqualsAndHashCode(callSuper = true)
-class RangePageImpl<T, M> extends PageImpl<T> implements RangePage<T, M> {
+@EqualsAndHashCode(callSuper = false)
+class RangePageImpl<T, M extends Comparable<?> & Serializable> extends PageImpl<T> implements RangePage<T, M> {
 
     private static final long serialVersionUID = -2418518649668788225L;
 

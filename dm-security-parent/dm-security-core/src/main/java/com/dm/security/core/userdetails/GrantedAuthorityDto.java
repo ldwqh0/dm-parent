@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_ABSENT)
 public class GrantedAuthorityDto implements GrantedAuthority {
     private static final long serialVersionUID = 4062924753193768577L;
     private String authority;

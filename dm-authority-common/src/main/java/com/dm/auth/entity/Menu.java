@@ -1,18 +1,20 @@
 package com.dm.auth.entity;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.common.entity.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "dm_menu_", indexes = {
-    @Index(columnList = "parent_", name = "IDX_bf_menu_parent_")}, uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name_", "parent_"})
+    @Index(columnList = "parent_", name = "IDX_dm_menu_parent_")}, uniqueConstraints = {
+    @UniqueConstraint(name = "UK_dm_menu_parent_name_", columnNames = {"name_", "parent_"})
 })
 public class Menu extends AbstractEntity {
 
@@ -47,7 +49,7 @@ public class Menu extends AbstractEntity {
     /**
      * 状态 启用true,禁用false
      */
-    @Column(name = "enabled_")
+    @Column(name = "enabled_", nullable = false)
     private boolean enabled = true;
 
     /**
@@ -74,8 +76,8 @@ public class Menu extends AbstractEntity {
     @Column(name = "description_", length = 1000)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_", foreignKey = @ForeignKey(name = "FK_dm_menu_parent_"))
     private Menu parent;
 
     @Column(name = "type_", nullable = false)
@@ -85,8 +87,39 @@ public class Menu extends AbstractEntity {
     /**
      * 是否在新窗口种打开链接
      */
-    @Column(name = "open_in_new_window_")
-    private Boolean openInNewWindow;
+    @Column(name = "open_in_new_window_", nullable = false)
+    private Boolean openInNewWindow = Boolean.FALSE;
 
+    @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Menu> children;
 
+    public void setChildren(List<Menu> children) {
+        if (CollectionUtils.isNotEmpty(children)) {
+            children.forEach(child -> child.setParent(this));
+        }
+        this.children = children;
+    }
+
+    public Menu(@NotNull String name) {
+        this(name, null);
+    }
+
+    public Menu(@NotNull String name, String url) {
+        this(name, name, url);
+    }
+
+    public Menu(@NotNull String name, String title, String url) {
+        this.name = name;
+        this.title = title;
+        this.url = url;
+    }
+
+    public Menu children(List<Menu> children) {
+        this.setChildren(children);
+        return this;
+    }
+
+    public Menu() {
+
+    }
 }

@@ -14,15 +14,15 @@ import lombok.Setter;
 
 /**
  * 登录日志
- * 
+ *
  * @author 李东
  *
  */
 @Entity
 @Getter
 @Setter
-@Table(name = "dm_login_log_", indexes = { @Index(columnList = "login_name_", name = "idx_login_name_"),
-        @Index(columnList = "time_", name = "idx_time_") })
+@Table(name = "dm_login_log_", indexes = { @Index(columnList = "login_name_", name = "IDX_dm_login_log_login_name_"),
+        @Index(columnList = "time_", name = "IDX_dm_login_log_time_") })
 public class LoginLog extends AbstractEntity {
 
     @Column(name = "login_name_", length = 250)

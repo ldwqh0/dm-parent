@@ -12,8 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.dm.uap.entity.RoleGroup;
-
 import lombok.Getter;
 import lombok.Setter;
 import static javax.persistence.CascadeType.*;
@@ -35,17 +33,15 @@ public class DRoleGroup extends CorpLongEntity {
     })
     private Set<DRole> roles;
 
-    @OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
-    @JoinColumn(name = "dm_group_id_")
-    private RoleGroup group;
+//    @OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
+//    @JoinColumn(name = "dm_group_id_")
+//    private RoleGroup group;
 
     /**
      * 标识角色组是否被删除
      */
     @Column(name = "deleted_")
     private Boolean deleted = false;
-
-
 
     public DRoleGroup(String corpId, Long id) {
         super(corpId, id);

@@ -1,12 +1,9 @@
 package com.dm.springboot.autoconfigure.common;
 
-import java.time.ZonedDateTime;
-import java.util.Optional;
-
-import javax.annotation.PostConstruct;
-
+import com.dm.common.entity.Audit;
+import com.dm.security.core.userdetails.UserDetailsDto;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,27 +14,27 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.dm.common.entity.Audit;
-import com.dm.security.core.userdetails.UserDetailsDto;
+import javax.annotation.PostConstruct;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 
 /**
  * 实体审计相关的配置项目
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 @Configuration
 @ConditionalOnBean(AuditingHandler.class)
+@RequiredArgsConstructor
 public class AuditingAutoConfiguration {
 
-    @Autowired
-    private AuditingHandler handler;
+    private final AuditingHandler handler;
 
     /**
      * 修改AuditingHandler的DateTimeProvider使用，ZonedDateTime获取当前时间<br>
      * 这个正确的修改方式应该是 在 @EnableJpaAuditing(dateTimeProviderRef =
      * "zonedDateTimeProvider") 指定<br>
-     * 
+     * <p>
      * 参考 {@link EnableJpaAuditing}
      */
     @PostConstruct
@@ -47,7 +44,7 @@ public class AuditingAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass({ AuditorAware.class, UserDetailsDto.class })
+    @ConditionalOnClass({AuditorAware.class, UserDetailsDto.class})
     @ConditionalOnMissingBean(AuditorAware.class)
     public static class SimpleAuditorAware implements AuditorAware<Audit> {
         @Override
@@ -58,7 +55,7 @@ public class AuditingAutoConfiguration {
                 if (principal instanceof UserDetailsDto) {
                     UserDetailsDto ud = (UserDetailsDto) principal;
                     String name = StringUtils.isBlank(ud.getFullname()) ? ud.getUsername() : ud.getFullname();
-                    return Optional.ofNullable(Audit.of(ud.getId(), name));
+                    return Optional.of(Audit.of(ud.getId(), name));
                 }
             }
             return Optional.empty();

@@ -26,24 +26,6 @@ public interface Converter<M, DTO> {
     DTO toDto(@Nullable M model);
 
     /**
-     * 将实体模型列表转换为DTO列表 <br>
-     * <p>
-     * 尽量不要使用这个方法，请用{@link Lists}替代
-     *
-     * @param models 模型列表
-     * @return DTO列表
-     * @see Lists
-     */
-    @Deprecated
-    default List<DTO> toDto(Collection<M> models) {
-        if (Iterables.isEmpty(models)) {
-            return Collections.emptyList();
-        } else {
-            return Lists.transform(Lists.arrayList(models), this::toDto);
-        }
-    }
-
-    /**
      * 将DTO中的数据复制到实体模型<br />
      * <p>
      * 所有的Converter必须实现该方法<br />
@@ -51,7 +33,7 @@ public interface Converter<M, DTO> {
      * converter不应该实现任何关联Repository的操做，它仅仅只作为一个复制数据的工具出现的
      *
      * @param model 模型
-     * @param dto dto
+     * @param dto   dto
      */
     M copyProperties(M model, DTO dto);
 

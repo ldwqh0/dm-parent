@@ -12,7 +12,7 @@ import lombok.Data;
  *
  */
 @Data
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_ABSENT)
 public class OrderDto {
     /**
      * 移动的顺序

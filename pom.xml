@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dm</groupId>
   <artifactId>dm-parent</artifactId>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>1.2.3-SNAPSHOT</version>
   <properties>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,17 +12,17 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <guava.version>29.0-jre</guava.version>
-    <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
-    <springboot.version>2.3.4.RELEASE</springboot.version>
+    <spring.cloud.version>Hoxton.SR9</spring.cloud.version>
+    <springboot.version>2.3.7.RELEASE</springboot.version>
     <springfox.version>2.9.2</springfox.version>
-    <hibernate.version>5.4.20.Final</hibernate.version>
+    <hibernate.version>5.4.27.Final</hibernate.version>
     <commons-lang3.version>3.11</commons-lang3.version>
     <commons-io.version>2.8.0</commons-io.version>
     <resource.delimiter>@</resource.delimiter>
     <commons-collections4.version>4.4</commons-collections4.version>
-    <querydsl.version>4.3.1</querydsl.version>
-    <lombok.version>1.18.12</lombok.version>
-    <dm.version>1.2.1-SNAPSHOT</dm.version>
+    <querydsl.version>4.4.0</querydsl.version>
+    <lombok.version>1.18.16</lombok.version>
+    <dm.version>1.2.3-SNAPSHOT</dm.version>
   </properties>
   <modules>
     <!-- 集合工具类 -->
@@ -40,7 +40,7 @@
     <!-- 钉钉API模块 -->
     <module>dm-dingding-api</module>
     <!-- 钉钉API和用户鉴权模块 -->
-    <module>dm-uap-dingtalk</module>
+    <!-- <module>dm-uap-dingtalk</module> -->
     <!-- 文件模块 -->
     <module>dm-file-parent/dm-file-core</module>
     <module>dm-file-parent/dm-file-spring-boot-starter</module>
@@ -498,6 +498,35 @@
             </execution>
           </executions>
         </plugin>
+
+        <plugin>
+          <!-- https://mvnrepository.com/artifact/cz.habarta.typescript-generator/typescript-generator-maven-plugin -->
+          <groupId>cz.habarta.typescript-generator</groupId>
+          <artifactId>typescript-generator-maven-plugin</artifactId>
+          <version>2.28.785</version>
+          <executions>
+            <execution>
+              <id>generate</id>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+              <phase>process-classes</phase>
+            </execution>
+          </executions>
+          <configuration>
+            <jsonLibrary>jackson2</jsonLibrary>
+            <optionalProperties>all</optionalProperties>
+            <outputFileType>implementationFile</outputFileType>
+            <mapEnum>asEnum</mapEnum>
+            <customTypeMappings>
+              <mapping>java.time.Instant:Date|string</mapping>
+              <mapping>java.time.LocalDate:Date|string</mapping>
+              <mapping>java.time.LocalDateTime:Date|string</mapping>
+              <mapping>java.time.ZonedDateTime:Date|string</mapping>
+            </customTypeMappings>
+          </configuration>
+        </plugin>
+
       </plugins>
     </pluginManagement>
     <plugins>

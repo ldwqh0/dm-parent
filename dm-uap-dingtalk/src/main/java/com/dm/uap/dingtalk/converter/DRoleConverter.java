@@ -2,9 +2,9 @@ package com.dm.uap.dingtalk.converter;
 
 import org.springframework.stereotype.Component;
 
+import com.dm.auth.entity.Role;
 import com.dm.dingtalk.api.response.OpenRole;
 import com.dm.uap.dingtalk.entity.DRole;
-import com.dm.uap.entity.Role;
 
 @Component
 public class DRoleConverter {

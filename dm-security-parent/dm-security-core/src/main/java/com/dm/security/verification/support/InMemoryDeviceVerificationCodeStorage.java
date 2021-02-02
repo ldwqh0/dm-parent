@@ -1,23 +1,20 @@
 package com.dm.security.verification.support;
 
-import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.springframework.scheduling.annotation.Scheduled;
-
 import com.dm.collections.CollectionUtils;
 import com.dm.security.verification.DeviceVerificationCode;
 import com.dm.security.verification.DeviceVerificationCodeStorage;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryDeviceVerificationCodeStorage implements DeviceVerificationCodeStorage {
 
+    // 以验证码ID为key的验证码map
     private final Map<String, DeviceVerificationCode> idKeyMap = new ConcurrentHashMap<>();
 
+    // 以设备识别符为key的验证码map
     private final Map<String, Set<DeviceVerificationCode>> keyMap = new ConcurrentHashMap<>();
 
     @Override

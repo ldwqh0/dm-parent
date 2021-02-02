@@ -5,21 +5,18 @@ import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
-import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
-import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.DepartmentRepository;
-import com.dm.uap.repository.RoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -31,16 +28,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
     private final UserConverter userConverter;
-
-    private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -50,15 +45,7 @@ public class UserServiceImpl implements UserService {
 
     private final QUser qUser = QUser.user;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, RoleRepository roleRepository, PasswordEncoder passwordEncoder, DepartmentRepository departmentRepository, DepartmentRepository dpr) {
-        this.userRepository = userRepository;
-        this.userConverter = userConverter;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.departmentRepository = departmentRepository;
-        this.dpr = dpr;
-    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -178,7 +165,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> search(Long department, Long role, Long roleGroup, String key, Pageable pageable) {
+    public Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (Objects.nonNull(department)) {
             Department dep = dpr.getOne(department);
@@ -188,7 +175,7 @@ public class UserServiceImpl implements UserService {
             query.and(qUser.roles.any().id.eq(role));
         }
         if (Objects.nonNull(roleGroup)) {
-            query.and(qUser.roles.any().group.id.eq(roleGroup));
+            query.and(qUser.roles.any().group.eq(roleGroup));
         }
         if (StringUtils.isNotBlank(key)) {
             query.and(qUser.username.containsIgnoreCase(key)
@@ -200,7 +187,6 @@ public class UserServiceImpl implements UserService {
     // 添加用户的职务和角色信息
     private void addPostsAndRoles(User model, UserDto dto) {
         List<UserPostDto> posts = dto.getPosts();
-        List<RoleDto> _roles = dto.getRoles();
         if (CollectionUtils.isNotEmpty(posts)) {
             Map<Department, String> posts_ = new HashMap<>();
             posts.forEach(entry -> posts_.put(departmentRepository.getOne(entry.getDepartment().getId()), entry.getPost()));
@@ -208,13 +194,7 @@ public class UserServiceImpl implements UserService {
         } else {
             model.setPosts(Collections.emptyMap());
         }
-        if (CollectionUtils.isNotEmpty(_roles)) {
-            List<Role> roles = _roles.stream().map(RoleDto::getId).map(roleRepository::getOne)
-                .collect(Collectors.toList());
-            model.setRoles(roles);
-        } else {
-            model.setRoles(Collections.emptyList());
-        }
+        model.setRoles(dto.getRoles());
     }
 
     @Override

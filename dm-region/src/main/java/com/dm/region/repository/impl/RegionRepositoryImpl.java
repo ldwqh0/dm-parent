@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dm.collections.CollectionUtils;
@@ -12,10 +13,11 @@ import com.dm.region.entity.QRegion;
 import com.dm.region.entity.Region;
 import com.querydsl.jpa.impl.JPAQuery;
 
+@RequiredArgsConstructor
 public class RegionRepositoryImpl {
 
-    @Autowired
-    private EntityManager em;
+    private final EntityManager em;
+
 
     private final QRegion qRegion = QRegion.region;
 
@@ -24,7 +26,7 @@ public class RegionRepositoryImpl {
         List<Region> result = new ArrayList<>();
         List<Region> tmp;
         query.select(qRegion).from(qRegion)
-                .where(qRegion.parentCode.code.eq(code));
+            .where(qRegion.parentCode.code.eq(code));
         tmp = query.fetch();
         while (CollectionUtils.isNotEmpty(tmp)) {
             result.addAll(tmp);

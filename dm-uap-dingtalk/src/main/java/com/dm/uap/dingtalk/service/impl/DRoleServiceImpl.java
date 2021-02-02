@@ -9,6 +9,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dm.auth.entity.Role;
+import com.dm.auth.entity.Role.Status;
+import com.dm.auth.repository.RoleRepository;
 import com.dm.dingtalk.api.response.OpenRole;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.uap.dingtalk.converter.DRoleConverter;
@@ -16,10 +19,7 @@ import com.dm.uap.dingtalk.entity.DRole;
 import com.dm.uap.dingtalk.repository.DRoleGroupRepository;
 import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.service.DRoleService;
-import com.dm.uap.entity.Role;
-import com.dm.uap.entity.Role.Status;
 //import com.dm.uap.repository.RoleGroupRepository;
-import com.dm.uap.repository.RoleRepository;
 
 import lombok.extern.slf4j.Slf4j;
 import static java.lang.Boolean.*;
@@ -106,7 +106,7 @@ public class DRoleServiceImpl implements DRoleService {
             role = new Role();
         }
         role = dRoleConverter.copyProperties(role, dRole);
-        role.setGroup(dRole.getGroup().getGroup());
+//        role.setGroup(dRole.getGroup().getGroup());
         dRole.setRole(roleRepository.save(role));
         return dRoleRepository.save(dRole);
     }

@@ -1,64 +1,53 @@
 package com.dm.auth.controller;
 
-import com.dm.auth.converter.AuthorityConverter;
 import com.dm.auth.converter.MenuConverter;
+import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
-import com.dm.auth.entity.Authority;
 import com.dm.auth.entity.Menu;
-import com.dm.auth.service.AuthorityService;
+import com.dm.auth.entity.Role;
+import com.dm.auth.service.RoleService;
 import com.dm.collections.CollectionUtils;
 import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
-import com.dm.security.core.userdetails.UserDetailsDto;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-    @RequestMapping({"menuAuthorities", "p/menuAuthorities"})
+@RequestMapping({"menuAuthorities", "p/menuAuthorities"})
+@RequiredArgsConstructor
 public class MenuAuthorityController {
 
-    private final AuthorityService authorityService;
+    private final RoleService roleService;
 
     private final MenuConverter menuConverter;
 
-    private final AuthorityConverter authorityConverter;
-
-    public MenuAuthorityController(
-        AuthorityService authorityService,
-        MenuConverter menuConverter,
-        AuthorityConverter authorityConverter) {
-        this.authorityService = authorityService;
-        this.menuConverter = menuConverter;
-        this.authorityConverter = authorityConverter;
-    }
+    private final RoleConverter roleConverter;
 
     /**
      * 保存一个角色的菜单权限配置
      *
-     * @param roleName     角色名称
+     * @param roleId     角色Id
      * @param authorityDto 角色授权配置
      * @return 菜单授权配置
      */
-    @PutMapping("{roleName}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PutMapping("{roleId}")
+    @PreAuthorize("hasAnyRole('内置分组_ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public MenuAuthorityDto save(@PathVariable("roleName") String roleName,
+    public MenuAuthorityDto save(@PathVariable("roleId") Long roleId,
                                  @RequestBody MenuAuthorityDto authorityDto) {
-        authorityDto.setRoleName(roleName);
-        Authority menuAuthority = authorityService.save(authorityDto);
-        return authorityConverter.toMenuAuthorityDto(menuAuthority);
+        Role menuAuthority = roleService.saveAuthority(roleId, authorityDto);
+        return roleConverter.toMenuAuthorityDto(menuAuthority);
     }
 
     /**
@@ -66,13 +55,13 @@ public class MenuAuthorityController {
      * <p>
      * 只会列出明确标记为选中的菜单项。
      *
-     * @param roleName 角色名称
+     * @param roleId 角色名称
      * @return 角色的菜单授权
      */
-    @GetMapping("{roleName}")
+    @GetMapping("{roleId}")
     @Transactional(readOnly = true)
-    public MenuAuthorityDto get(@PathVariable("roleName") String roleName) {
-        return authorityService.findByRoleName(roleName).map(authorityConverter::toMenuAuthorityDto)
+    public MenuAuthorityDto get(@PathVariable("roleId") Long roleId) {
+        return roleService.findById(roleId).map(roleConverter::toMenuAuthorityDto)
             .orElseThrow(DataNotExistException::new);
     }
 
@@ -81,19 +70,17 @@ public class MenuAuthorityController {
      * <p>
      * Description: 根据登录用户获取菜单
      *
-     * @param userDto 当前用户信息
+     * @param user 当前用户信息
      * @return 可见菜单项目的列表
      */
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
-    public List<MenuDto> systemMenu(@AuthenticationPrincipal UserDetailsDto userDto) {
-        Collection<GrantedAuthority> authorities = userDto.getRoles();
+    public List<MenuDto> systemMenu(@AuthenticationPrincipal UserDetails user) {
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         if (CollectionUtils.isNotEmpty(authorities)) {
             List<Menu> result = authorities.stream().map(GrantedAuthority::getAuthority)
-                .map(authorityService::findByAuthority)
-                .flatMap(Set::stream).distinct()
-                .sorted((o1, o2) -> (int) (o1.getOrder() - o2.getOrder()))
-                .collect(Collectors.toList());
+                .map(roleService::findAuthorityMenus).flatMap(Set::stream).distinct()
+                .sorted(Comparator.comparing(Menu::getOrder)).collect(Collectors.toList());
             return Lists.transform(result, menuConverter::toDto);
         } else {
             return Collections.emptyList();

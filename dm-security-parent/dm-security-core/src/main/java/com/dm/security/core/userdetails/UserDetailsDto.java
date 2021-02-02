@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_ABSENT)
 public class UserDetailsDto implements UserDetails, CredentialsContainer, OAuth2User {
     private static final long serialVersionUID = -4337846050031244208L;
 

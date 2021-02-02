@@ -1,18 +1,17 @@
 package com.dm.security.oauth2.core;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-
 public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 
     @Override
-    public OAuth2User extract(Map<String, Object> map) {
+    public OAuth2UserDetailsDto extract(Map<String, Object> map) {
         OAuth2UserDetailsDto userDetailsDto = new OAuth2UserDetailsDto();
         userDetailsDto.setId(((Integer) map.get("id")).longValue());
         userDetailsDto.setUsername((String) map.get("username"));
@@ -22,9 +21,9 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> roles = (List<Map<String, Object>>) map.get("roles");
             List<GrantedAuthority> authorities = roles.stream()
-                    .map(role -> role.get("authority").toString())
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+                .map(role -> role.get("authority").toString())
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
             userDetailsDto.setGrantedAuthority(authorities);
         }
         userDetailsDto.setScenicName((String) map.get("scenicName"));

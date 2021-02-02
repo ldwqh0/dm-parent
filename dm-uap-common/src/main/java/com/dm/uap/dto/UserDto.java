@@ -2,6 +2,7 @@ package com.dm.uap.dto;
 
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
+import com.dm.uap.entity.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@JsonInclude(value = Include.NON_NULL)
+@JsonInclude(value = Include.NON_ABSENT)
 @JsonIgnoreProperties(allowSetters = true, value = {"password"})
 public class UserDto implements Serializable, IdentifiableDto<Long> {
 
@@ -72,7 +73,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
 
     @Valid
     @NotEmpty(groups = {New.class, Update.class})
-    private List<RoleDto> roles;
+    private List<Role> roles;
 
     /**
      * 景区名称

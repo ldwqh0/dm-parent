@@ -5,8 +5,8 @@ import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.entity.AuthResource;
 import com.dm.auth.entity.QAuthResource;
 import com.dm.auth.entity.ResourceOperation;
-import com.dm.auth.repository.AuthorityRepository;
 import com.dm.auth.repository.ResourceRepository;
+import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.ResourceService;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -25,14 +25,14 @@ public class ResourceServiceImpl implements ResourceService {
 
     private final ResourceConverter resourceConverter;
 
-    private final AuthorityRepository authorityRepository;
+    private final RoleRepository roleRepository;
 
     private final QAuthResource qResource = QAuthResource.authResource;
 
-    public ResourceServiceImpl(ResourceRepository resourceRepository, ResourceConverter resourceConverter, AuthorityRepository authorityRepository) {
+    public ResourceServiceImpl(ResourceRepository resourceRepository, ResourceConverter resourceConverter, RoleRepository authorityRepository) {
         this.resourceRepository = resourceRepository;
         this.resourceConverter = resourceConverter;
-        this.authorityRepository = authorityRepository;
+        this.roleRepository = authorityRepository;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public void deleteById(long id) {
-        authorityRepository.findByResourceOperationsResourceId(id).forEach(authority -> {
+        roleRepository.findByResourceOperationsResourceId(id).forEach(authority -> {
             Map<AuthResource, ResourceOperation> iterator = authority.getResourceOperations();
             iterator.keySet().stream().filter(resource -> Objects.equals(resource.getId(), id))
                 .forEach(iterator::remove);

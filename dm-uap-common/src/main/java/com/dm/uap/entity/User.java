@@ -1,34 +1,22 @@
 package com.dm.uap.entity;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-
 import com.dm.common.entity.AbstractEntity;
-
-import javax.persistence.JoinColumn;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "dm_user_")
+@Table(name = "dm_user_", uniqueConstraints = {
+    @UniqueConstraint(name = "UK_dm_user_username_", columnNames = {"username_"}),
+    @UniqueConstraint(name = "UK_dm_user_email_", columnNames = {"email_"}),
+    @UniqueConstraint(name = "UK_dm_user_mobile_", columnNames = {"mobile_"})
+})
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User extends AbstractEntity {
 
@@ -66,15 +54,11 @@ public class User extends AbstractEntity {
     @Column(name = "order_")
     private Long order;
 
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinTable(name = "dm_user_role_", joinColumns = {
-            @JoinColumn(name = "user_", referencedColumnName = "id_")
-    }, inverseJoinColumns = {
-            @JoinColumn(name = "role_", referencedColumnName = "id_")
-    }, indexes = {
-            @Index(columnList = "user_", name = "IDX_dm_user_role_user_")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "dm_user_role_", joinColumns = {
+        @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_role_user_"))
     }, uniqueConstraints = {
-            @UniqueConstraint(columnNames = { "user_", "role_" })
+        @UniqueConstraint(name = "UK_dm_user_role_user_role_", columnNames = {"user_id_", "role_id_"})
     })
     private List<Role> roles;
 
@@ -83,11 +67,14 @@ public class User extends AbstractEntity {
      */
     @ElementCollection
     @JoinTable(name = "dm_user_post_", joinColumns = {
-            @JoinColumn(name = "user_id_")
+        @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_post_user_id_"))
     }, uniqueConstraints = {
-            @UniqueConstraint(columnNames = { "user_id_", "department_id_", "post_" })
+        @UniqueConstraint(name = "UK_user_id_department_id_post_", columnNames = {"user_id_", "department_id_", "post_"})
+    }, indexes = {
+        @Index(name = "IDX_dm_user_post_user_id_", columnList = "user_id_"),
+        @Index(name = "IDX_dm_user_post_department_id_", columnList = "department_id_")
     })
-    @MapKeyJoinColumn(name = "department_id_")
+    @MapKeyJoinColumn(name = "department_id_", foreignKey = @ForeignKey(name = "FK_dm_user_post_department_id_"))
     @Column(name = "post_", length = 50)
     private Map<Department, String> posts;
 
@@ -96,9 +83,12 @@ public class User extends AbstractEntity {
      */
     @ElementCollection
     @JoinTable(name = "dm_user_order_", joinColumns = {
-            @JoinColumn(name = "user_id_")
+        @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_order_user_id_"))
+    }, indexes = {
+        @Index(name = "IDX_department_id_user_id_", columnList = "user_id_"),
+        @Index(name = "IDX_department_id_department_id_", columnList = "department_id_")
     })
-    @MapKeyJoinColumn(name = "department_id_")
+    @MapKeyJoinColumn(name = "department_id_", foreignKey = @ForeignKey(name = "FK_dm_user_order_department_id_"))
     @Column(name = "order_")
     private Map<Department, Long> orders;
 

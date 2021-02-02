@@ -1,20 +1,16 @@
 package com.dm.security.oauth2.core;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
-import org.springframework.security.oauth2.core.user.OAuth2User;
-
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.util.*;
 
 public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
 
     private static final long serialVersionUID = 1260336499852489771L;
 
-    private Map<String, Object> attributes = Collections.emptyMap();
+    private Map<String, Object> attributes = new HashMap<>();
 
     private Set<String> scopes;
 
@@ -33,11 +29,15 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
     @Override
     @JsonIgnore
     public Map<String, Object> getAttributes() {
-        return this.attributes;
+        return Collections.unmodifiableMap(this.attributes);
     }
 
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
+    }
+
+    public void putAttribute(String key, Object value) {
+        this.attributes.put(key, value);
     }
 
     public Set<String> getScopes() {
@@ -74,7 +74,7 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
             return false;
         OAuth2UserDetailsDto other = (OAuth2UserDetailsDto) obj;
         return Objects.equals(attributes, other.attributes) && Objects.equals(clientId, other.clientId)
-                && Objects.equals(scopes, other.scopes);
+            && Objects.equals(scopes, other.scopes);
     }
 
 }

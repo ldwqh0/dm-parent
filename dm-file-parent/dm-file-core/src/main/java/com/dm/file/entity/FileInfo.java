@@ -3,6 +3,7 @@ package com.dm.file.entity;
 import com.dm.common.entity.Audit;
 import com.dm.common.entity.CreateAudit;
 import com.dm.common.entity.ModifyAudit;
+import com.dm.file.listener.FileListener;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, FileListener.class})
 @Table(name = "dm_file_", indexes = {
     @Index(name = "idx_dm_file_created_date_", columnList = "created_date_"),
     @Index(name = "idx_dm_file_created_user_id_", columnList = "created_user_id_"),
