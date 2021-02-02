@@ -8,11 +8,15 @@
 
 ## 升级日志
 
+1.3.0
+
+* 升级spring boot至2.3.8.release
+
 1.2.3
 
 * 升级spring boot 至 2.3.7.release
 * 添加typescript-generator-maven-plugin
-* 升级querydsl至2.4.0
+* 升级querydsl至4.4.0
 * 升级hibernate至5.4.27
 
 1.2.2

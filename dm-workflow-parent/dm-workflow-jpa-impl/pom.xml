@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.dm</groupId>
     <artifactId>dm-workflow-parent</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
   </parent>
   <artifactId>dm-workflow-jpa-impl</artifactId>
 </project>
