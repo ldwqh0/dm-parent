@@ -2,22 +2,19 @@ package com.dm.auth.entity;
 
 import com.dm.collections.CollectionUtils;
 import com.dm.common.entity.AbstractEntity;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "dm_menu_", indexes = {
-    @Index(columnList = "parent_", name = "IDX_bf_menu_parent_")}, uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name_", "parent_"})
+    @Index(columnList = "parent_", name = "IDX_dm_menu_parent_")}, uniqueConstraints = {
+    @UniqueConstraint(name = "UK_dm_menu_parent_name_", columnNames = {"name_", "parent_"})
 })
 public class Menu extends AbstractEntity {
 
@@ -80,7 +77,7 @@ public class Menu extends AbstractEntity {
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent_")
+    @JoinColumn(name = "parent_", foreignKey = @ForeignKey(name = "FK_dm_menu_parent_"))
     private Menu parent;
 
     @Column(name = "type_", nullable = false)

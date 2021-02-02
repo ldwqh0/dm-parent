@@ -1,33 +1,27 @@
 package com.dm.auth.entity;
 
-import java.util.Set;
-
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-
 import com.dm.common.entity.AbstractEntity;
 import com.dm.security.authentication.UriResource.MatchType;
-
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
+import java.util.Set;
+
 /**
  * 定义资源
- * 
+ *
  * @author LiDong
  *
  */
 @Entity
 @Getter
 @Setter
-@Table(name = "dm_resource_")
+@Table(name = "dm_resource_", uniqueConstraints = {
+    @UniqueConstraint(name = "UK_dm_resource_name_", columnNames = {"name_"}),
+    @UniqueConstraint(name = "UK_dm_resource_matcher_", columnNames = {"matcher_"})
+})
+
 public class AuthResource extends AbstractEntity {
 
     /**
@@ -55,7 +49,9 @@ public class AuthResource extends AbstractEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "scope_")
     @CollectionTable(name = "dm_resource_scope_", joinColumns = {
-            @JoinColumn(name = "resource_")
+        @JoinColumn(name = "resource_", foreignKey = @ForeignKey(name = "FK_dm_resource_scope_resource_"))
+    },indexes = {
+        @Index(name = "IDX_dm_resource_scope_resource_",columnList = "resource_")
     })
     private Set<String> scope;
 

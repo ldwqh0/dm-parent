@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class Role implements GrantedAuthority, Serializable {
     private static final long serialVersionUID = -3154023961155631437L;
 
-    @Column(name = "role_")
+    @Column(name = "role_id_")
     private long id;
 
     @Column(name = "group_", length = 100)
