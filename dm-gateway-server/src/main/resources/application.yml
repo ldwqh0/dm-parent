@@ -1,5 +1,0 @@
-server:  servlet:    session:      cookie:        name: MARKETGWSESSIONID
-spring:
-  cache:
-    type: jcache    jcache:
-      config: classpath:config/ehcache.xml

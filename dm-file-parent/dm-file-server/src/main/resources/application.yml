@@ -1,5 +1,0 @@
-spring:
-  profiles:
-    active:
-    - lidong  security:    oauth2:      resourceserver:
-        opaquetoken:          introspection-uri: http://localhost:8887/users/current

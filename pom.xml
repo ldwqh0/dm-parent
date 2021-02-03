@@ -38,21 +38,33 @@
     <!-- 自动配置工具 -->
     <module>dm-autoconfigure</module>
     <!-- 钉钉API模块 -->
-    <module>dm-dingding-api</module>
     <!-- 钉钉API和用户鉴权模块 -->
+    <module>dm-dingtalk/dm-dingding-api</module>
     <!-- <module>dm-uap-dingtalk</module> -->
     <!-- 文件模块 -->
-    <module>dm-file-parent/dm-file-core</module>
-    <module>dm-file-parent/dm-file-spring-boot-starter</module>
+    <module>dm-file/dm-file-core</module>
+    <module>dm-file/dm-file-spring-boot-starter</module>
     <!--行政区划模块 -->
     <module>dm-code</module>
     <!--多数据源模块 -->
     <module>dm-jdbc/dm-multi-datasource</module>
     <module>dm-jdbc/dm-multi-datasource-jpa-support</module>
-    <module>dm-security-parent</module>
+    <!--安全模块-->
+    <module>dm-security/dm-security-core</module>
+    <module>dm-security/dm-security-mp</module>
+    <module>dm-security/dm-security-oauth2-client</module>
+    <module>dm-security/dm-security-oauth2-core</module>
+    <module>dm-security/dm-security-oauth2-resource</module>
+    <module>dm-security/dm-security-spring-boot-starter</module>
+    <module>dm-security/dm-security-web</module>
+    <module>dm-security/dm-oauth2-client-spring-boot-starter</module>
+    <module>dm-security/dm-oauth2-resource-server-spring-boot-starter</module>
     <!-- <module>dm-gateway-server</module> -->
-    <module>dm-activity-parent</module>
-    <module>dm-workflow-parent</module>
+    <!--工作流相关-->
+    <module>dm-activity/dm-activity-api</module>
+    <module>dm-activity/dm-activity-jpa-impl</module>
+    <module>dm-workflow/dm-workflow-api</module>
+    <module>dm-workflow/dm-workflow-jpa-impl</module>
   </modules>
   <packaging>pom</packaging>
   <dependencyManagement>
@@ -197,11 +209,6 @@
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-oauth2-client</artifactId>
-        <version>${dm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dm</groupId>
-        <artifactId>dm-security-oauth2-authorization</artifactId>
         <version>${dm.version}</version>
       </dependency>
       <dependency>
