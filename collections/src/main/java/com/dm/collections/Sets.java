@@ -42,6 +42,7 @@ public final class Sets {
         }
     }
 
+    @SafeVarargs
     public static <T> Set<T> merge(Set<T> origin, T... e) {
         HashSet<T> result = hashSet(origin);
         if (e != null) {
