@@ -28,6 +28,7 @@ public final class Lists {
      * @param <E> 集合元素类型
      * @return 一个包含指定元素的ArrayList
      */
+    @SafeVarargs
     public static <E> ArrayList<E> arrayList(E... e) {
         if (e == null) {
             return arrayList();
@@ -92,6 +93,7 @@ public final class Lists {
      * @param elements 要添加的一系列元素
      * @param <E>      元素类型
      */
+    @SafeVarargs
     public static <E> void addAll(List<E> list, E... elements) {
         if (Objects.nonNull(elements)) {
             list.addAll(Arrays.asList(elements));
