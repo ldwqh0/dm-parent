@@ -6,6 +6,7 @@
     <groupId>com.dm</groupId>
     <artifactId>dm-parent</artifactId>
     <version>2.0.0-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>authorization-server</artifactId>
   <dependencies>
@@ -76,7 +77,7 @@
     <dependency>
       <groupId>org.xyyh.authorization</groupId>
       <artifactId>authorization-server-spring-boot-starter</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>2.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>
