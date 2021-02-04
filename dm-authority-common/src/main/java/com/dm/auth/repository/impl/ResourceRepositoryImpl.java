@@ -16,13 +16,13 @@ public class ResourceRepositoryImpl {
     public ResourceRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
-
-    public List<String> listScopes() {
-        StringPath scope = Expressions.stringPath("scopes");
-        return queryFactory.select(scope)
-            .from(qResource)
-            .join(qResource.scope, scope)
-            .distinct()
-            .fetch();
-    }
+// todo 需要测试一下是不是可以注释
+//    public List<String> listScopes() {
+//        StringPath scope = Expressions.stringPath("scopes");
+//        return queryFactory.select(scope)
+//            .from(qResource)
+//            .join(qResource.scope, scope)
+//            .distinct()
+//            .fetch();
+//    }
 }

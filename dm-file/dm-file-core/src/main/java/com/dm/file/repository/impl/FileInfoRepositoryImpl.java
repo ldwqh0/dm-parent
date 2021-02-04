@@ -14,15 +14,15 @@ public class FileInfoRepositoryImpl {
 
     private final QFileInfo qFileInfo = QFileInfo.fileInfo;
 
-    public FileInfoRepositoryImpl(@Autowired JPAQueryFactory queryFactory) {
+    public FileInfoRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
-
-    @Transactional(readOnly = true)
-    public Optional<UUID> findMaxId() {
-        return Optional.ofNullable(
-            queryFactory.select(qFileInfo.id).from(qFileInfo)
-                .orderBy(qFileInfo.id.desc())
-                .fetchFirst());
-    }
+// todo 需要测试是否有效
+//    @Transactional(readOnly = true)
+//    public Optional<UUID> findMaxId() {
+//        return Optional.ofNullable(
+//            queryFactory.select(qFileInfo.id).from(qFileInfo)
+//                .orderBy(qFileInfo.id.desc())
+//                .fetchFirst());
+//    }
 }

@@ -17,7 +17,9 @@ public interface UserRepository extends IdentifiableDtoRepository<User, Long>, Q
 
     Optional<User> findByMobileIgnoreCase(String mobile);
 
-    List<User> findByDepartment(Department dp);
+    // todo 需要测试是否有用
+    @Query("select u from User u where key(u.posts) = :department")
+    List<User> findByDepartment(@Param("department") Department dp);
 
     /**
      * 获取指定部门的用户

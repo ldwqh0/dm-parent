@@ -2,6 +2,7 @@ package com.dm.auth.repository;
 
 import com.dm.auth.entity.AuthResource;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.Collection;
@@ -19,6 +20,8 @@ public interface ResourceRepository extends JpaRepository<AuthResource, Long>, Q
      *
      * @return 所有资源的scope列表
      */
+    // todo 需要验证一下
+    @Query("select distinct (ar.scope) from AuthResource ar")
     List<String> listScopes();
 
 }

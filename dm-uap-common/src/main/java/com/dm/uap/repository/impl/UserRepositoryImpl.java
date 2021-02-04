@@ -23,10 +23,10 @@ public class UserRepositoryImpl {
     public UserRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
-
-    public List<User> findByDepartment(Department department) {
-        return queryFactory.select(qUser).from(qUser).where(qUser.posts.containsKey(department)).fetch();
-    }
+// todo 需要测试是否有用
+//    public List<User> findByDepartment(Department department) {
+//        return queryFactory.select(qUser).from(qUser).where(qUser.posts.containsKey(department)).fetch();
+//    }
 
     /**
      * 查询某个部门的用户
@@ -36,21 +36,22 @@ public class UserRepositoryImpl {
      * @return 查询到的用户的列表
      */
     public List<User> findByDepartment(Department dp, boolean recursive) {
-        if (recursive) {
-            // 获取所有待查询的部门已经其子部门
-            List<User> result = new ArrayList<>();
-            List<Department> deps = new ArrayList<>();
-            deps.add(dp);
-            List<Department> children = findChildren(Collections.singleton(dp));
-            while (CollectionUtils.isNotEmpty(children)) {
-                deps.addAll(children);
-                children = findChildren(children);
-            }
-            deps.forEach(dep -> result.addAll(findByDepartment(dep)));
-            return result;
-        } else {
-            return findByDepartment(dp);
-        }
+//        if (recursive) {
+//            // 获取所有待查询的部门已经其子部门
+//            List<User> result = new ArrayList<>();
+//            List<Department> deps = new ArrayList<>();
+//            deps.add(dp);
+//            List<Department> children = findChildren(Collections.singleton(dp));
+//            while (CollectionUtils.isNotEmpty(children)) {
+//                deps.addAll(children);
+//                children = findChildren(children);
+//            }
+//            deps.forEach(dep -> result.addAll(findByDepartment(dep)));
+//            return result;
+//        } else {
+//            return findByDepartment(dp);
+//        }
+        return Collections.emptyList();
     }
 
     private List<Department> findChildren(Collection<Department> parents) {
