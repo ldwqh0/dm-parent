@@ -25,24 +25,12 @@ spring:
             scope:
               - userinfo
             redirect-uri: "{xForwardedProto}://{xForwardedHost}/dcm{prefix}/login/oauth2/code/{registrationId}"
-          iam:
-            client-id: NYNC
-            client-secret: 7057b18b4048450781ce6fd9eea7ee3c
-            client-authentication-method: "post"
-            authorization-grant-type: authorization_code
-            redirect-uri: "{xForwardedProto}://{xForwardedHost}/dcm{prefix}/login/oauth2/code/{registrationId}"
         provider:
           oauth2:
             user-info-uri: http://127.0.0.1:8887/oauth2/userinfo
             authorization-uri: http://127.0.0.1:8887/oauth2/authorize
             token-uri: http://127.0.0.1:8887/oauth2/token
             user-name-attribute: username
-          iam:
-            user-info-uri: https://2.33.8.37:8088/idp/oauth2/getUserInfo
-            authorization-uri: https://2.33.8.37:8088/idp/oauth2/authorize
-            token-uri: https://2.33.8.37:8088/idp/oauth2/getToken
-            user-name-attribute: loginName
-            user-info-authentication-method: form
   cache:
     type: jcache
     jcache:
@@ -52,30 +40,6 @@ spring:
       default-filters:
         - TokenRelay=
       routes:
-        - id: ds
-          uri: http://127.0.0.1:8081
-          predicates:
-            - Path=/ds/**
-          filters:
-            - StripPrefix=1
-        - id: dm
-          uri: http://127.0.0.1:8888
-          predicates:
-            - Path=/dm/**
-          filters:
-            - StripPrefix=1
-        - id: di
-          uri: http://127.0.0.1:8885
-          predicates:
-            - Path=/di/**
-          filters:
-            - StripPrefix=1
-        - id: dw
-          uri: http://127.0.0.1:8899
-          predicates:
-            - Path=/dw/**
-          filters:
-            - StripPrefix=1
         - id: uap
           uri: http://127.0.0.1:8887
           predicates:

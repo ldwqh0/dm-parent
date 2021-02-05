@@ -46,6 +46,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public void deleteById(long id) {
+        // 删除资源之前先从角色中删除特定资源相关的权限配置
         roleRepository.findByResourceOperationsResourceId(id).forEach(authority -> {
             Map<AuthResource, ResourceOperation> iterator = authority.getResourceOperations();
             iterator.keySet().stream().filter(resource -> Objects.equals(resource.getId(), id))

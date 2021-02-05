@@ -1,1 +1,0 @@
-export AjaxPlugin from './AjaxPlugin'
