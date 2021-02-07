@@ -8,16 +8,19 @@ import http, { plugin as httpPlugin } from '@/http'
 import EleDataTables from 'element-datatables'
 import { plugin as commonPlugin } from '@/common'
 
+import { system, security } from './modules'
+
 Vue.use(ElementUi)
 Vue.use(EleDataTables, { httpInstance: http })
-
-document.title = '张家港农业农村局项目管理系统 - 申报端'
 
 const rootConfig = {
   router, store
 }
 Vue.use(commonPlugin)
-Vue.use(httpPlugin, { store })
+Vue.use(httpPlugin, rootConfig)
+Vue.use(security, rootConfig)
+Vue.use(system, rootConfig)
+
 new Vue({
   router,
   store,

@@ -28,7 +28,8 @@ module.exports = env => {
         errors: true
       },
       host: '0.0.0.0',
-      proxy,
+      port: 80,
+      proxy: proxy(env),
       historyApiFallback: {
         rewrites: [{
           from: new RegExp(`^${env.CONTEXT_PATH}`),

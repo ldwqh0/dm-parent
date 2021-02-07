@@ -1,18 +1,16 @@
 package com.dm.file.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.dm.file.exception.RangeNotSatisfiableException;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.dm.file.exception.RangeNotSatisfiableException;
-
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 标识一个文件下载范围请求的范围
- * 
+ *
  * @author ldwqh0@outlook.con
  * @since 0.2.3
  *

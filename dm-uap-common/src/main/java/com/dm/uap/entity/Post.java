@@ -1,15 +1,15 @@
 package com.dm.uap.entity;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import lombok.Data;
-
 /**
  * 职务
- * 
+ *
  * @author LiDong
  *
  */

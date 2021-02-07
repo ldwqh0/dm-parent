@@ -8,7 +8,6 @@ import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
-import com.dm.uap.entity.QDepartment;
 import com.dm.uap.entity.QUser;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.DepartmentRepository;

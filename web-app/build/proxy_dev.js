@@ -1,16 +1,12 @@
-module.exports = {
-  '/pm/gw/': {
-    target: 'http://localhost:8080',
-    pathRewrite: { '^/pm/gw/': '/' },
-    cookiePathRewrite:{
-      "/":"/pm/"
-    }
-  },
-  '/pw/gw/': {
-    target: 'http://localhost:8080',
-    pathRewrite: { '^/pw/gw/': '/' },
-    cookiePathRewrite:{
-      "/":"/pw/"
+module.exports = (env) => {
+  return {
+    [`${env.CONTEXT_PATH}gw/`]: {
+      target: 'http://localhost:8080',
+      xfwd: true,
+      pathRewrite: { [`^${env.CONTEXT_PATH}gw/`]: '/' },
+      cookiePathRewrite: {
+        '/': `${env.CONTEXT_PATH}`
+      }
     }
   }
 }

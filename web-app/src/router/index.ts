@@ -21,7 +21,7 @@ const router = new VueRouter({
     component: (): Promise<EsModuleComponent> => import('../pages/ErrorPage.vue')
   }, {
     path: '*',
-    props: ({ params, query }: Route) => ({ code: '404' }),
+    props: () => ({ code: '404' }),
     component: (): Promise<EsModuleComponent> => import('../pages/ErrorPage.vue')
   }]
 })

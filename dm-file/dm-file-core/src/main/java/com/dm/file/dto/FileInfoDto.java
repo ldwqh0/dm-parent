@@ -1,19 +1,16 @@
 package com.dm.file.dto;
 
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.UUID;
-
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.entity.Audit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
 import lombok.Data;
-import lombok.Setter;
+
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Data
 @JsonInclude(value = Include.NON_EMPTY)

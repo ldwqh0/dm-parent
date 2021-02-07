@@ -1,13 +1,12 @@
 package com.dm.uap.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.dm.uap.dto.DepartmentDto;
+import com.dm.uap.entity.Department;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.dm.uap.dto.DepartmentDto;
-import com.dm.uap.entity.Department;
+import java.util.List;
+import java.util.Optional;
 
 public interface DepartmentService {
 

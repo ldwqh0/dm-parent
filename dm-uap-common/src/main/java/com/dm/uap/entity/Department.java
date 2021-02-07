@@ -1,11 +1,10 @@
 package com.dm.uap.entity;
 
-import javax.persistence.*;
-
 import com.dm.common.entity.AbstractEntity;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 @Entity
 @Getter

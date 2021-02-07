@@ -24,7 +24,7 @@ spring:
             authorization-grant-type: authorization_code
             scope:
               - userinfo
-            redirect-uri: "{xForwardedProto}://{xForwardedHost}/dcm{prefix}/login/oauth2/code/{registrationId}"
+            redirect-uri: "{xForwardedProto}://{xForwardedHost}{prefix}login/oauth2/code/{registrationId}"
         provider:
           oauth2:
             user-info-uri: http://127.0.0.1:8887/oauth2/userinfo

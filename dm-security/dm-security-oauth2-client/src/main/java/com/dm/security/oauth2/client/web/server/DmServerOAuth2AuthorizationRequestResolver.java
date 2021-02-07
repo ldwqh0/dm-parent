@@ -106,7 +106,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
 
     private final StringKeyGenerator secureKeyGenerator = new Base64StringKeyGenerator(
         Base64.getUrlEncoder().withoutPadding(), 96);
-    private String defaultPrefix = "";
+    private String defaultPrefix = "/";
 
     public void setDefaultPrefix(String defaultPrefix) {
         this.defaultPrefix = defaultPrefix;
@@ -270,7 +270,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
         }
         uriVariables.put("action", action);
 
-        return UriComponentsBuilder.fromUriString(clientRegistration.getRedirectUriTemplate())
+        return UriComponentsBuilder.fromUriString(clientRegistration.getRedirectUri())
             .buildAndExpand(uriVariables)
             .toUriString();
     }

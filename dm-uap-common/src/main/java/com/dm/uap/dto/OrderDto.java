@@ -2,12 +2,11 @@ package com.dm.uap.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Data;
 
 /**
  * 表示移动操作的移动方式
- * 
+ *
  * @author LiDong
  *
  */
@@ -16,7 +15,7 @@ import lombok.Data;
 public class OrderDto {
     /**
      * 移动的顺序
-     * 
+     *
      * @author LiDong
      *
      */

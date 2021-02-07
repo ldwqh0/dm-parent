@@ -1,9 +1,9 @@
 package com.dm.uap.dto;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-
-import lombok.Data;
 
 @Data
 public class LoginLogDto implements Serializable {

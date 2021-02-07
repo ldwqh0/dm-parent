@@ -93,6 +93,19 @@
         <groupId>org.hibernate.orm.tooling</groupId>
         <artifactId>hibernate-enhance-maven-plugin</artifactId>
       </plugin>
+
+      <plugin>
+        <groupId>cz.habarta.typescript-generator</groupId>
+        <artifactId>typescript-generator-maven-plugin</artifactId>
+        <configuration>
+          <jsonLibrary>jackson2</jsonLibrary>
+          <outputKind>module</outputKind>
+          <outputFile>target/typescript-generator/service-gateway.ts</outputFile>
+          <classPatterns>
+            <pattern>com.dm.auth.dto.*</pattern>
+          </classPatterns>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

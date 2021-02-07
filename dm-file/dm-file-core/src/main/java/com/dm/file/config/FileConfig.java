@@ -1,12 +1,11 @@
 package com.dm.file.config;
 
+import com.dm.collections.Maps;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.dm.collections.Maps;
 
 public class FileConfig {
     private String path;

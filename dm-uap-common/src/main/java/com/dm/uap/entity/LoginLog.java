@@ -1,16 +1,14 @@
 package com.dm.uap.entity;
 
-import java.time.ZonedDateTime;
+import com.dm.common.entity.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
-
-import com.dm.common.entity.AbstractEntity;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.time.ZonedDateTime;
 
 /**
  * 登录日志
