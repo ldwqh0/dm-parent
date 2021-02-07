@@ -52,9 +52,10 @@ public class DepartmentController {
     }
 
     @GetMapping(params = {"draw"})
-    public Page<DepartmentDto> search(@RequestParam("draw") Long draw,
-                                      @RequestParam(value = "keywords", required = false) String key, @PageableDefault Pageable pageable) {
-        return departmentService.find(key, pageable).map(departmentConverter::toDto);
+    public Page<DepartmentDto> search(@RequestParam(value = "keywords", required = false) String key,
+                                      @RequestParam(value = "parentId", required = false) Long parentId,
+                                      @PageableDefault Pageable pageable) {
+        return departmentService.find(parentId, key, pageable).map(departmentConverter::toDto);
     }
 
     @GetMapping(params = "!draw")

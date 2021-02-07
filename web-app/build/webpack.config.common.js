@@ -15,9 +15,7 @@ module.exports = env => {
         test: /((m?j)|t)s$/,
         exclude: (path) =>
           /(node_modules|bower_components)/.test(path) &&
-          !/node_modules(\\|\/)element-datatables/.test(path) &&
-          !/node_modules(\\|\/)vue2-uploader/.test(path) &&
-          !/node_modules(\\|\/)vuex/.test(path),
+          !/node_modules(\\|\/)vue2-uploader/.test(path),
         loader: 'ts-loader',
         options: {
           appendTsSuffixTo: [/\.vue$/],

@@ -6,5 +6,6 @@ export default {
   scope: `${env.CONTEXT_PATH}gw/p/scopes`,
   user: `${env.CONTEXT_PATH}gw/users`,
   role: `${env.CONTEXT_PATH}gw/roles`,
-  roleGroups: `${env.CONTEXT_PATH}gw/u/roleGroups`
+  roleGroups: `${env.CONTEXT_PATH}gw/u/roleGroups`,
+  department: `${env.CONTEXT_PATH}gw/u/departments`
 }

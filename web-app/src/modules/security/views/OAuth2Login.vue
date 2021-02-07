@@ -55,9 +55,7 @@
             code: this.code,
             state: this.state
           }
-        }).then((res) => {
-          console.log(res)
-          debugger
+        }).then(() => {
           const saveRequest = sessionStorage.getItem('SAVED_REQUEST')
           if (saveRequest) {
             window.location.href = saveRequest

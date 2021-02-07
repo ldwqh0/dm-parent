@@ -18,7 +18,7 @@ public interface DepartmentService {
 
     void deleteById(Long id);
 
-    Page<Department> find(String key, Pageable pageable);
+    Page<Department> find(Long parentId, String key, Pageable pageable);
 
     List<Department> findAll();
 

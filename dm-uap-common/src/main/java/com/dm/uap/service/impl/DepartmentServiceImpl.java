@@ -6,7 +6,7 @@ import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QDepartment;
 import com.dm.uap.repository.DepartmentRepository;
 import com.dm.uap.service.DepartmentService;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -76,15 +76,18 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Page<Department> find(String key, Pageable pageable) {
-        if (StringUtils.isBlank(key)) {
-            return departmentRepository.findAll(pageable);
-        } else {
-            BooleanExpression query = qDepartment.fullname.containsIgnoreCase(key)
-                .or(qDepartment.shortname.containsIgnoreCase(key))
-                .or(qDepartment.description.containsIgnoreCase(key));
-            return departmentRepository.findAll(query, pageable);
+    public Page<Department> find(Long parentId, String key, Pageable pageable) {
+        BooleanBuilder query = new BooleanBuilder();
+        if (!Objects.isNull(parentId)) {
+            query.and(qDepartment.parent.id.eq(parentId));
         }
+        if (StringUtils.isNotBlank(key)) {
+            query.and(qDepartment.fullname.containsIgnoreCase(key)
+                .or(qDepartment.shortname.containsIgnoreCase(key))
+                .or(qDepartment.description.containsIgnoreCase(key))
+            );
+        }
+        return departmentRepository.findAll(query, pageable);
     }
 
     @Override
