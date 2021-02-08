@@ -43,6 +43,7 @@
             <el-button>新用户</el-button>
           </el-col>
         </el-row>
+        <ele-data-tables :ajax="userUrl" :server-params="userQuery" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -62,6 +63,12 @@
       parentId: null
     }
 
+    get userQuery () {
+      return {
+        department: this.search.parentId
+      }
+    }
+
     departments: DepartmentDto[] = [] // 树形结构
     root: DepartmentDto = {}
 
@@ -79,6 +86,7 @@
     }
 
     tableUrl = urls.department
+    userUrl = urls.user
 
     //
     created (): void {
@@ -96,9 +104,8 @@
       })
     }
 
-    nodeChange (data, node) { // 当树形结构选择项改变时,更新表格搜索参数
-      // this.search.parentId = data.id
-      debugger
+    nodeChange (data: DepartmentDto): void { // 当树形结构选择项改变时,更新表格搜索参数
+      this.search.parentId = data.id ?? null
     }
 
   //

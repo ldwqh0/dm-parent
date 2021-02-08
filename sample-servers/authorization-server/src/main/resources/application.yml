@@ -21,5 +21,7 @@ spring:
     hibernate:
       use-new-id-generator-mappings: true
       ddl-auto: update
+      naming:
+        physical-strategy: com.dm.common.orm.jpa.hibernate.DmPhysicalNamingStrategy
   thymeleaf:
     cache: false
