@@ -43,10 +43,7 @@ public class RoleController {
     @ResponseStatus(CREATED)
     public RoleDto save(@RequestBody @Validated(RoleDto.New.class) RoleDto roleDto) {
         // 不允许将角色添加到内置分组
-//        if ("内置分组".equals(roleDto.getGroup().getName())) {
-//            throw new DataValidateException("不允许修改内置组定义");
-//        }
-        if (roleService.nameExist(null, roleDto.getName())) {
+        if (roleService.nameExist(null, roleDto.getGroup(), roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
             Role role = roleService.save(roleDto);
@@ -70,17 +67,10 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public RoleDto update(@PathVariable("id") @Min(4) long id, @RequestBody @Validated({RoleDto.Update.class}) RoleDto roleDto) {
-        // 内置分组角色不允许修改
-        roleService.get(id)
-            .filter(role -> "内置分组".equals(role.getGroup()))
-            .ifPresent(role -> {
-                throw new DataValidateException("不允许修改内置分组");
-            });
-        if (roleService.nameExist(id, roleDto.getName())) {
+        if (roleService.nameExist(id, roleDto.getGroup(), roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
-            Role role = roleService.update(id, roleDto);
-            return roleConverter.toDto(role);
+            return roleConverter.toDto(roleService.update(id, roleDto));
         }
     }
 
@@ -109,9 +99,9 @@ public class RoleController {
     @GetMapping(params = {"page", "size"})
     public Page<RoleDto> list(
         @RequestParam(value = "group", required = false) String group,
-        @RequestParam(value = "search", required = false) String key,
+        @RequestParam(value = "keyword", required = false) String keyword,
         @PageableDefault Pageable pageable) {
-        return roleService.search(group, key, pageable).map(roleConverter::toDto);
+        return roleService.search(group, keyword, pageable).map(roleConverter::toDto);
     }
 
     @ApiOperation("获取所有启用角色")

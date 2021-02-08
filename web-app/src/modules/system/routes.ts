@@ -7,15 +7,16 @@ export default [{
     name: 'menus',
     path: 'menus',
     component: (): Promise<EsModuleComponent> => import('./views/Menus.vue')
-  }, {
-    name: 'resources',
-    path: 'resources',
-    component: (): Promise<EsModuleComponent> => import('./views/Resources.vue')
-  }, {
-    name: 'roles',
-    path: 'roles',
-    component: (): Promise<EsModuleComponent> => import('./views/Roles.vue')
-  }, */ {
+  }, */
+    {
+      name: 'resources',
+      path: 'resources',
+      component: (): Promise<EsModuleComponent> => import('./views/Resources.vue')
+    }, {
+      name: 'roles',
+      path: 'roles',
+      component: (): Promise<EsModuleComponent> => import('./views/Roles.vue')
+    }, {
       name: 'departments',
       path: 'departments',
       component: (): Promise<EsModuleComponent> => import('./views/Departments.vue')

@@ -62,10 +62,10 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
         return group + "_" + name;
     }
 
-    public void setFullname(String fullname) {
-        String[] groupName = fullname.split("\\_", 2);
-        group = groupName[0];
-        name = groupName[1];
-    }
+//    public void setFullname(String fullname) {
+//        String[] groupName = fullname.split("\\_", 2);
+//        group = groupName[0];
+//        name = groupName[1];
+//    }
 
 }

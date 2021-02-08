@@ -35,14 +35,14 @@
       </el-table-column>
     </ele-data-tables>
     <el-dialog v-if="dialogVisible"
-               visible.sync="dialogVisible"
+               :visible.sync="dialogVisible"
                title="资源编辑"
                :close-on-click-modal="false"
                :close-on-press-escape="false">
       <resource :id="currentAuthority.id" ref="resource" />
       <template #footer>
         <el-button @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" :loading="loading" @click="saveResource">确定</el-button>
+        <el-button type="primary" :loading="submitting" @click="saveResource">确定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -51,7 +51,6 @@
 <script lang="ts">
   import Vue from 'vue'
   import { Component } from 'vue-property-decorator'
-  import { Getter } from 'vuex-class'
   import Resource from './Resource.vue'
   import URLS from '../URLS'
   import http from '@/http'
@@ -65,13 +64,11 @@
   export default class Resources extends Vue {
     searchObj = {}
     ajax = URLS.resource
+    submitting = false
 
     dialogVisible = false
 
     currentAuthority = {}
-
-    @Getter('loading')
-    loading!: boolean
 
     del ({ id }: { id: number }): Promise<any> {
       return this.$confirm('此操作将永久删除该资源，是否继续?', '删除资源', {
@@ -93,14 +90,17 @@
     }
 
     edit (data: ResourceDto): void {
+      debugger
       this.currentAuthority = data
       this.dialogVisible = true
     }
 
     saveResource (): Promise<any> {
+      this.submitting = true
       return (this.$refs.resource as any).submit()
-        .then((this.$refs.list as any).reloadData)
+        .then(() => (this.$refs.list as any).reloadData())
         .then(() => (this.dialogVisible = false))
+        .finally(() => (this.submitting = false))
     }
   }
 </script>

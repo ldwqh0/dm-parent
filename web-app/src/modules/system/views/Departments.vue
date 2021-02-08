@@ -11,9 +11,10 @@
              @current-change="selectNode">
       <template #default="{ node }">
         <span>
-          <i v-if="node.data.type==='GROUP'" class="el-icon-folder-opened" />
+          <i v-if="node.data.type==='GROUP' && node.expanded" class="el-icon-folder-opened" />
+          <i v-if="node.data.type==='GROUP' && !node.expanded" class="el-icon-folder" />
           <i v-if="node.data.type==='ORGANS'" class="el-icon-office-building" />
-          <i v-if="node.data.type==='DEPARTMENT'" class="el-icon-school" />
+          <i v-if="node.data.type==='DEPARTMENT'" class="el-icon-coordinate" />
           &nbsp;{{ node.label }}</span>
       </template>
     </el-tree>

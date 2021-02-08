@@ -41,10 +41,12 @@
       <el-col :span="14">
         <el-form-item :label="`职务 ${index+1}`"
                       :prop="`posts[${index}].department.id`"
-                      :rules="{
+                      :rules="[{
                         required:true,
                         message:'请选择一个部门',
-                      }">
+                      },{
+                        validator:validateDepartment,
+                      }]">
           <el-cascader
             v-model="post.department.id"
             clearable
@@ -56,10 +58,10 @@
         <el-form-item label="职务"
                       label-width="60px"
                       :prop="`posts[${index}].post`"
-                      :rules="{
+                      :rules="[{
                         required: true,
                         message:'请输入职务名称',
-                      }">
+                      }]">
           <el-input v-model="post.post" />
         </el-form-item>
       </el-col>
@@ -83,7 +85,7 @@
 
 <script lang="ts">
   import { Component, Prop, Vue } from 'vue-property-decorator'
-  import { DepartmentDto, DepartmentTreeItem, RoleDto, UserDto } from '@/types/service'
+  import { DepartmentDto, DepartmentTreeItem, RoleDto, Types, UserDto } from '@/types/service'
   import http from '@/http'
   import urls from '../URLS'
   import isNil from 'lodash/isNil'
@@ -177,6 +179,15 @@
       }
     }
 
+    validateDepartment (rule: Rules, value: number, callback: (error?: Error) => void): void {
+      const [selected] = this.allDepartments.filter(v => v.id === value)
+      if (!isNil(selected) && selected.type !== Types.GROUP) {
+        callback()
+      } else {
+        callback(new Error('不能将用户添加到分组中'))
+      }
+    }
+
     get roleGroups (): { name: string, roles: RoleDto[] }[] {
       const results: { name: string, roles: RoleDto[] }[] = []
       this.roles.reduce((acc, cur) => {
@@ -206,7 +217,7 @@
       if (Number.parseInt(this.id) > 0) {
         http.get(`${urls.user}/${this.id}`).then(({ data }) => (this.$set(this, 'user', data)))
       } else {
-        this.user.posts = [{ department: { id: Number.parseInt(this.departmentId) } }]
+        this.$set(this.user, 'posts', [{ department: { id: Number.parseInt(this.departmentId) } }])
       }
     }
 
