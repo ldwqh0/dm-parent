@@ -130,7 +130,7 @@
       }
     }
 
-    submit (): Promise<unknown> {
+    submit (): Promise<DepartmentDto> {
       return (this.$refs.form as any).validate().then(() => {
         if (Number.parseInt(this.id) > 0) {
           return http.put(`${urls.department}/${this.id}`, this.department)

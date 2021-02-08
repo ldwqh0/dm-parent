@@ -17,7 +17,7 @@
       <el-tab-pane label="下级部门">
         <el-row>
           <el-col>
-            <el-button type="primary" @click="departmentEditVisible=true">添加子节点</el-button>
+            <el-button type="primary" @click="editDepartment({})">添加子节点</el-button>
           </el-col>
         </el-row>
         <ele-data-tables v-if="departmentQuery.parentId"
@@ -63,7 +63,7 @@
                :close-on-click-modal="false">
       <department :id="currentEdit.id" ref="departmentForm" :parent-id="current.id" />
       <template #footer>
-        <el-button type="primary" @click="saveDepartment">确定</el-button>
+        <el-button type="primary" :loading="submitting" @click="saveDepartment">确定</el-button>
         <el-button type="danger" @click="departmentEditVisible=false">取消</el-button>
       </template>
     </el-dialog>
@@ -86,7 +86,10 @@
   export default class Departments extends Vue {
     current: DepartmentDto = {}
     departmentEditVisible = false
+    // 当前的编辑项目
     currentEdit: DepartmentDto = {}
+    // 指示是否在提交
+    submitting = false
 
     get defaultExpands (): number[] {
       // 默认选择中当前项目
@@ -157,7 +160,7 @@
     }
 
     saveDepartment (): Promise<unknown> {
-      // return this.id === 'new' ? this.save(this.department) : this.update(this.department)
+      this.submitting = true
       return (this.$refs.departmentForm as any).submit().then(({ data }: { data: DepartmentDto }) => {
         this.departmentEditVisible = false;
         // 保存之后需要刷新当前页面
@@ -170,6 +173,8 @@
         if (this.current.id !== data.parent?.id) {
           this.updateTreeNode(data.parent?.id)
         }
+      }).finally(() => {
+        this.submitting = false
       })
     }
 
