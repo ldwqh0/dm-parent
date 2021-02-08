@@ -1,17 +1,16 @@
 package com.dm.uap.entity;
 
-import javax.persistence.*;
-
 import com.dm.common.entity.AbstractEntity;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "dm_department_", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_dm_department_parent_id_full_name_",columnNames = { "parent_id_", "full_name_" })
+    @UniqueConstraint(name = "UK_dm_department_parent_id_full_name_", columnNames = {"parent_id_", "full_name_"})
 })
 public class Department extends AbstractEntity {
 
@@ -19,7 +18,6 @@ public class Department extends AbstractEntity {
      * 部门类型
      *
      * @author LiDong
-     *
      */
     public enum Types {
         /**
@@ -52,7 +50,7 @@ public class Department extends AbstractEntity {
      * 上级部门
      */
     @ManyToOne
-    @JoinColumn(name = "parent_id_",foreignKey = @ForeignKey(name = "FK_dm_department_parent_id_"))
+    @JoinColumn(name = "parent_id_", foreignKey = @ForeignKey(name = "FK_dm_department_parent_id_"))
     private Department parent;
 
     @Enumerated(EnumType.STRING)

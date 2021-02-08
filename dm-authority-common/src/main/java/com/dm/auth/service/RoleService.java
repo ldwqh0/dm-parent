@@ -36,9 +36,10 @@ public interface RoleService {
      *
      * @param id   需要排除的角色id
      * @param name 要验证的角色名称
+     * @param group 角色所在的角色组
      * @return 存在返回true, 不存在返回false
      */
-    boolean nameExist(Long id, String name);
+    boolean nameExist(Long id,String group, String name);
 
     Role update(long id, RoleDto roleDto);
 

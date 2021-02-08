@@ -1,17 +1,17 @@
 <template>
-  <el-form :model="menu"
+  <el-form ref="menuform"
+           :model="menu"
            :rules="rules"
-           label-width="120px"
-           ref="menuform">
+           label-width="120px">
     <el-row>
       <el-col :span="12">
         <el-form-item label="菜单名称" prop="name">
-          <el-input v-model="menu.name"/>
+          <el-input v-model="menu.name" :maxlength="50" />
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="菜单标题" prop="title">
-          <el-input v-model="menu.title"/>
+          <el-input v-model="menu.title" :maxlength="50" />
         </el-form-item>
       </el-col>
     </el-row>
@@ -19,14 +19,14 @@
       <el-col :span="12">
         <el-form-item label="菜单类型" prop="type">
           <el-select v-model="menu.type">
-            <el-option label="组件" value="COMPONENT"/>
-            <el-option label="网页" value="HYPERLINK"/>
+            <el-option label="组件" value="COMPONENT" />
+            <el-option label="网页" value="HYPERLINK" />
           </el-select>
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="菜单链接" prop="url">
-          <el-input v-model="menu.url"/>
+          <el-input v-model="menu.url" :maxlength="1000" />
         </el-form-item>
       </el-col>
     </el-row>
@@ -35,12 +35,12 @@
       <el-col :span="12">
         <el-form-item label="父菜单" prop="parent">
           <el-cascader
-            clearable
             v-model="parentId"
+            clearable
             expand-trigger="hover"
             :options="tree"
             :props="treeProp"
-            change-on-select/>
+            change-on-select />
         </el-form-item>
       </el-col>
       <el-col :span="12">
@@ -50,15 +50,17 @@
                      allow-create
                      default-first-option
                      clearable>
-            <template v-slot:prefix>
-              <i :class="menu.icon"/>
+            <template #prefix>
+              <i :class="menu.icon" />
             </template>
-            <el-option v-for="icon in icons" :value="icon" :key="icon">
-              <i :class="icon"/>
+            <el-option v-for="icon in icons"
+                       :key="icon"
+                       :value="`el-icon-${icon}`"
+                       :label="icon">
+              <i :class="`el-icon-${icon}`" />
               <span>{{ icon }}</span>
             </el-option>
           </el-select>
-          <!--          <el-input v-model="menu.icon" />-->
         </el-form-item>
       </el-col>
     </el-row>
@@ -78,47 +80,37 @@
     <el-row>
       <el-col :span="24">
         <el-form-item label="描述信息" prop="description">
-          <el-input v-model="menu.description"/>
+          <el-input v-model="menu.description" type="textarea" />
         </el-form-item>
       </el-col>
     </el-row>
   </el-form>
 </template>
 
-<script>
+<script lang="ts">
   import Vue from 'vue'
-  import {Component, Prop} from 'vue-property-decorator'
-  import {namespace} from 'vuex-class'
+  import { Component, Prop } from 'vue-property-decorator'
+  import { namespace } from 'vuex-class'
+  import http from '@/http'
+  import URLS from '../URLS'
   import icons from './icons'
+  import { Rules } from 'async-validator'
+  import { MenuDto, MenuType } from '@/types/Service'
 
   const menuModule = namespace('system/menu')
   @Component
   export default class Menu extends Vue {
-    @Prop({default: () => 'new'})
-    id
-
-    @menuModule.Action('get')
-    getMenu
-
-    @menuModule.Action('save')
-    save
-
-    @menuModule.Action('update')
-    update
+    @Prop({
+      type: [Number],
+      default: () => 0
+    })
+    id!: number
 
     @menuModule.Getter('tree')
-    tree
+    tree!: any
 
-    @menuModule.Action('listAll')
-    loadTree
-
-    get parentId () {
-      return this.menu.parent ? this.menu.parent.id : null
-    }
-
-    set parentId (value) {
-      this.$set(this.menu, 'parent', {id: value})
-    }
+    @menuModule.Action('loadAll')
+    loadTree!: () => Promise<any>
 
     icons = icons
 
@@ -129,12 +121,29 @@
       emitPath: false
     }
 
-    menu = {
+    menu: MenuDto = {
+      id: 0,
+      name: '',
+      title: '',
+      url: '',
       enabled: true,
-      type: 'COMPONENT'
+      openInNewWindow: false,
+      type: MenuType.COMPONENT
     }
 
-    get rules () {
+    get parentId (): number | undefined {
+      return this.menu.parent?.id
+    }
+
+    set parentId (value: number | undefined) {
+      if (value !== undefined) {
+        this.$set(this.menu, 'parent', { id: value })
+      } else {
+        this.$set(this.menu, 'parent', null)
+      }
+    }
+
+    get rules (): Rules {
       return {
         name: [{
           required: true,
@@ -149,16 +158,27 @@
       }
     }
 
-    submit () {
-      return this.$refs.menuform.validate().then(valid => {
-        return this.id === 'new' ? this.save(this.menu) : this.update(this.menu, {id: this.id})
-      })
+    save (menu: MenuDto): Promise<any> {
+      return http.post(URLS.menus, menu)
     }
 
-    created () {
+    update (id: number, menu: MenuDto): Promise<any> {
+      return http.put(`${URLS.menus}/${id}`, menu)
+    }
+
+    loadMenu (id: number = this.id): Promise<any> {
+      return http.get(`${URLS.menus}/${id}`).then(({ data }) => (this.menu = data))
+    }
+
+    submit (): Promise<any> {
+      return (this.$refs.menuform as any).validate()
+          .then(() => this.id === 0 ? this.save(this.menu) : this.update((this.id as number), this.menu))
+    }
+
+    created (): void {
       this.loadTree()
-      if (this.id !== 'new') {
-        this.getMenu({id: this.id}).then(({data}) => (this.menu = data))
+      if (this.id !== 0) {
+        this.loadMenu()
       }
     }
   }

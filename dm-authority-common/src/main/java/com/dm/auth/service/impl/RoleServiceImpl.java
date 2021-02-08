@@ -71,11 +71,12 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
     }
 
     @Override
-    public boolean nameExist(Long id, String name) {
+    public boolean nameExist(Long id, String group, String name) {
         BooleanBuilder builder = new BooleanBuilder();
         if (id != null) {
             builder.and(qRole.id.ne(id));
         }
+        builder.and(qRole.group.eq(group));
         builder.and(qRole.name.eq(name));
         return roleRepository.exists(builder);
     }

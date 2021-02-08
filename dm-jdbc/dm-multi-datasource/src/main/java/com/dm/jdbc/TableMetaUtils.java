@@ -2,7 +2,6 @@ package com.dm.jdbc;
 
 import javax.sql.DataSource;
 import javax.validation.constraints.NotNull;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;

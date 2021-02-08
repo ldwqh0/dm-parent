@@ -21,7 +21,6 @@ import java.util.Set;
     @UniqueConstraint(name = "UK_dm_resource_name_", columnNames = {"name_"}),
     @UniqueConstraint(name = "UK_dm_resource_matcher_", columnNames = {"matcher_"})
 })
-
 public class AuthResource extends AbstractEntity {
 
     /**

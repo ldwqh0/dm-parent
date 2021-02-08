@@ -1,283 +1,175 @@
 <template>
-  <el-form class="user"
-           :model="user"
-           :rules="rules"
+  <el-form ref="form"
            label-width="100px"
-           ref="userform">
+           :rules="rules"
+           :model="user">
+    <el-form-item label="用户名：" prop="username">
+      <el-input v-model="user.username" :maxlength="50" />
+    </el-form-item>
+    <el-form-item v-if="id==='0'" label="密码：" prop="password">
+      <el-input v-model="user.password" type="password" :maxlength="50" />
+    </el-form-item>
+    <el-form-item v-if="id==='0'" label="确认密码：" prop="repassword">
+      <el-input v-model="user.repassword" type="password" :maxlength="50" />
+    </el-form-item>
+    <el-form-item label="姓名：" prop="fullname">
+      <el-input v-model="user.fullname" :maxlength="20" />
+    </el-form-item>
+    <el-form-item label="用户角色：" prop="roles">
+      <el-select v-model="user.roles"
+                 value-key="id"
+                 style="width: 100%;"
+                 multiple>
+        <el-option-group v-for="group in roleGroups" :key="group.name" :label="group.name">
+          <el-option v-for="role in group.roles"
+                     :key="role.id"
+                     :label="role.name"
+                     :value="role" />
+        </el-option-group>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="联系电话：" prop="mobile">
+      <el-input v-model="user.mobile" :maxlength="20" />
+    </el-form-item>
+
     <el-row>
-      <el-col :span="12">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="user.username"/>
+      <el-col>
+        <div style="width: 100px;text-align: right;padding-right: 12px;box-sizing: border-box;">用户职务：</div>
+      </el-col>
+    </el-row>
+    <el-row v-for="(post,index) in user.posts" :key="index">
+      <el-col :span="14">
+        <el-form-item :label="`职务 ${index+1}`"
+                      :prop="`posts[${index}].department.id`"
+                      :rules="[{
+                        required:true,
+                        message:'请选择一个部门',
+                      },{
+                        validator:validateDepartment,
+                      }]">
+          <el-cascader
+            v-model="post.department.id"
+            clearable
+            :options="departmentTree"
+            :props="cascadeProps" />
         </el-form-item>
       </el-col>
-      <el-col :span="12">
-        <el-form-item label="姓名" prop="fullname">
-          <el-input v-model="user.fullname"/>
+      <el-col :span="7">
+        <el-form-item label="职务"
+                      label-width="60px"
+                      :prop="`posts[${index}].post`"
+                      :rules="[{
+                        required: true,
+                        message:'请输入职务名称',
+                      }]">
+          <el-input v-model="post.post" />
         </el-form-item>
+      </el-col>
+      <el-col :span="3">
+        <!--        <el-form-item>-->
+        <!--这里做一个减号图标-->
+        <el-button v-if="user.posts.length>1" @click="removePost(index)">移除</el-button>
+        <!--        </el-form-item>-->
       </el-col>
     </el-row>
 
-    <el-row v-if="id==='new'">
-      <el-col :span="12">
-        <el-form-item label="密码" prop="password">
-          <el-input
-            type="password"
-            v-model="user.password"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="确认密码" prop="repassword">
-          <el-input
-            type="password"
-            v-model="user.repassword"/>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <!--
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="所属区域" prop="region">
-              <el-cascader
-                v-model="region"
-                expand-trigger="hover"
-                :options="regions"
-                :props="treeProp"
-                change-on-select/>
-            </el-form-item>
-          </el-col>
-          -->
-    <el-row>
-      <el-col :span="24">
-        <el-form-item prop="scenicName" label="所属景区">
-          <el-input v-model="user.scenicName"/>
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <el-form-item>
+      <el-button type="success" @click="addPost">添加职务</el-button>
+    </el-form-item>
 
-    <el-row>
-      <el-col :span="12">
-        <el-form-item label="状态">
-          <el-checkbox v-model="user.enabled">启用</el-checkbox>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="所属角色" prop="roles">
-          <el-select multiple
-                     style="width: 100%;"
-                     value-key="id"
-                     placeholder="请选择"
-                     v-model="user.roles">
-            <el-option v-for="item in roles"
-                       :key="item.id"
-                       :value="item"
-                       :label="item.name">
-              <span style="float: left">{{ item.group.name }}</span>
-              <span style="float: right">{{ item.name }}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <!--关于职务的验证需要单独处理-->
-    <el-form ref="postForms"
-             v-for="(post,index) in user.posts"
-             :key="index"
-             label-width="100px"
-             :model="post"
-             :rules="postRules">
-      <el-row>
-        <el-col :span="12">
-          <el-form-item prop="department.id">
-            <template #label>
-              部门
-            </template>
-            <el-cascader
-              style="width: 100%;"
-              v-model="post.department.id"
-              expand-trigger="hover"
-              :options="departmentTree"
-              :props="treeProp"
-              change-on-select/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="职务" prop="post">
-            <el-input v-model="post.post">
-              <template v-slot:append>
-                <el-button icon="el-icon-delete" @click="removePost(index)"></el-button>
-              </template>
-            </el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item>
-          <el-button @click="addPost">添加职务</el-button>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
-        <el-form-item label="联系电话" prop="mobile">
-          <el-input v-model="user.mobile"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="邮箱">
-          <el-input v-model="user.email"/>
-        </el-form-item>
-      </el-col>
-    </el-row>
-
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="描述信息">
-          <el-input
-            v-model="user.description"
-            type="textarea"/>
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <el-form-item label="简介：" prop="profile">
+      <el-input v-model="user.description" type="textarea" :maxlength="4000" />
+    </el-form-item>
   </el-form>
 </template>
-<script>
-  import Vue from 'vue'
-  import { Component, Prop } from 'vue-property-decorator'
-  import { namespace } from 'vuex-class'
 
-  const userSpace = namespace('system/user')
-  const roleSpace = namespace('system/role')
-  // const regionSpace = namespace('system/region')
-  const departmentModule = namespace('system/department')
-  @Component({
-    components: {}
-  })
+<script lang="ts">
+  import { Component, Prop, Vue } from 'vue-property-decorator'
+  import { DepartmentDto, DepartmentTreeItem, RoleDto, Types, UserDto } from '@/types/service'
+  import http from '@/http'
+  import urls from '../URLS'
+  import isNil from 'lodash/isNil'
+  import { Rules } from 'async-validator'
+  import { listToTree } from '@/utils'
+  import { CascaderProps } from 'element-ui/types/cascader-panel'
+
+  @Component
   export default class User extends Vue {
-    user = {
-      enabled: true,
-      roles: [],
-      posts: [],
-      regionCode: '510903'
+    @Prop({
+      type: [String, Number],
+      required: false,
+      default: () => '0'
+    })
+    id!: string
+
+    @Prop({
+      type: [String, Number],
+      required: true
+    })
+    departmentId!: string
+
+    allDepartments: DepartmentDto[] = []
+
+    get departmentTree (): DepartmentTreeItem[] {
+      return listToTree(this.allDepartments)
     }
 
-    treeProp = {
+    cascadeProps: CascaderProps<number, DepartmentDto> = {
       children: 'children',
       label: 'fullname',
       value: 'id',
-      emitPath: false
+      emitPath: false,
+      checkStrictly: true,
+      expandTrigger: 'hover'
     }
 
-    @Prop({ default: () => 'new' })
-    id
+    user: UserDto = {}
+    roles: RoleDto[] = []
 
-    @departmentModule.Getter('tree')
-    departmentTree
-
-    get postRules () {
-      return {
-        'department.id': [{
-          required: true,
-          message: '请选择任职部门',
-          trigger: 'change'
-        }],
-        post: [{
-          required: true,
-          message: '请输入职务名称',
-          trigger: 'blur'
-        }]
-      }
+    rules: Rules = {
+      username: [{
+        required: true,
+        message: '请输入用户名',
+        trigger: 'blur'
+      }],
+      fullname: [{
+        required: true,
+        message: '用户姓名不能为空',
+        trigger: 'blur'
+      }],
+      password: [{
+        required: true,
+        message: '密码不能为空',
+        trigger: 'blur'
+      }],
+      repassword: [{
+        required: true,
+        message: '确认密码不能为空'
+      }, {
+        validator: this.validateRePassword,
+        trigger: 'blur'
+      }],
+      mobile: [{
+        required: true,
+        message: '用户手机号不能为空',
+        trigger: 'blur'
+      }, {
+        len: 11,
+        message: '请输入正确的手机号码'
+      }],
+      roles: [{
+        required: true,
+        message: '用户角色不能为空',
+        trigger: 'blur'
+      }],
+      email: [{
+        type: 'email',
+        message: '请输入正确的邮箱地址',
+        trigger: 'blur'
+      }]
     }
 
-    get rules () {
-      return {
-        username: [{
-          required: true,
-          message: '请输入用户名',
-          trigger: 'blur'
-        }],
-        fullname: [{
-          required: true,
-          message: '用户姓名不能为空',
-          trigger: 'blur'
-        }],
-        password: [{
-          required: true,
-          message: '密码不能为空',
-          trigger: 'blur'
-        }],
-        repassword: [{
-          validator: this.validateRePassword,
-          trigger: 'blur'
-        }],
-        mobile: [{
-          required: true,
-          message: '用户手机号不能为空',
-          trigger: 'blur'
-        }],
-        roles: [{
-          required: true,
-          message: '用户角色不能为空',
-          trigger: 'blur'
-        }]
-      }
-    }
-
-    @roleSpace.State('roles')
-    roles
-
-    @roleSpace.Action('listAll')
-    listRoles
-
-    @userSpace.Action('save')
-    save
-
-    @userSpace.Action('get')
-    getUser
-
-    @userSpace.Action('update')
-    update
-
-    created () {
-      this.listRoles()
-      // this.loadRegions()
-      if (this.id !== 'new') {
-        // 获取用户之后，重置用户的职务信息
-        this.getUser({ id: this.id }).then(({ data, data: { posts = [] } }) => {
-          this.user = data
-          this.$set(this.user, 'posts', posts)
-        })
-      }
-    }
-
-    // 添加职务信息
-    addPost () {
-      this.user.posts.push({ department: {} })
-    }
-
-    // 移除指定索引位置的职务
-    removePost (index) {
-      this.user.posts.splice(index, 1)
-    }
-
-    submit () {
-      this.$emit('on-submit', true)
-      const validations = [this.$refs.userform]
-      if (this.$refs.postForms) {
-        validations.push(...this.$refs.postForms)
-      }
-      return Promise.all(validations.map(form => form.validate())).then(() => {
-        return this.id === 'new' ? this.save(this.user) : this.update(this.user)
-      }).catch(e => {
-        // console.error('校验不通过')
-        return Promise.reject(e)
-      }).finally(() => {
-        this.$emit('on-submit', false)
-      })
-    }
-
-    validateRePassword (rule, value, callback) {
+    validateRePassword (rule: Rules, value: string, callback: (error?: Error) => void): void {
       if (value === '') {
         callback(new Error('确认密码不能为空'))
       } else if (value !== this.user.password) {
@@ -286,7 +178,69 @@
         callback()
       }
     }
+
+    validateDepartment (rule: Rules, value: number, callback: (error?: Error) => void): void {
+      const [selected] = this.allDepartments.filter(v => v.id === value)
+      if (!isNil(selected) && selected.type !== Types.GROUP) {
+        callback()
+      } else {
+        callback(new Error('不能将用户添加到分组中'))
+      }
+    }
+
+    get roleGroups (): { name: string, roles: RoleDto[] }[] {
+      const results: { name: string, roles: RoleDto[] }[] = []
+      this.roles.reduce((acc, cur) => {
+        const group = cur.group ?? 'unknown'
+        const groupRoles = acc.get(group)
+        if (isNil(groupRoles)) {
+          acc.set(group, [cur])
+        } else {
+          groupRoles.push(cur)
+        }
+        return acc
+      }, new Map<string, RoleDto[]>())
+        .forEach((value, key) => {
+          results.push({
+            name: key,
+            roles: value
+          })
+        })
+      return results
+    }
+
+    created (): void {
+      http.get(`${urls.role}`).then(({ data }) => (this.roles = data))
+      http.get(`${urls.department}`, { params: { scope: 'all' } }).then(({ data }) => {
+        this.allDepartments = data
+      })
+      if (Number.parseInt(this.id) > 0) {
+        http.get(`${urls.user}/${this.id}`).then(({ data }) => (this.$set(this, 'user', data)))
+      } else {
+        this.$set(this.user, 'posts', [{ department: { id: Number.parseInt(this.departmentId) } }])
+      }
+    }
+
+    addPost (): void {
+      this.user.posts?.push({ department: {} })
+    }
+
+    removePost (index: number): void {
+      this.user.posts?.splice(index, 1)
+    }
+
+    submit (): Promise<any> {
+      return (this.$refs.form as any).validate().then(() => {
+        if (Number.parseInt(this.id) > 0) {
+          return http.put(`${urls.user}/${this.id}`, this.user)
+        } else {
+          return http.post(`${urls.user}`, this.user)
+        }
+      })
+    }
   }
 </script>
-<style lang="less">
+
+<style scoped>
+
 </style>

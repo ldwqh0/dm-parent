@@ -1,26 +1,24 @@
 package com.dm.uap.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.dm.uap.dto.DepartmentDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.dm.uap.dto.DepartmentDto;
-import com.dm.uap.entity.Department;
+import java.util.List;
+import java.util.Optional;
 
 public interface DepartmentService {
 
-    Department save(DepartmentDto data);
+    DepartmentDto save(DepartmentDto data);
 
-    Optional<Department> findById(Long id);
+    Optional<DepartmentDto> findById(Long id);
 
-    Department update(Long id, DepartmentDto data);
+    DepartmentDto update(Long id, DepartmentDto data);
 
     void deleteById(Long id);
 
-    Page<Department> find(String key, Pageable pageable);
+    Page<DepartmentDto> find(Long parentId, String key, Pageable pageable);
 
-    List<Department> findAll();
+    List<DepartmentDto> findAll();
 
 }

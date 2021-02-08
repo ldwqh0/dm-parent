@@ -8,6 +8,12 @@
 
 ## 升级日志
 
+2.0.0
+
+* 升级spring boot至2.4.2版本
+* 升级spring cloud至2020.0.1
+* 全面启用jdk 11编译
+  
 1.3.0
 
 * 升级spring boot至2.3.8.release

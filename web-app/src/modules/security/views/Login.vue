@@ -1,75 +1,96 @@
 <template>
-  <div><a href="javascript:void(0)" @click="oauthLogin">使用oauth授权登录</a></div>
+  <div class="login-page">
+    <el-form v-if="false"
+             :model="user"
+             label-width="100px"
+             style="width: 400px"
+             class="login-form">
+      <el-form-item label="用户名">
+        <el-input v-model="user.username" type="text" />
+      </el-form-item>
+      <el-form-item label="密码">
+        <el-input v-model="user.password" type="password" />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="doLogin">登录</el-button>
+      </el-form-item>
+      <el-row>
+        <el-col><a class="float-right" href="/dcm/gw/oauth2/authorization/iam?prefix">使用华为认证平台登录</a></el-col>
+      </el-row>
+    </el-form>
+  </div>
 </template>
 
-<script>
-  import Vue from 'vue'
-  import {Component, Prop} from 'vue-property-decorator'
-  import Cookies from 'js-cookie'
+<script lang="ts">
+  import { Component, Prop, Vue } from 'vue-property-decorator'
+  import axios from 'axios'
+  import qs from 'qs'
 
-  const SAVE_LOCATION_KEY = 'SAVE_LOCATION_KEY'
+  const http = axios.create()
 
   @Component
   export default class Login extends Vue {
-    @Prop()
-    redirect
+    @Prop({
+      type: [String],
+      default: () => ''
+    })
+    redirect!: string
 
-    oauthLogin () {
-      // 点击登录时，如果没有跳转地址，保存跳转地址为应用地址
-      let savedLocation = this.getSavedLocation()
-      if (!savedLocation) {
-        this.saveLocation(CONTEXT_PATH)
-      }
-      window.location.href = '/gw/oauth2/authorization/oauth2'
+    @Prop({
+      type: [String],
+      default: () => ''
+    })
+    state!: string
+
+    @Prop({
+      type: [String],
+      default: () => ''
+    })
+    code!: string
+
+    user = {
+      username: 'admin',
+      password: '123456',
+      grant_type: 'password',
+      scope: 'userinfo'
     }
 
-    created () {
-      // 如果包含跳转信息，直接跳转
-      if (this.redirect) {
-        this.saveLocation(this.redirect)
-        // 如果要设置为自动登录的话，直接在这里跳转
-        // window.location.href= 跳转地址
-        this.oauthLogin()
-      } else {
-        // 当时从别的页面跳转到此处,或者直接打开登录页面时
-        // 进入检测是否有保存的跳转，如果有，先直接跳转
-        let savedLocation = this.getSavedLocation()
-        if (savedLocation) {
-          this.removeSavedLocation()
-          window.location.href = savedLocation
+    doLogin () {
+      http.post('/oauth2/token', qs.stringify(this.user), {
+        auth: {
+          username: 'app',
+          password: '123456'
+        }
+      }).then(({ data }) => {
+        const token = JSON.stringify(data)
+        sessionStorage.setItem('token', token)
+      }).then(() => {
+        if (this.redirect) {
+          window.location.href = this.redirect
         } else {
-          this.oauthLogin()
+          this.$router.replace('/')
         }
-      }
+      })
     }
 
-    saveLocation (url) {
-      Cookies.set(SAVE_LOCATION_KEY, url)
-      if (sessionStorage !== undefined) {
-        sessionStorage.setItem(SAVE_LOCATION_KEY, url)
+    created (): void {
+      if (this.redirect) {
+        sessionStorage.setItem('SAVED_REQUEST', this.redirect)
       }
-    }
-
-    getSavedLocation () {
-      let url = Cookies.get(SAVE_LOCATION_KEY)
-      if (url) {
-      } else {
-        if (sessionStorage !== undefined) {
-          url = sessionStorage.getItem(SAVE_LOCATION_KEY)
-        }
-      }
-      return url
-    }
-
-    removeSavedLocation () {
-      Cookies.remove(SAVE_LOCATION_KEY)
-      if (sessionStorage !== undefined) {
-        sessionStorage.removeItem(SAVE_LOCATION_KEY)
-      }
+      window.location.href = `${env.CONTEXT_PATH}gw/oauth2/authorization/oauth2?prefix=${env.CONTEXT_PATH}`
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+  .login-page {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
 
+    .login-form {
+
+    }
+  }
 </style>

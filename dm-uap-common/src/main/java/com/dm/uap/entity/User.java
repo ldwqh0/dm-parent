@@ -95,6 +95,15 @@ public class User extends AbstractEntity {
     @Column(name = "region_code_", length = 20)
     private String regionCode;
 
+    @ElementCollection
+    @JoinTable(name = "dm_user_attribute_",
+        joinColumns = {
+            @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_dm_user_attribute_user_id_"))
+        })
+    @MapKeyColumn(name = "key")
+    @Column(name = "value")
+    private Map<String, String> attributes;
+
     @Column(name = "scenic_name_", length = 200)
     private String scenicName;
 }

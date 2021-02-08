@@ -3,12 +3,15 @@ package com.dm.file.repository;
 import com.dm.common.repository.IdentifiableDtoRepository;
 import com.dm.file.entity.FileInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface FileInfoRepository extends JpaRepository<FileInfo, UUID>, IdentifiableDtoRepository<FileInfo, UUID> {
 
+    // todo 需要测试是否有效
+    @Query("select max(fi.id) from FileInfo fi")
     Optional<UUID> findMaxId();
 
     /**

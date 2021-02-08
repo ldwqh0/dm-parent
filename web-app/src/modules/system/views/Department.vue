@@ -6,48 +6,38 @@
     <el-row>
       <el-col :span="24">
         <el-form-item label="部门名称：" prop="fullname">
-          <el-input v-model="department.fullname"/>
+          <el-input v-model="department.fullname" />
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="24">
         <el-form-item label="部门简称：" prop="shortname">
-          <el-input v-model="department.shortname"/>
+          <el-input v-model="department.shortname" />
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="24">
         <el-form-item label="部门类型：" prop="type">
-          <el-select v-model="department.type" placeholder="请选择" style="width: 100%;">
-            <el-option label="机构" value="ORGANS"/>
-            <el-option label="部门" value="DEPARTMENT"/>
-            <el-option label="分组" value="GROUP"/>
+          <el-select v-model="department.type" placeholder="请选择">
+            <el-option label="机构" value="ORGANS" />
+            <el-option label="部门" value="DEPARTMENT" />
+            <el-option label="分组" value="GROUP" />
           </el-select>
         </el-form-item>
       </el-col>
     </el-row>
-    <!--
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="状态：">
-          <el-checkbox true-label="ENABLED" false-label="DISABLED" v-model="department.state">启用</el-checkbox>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    -->
     <el-row>
       <el-col :span="24">
         <el-form-item label="上级单位：" prop="parent">
           <el-cascader
-            style="width:100%;"
-            clearable
             v-model="parent"
-            expand-trigger="hover"
+            clearable
             :options="departmentTree"
-            :props="treeProp"
-            change-on-select/>
+            expand-trigger="hover"
+            :props="cascadeProps"
+            change-on-select />
         </el-form-item>
       </el-col>
     </el-row>
@@ -55,31 +45,49 @@
     <el-row>
       <el-col :span="24">
         <el-form-item label="描述信息：" prop="description">
-          <el-input type="textarea" v-model="department.description"/>
+          <el-input v-model="department.description" type="textarea" />
         </el-form-item>
       </el-col>
     </el-row>
   </el-form>
 </template>
-<script>
+<script lang="ts">
   import Vue from 'vue'
   import { Component, Prop } from 'vue-property-decorator'
+  import { DepartmentDto, DepartmentTreeItem, Types } from '@/types/service'
+  import { CascaderProps } from 'element-ui/types/cascader-panel'
+  import http from '@/http'
+  import urls from '../urls'
+  import { listToTree } from '@/utils'
+  import isNil from 'lodash/isNil'
 
-  import { namespace } from 'vuex-class'
-
-  const departmentModule = namespace('system/department')
   @Component
   export default class Department extends Vue {
-    @Prop({ type: [String, Number], default: 'new' })
-    id
+    @Prop({
+      type: [String, Number],
+      required: false,
+      default: '0'
+    })
+    id!: string
 
-    // 当前项目的ID,为"new时代表新增"
-    department = {// department对象
-      type: 'DEPARTMENT',
-      state: 'ENABLED'
+    @Prop({
+      type: [String, Number],
+      required: true
+    })
+    parentId!: string
+
+    allDepartments: DepartmentDto[] = []
+
+    get departmentTree (): DepartmentTreeItem[] {
+      return listToTree(this.allDepartments)
     }
 
-    treeProp = {
+    department: DepartmentDto = {
+      type: Types.DEPARTMENT,
+      parent: { id: Number.parseInt(this.parentId) }
+    }
+
+    cascadeProps: CascaderProps<number, DepartmentDto> = {
       children: 'children',
       label: 'fullname',
       value: 'id',
@@ -99,44 +107,36 @@
       }]
     }
 
-    @departmentModule.Getter('tree')
-    departmentTree
-
-    @departmentModule.Action('get')
-    getDepartment
-
-    @departmentModule.Action('save')
-    save
-
-    @departmentModule.Action('update')
-    update
-
-    get parent () {
-      return this.department.parent ? this.department.parent.id : null
+    get parent (): number | null {
+      return this.department.parent?.id ?? null
     }
 
-    set parent (id) {
-      this.$set(this.department, 'parent', { id })
-    }
-
-    created () {
-      if (this.id !== 'new') {
-        this.getDepartment({ id: this.id }).then(data => (this.department = data))
+    set parent (id: number | null) {
+      if (isNil(id)) {
+        this.$delete(this.department, 'parent')
+      } else {
+        this.$set(this.department, 'parent', { id })
       }
     }
 
-    // 获取行政区划
-    getRegionCity (val) {
-      const len = val.length - 1
-      this.department.areaCode = val[len]
+    created (): void {
+      // 加载所有部门的列表
+      http.get(`${urls.department}`, { params: { scope: 'all' } }).then(({ data }) => {
+        this.allDepartments = data
+      })
+      // 加载当前部门信息
+      if (Number.parseInt(this.id) > 0) {
+        http.get(`${urls.department}/${this.id}`).then(({ data }) => (this.department = data))
+      }
     }
 
-    submit () {
-      this.$emit('on-submit', true)
-      return this.$refs.form.validate().then(() => {
-        return this.id === 'new' ? this.save(this.department) : this.update(this.department)
-      }).finally(() => {
-        this.$emit('on-submit', false)
+    submit (): Promise<DepartmentDto> {
+      return (this.$refs.form as any).validate().then(() => {
+        if (Number.parseInt(this.id) > 0) {
+          return http.put(`${urls.department}/${this.id}`, this.department)
+        } else {
+          return http.post(`${urls.department}`, this.department)
+        }
       })
     }
   }

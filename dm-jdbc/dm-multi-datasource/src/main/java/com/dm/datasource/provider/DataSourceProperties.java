@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;

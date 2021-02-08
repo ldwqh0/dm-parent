@@ -1,12 +1,11 @@
 package com.dm.uap.service;
 
-import java.util.List;
-
+import com.dm.uap.dto.LoginLogDto;
+import com.dm.uap.entity.LoginLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.dm.uap.dto.LoginLogDto;
-import com.dm.uap.entity.LoginLog;
+import java.util.List;
 
 public interface LoginLogService {
 

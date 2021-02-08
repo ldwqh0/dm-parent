@@ -1,75 +1,90 @@
 <template>
-  <div class="resource-authority">
-    <el-form size="mini"
-             ref="form"
-             label-width="120px"
-             :model="data">
-      <el-row>
-        <el-col :span="24">
-          <ele-datatable :data="data.resourceAuthorities">
-            <el-table-column label="资源名称" prop="resource.name"/>
-            <el-table-column label="资源路径" prop="resource.matcher"/>
+  <el-form ref="form"
+           class="resource-authority"
+           size="mini"
+           label-width="120px"
+           :model="data">
+    <el-row>
+      <el-col :span="24">
+        <ele-datatable :data="data.authorities">
+          <el-table-column label="资源名称" prop="name" />
+          <el-table-column label="资源路径" prop="matcher" />
 
-            <el-table-column label="可读取">
-              <template slot-scope="scope">
-                <three-check-box v-model="scope.row.readable"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="可新增">
-              <template slot-scope="scope">
-                <three-check-box v-model="scope.row.saveable"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="可修改">
-              <template slot-scope="scope">
-                <three-check-box v-model="scope.row.updateable"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="可删除">
-              <template slot-scope="scope">
-                <three-check-box v-model="scope.row.deleteable"/>
-              </template>
-            </el-table-column>
-          </ele-datatable>
-        </el-col>
-      </el-row>
-    </el-form>
-  </div>
+          <el-table-column label="可读取">
+            <template #default="scope">
+              <three-check-box v-model="scope.row.readable" />
+            </template>
+          </el-table-column>
+          <el-table-column label="可新增">
+            <template #default="scope">
+              <three-check-box v-model="scope.row.saveable" />
+            </template>
+          </el-table-column>
+          <el-table-column label="可修改">
+            <template #default="scope">
+              <three-check-box v-model="scope.row.updateable" />
+            </template>
+          </el-table-column>
+          <el-table-column label="可删除">
+            <template #default="scope">
+              <three-check-box v-model="scope.row.deleteable" />
+            </template>
+          </el-table-column>
+        </ele-datatable>
+      </el-col>
+    </el-row>
+  </el-form>
 </template>
 
-<script>
+<script lang="ts">
   import Vue from 'vue'
   import { Component, Prop } from 'vue-property-decorator'
-  import { namespace } from 'vuex-class'
-  import ThreeCheckBox from './ThreeCheckBox'
-  import EleDatatable from 'element-datatables'
-
-  const resourceAuthority = namespace('system/resourceAuthority')
+  import ThreeCheckBox from './ThreeCheckBox.vue'
+  import http from '@/http'
+  import URLS from '../URLS'
+  import isNil from 'lodash/isNil'
+  import isEmpty from 'lodash/isEmpty'
+  // const resourceAuthority = namespace('system/resourceAuthority')
 
   @Component({
     components: {
-      ThreeCheckBox,
-      EleDatatable
+      ThreeCheckBox
     }
   })
   export default class ResourceAuthority extends Vue {
-    @Prop({ default: () => 'new' })
-    name
+    @Prop({ required: true })
+    roleId!: string | number
 
-    @resourceAuthority.Action('list')
-    list
+    @Prop({ required: true })
+    roleName!: string
 
-    @resourceAuthority.Action('save')
-    save
+    data = { authorities: [] }
 
-    data = { resourceAuthorities: [] }
-
-    submit () {
-      return this.save(this.data)
+    submit (): Promise<unknown> {
+      const resourceAuthorities = this.data.authorities.filter(item => this.notNull(item))
+        .reduce((acc: unknown, cur: { id: any }) => {
+          (acc as any)[`${cur.id}`] = cur
+          return acc
+        }, {})
+      return http.post(URLS.resourceAuthorities, {
+        roleId: this.roleId,
+        roleName: this.roleName,
+        resourceAuthorities
+      })
     }
 
-    created () {
-      this.list(this.name).then(({ data }) => (this.data = data))
+    // TODO 这里需要处理
+    notNull (item: unknown): boolean {
+      return !(isEmpty(item) || isNil(item))
+    }
+
+    created (): void {
+      Promise.all([http.get(`${URLS.resource}`), http.get(`${URLS.resourceAuthorities}/${this.roleName}`)])
+        .then(([{ data: resources }, { data: { resourceAuthorities = {} } }]) => resources.map((resource: any) => ({
+            ...resource,
+            ...resourceAuthorities[resource.id]
+          }))
+        ).then(result => (this.data.authorities = result))
     }
   }
 </script>

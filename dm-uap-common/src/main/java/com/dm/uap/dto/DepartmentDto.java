@@ -41,6 +41,10 @@ public class DepartmentDto implements Serializable {
         super();
     }
 
+    private boolean hasChildren = false;
+
+    private long childrenCount = 0;
+
     public DepartmentDto(Long id) {
         super();
         this.id = id;
