@@ -10,7 +10,11 @@
              :load="loadNode"
              @current-change="selectNode">
       <template #default="{ node }">
-        {{ node.label }}
+        <span>
+          <i v-if="node.data.type==='GROUP'" class="el-icon-folder-opened" />
+          <i v-if="node.data.type==='ORGANS'" class="el-icon-office-building" />
+          <i v-if="node.data.type==='DEPARTMENT'" class="el-icon-school" />
+          &nbsp;{{ node.label }}</span>
       </template>
     </el-tree>
     <el-tabs class="tabs">
@@ -25,7 +29,11 @@
                          :ajax="departmentUrl"
                          :server-params="departmentQuery"
                          pagination-layout="total, sizes, prev, pager, next, jumper">
-          <el-table-column prop="fullname" label="名称" />
+          <el-table-column prop="fullname">
+            <template #default="{row}">
+              <a href="javascript:void(0)" @click="selectNode(row)">{{ row.fullname }}</a>
+            </template>
+          </el-table-column>
           <el-table-column label="类型">
             <template #default="{row}">
               <span v-if="row.type==='ORGANS'">组织机构</span>
@@ -50,11 +58,19 @@
       <el-tab-pane label="部门人员">
         <el-row>
           <el-col>
-            <el-button>新用户</el-button>
+            <el-button type="primary" @click="editUser({})">新用户</el-button>
           </el-col>
         </el-row>
-        <ele-data-tables v-if="userQuery.department" :ajax="userUrl" :server-params="userQuery">
-          <el-table-column prop="username" />
+        <ele-data-tables v-if="userQuery.department"
+                         ref="userTable"
+                         :ajax="userUrl"
+                         :server-params="userQuery">
+          <el-table-column prop="username" label="用户名" />
+          <el-table-column>
+            <template #default="{row}">
+              <el-button type="text" @click="editUser(row)">编辑</el-button>
+            </template>
+          </el-table-column>
         </ele-data-tables>
       </el-tab-pane>
     </el-tabs>
@@ -67,6 +83,16 @@
         <el-button type="danger" @click="departmentEditVisible=false">取消</el-button>
       </template>
     </el-dialog>
+
+    <el-dialog v-if="userEditVisible"
+               :visible.sync="userEditVisible"
+               :close-on-click-modal="false">
+      <user :id="currentEdit.id" ref="user" :department-id="current.id" />
+      <template #footer>
+        <el-button type="primary" :loading="submitting" @click="saveUser">确定</el-button>
+        <el-button type="danger" @click="userEditVisible=false">取消</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -75,19 +101,22 @@
   import { TreeNode } from 'element-ui/types/tree'
   import http from '@/http'
   import urls from '../URLS'
-  import { DepartmentDto, Page } from '@/types/service'
+  import { DepartmentDto, Page, UserDto } from '@/types/service'
   import { TreeProps } from '@/types/element'
   import isNil from 'lodash/isNil'
   import Department from './Department.vue'
+  import User from './User.vue'
 
   @Component({
-    components: { Department }
+    components: { User, Department }
   })
   export default class Departments extends Vue {
     current: DepartmentDto = {}
     departmentEditVisible = false
     // 当前的编辑项目
-    currentEdit: DepartmentDto = {}
+    currentEdit: DepartmentDto | UserDto = {}
+
+    userEditVisible = false
     // 指示是否在提交
     submitting = false
 
@@ -173,6 +202,21 @@
         if (this.current.id !== data.parent?.id) {
           this.updateTreeNode(data.parent?.id)
         }
+      }).finally(() => {
+        this.submitting = false
+      })
+    }
+
+    editUser (user: UserDto): void {
+      this.currentEdit = user
+      this.userEditVisible = true
+    }
+
+    saveUser (): Promise<unknown> {
+      this.submitting = true
+      return (this.$refs.user as any).submit().then(() => {
+        this.userEditVisible = false;
+        (this.$refs.userTable as any).reloadData()
       }).finally(() => {
         this.submitting = false
       })
