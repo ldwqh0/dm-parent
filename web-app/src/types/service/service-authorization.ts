@@ -10,6 +10,7 @@ export interface DepartmentDto extends Serializable {
   description?: string;
   type?: Types;
   parent?: DepartmentDto;
+  readonly hasChildren?: boolean
 }
 
 export interface LoginLogDto extends Serializable {

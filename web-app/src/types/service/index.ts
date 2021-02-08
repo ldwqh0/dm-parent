@@ -12,3 +12,5 @@ export {
   OrderDto,
   Position
 }
+
+export * from './service-ext'

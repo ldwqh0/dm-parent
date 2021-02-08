@@ -2,12 +2,13 @@
   <div class="departments">
     <el-tree ref="tree"
              class="tree"
-             :default-expand-all="true"
              :expand-on-click-node="false"
              node-key="id"
              :props="treeProp"
-             :data="tree"
-             @current-change="nodeChange">
+             :default-expanded-keys="defaultExpands"
+             lazy
+             :load="loadNode"
+             @current-change="selectNode">
       <template #default="{ node }">
         {{ node.label }}
       </template>
@@ -16,23 +17,32 @@
       <el-tab-pane label="下级部门">
         <el-row>
           <el-col>
-            <el-button type="primary">添加子节点</el-button>
+            <el-button type="primary" @click="departmentEditVisible=true">添加子节点</el-button>
           </el-col>
         </el-row>
-        <ele-data-tables v-if="search.parentId"
+        <ele-data-tables v-if="departmentQuery.parentId"
                          ref="table"
-                         :ajax="tableUrl"
-                         :server-params="search"
+                         :ajax="departmentUrl"
+                         :server-params="departmentQuery"
                          pagination-layout="total, sizes, prev, pager, next, jumper">
-          <el-table-column prop="fullname" label="部门名称" />
-          <el-table-column prop="id" label="操作">
+          <el-table-column prop="fullname" label="名称" />
+          <el-table-column label="类型">
+            <template #default="{row}">
+              <span v-if="row.type==='ORGANS'">组织机构</span>
+              <span v-if="row.type==='DEPARTMENT'">部门</span>
+              <span v-if="row.type==='GROUP'">分组</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="id" label="操作" width="100">
             <!--            <span slot-scope="scope">-->
             <!--              <el-button type="text" @click="toggleState(scope.row)">{{-->
             <!--                scope.row.state === 'ENABLED' ? '禁用' : '启用'-->
             <!--              }}</el-button>-->
-            <!--              <el-button type="text" @click="edit(scope.row.id)">编辑</el-button>-->
-            <el-button type="text" @click="up(scope.row.id)">上移</el-button>
-            <el-button type="text" @click="down(scope.row.id)">下移</el-button>
+            <template #default="{row}">
+              <el-button type="text" @click="editDepartment(row)">编辑</el-button>
+              <!--              <el-button type="text" @click="up(scope.row.id)">上移</el-button>-->
+              <!--              <el-button type="text" @click="down(scope.row.id)">下移</el-button>-->
+            </template>
             <!--            </span>-->
           </el-table-column>
         </ele-data-tables>
@@ -43,117 +53,130 @@
             <el-button>新用户</el-button>
           </el-col>
         </el-row>
-        <ele-data-tables :ajax="userUrl" :server-params="userQuery" />
+        <ele-data-tables v-if="userQuery.department" :ajax="userUrl" :server-params="userQuery">
+          <el-table-column prop="username" />
+        </ele-data-tables>
       </el-tab-pane>
     </el-tabs>
+    <el-dialog v-if="departmentEditVisible"
+               :visible.sync="departmentEditVisible"
+               :close-on-click-modal="false">
+      <department :id="currentEdit.id" ref="departmentForm" :parent-id="current.id" />
+      <template #footer>
+        <el-button type="primary" @click="saveDepartment">确定</el-button>
+        <el-button type="danger" @click="departmentEditVisible=false">取消</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
-  import { TreeProps } from 'element-ui/types/tree'
+  import { TreeNode } from 'element-ui/types/tree'
   import http from '@/http'
   import urls from '../URLS'
-  import { DepartmentDto } from '@/types/service'
-  import { listToTree } from '@/utils'
+  import { DepartmentDto, Page } from '@/types/service'
+  import { TreeProps } from '@/types/element'
+  import isNil from 'lodash/isNil'
+  import Department from './Department.vue'
 
-  @Component
+  @Component({
+    components: { Department }
+  })
   export default class Departments extends Vue {
-    search: { parentId: number | null } = {
-      parentId: null
-    }
+    current: DepartmentDto = {}
+    departmentEditVisible = false
+    currentEdit: DepartmentDto = {}
 
-    get userQuery () {
-      return {
-        department: this.search.parentId
+    get defaultExpands (): number[] {
+      // 默认选择中当前项目
+      // 只在第一次是生效
+      if (this.current.id) {
+        return [this.current.id]
+      } else {
+        return []
       }
     }
 
-    departments: DepartmentDto[] = [] // 树形结构
-    root: DepartmentDto = {}
-
-    get tree (): any {
-      return listToTree(this.departments)
+    get departmentQuery (): { [key: string]: any } {
+      return {
+        parentId: this.current.id
+      }
     }
 
-    get treeProp (): TreeProps {
+    get userQuery (): { [key: string]: any } {
+      return {
+        department: this.current.id
+      }
+    }
+
+    get treeProp (): TreeProps<number, DepartmentDto> {
       return { // 树形机构显示属性
         children: 'children',
         label: 'fullname',
         disabled: '',
-        isLeaf: ''
+        // 判断某个部门是否有叶子节点
+        isLeaf: (data: DepartmentDto) => !data.hasChildren
       }
     }
 
-    tableUrl = urls.department
+    departmentUrl = urls.department
     userUrl = urls.user
 
-    //
-    created (): void {
-      this.loadTree().then(() => (this.$refs.tree as any).setCurrentKey(this.root.id))// 加载时载入树形结构
-    }
-
-    //
-    loadTree (): Promise<DepartmentDto[]> { // 载入树形结构
-      return http.get<DepartmentDto[]>(`${urls.department}`).then(({ data }) => {
-        this.departments = data
-        const [root] = this.departments.filter(v => v.parent === undefined)
-        this.$set(this, 'root', root)
-        this.search.parentId = root.id ?? null
-        return data
+    loadNode ({ key }: TreeNode<number, DepartmentDto>, reslove: (v: DepartmentDto[]) => void): void {
+      // 加载某个节点
+      this.loadChildren(key).then(result => {
+        reslove(result)
+        return result
+      }).then(([root] = []) => {
+        // 如果加载的是根节点，选中根节点
+        if (isNil(key)) {
+          this.selectNode(root)
+        }
       })
     }
 
-    nodeChange (data: DepartmentDto): void { // 当树形结构选择项改变时,更新表格搜索参数
-      this.search.parentId = data.id ?? null
+    loadChildren (parentId: number): Promise<DepartmentDto[]> {
+      return http.get<Page<DepartmentDto>>(`${urls.department}`, { params: { parentId, size: 10000 } })
+        .then(({ data: { content } }) => (content ?? []))
     }
 
-  //
-  //   showRoot () {
-  //     this.search.parentId = null
-  //   }
-  //
-  //   up (id) { // 部门上移
-  //     DepartmentService.up(id).then(() => {
-  //       this.loadTree()
-  //       this.$refs.table.reloadData()
-  //     })
-  //   }
-  //
-  //   down (id) { // 部门下移
-  //     DepartmentService.down(id).then(() => {
-  //       this.loadTree()
-  //       this.$refs.table.reloadData()
-  //     })
-  //   }
-  //
-  //   add () {
-  //     this.$router.push({ name: 'department', params: { id: 'new' } })
-  //   }
-  //
-  //   edit (id) {
-  //     this.$router.push({ name: 'department', params: { id } })
-  //   }
-  //
-  //   // 启用/禁用
-  //   toggleState (row) {
-  //     if (row.state === 'ENABLED') { // 禁用
-  //       row.state = 'DISABLED'
-  //     } else if (row.state === 'DISABLED') { // 启用
-  //       row.state = 'ENABLED'
-  //     }
-  //     DepartmentService.update(row, { id: row.id }).then(res => {
-  //       this.$message({
-  //         message: '修改成功！',
-  //         type: 'success'
-  //       })
-  //     }).catch(e => {
-  //       this.$message({
-  //         message: '修改失败！',
-  //         type: 'success'
-  //       })
-  //     })
-  //   }
+    updateTreeNode (id?: number): Promise<unknown> {
+      if (id !== undefined) {
+        return this.loadChildren(id).then((data) => {
+          (this.$refs.tree as any).updateKeyChildren(id, data)
+        })
+      } else {
+        return Promise.reject(new Error('需要更新的节点为空'))
+      }
+    }
+
+    editDepartment (department: DepartmentDto): void {
+      this.currentEdit = department
+      this.departmentEditVisible = true
+    }
+
+    saveDepartment (): Promise<unknown> {
+      // return this.id === 'new' ? this.save(this.department) : this.update(this.department)
+      return (this.$refs.departmentForm as any).submit().then(({ data }: { data: DepartmentDto }) => {
+        this.departmentEditVisible = false;
+        // 保存之后需要刷新当前页面
+        (this.$refs.table as any).reloadData()
+        // 保存刷新当前部门的树
+        if (!isNil(this.current.id)) {
+          this.updateTreeNode(this.current.id)
+        }
+        // 如果当前树不等于修改后的部门树,说明将部门修改到了其他节点，还要刷新相应的节点
+        if (this.current.id !== data.parent?.id) {
+          this.updateTreeNode(data.parent?.id)
+        }
+      })
+    }
+
+    selectNode (data: DepartmentDto): void {
+      // 当树形结构选择项改变时,更新表格搜索参数
+      this.current = data
+    }
   }
 </script>
 
