@@ -41,8 +41,8 @@
                :close-on-press-escape="false">
       <resource :id="currentAuthority.id" ref="resource" />
       <template #footer>
-        <el-button @click="dialogVisible=false">取消</el-button>
         <el-button type="primary" :loading="submitting" @click="saveResource">确定</el-button>
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
       </template>
     </el-dialog>
   </div>
@@ -76,7 +76,7 @@
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => http.delete(`${URLS.resource}/${id}`))
-        .then((this.$refs.list as any).reloadData)
+        .then(() => (this.$refs.list as any).reloadData())
         .catch(e => {
           if (e === 'cancel') {
             this.$message.info('已取消删除')
@@ -90,7 +90,6 @@
     }
 
     edit (data: ResourceDto): void {
-      debugger
       this.currentAuthority = data
       this.dialogVisible = true
     }

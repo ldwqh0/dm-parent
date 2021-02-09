@@ -3,6 +3,7 @@ package com.dm.server.gateway.config;
 //import com.dm.gateway.security.DelegatingOAuth2LoginReactiveAuthenticationManager;
 //import com.dm.gateway.security.SynchronizeWebClientReactiveRefreshTokenTokenResponseClient;
 
+import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.security.oauth2.authorization.ServerHttpOauth2RequestReactiveAuthorizationManager;
 import com.dm.security.oauth2.client.web.server.DmServerOAuth2AuthorizationRequestResolver;
 import com.dm.security.web.authorization.DmExceptionTranslationWebFilter;
@@ -64,15 +65,13 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         MediaTypeServerWebExchangeMatcher mediaMatcher = new MediaTypeServerWebExchangeMatcher(MediaType.APPLICATION_JSON);
         mediaMatcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
-        // 指定一个返回401的入口
-        DelegatingServerAuthenticationEntryPoint.DelegateEntry entry = new DelegatingServerAuthenticationEntryPoint.DelegateEntry(mediaMatcher, new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED));
-        DelegatingServerAuthenticationEntryPoint delegationEntrypoint = new DelegatingServerAuthenticationEntryPoint(entry);
-        // 指定默认跳转oauth2等的入口
-        delegationEntrypoint.setDefaultEntryPoint(new RedirectServerAuthenticationEntryPoint("/oauth2/authorization/oauth2"));
         // 指定权限检察器
         http.authorizeExchange().anyExchange().access(reactiveAuthorizationManager());
         // 设置匿名用户
-        http.anonymous().authorities("内置分组_ROLE_ANONYMOUS");
+        UserDetailsDto anonymousUser = new UserDetailsDto();
+        anonymousUser.setId(2L);
+        anonymousUser.setUsername("ANONYMOUS");
+        http.anonymous().principal(anonymousUser).authorities("内置分组_ROLE_ANONYMOUS");
         // 配置oauth2登录
         http.oauth2Login(customizer -> {
             DmServerOAuth2AuthorizationRequestResolver requestResolver = new DmServerOAuth2AuthorizationRequestResolver(clientRegistrationRepository);
@@ -87,6 +86,11 @@ public class SecurityConfiguration {
 
         // 重新配置一个异常处理器，这个异常处理器在用户没有登录是，转入登录入口点
         DmExceptionTranslationWebFilter exceptionTranslationWebFilter = new DmExceptionTranslationWebFilter();
+        // 指定一个返回401的入口
+        DelegatingServerAuthenticationEntryPoint.DelegateEntry entry = new DelegatingServerAuthenticationEntryPoint.DelegateEntry(mediaMatcher, new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED));
+        DelegatingServerAuthenticationEntryPoint delegationEntrypoint = new DelegatingServerAuthenticationEntryPoint(entry);
+        // 指定默认跳转oauth2等的入口
+        delegationEntrypoint.setDefaultEntryPoint(new RedirectServerAuthenticationEntryPoint("/oauth2/authorization/oauth2"));
         exceptionTranslationWebFilter.setAuthenticationEntryPoint(delegationEntrypoint);
         http.addFilterAfter(exceptionTranslationWebFilter, SecurityWebFiltersOrder.EXCEPTION_TRANSLATION);
         return http.build();

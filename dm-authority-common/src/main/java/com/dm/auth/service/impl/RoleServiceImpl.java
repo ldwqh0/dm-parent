@@ -50,7 +50,9 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         HttpMethod.POST,
         HttpMethod.PUT,
         HttpMethod.DELETE,
-        HttpMethod.PATCH
+        HttpMethod.PATCH,
+        HttpMethod.HEAD,
+        HttpMethod.OPTIONS,
     };
 
     @Override
@@ -250,19 +252,25 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         Boolean access = null;
         switch (method) {
             case POST:
-                access = operation.getSaveable();
+                access = operation.getPostAble();
                 break;
             case PUT:
-                access = operation.getUpdateable();
+                access = operation.getPutAble();
                 break;
             case GET:
-                access = operation.getReadable();
+                access = operation.getGetAble();
                 break;
             case DELETE:
-                access = operation.getDeleteable();
+                access = operation.getDeleteAble();
                 break;
             case PATCH:
-                access = operation.getPatchable();
+                access = operation.getPatchAble();
+                break;
+            case HEAD:
+                access = operation.getHeadAble();
+                break;
+            case OPTIONS:
+                access = operation.getOptionsAble();
                 break;
             default:
                 break;

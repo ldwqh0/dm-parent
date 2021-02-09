@@ -73,7 +73,6 @@ public class ServerHttpRequestReactiveAuthorizationManager
                 return Mono.just(new AuthorizationDecision(false));
             }
             // 匿名用户的可访问权限包含在显示的权限配置中
-
             if (CollectionUtils.isNotEmpty(currentAuthorities)
                 && CollectionUtils.isNotEmpty(attribute.getAccessAuthority())
                 && CollectionUtils.containsAny(currentAuthorities, attribute.getAccessAuthority())) {

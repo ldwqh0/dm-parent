@@ -34,14 +34,19 @@
       <el-table-column label="角色描述" prop="describe" />
       <el-table-column label="操作" min-width="150">
         <template #default="{row}">
-          <el-button type="text" size="small" @click="edit(row)">编辑</el-button>
+          <el-button v-if="row.id>3"
+                     type="text"
+                     size="small"
+                     @click="edit(row)">
+            编辑
+          </el-button>
           <el-button type="text" size="small" @click="setmenu(row)">设置菜单权限</el-button>
           <el-button type="text" size="small" @click="setResource(row)">设置资源权限</el-button>
-          <el-button v-if="row.id>>3"
+          <el-button v-if="row.id>3"
                      type="text"
                      size="small"
                      @click="del(row)">
-            删除{{ row.id }}
+            删除
           </el-button>
         </template>
       </el-table-column>
@@ -54,6 +59,31 @@
         <el-button type="danger" @click="editVisible=false">取消</el-button>
       </template>
     </el-dialog>
+
+    <!--菜单权限-->
+    <el-dialog v-if="menuAuthorityDialogVisible"
+               :title="`${current.group}_${current.name}的菜单权限`"
+               :close-on-click-modal="false"
+               :visible.sync="menuAuthorityDialogVisible">
+      <menu-authority ref="menuAuthority"
+                      :role-id="current.id" />
+      <div slot="footer">
+        <el-button @click="menuAuthorityDialogVisible=false">取消</el-button>
+        <el-button type="primary" :loading="submitting" @click="saveMenuAuthority">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog v-if="resourceAuthorityDialogVisible"
+               :title="`${current.group}_${current.name}的资源权限`"
+               :close-on-click-modal="false"
+               :visible.sync="resourceAuthorityDialogVisible">
+      <resource-authority ref="resourceAuthority"
+                          :role-id="current.id" />
+      <div slot="footer">
+        <el-button @click="resourceAuthorityDialogVisible=false">取消</el-button>
+        <el-button type="primary" :loading="submitting" @click="saveResourceAuthority">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -64,10 +94,16 @@
   import urls from '../URLS'
   import Role from './Role.vue'
   import http from '@/http'
+  import MenuAuthority from './MenuAuthority.vue'
+  import ResourceAuthority from './ResourceAuthority.vue'
 
   // 角色模块的vuex
   @Component({
-    components: { Role }
+    components: {
+      Role,
+      MenuAuthority,
+      ResourceAuthority
+    }
   })
   export default class Roles extends Vue {
     url = urls.role
@@ -77,6 +113,8 @@
 
     submitting = false
     editVisible = false
+    menuAuthorityDialogVisible = false
+    resourceAuthorityDialogVisible = false
 
     current: RoleDto = {}
 
@@ -109,13 +147,30 @@
       })
     }
 
-    // 设置菜单权限
-    setmenu (params) {
-      this.$router.push({ name: 'menuAuthority', params })
+    saveMenuAuthority (): void {
+      this.submitting = true;
+      (this.$refs.menuAuthority as any).submit()
+        .then(() => {
+          this.menuAuthorityDialogVisible = false
+        }).finally(() => (this.submitting = false))
     }
 
-    setResource (params) {
-      this.$router.push({ name: 'resourceAuthority', params })
+    saveResourceAuthority (): void {
+      this.submitting = true;
+      (this.$refs.resourceAuthority as any).submit()
+        .then(() => (this.resourceAuthorityDialogVisible = false))
+        .finally(() => (this.submitting = false))
+    }
+
+    // 设置菜单权限
+    setmenu (params: RoleDto): void {
+      this.menuAuthorityDialogVisible = true
+      this.current = params
+    }
+
+    setResource (params: RoleDto): void {
+      this.resourceAuthorityDialogVisible = true
+      this.current = params
     }
   }
 </script>

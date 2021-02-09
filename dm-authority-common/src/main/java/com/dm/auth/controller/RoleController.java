@@ -8,6 +8,7 @@ import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,17 +26,12 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RestController
 @RequestMapping({"roles", "p/roles"})
 @Validated
+@RequiredArgsConstructor
 public class RoleController {
 
     private final RoleService roleService;
 
     private final RoleConverter roleConverter;
-
-    @Autowired
-    public RoleController(RoleService roleService, RoleConverter roleConverter) {
-        this.roleService = roleService;
-        this.roleConverter = roleConverter;
-    }
 
     @ApiOperation("保存角色")
     @PostMapping

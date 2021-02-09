@@ -1,5 +1,6 @@
 package com.dm.auth.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,17 +26,14 @@ import static org.springframework.http.HttpStatus.*;
 import java.util.List;
 
 @RestController
-@RequestMapping({ "resources", "p/resources" })
+@RequestMapping({"resources", "p/resources"})
+@RequiredArgsConstructor
 public class ResourceController {
 
     private final ResourceService resourceService;
 
     private final ResourceConverter resourceConverter;
 
-    public ResourceController(ResourceService resourceService, ResourceConverter resourceConverter) {
-        this.resourceService = resourceService;
-        this.resourceConverter = resourceConverter;
-    }
 
     @PostMapping
     @ResponseStatus(value = CREATED)
@@ -58,13 +56,13 @@ public class ResourceController {
     @GetMapping("{id}")
     public ResourceDto get(@PathVariable("id") Long id) {
         return resourceService.findById(id).map(resourceConverter::toDto)
-                .orElseThrow(DataNotExistException::new);
+            .orElseThrow(DataNotExistException::new);
     }
 
-    @GetMapping(params = { "draw" })
+    @GetMapping(params = {"draw"})
     public Page<ResourceDto> search(
-            @PageableDefault Pageable pageable,
-            @RequestParam(value = "search", required = false) String keywords) {
+        @PageableDefault Pageable pageable,
+        @RequestParam(value = "search", required = false) String keywords) {
         return resourceService.search(keywords, pageable).map(resourceConverter::toDto);
     }
 

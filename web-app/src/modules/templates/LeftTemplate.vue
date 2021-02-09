@@ -192,7 +192,7 @@
     }
 
     .content-wrapper {
-      padding: 0;
+      //padding: 0;
     }
 
     .template-aside {

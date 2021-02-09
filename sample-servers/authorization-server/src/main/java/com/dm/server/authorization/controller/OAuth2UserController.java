@@ -10,8 +10,8 @@ public class OAuth2UserController {
 
     @GetMapping("/oauth2/userinfo")
     @ResponseBody
-    public Object currentUser(@AuthenticationPrincipal Object principaal) {
-        return principaal;
+    public Object currentUser(@AuthenticationPrincipal Object principal) {
+        return principal;
     }
 
 }

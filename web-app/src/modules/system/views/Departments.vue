@@ -1,80 +1,84 @@
 <template>
-  <div class="departments">
-    <el-tree ref="tree"
-             class="tree"
-             :expand-on-click-node="false"
-             node-key="id"
-             :props="treeProp"
-             :default-expanded-keys="defaultExpands"
-             lazy
-             :load="loadNode"
-             @current-change="selectNode">
-      <template #default="{ node }">
-        <span>
-          <i v-if="node.data.type==='GROUP' && node.expanded" class="el-icon-folder-opened" />
-          <i v-if="node.data.type==='GROUP' && !node.expanded" class="el-icon-folder" />
-          <i v-if="node.data.type==='ORGANS'" class="el-icon-office-building" />
-          <i v-if="node.data.type==='DEPARTMENT'" class="el-icon-coordinate" />
-          &nbsp;{{ node.label }}</span>
-      </template>
-    </el-tree>
-    <el-tabs class="tabs">
-      <el-tab-pane label="下级部门">
-        <el-row>
-          <el-col>
-            <el-button type="primary" @click="editDepartment({})">添加子节点</el-button>
-          </el-col>
-        </el-row>
-        <ele-data-tables v-if="departmentQuery.parentId"
-                         ref="table"
-                         :ajax="departmentUrl"
-                         :server-params="departmentQuery"
-                         pagination-layout="total, sizes, prev, pager, next, jumper">
-          <el-table-column prop="fullname">
-            <template #default="{row}">
-              <a href="javascript:void(0)" @click="selectNode(row)">{{ row.fullname }}</a>
-            </template>
-          </el-table-column>
-          <el-table-column label="类型">
-            <template #default="{row}">
-              <span v-if="row.type==='ORGANS'">组织机构</span>
-              <span v-if="row.type==='DEPARTMENT'">部门</span>
-              <span v-if="row.type==='GROUP'">分组</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="id" label="操作" width="100">
-            <!--            <span slot-scope="scope">-->
-            <!--              <el-button type="text" @click="toggleState(scope.row)">{{-->
-            <!--                scope.row.state === 'ENABLED' ? '禁用' : '启用'-->
-            <!--              }}</el-button>-->
-            <template #default="{row}">
-              <el-button type="text" @click="editDepartment(row)">编辑</el-button>
-              <!--              <el-button type="text" @click="up(scope.row.id)">上移</el-button>-->
-              <!--              <el-button type="text" @click="down(scope.row.id)">下移</el-button>-->
-            </template>
-            <!--            </span>-->
-          </el-table-column>
-        </ele-data-tables>
-      </el-tab-pane>
-      <el-tab-pane label="部门人员">
-        <el-row>
-          <el-col>
-            <el-button type="primary" @click="editUser({})">新用户</el-button>
-          </el-col>
-        </el-row>
-        <ele-data-tables v-if="userQuery.department"
-                         ref="userTable"
-                         :ajax="userUrl"
-                         :server-params="userQuery">
-          <el-table-column prop="username" label="用户名" />
-          <el-table-column>
-            <template #default="{row}">
-              <el-button type="text" @click="editUser(row)">编辑</el-button>
-            </template>
-          </el-table-column>
-        </ele-data-tables>
-      </el-tab-pane>
-    </el-tabs>
+  <el-main class="departments">
+    <el-aside>
+      <el-tree ref="tree"
+               class="tree"
+               :expand-on-click-node="false"
+               node-key="id"
+               :props="treeProp"
+               :default-expanded-keys="defaultExpands"
+               lazy
+               :load="loadNode"
+               @current-change="selectNode">
+        <template #default="{ node }">
+          <span>
+            <i v-if="node.data.type==='GROUP' && node.expanded" class="el-icon-folder-opened" />
+            <i v-if="node.data.type==='GROUP' && !node.expanded" class="el-icon-folder" />
+            <i v-if="node.data.type==='ORGANS'" class="el-icon-office-building" />
+            <i v-if="node.data.type==='DEPARTMENT'" class="el-icon-coordinate" />
+            &nbsp;{{ node.label }}</span>
+        </template>
+      </el-tree>
+    </el-aside>
+    <el-main style="padding: 0">
+      <el-tabs class="tabs">
+        <el-tab-pane label="下级部门">
+          <el-row>
+            <el-col>
+              <el-button type="primary" @click="editDepartment({})">添加子节点</el-button>
+            </el-col>
+          </el-row>
+          <ele-data-tables v-if="departmentQuery.parentId"
+                           ref="table"
+                           :ajax="departmentUrl"
+                           :server-params="departmentQuery"
+                           pagination-layout="total, sizes, prev, pager, next, jumper">
+            <el-table-column prop="fullname">
+              <template #default="{row}">
+                <a href="javascript:void(0)" @click="selectNode(row)">{{ row.fullname }}</a>
+              </template>
+            </el-table-column>
+            <el-table-column label="类型">
+              <template #default="{row}">
+                <span v-if="row.type==='ORGANS'">组织机构</span>
+                <span v-if="row.type==='DEPARTMENT'">部门</span>
+                <span v-if="row.type==='GROUP'">分组</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="id" label="操作" width="100">
+              <!--            <span slot-scope="scope">-->
+              <!--              <el-button type="text" @click="toggleState(scope.row)">{{-->
+              <!--                scope.row.state === 'ENABLED' ? '禁用' : '启用'-->
+              <!--              }}</el-button>-->
+              <template #default="{row}">
+                <el-button type="text" @click="editDepartment(row)">编辑</el-button>
+                <!--              <el-button type="text" @click="up(scope.row.id)">上移</el-button>-->
+                <!--              <el-button type="text" @click="down(scope.row.id)">下移</el-button>-->
+              </template>
+              <!--            </span>-->
+            </el-table-column>
+          </ele-data-tables>
+        </el-tab-pane>
+        <el-tab-pane label="部门人员">
+          <el-row>
+            <el-col>
+              <el-button type="primary" @click="editUser({})">新用户</el-button>
+            </el-col>
+          </el-row>
+          <ele-data-tables v-if="userQuery.department"
+                           ref="userTable"
+                           :ajax="userUrl"
+                           :server-params="userQuery">
+            <el-table-column prop="username" label="用户名" />
+            <el-table-column>
+              <template #default="{row}">
+                <el-button type="text" @click="editUser(row)">编辑</el-button>
+              </template>
+            </el-table-column>
+          </ele-data-tables>
+        </el-tab-pane>
+      </el-tabs>
+    </el-main>
     <el-dialog v-if="departmentEditVisible"
                :visible.sync="departmentEditVisible"
                :close-on-click-modal="false">
@@ -94,7 +98,7 @@
         <el-button type="danger" @click="userEditVisible=false">取消</el-button>
       </template>
     </el-dialog>
-  </div>
+  </el-main>
 </template>
 
 <script lang="ts">

@@ -7,6 +7,7 @@ import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.entity.Role;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Maps;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping({ "resourceAuthorities", "p/resourceAuthorities" })
+@RequestMapping({"resourceAuthorities", "p/resourceAuthorities"})
+@RequiredArgsConstructor
 public class ResourceAuthorityController {
 
     private final RoleService authorityService;
 
     private final RoleConverter roleConverter;
 
-    public ResourceAuthorityController(RoleService roleService, RoleConverter authorityConverter) {
-        this.authorityService = roleService;
-        this.roleConverter = authorityConverter;
-    }
 
     /**
      * 保存一组资源授权设置
@@ -58,7 +56,7 @@ public class ResourceAuthorityController {
         dto.setRoleId(authority.getId());
         dto.setRoleName(authority.getName());
         Map<Long, ResourceOperation> result = Maps.transformKeys(authority.getResourceOperations(),
-                AuthResource::getId);
+            AuthResource::getId);
         dto.setResourceAuthorities(result);
         return dto;
     }

@@ -3,11 +3,16 @@ package com.dm.server.authorization.config;
 import com.dm.server.authorization.oauth2.ServerOpaqueTokenIntrospector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.xyyh.authorization.core.OAuth2ResourceServerTokenService;
+
+import java.util.Collections;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -22,7 +27,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated()
             .and().formLogin().loginPage("/oauth2/login.html").loginProcessingUrl("/oauth2/login").permitAll()
             .and().httpBasic().disable();
-        http.oauth2ResourceServer().opaqueToken().introspector(opaqueTokenIntrospector());
+        // 针对rest请求，返回401
+        MediaTypeRequestMatcher mtrm = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
+        mtrm.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
+        http.exceptionHandling().defaultAuthenticationEntryPointFor(new BearerTokenAuthenticationEntryPoint(), mtrm);
+        // 这里不处理匿名用户的问题
+        // 正常情况下，所有带token的请求都会认为是resource请求，会返回401状态码
+        http.oauth2ResourceServer()
+            .opaqueToken().introspector(opaqueTokenIntrospector());
     }
 
     @Bean

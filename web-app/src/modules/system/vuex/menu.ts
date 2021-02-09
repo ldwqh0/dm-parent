@@ -21,14 +21,23 @@ const menuModule: Module<MenuState, RootState> = {
   getters: {
     tree ({ menus: originMenus }: MenuState): MenuTreeItem[] {
       const children: MenuTreeItem[] = []
-      const menus: MenuTreeItem[] = originMenus.map(({ id, title, parent, type, url, openInNewWindow }: MenuDto) => {
+      const menus: MenuTreeItem[] = originMenus.map(({
+        id,
+        title,
+        parent,
+        type,
+        url,
+        openInNewWindow,
+        icon
+      }: MenuDto) => {
         // 将menu转换为menuTreeItem
         const result: MenuTreeItem = {
           openInNewWindow,
           type,
           url,
           id,
-          title
+          title,
+          icon
         }
         if (parent !== undefined && parent !== null) {
           result.parent = {
@@ -52,6 +61,7 @@ const menuModule: Module<MenuState, RootState> = {
           children.push(menu)
         }
       })
+
       return children
     }
   },

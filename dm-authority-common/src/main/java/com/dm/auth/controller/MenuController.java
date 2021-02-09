@@ -1,5 +1,6 @@
 package com.dm.auth.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,19 +36,15 @@ import static com.dm.auth.dto.OrderDto.Position.*;
 
 import java.util.List;
 
-@Api(tags = { "menu" })
-@RequestMapping({ "menus", "p/menus" })
+@Api(tags = {"menu"})
+@RequestMapping({"menus", "p/menus"})
 @RestController
+@RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
 
     private final MenuConverter menuConverter;
-
-    public MenuController(MenuService menuService, MenuConverter menuConverter) {
-        this.menuService = menuService;
-        this.menuConverter = menuConverter;
-    }
 
     @ApiOperation("保存菜单")
     @PostMapping
@@ -81,11 +78,11 @@ public class MenuController {
     }
 
     @ApiOperation("根据关键字查询菜单")
-    @GetMapping(params = { "draw" })
+    @GetMapping(params = {"draw"})
     public Page<MenuDto> list(
-            @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable,
-            @RequestParam(value = "search", required = false) String key,
-            @RequestParam(value = "parentId", required = false) Long parentId) {
+        @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable,
+        @RequestParam(value = "search", required = false) String key,
+        @RequestParam(value = "parentId", required = false) Long parentId) {
         return menuService.search(parentId, key, pageable).map(menuConverter::toDto);
     }
 
@@ -97,7 +94,7 @@ public class MenuController {
 
     @ApiOperation("获取可用菜单树")
     @GetMapping
-    public List<MenuDto> getAllMenuEnabled(@SortDefault(direction = Direction.ASC, sort = { "order" }) Sort sort) {
+    public List<MenuDto> getAllMenuEnabled(@SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
         List<Menu> allMenuEnabled = menuService.listAllEnabled(sort);
         return Lists.transform(allMenuEnabled, menuConverter::toDto);
     }

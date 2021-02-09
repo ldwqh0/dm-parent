@@ -1,12 +1,11 @@
 package com.dm.auth.entity;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.io.Serializable;
 
 @Embeddable
 @Getter
@@ -15,38 +14,44 @@ public class ResourceOperation implements Serializable {
 
     private static final long serialVersionUID = -4460635653614468618L;
 
-    @Column(name = "read_able_")
-    private Boolean readable;
+    @Column(name = "get_able_")
+    private Boolean getAble;
 
-    @Column(name = "save_able_")
-    private Boolean saveable;
+    @Column(name = "post_able_")
+    private Boolean postAble;
 
-    @Column(name = "update_able_")
-    private Boolean updateable;
+    @Column(name = "put_able_")
+    private Boolean putAble;
 
     @Column(name = "delete_able_")
-    private Boolean deleteable;
+    private Boolean deleteAble;
 
     @Column(name = "patch_able_")
-    private Boolean patchable;
+    private Boolean patchAble;
+
+    @Column(name = "head_able_")
+    private Boolean headAble;
+
+    @Column(name = "options_able_")
+    private Boolean optionsAble;
 
     public static ResourceOperation accessAll() {
-        ResourceOperation operation = new ResourceOperation();
-        operation.setDeleteable(Boolean.TRUE);
-        operation.setPatchable(Boolean.TRUE);
-        operation.setReadable(Boolean.TRUE);
-        operation.setSaveable(Boolean.TRUE);
-        operation.setUpdateable(Boolean.TRUE);
-        return operation;
+        return all(Boolean.TRUE);
     }
 
     public static ResourceOperation denyAll() {
+        return all(Boolean.FALSE);
+    }
+
+    public static ResourceOperation all(Boolean v) {
         ResourceOperation operation = new ResourceOperation();
-        operation.setDeleteable(Boolean.FALSE);
-        operation.setPatchable(Boolean.FALSE);
-        operation.setReadable(Boolean.FALSE);
-        operation.setSaveable(Boolean.FALSE);
-        operation.setUpdateable(Boolean.FALSE);
+        operation.setDeleteAble(v);
+        operation.setPatchAble(v);
+        operation.setGetAble(v);
+        operation.setPostAble(v);
+        operation.setPutAble(v);
+        operation.setHeadAble(v);
+        operation.setOptionsAble(v);
         return operation;
     }
 

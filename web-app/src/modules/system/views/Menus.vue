@@ -1,75 +1,82 @@
 <template>
-  <page-wrapper :header="['系统设置','菜单管理']">
-    <el-container class="menus">
-      <el-aside>
-        <el-tree
-          :expand-on-click-node="false"
-          :default-expanded-keys="['']"
-          node-key="id"
-          :props="treeProp"
-          :data="menuTree"
-          @current-change="nodeChange" />
-      </el-aside>
-      <el-main style="padding: 0;">
-        <el-form inline
-                 :model="search"
-                 class="clear-float">
-          <el-row>
-            <el-col :span="12">
-              <el-form-item class="pull-left">
-                <el-input
-                  v-model="search.search"
-                  placeholder="请输入关键字" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item class="float-right">
-                <el-button type="primary" @click="add">新增</el-button>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <ele-data-tables ref="table"
-                         :ajax="ajax"
-                         :server-params="search"
-                         pagination-layout="total, sizes, prev, pager, next, jumper">
-          <el-table-column prop="name" label="菜单名称" />
-          <el-table-column prop="title" label="菜单标题" />
-          <el-table-column label="菜单状态">
-            <template #default="{row}"><span>{{ row.enabled ? '启用' : '禁用' }}</span></template>
-          </el-table-column>
-          <el-table-column prop="id" label="操作" :min-width="120">
-            <template #default="{row:{enabled,id}}">
-              <el-button v-if="enabled"
-                         type="text"
-                         @click="patch({id,enabled:false})">
-                禁用
-              </el-button>
-              <el-button v-if="!enabled"
-                         type="text"
-                         @click="patch({id,enabled:true})">
-                启用
-              </el-button>
-              <el-button type="text" @click="edit({id})">编辑</el-button>
-              <el-button type="text" @click="move({id,position:'UP'})">上移</el-button>
-              <el-button type="text" @click="move({id,position:'DOWN'})">下移</el-button>
-              <el-button type="text" @click="del({id})">删除</el-button>
-            </template>
-          </el-table-column>
-        </ele-data-tables>
-      </el-main>
-      <el-dialog v-if="menuDialogVisible"
-                 :visible.sync="menuDialogVisible"
-                 :close-on-click-modal="false"
-                 :close-on-press-escape="false">
-        <e-menu :id="currentMenu.id" ref="menu" />
-        <template #footer>
-          <el-button @click="menuDialogVisible=false">取消</el-button>
-          <el-button type="primary" :loading="loading" @click="saveMenu">确定</el-button>
+  <el-container class="menus">
+    <el-aside>
+      <el-tree
+        :expand-on-click-node="false"
+        :default-expanded-keys="['']"
+        node-key="id"
+        :props="treeProp"
+        :data="menuTree"
+        @current-change="nodeChange">
+        <template #default="{node}">
+          <span>
+            <i :class="node.data.icon || 'el-icon-menu'" />&nbsp;{{ node.label }}
+          </span>
         </template>
-      </el-dialog>
-    </el-container>
-  </page-wrapper>
+      </el-tree>
+    </el-aside>
+    <el-main style="padding: 0;">
+      <el-form inline
+               :model="search"
+               class="clear-float">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item class="pull-left">
+              <el-input
+                v-model="search.search"
+                placeholder="请输入关键字" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="float-right">
+              <el-button type="primary" @click="add">新增</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <ele-data-tables ref="table"
+                       :ajax="ajax"
+                       :server-params="search"
+                       pagination-layout="total, sizes, prev, pager, next, jumper">
+        <el-table-column prop="name" label="菜单名称" />
+        <el-table-column prop="title" label="菜单标题" />
+        <el-table-column label="菜单状态">
+          <template #default="{row}">
+            <span v-if="row.enabled">启用</span>
+            <span v-else style="color: red">禁用</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="id" label="操作" :min-width="120">
+          <template #default="{row:{enabled,id}}">
+            <el-button v-if="enabled"
+                       type="text"
+                       @click="patch({id,enabled:false})">
+              禁用
+            </el-button>
+            <el-button v-if="!enabled"
+                       type="text"
+                       @click="patch({id,enabled:true})">
+              启用
+            </el-button>
+            <el-button type="text" @click="edit({id})">编辑</el-button>
+            <el-button type="text" @click="move({id,position:'UP'})">上移</el-button>
+            <el-button type="text" @click="move({id,position:'DOWN'})">下移</el-button>
+            <el-button type="text" @click="del({id})">删除</el-button>
+          </template>
+        </el-table-column>
+      </ele-data-tables>
+    </el-main>
+    <el-dialog v-if="menuDialogVisible"
+               :visible.sync="menuDialogVisible"
+               :close-on-click-modal="false"
+               :close-on-press-escape="false">
+      <e-menu :id="currentMenu.id" ref="menu" />
+      <template #footer>
+        <el-button @click="menuDialogVisible=false">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="saveMenu">确定</el-button>
+      </template>
+    </el-dialog>
+  </el-container>
 </template>
 
 <script lang="ts">
@@ -81,12 +88,10 @@
   import URLS from '../URLS'
   import { MenuDto, MenuTreeItem } from '@/types/Service'
   import { TreeProps } from 'element-ui/types/tree'
-  import { PageWrapper } from '@/components'
 
   const menuModule = namespace('system/menu')
   @Component({
     components: {
-      PageWrapper,
       EMenu: Menu
     }
   })
@@ -121,15 +126,13 @@
      * 获取菜单的树型结构
      */
     get menuTree (): MenuTreeItem [] {
-      return this.tree
-      // return [{
-      //   id: 0,
-      //   title: '根1',
-      //   url: '',
-      //   openInNewWindow: false,
-      //   children: this.tree,
-      //   type: MenuType.COMPONENT
-      // }]
+      // 根据系统实际情况确定是否要包一个根
+      return [{
+        id: 0,
+        title: '全部',
+        name: '全部',
+        children: this.tree
+      }]
     }
 
     add (): void {

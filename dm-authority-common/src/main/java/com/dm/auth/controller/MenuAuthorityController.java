@@ -14,9 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,7 @@ public class MenuAuthorityController {
     /**
      * 保存一个角色的菜单权限配置
      *
-     * @param roleId     角色Id
+     * @param roleId       角色Id
      * @param authorityDto 角色授权配置
      * @return 菜单授权配置
      */
@@ -75,15 +74,16 @@ public class MenuAuthorityController {
      */
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
-    public List<MenuDto> systemMenu(@AuthenticationPrincipal UserDetails user) {
-        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-        if (CollectionUtils.isNotEmpty(authorities)) {
-            List<Menu> result = authorities.stream().map(GrantedAuthority::getAuthority)
-                .map(roleService::findAuthorityMenus).flatMap(Set::stream).distinct()
-                .sorted(Comparator.comparing(Menu::getOrder)).collect(Collectors.toList());
-            return Lists.transform(result, menuConverter::toDto);
-        } else {
-            return Collections.emptyList();
+    public List<MenuDto> systemMenu(Authentication user) {
+        if (!Objects.isNull(user)) {
+            Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+            if (CollectionUtils.isNotEmpty(authorities)) {
+                List<Menu> result = authorities.stream().map(GrantedAuthority::getAuthority)
+                    .map(roleService::findAuthorityMenus).flatMap(Set::stream).distinct()
+                    .sorted(Comparator.comparing(Menu::getOrder)).collect(Collectors.toList());
+                return Lists.transform(result, menuConverter::toDto);
+            }
         }
+        return Collections.emptyList();
     }
 }
