@@ -55,7 +55,7 @@
       scope: 'userinfo'
     }
 
-    doLogin () {
+    doLogin (): void {
       http.post('/oauth2/token', qs.stringify(this.user), {
         auth: {
           username: 'app',
