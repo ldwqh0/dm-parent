@@ -61,7 +61,7 @@
   import http from '@/http'
   import URLS from '../URLS'
   import { Rules } from 'async-validator'
-  import { MatchType, ResourceDto } from '@/types/Service'
+  import { MatchType, ResourceDto } from '@/types/service'
 
   @Component
   export default class Resource extends Vue {

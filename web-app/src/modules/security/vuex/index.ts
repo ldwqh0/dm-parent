@@ -1,7 +1,7 @@
 import http from '@/http'
 import { ActionContext, Module } from 'vuex'
 import { RootState } from '@/store'
-import { MenuDto, MenuTreeItem, UserDto } from '@/types/Service'
+import { MenuDto, MenuTreeItem, UserDto } from '@/types/service'
 import urls from '../urls'
 import isEmpty from 'lodash/isEmpty'
 

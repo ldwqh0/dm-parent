@@ -2,7 +2,7 @@ import { ActionContext, Module } from 'vuex'
 import http from '@/http'
 import URLS from '../URLS'
 import { RootState } from '@/store'
-import { MenuDto, MenuTreeItem } from '@/types/Service'
+import { MenuDto, MenuTreeItem } from '@/types/service'
 
 interface MenuState {
   menus: MenuDto[]

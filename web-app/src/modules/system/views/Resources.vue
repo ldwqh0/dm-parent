@@ -54,7 +54,7 @@
   import Resource from './Resource.vue'
   import URLS from '../URLS'
   import http from '@/http'
-  import { ResourceDto } from '@/types/Service'
+  import { ResourceDto } from '@/types/service'
 
   @Component({
     components: {

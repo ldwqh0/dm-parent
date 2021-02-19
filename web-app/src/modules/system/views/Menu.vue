@@ -95,7 +95,7 @@
   import URLS from '../URLS'
   import icons from './icons'
   import { Rules } from 'async-validator'
-  import { MenuDto, MenuType } from '@/types/Service'
+  import { MenuDto, MenuType } from '@/types/service'
 
   const menuModule = namespace('system/menu')
   @Component

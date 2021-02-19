@@ -24,7 +24,7 @@
 <script lang="ts">
   import Vue from 'vue'
   import { Component, Prop } from 'vue-property-decorator'
-  import { MenuTreeItem, MenuType } from '@/types/Service'
+  import { MenuTreeItem, MenuType } from '@/types/service'
 
   @Component({
     name: 'menu-item'

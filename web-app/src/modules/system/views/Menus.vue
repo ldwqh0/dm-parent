@@ -86,7 +86,7 @@
   import Menu from './Menu.vue'
   import http from '@/http'
   import URLS from '../URLS'
-  import { MenuDto, MenuTreeItem } from '@/types/Service'
+  import { MenuDto, MenuTreeItem } from '@/types/service'
   import { TreeProps } from 'element-ui/types/tree'
 
   const menuModule = namespace('system/menu')

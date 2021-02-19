@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router'
 import { Store } from 'vuex'
 import whiteList from './whiteList'
-import { MenuDto } from '@/types/Service'
+import { MenuDto } from '@/types/service'
 
 function matches (target: string, list: string[]): boolean {
   return list.findIndex(i => target.startsWith(i)) > -1

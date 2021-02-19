@@ -57,7 +57,7 @@
   import { DepartmentDto, DepartmentTreeItem, Types } from '@/types/service'
   import { CascaderProps } from 'element-ui/types/cascader-panel'
   import http from '@/http'
-  import urls from '../urls'
+  import urls from '../URLS'
   import { listToTree } from '@/utils'
   import isNil from 'lodash/isNil'
 
