@@ -20,8 +20,7 @@ public interface ResourceRepository extends JpaRepository<AuthResource, Long>, Q
      *
      * @return 所有资源的scope列表
      */
-    // todo 需要验证一下
-    @Query("select distinct s from AuthResource ar join ar.scope s")
+    @Query("select distinct scope from AuthResource ar join ar.scope scope")
     List<String> listScopes();
 
 }

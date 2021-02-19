@@ -5,7 +5,7 @@ import com.dm.security.oauth2.core.UserDetailsDtoPrincipalExtractor;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.openid.connect.sdk.UserInfoErrorResponse;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+//import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -35,7 +35,6 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
 
     private PrincipalExtractor principalExtractor = new UserDetailsDtoPrincipalExtractor();
 
-    @Autowired(required = false)
     public void setPrincipalExtractor(PrincipalExtractor principalExtractor) {
         this.principalExtractor = principalExtractor;
     }
@@ -47,8 +46,7 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
             Assert.notNull(userRequest, "userRequest cannot be null");
             String userInfoUri = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUri();
-            if (!StringUtils.hasText(
-                userInfoUri)) {
+            if (!StringUtils.isNotBlank(userInfoUri)) {
                 OAuth2Error oauth2Error = new OAuth2Error(
                     MISSING_USER_INFO_URI_ERROR_CODE,
                     "Missing required UserInfo Uri in UserInfoEndpoint for Client Registration: "
@@ -59,7 +57,7 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
             String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
-            if (!StringUtils.hasText(userNameAttributeName)) {
+            if (!StringUtils.isNotBlank(userNameAttributeName)) {
                 OAuth2Error oauth2Error = new OAuth2Error(
                     MISSING_USER_NAME_ATTRIBUTE_ERROR_CODE,
                     "Missing required \"user name\" attribute name in UserInfoEndpoint for Client Registration: "

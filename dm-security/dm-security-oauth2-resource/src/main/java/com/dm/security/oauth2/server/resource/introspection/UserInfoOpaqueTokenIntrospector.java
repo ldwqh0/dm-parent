@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.Map;
 
 public class UserInfoOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
-    private String url = "";
+    private final String url;
     private final RestTemplate restTemplate;
 
     private final PrincipalExtractor principalExtractor = new UserDetailsDtoPrincipalExtractor();

@@ -19,7 +19,8 @@ public interface RoleRepository extends IdentifiableDtoRepository<Role, Long>, Q
 
     boolean existsByGroupAndName(String group, String name);
 
-    List<Role> findByMenu(Menu menu);
+    @Query("select r from Role r left join r.menus m where m=:menu")
+    List<Role> findByMenu(@Param("menu") Menu menu);
 
     @Query("select r from Role r join r.resourceOperations ro where KEY(ro).id=:resourceId")
     List<Role> findByResourceOperationsResourceId(@Param("resourceId") Long resourceId);

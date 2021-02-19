@@ -283,9 +283,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
      *                             stored for the authentication request
      * @param additionalParameters where the {@link OidcParameterNames#NONCE} hash
      *                             is added for the authentication request
-     * @see <a target="_blank" href=
-     * "https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">3.1.2.1.
-     * Authentication Request</a>
+     * @see <a target="_blank" href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">3.1.2.1 Authentication Request</a>
      * @since 5.2
      */
     private void addNonceParameters(Map<String, Object> attributes, Map<String, Object> additionalParameters) {
@@ -295,6 +293,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
             attributes.put(OidcParameterNames.NONCE, nonce);
             additionalParameters.put(OidcParameterNames.NONCE, nonceHash);
         } catch (NoSuchAlgorithmException e) {
+            // do nothing here
         }
     }
 

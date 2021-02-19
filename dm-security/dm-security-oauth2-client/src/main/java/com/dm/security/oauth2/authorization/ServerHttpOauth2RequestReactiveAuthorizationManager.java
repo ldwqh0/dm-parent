@@ -1,32 +1,29 @@
 package com.dm.security.oauth2.authorization;
 
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dm.collections.CollectionUtils;
+import com.dm.security.authentication.ResourceAuthorityAttribute;
+import com.dm.security.web.authorization.ServerHttpRequestReactiveAuthorizationManager;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
-
-import com.dm.collections.CollectionUtils;
-import com.dm.security.authentication.ResourceAuthorityAttribute;
-import com.dm.security.web.authorization.ServerHttpRequestReactiveAuthorizationManager;
-
+import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
+
+import java.util.Set;
 
 /**
  * Oauth2授权管理器
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
-public class  ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerHttpRequestReactiveAuthorizationManager {
+public class ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerHttpRequestReactiveAuthorizationManager implements InitializingBean {
 
     private ServerOAuth2AuthorizedClientRepository authorizedClientRepository = null;
 
-    @Autowired
     public void setAuthorizedClientRepository(ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
         this.authorizedClientRepository = authorizedClientRepository;
     }
@@ -36,13 +33,13 @@ public class  ServerHttpOauth2RequestReactiveAuthorizationManager extends Server
      */
     @Override
     protected Mono<Boolean> additionalValidate(ResourceAuthorityAttribute attribute, Authentication authentication,
-            AuthorizationContext context) {
+                                               AuthorizationContext context) {
         if (authentication instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
             return this.authorizedClientRepository.loadAuthorizedClient(
-                    token.getAuthorizedClientRegistrationId(),
-                    token, context.getExchange())
-                    .map(client -> containsScope(client, attribute));
+                token.getAuthorizedClientRegistrationId(),
+                token, context.getExchange())
+                .map(client -> containsScope(client, attribute));
         } else {
             return Mono.just(Boolean.TRUE);
         }
@@ -57,5 +54,10 @@ public class  ServerHttpOauth2RequestReactiveAuthorizationManager extends Server
         } else {
             return Boolean.TRUE;
         }
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        Assert.notNull(authorizedClientRepository, "the authorized client repository can not be null");
     }
 }
