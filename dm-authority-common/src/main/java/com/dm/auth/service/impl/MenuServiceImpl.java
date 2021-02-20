@@ -68,6 +68,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
+    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public List<Menu> save(Collection<Menu> menus) {
         List<Menu> result = menuRepository.saveAll(menus);
         initOrder(result);

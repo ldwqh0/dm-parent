@@ -10,6 +10,7 @@ import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.ResourceService;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = {"AuthorityAttributes"}, allEntries = true)
     public AuthResource save(ResourceDto dto) {
         AuthResource resource = new AuthResource();
         resourceConverter.copyProperties(resource, dto);
@@ -45,6 +47,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = {"AuthorityAttributes"}, allEntries = true)
     public void deleteById(long id) {
         // 删除资源之前先从角色中删除特定资源相关的权限配置
         roleRepository.findByResourceOperationsResourceId(id).forEach(authority -> {
@@ -57,6 +60,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = {"AuthorityAttributes"}, allEntries = true)
     public AuthResource update(long id, ResourceDto dto) {
         AuthResource resource = resourceRepository.getOne(id);
         resourceConverter.copyProperties(resource, dto);

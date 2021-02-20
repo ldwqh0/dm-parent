@@ -68,6 +68,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
+    @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public Role save(RoleDto roleDto) {
         return roleRepository.save(roleConverter.copyProperties(new Role(), roleDto));
     }
@@ -85,6 +86,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
+    @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public Role update(long id, RoleDto roleDto) {
         return roleRepository.save(roleConverter.copyProperties(roleRepository.getOne(id), roleDto));
     }
@@ -96,6 +98,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
+    @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public void delete(long id) {
         roleRepository.deleteById(id);
     }
@@ -178,15 +181,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         }
     }
 
-//    @Override
-//    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
-//    @Transactional(rollbackFor = Throwable.class)
-//    public void deleteResourceAuthoritiesByRoleName(String rolename) {
-//        findByFullname(rolename).ifPresent(role -> {
-//            role.setResourceOperations(null);
-//            roleRepository.save(role);
-//        });
-//    }
 
     @Override
     public Optional<Role> findById(Long id) {
@@ -291,7 +285,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     @Override
     public boolean existsByFullname(String authority) {
-        String groupName[] = authority.split("\\_", 2);
+        String[] groupName = authority.split("\\_", 2);
         return roleRepository.existsByGroupAndName(groupName[0], groupName[1]);
     }
 
