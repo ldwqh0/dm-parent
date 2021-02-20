@@ -5,6 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * <p>oauth2 用户信息</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 @Controller
 public class OAuth2UserController {
 

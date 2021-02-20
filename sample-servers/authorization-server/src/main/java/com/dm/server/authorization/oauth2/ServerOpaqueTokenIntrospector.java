@@ -6,6 +6,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
+import org.springframework.security.oauth2.server.resource.introspection.BadOpaqueTokenException;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.util.Assert;
 import org.xyyh.authorization.core.OAuth2Authentication;
@@ -17,6 +18,12 @@ import java.util.*;
 
 import static org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionClaimNames.*;
 
+
+/**
+ * <p>专用于授权服务器的token内省器</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 public class ServerOpaqueTokenIntrospector implements OpaqueTokenIntrospector, InitializingBean {
 
     private OAuth2ResourceServerTokenService accessTokenService = null;
@@ -43,7 +50,7 @@ public class ServerOpaqueTokenIntrospector implements OpaqueTokenIntrospector, I
         attributes.put(ISSUED_AT, issuedAt);
         attributes.put(SCOPE, scopes);
         attributes.put(TOKEN_TYPE, tokenType);
-        attributes.put(CLIENT_ID, authentication.getClient().getClientId());
+        attributes.put(CLIENT_ID, Objects.requireNonNull(authentication).getClient().getClientId());
         attributes.put(NOT_BEFORE, issuedAt);
         result.setClientId(authentication.getClient().getClientId());
         result.setScopes(authentication.getScopes());

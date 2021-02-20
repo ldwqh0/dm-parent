@@ -9,6 +9,11 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
+/**
+ * <p>用户授权结果</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 
 @Getter
 @Setter
@@ -42,10 +47,10 @@ public class UserApprovalResult implements Serializable {
     private Set<String> scopes;
 
     @ElementCollection
-    @CollectionTable(name = "dm_approval_result_redirect_uri_",joinColumns = {
+    @CollectionTable(name = "dm_approval_result_redirect_uri_", joinColumns = {
         @JoinColumn(name = "user_id_", referencedColumnName = "user_id_"),
         @JoinColumn(name = "client_id_", referencedColumnName = "client_id_")
-    },foreignKey = @ForeignKey(name = "FK_dm_approval_result_redirect_uri_dm_approval_result_"))
+    }, foreignKey = @ForeignKey(name = "FK_dm_approval_result_redirect_uri_dm_approval_result_"))
     @Column(name = "redirect_uri_", nullable = false, length = 400)
     private Set<String> redirectUris;
 

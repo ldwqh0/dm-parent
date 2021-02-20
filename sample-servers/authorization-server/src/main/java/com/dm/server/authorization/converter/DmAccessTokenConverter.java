@@ -12,6 +12,12 @@ import java.util.Objects;
 
 import static org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionClaimNames.SUBJECT;
 
+
+/**
+ * <p>Token转换器</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 @Component
 public class DmAccessTokenConverter extends DefaultAccessTokenConverter {
     @Override

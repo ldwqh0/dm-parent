@@ -6,6 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * <p>Oauth2 服务器页面</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 @SessionAttributes({"authorizationRequest"})
 @Controller
 public class OAuth2PageController {

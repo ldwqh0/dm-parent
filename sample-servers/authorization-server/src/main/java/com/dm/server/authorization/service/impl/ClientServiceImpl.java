@@ -1,10 +1,12 @@
-package  com.dm.server.authorization.service.impl;
+package com.dm.server.authorization.service.impl;
 
-import  com.dm.server.authorization.converter.ClientConverter;
-import  com.dm.server.authorization.dto.ClientDto;
-import  com.dm.server.authorization.entity.Client;
-import  com.dm.server.authorization.repository.ClientRepository;
-import  com.dm.server.authorization.service.ClientService;
+import com.dm.server.authorization.converter.ClientConverter;
+import com.dm.server.authorization.dto.ClientDto;
+import com.dm.server.authorization.entity.Client;
+import com.dm.server.authorization.repository.ClientRepository;
+import com.dm.server.authorization.service.ClientService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,11 @@ import org.xyyh.authorization.exception.NoSuchClientException;
 
 import java.util.Optional;
 
+/**
+ * <p>连接管理服务</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 @Service
 public class ClientServiceImpl implements ClientService, ClientDetailsService {
 
@@ -29,15 +36,17 @@ public class ClientServiceImpl implements ClientService, ClientDetailsService {
 
     @Override
     @Transactional
-    public Client save(ClientDto app) {
+    @CacheEvict(cacheNames = "clients", key = "#result.id")
+    public ClientDto save(ClientDto app) {
         Client model = Optional.ofNullable(app.getId())
             .map(Client::new)
             .orElseGet(Client::new);
-        return clientRepository.save(clientConverter.copyProperties(model, app));
+        return clientConverter.toDto(clientRepository.save(clientConverter.copyProperties(model, app)));
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "clients", sync = true)
     public ClientDetails loadClientByClientId(String clientId) throws NoSuchClientException {
         return clientRepository.findById(clientId)
             .map(clientConverter::toClientDetails)
@@ -51,28 +60,30 @@ public class ClientServiceImpl implements ClientService, ClientDetailsService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "clients")
     public void delete(String clientId) {
         clientRepository.deleteById(clientId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Client> findById(String id) {
-        return clientRepository.findById(id);
+    public Optional<ClientDto> findById(String id) {
+        return clientRepository.findById(id).map(clientConverter::toDto);
     }
 
     @Override
     @Transactional
-    public Client update(String id, ClientDto client) {
+    @CacheEvict(cacheNames = "clients", key = "#id")
+    public ClientDto update(String id, ClientDto client) {
         Client c_ = clientRepository.getOne(id);
         c_ = clientConverter.copyProperties(c_, client);
-        return clientRepository.save(c_);
+        return clientConverter.toDto(clientRepository.save(c_));
     }
 
     @Override
-    public Page<Client> find(String key, Pageable pageable) {
+    public Page<ClientDto> find(String key, Pageable pageable) {
         // TODO 需要增加查询参数
-        return clientRepository.findAll(pageable);
+        return clientRepository.findAll(pageable).map(clientConverter::toDto);
     }
 
 }

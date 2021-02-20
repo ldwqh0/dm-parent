@@ -1,22 +1,27 @@
-package  com.dm.server.authorization.service.impl;
+package com.dm.server.authorization.service.impl;
 
-import  com.dm.server.authorization.entity.Client;
-import  com.dm.server.authorization.entity.UserApprovalResult;
-import  com.dm.server.authorization.repository.ClientRepository;
-import  com.dm.server.authorization.repository.UserApprovalResultRepository;
 import com.dm.common.exception.DataNotExistException;
+import com.dm.server.authorization.entity.Client;
+import com.dm.server.authorization.entity.UserApprovalResult;
+import com.dm.server.authorization.repository.ClientRepository;
+import com.dm.server.authorization.repository.UserApprovalResultRepository;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.UserRepository;
-import org.xyyh.authorization.core.ApprovalResult;
-import org.xyyh.authorization.core.ApprovalResultStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.xyyh.authorization.core.ApprovalResult;
+import org.xyyh.authorization.core.ApprovalResultStore;
 
 import javax.persistence.EntityManager;
 import java.util.Optional;
 
 import static com.dm.collections.Sets.merge;
 
+/**
+ * <p>用户授权存储服务，用于保存用户已经确认的授权信息</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 @Service
 public class UserApprovalStoreServiceImpl implements ApprovalResultStore {
 
@@ -50,7 +55,8 @@ public class UserApprovalStoreServiceImpl implements ApprovalResultStore {
         uar.setExpireAt(result.getExpireAt());
         uar.setScopes(merge(uar.getScopes(), result.getScopes()));
         uar.setRedirectUris(merge(uar.getRedirectUris(), result.getRedirectUris()));
-        // Spring data jpa对于持久化这种类型的数据会有bug,调用原生色entityManager
+        // Spring data jpa对于持久化这种类型的数据会有bug,调用原生的entityManager
+//        approvalResultRepository.save(uar);
         entityManager.persist(uar);
     }
 
@@ -62,10 +68,9 @@ public class UserApprovalStoreServiceImpl implements ApprovalResultStore {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(String username, String clientId) {
+        // 对于这种模型，spring data jpa的删除有问题，需要调用原生的entityManager
         userRepository.findOneByUsernameIgnoreCase(username)
-            .ifPresent(user -> approvalResultRepository.findById(new UserApprovalResult.Pk(user, clientRepository.getOne(clientId)))
-                // 对于这种模型，spring data jpa的删除有问题，需要调用原生的entityManager
-                .ifPresent(entityManager::remove)
-            );
+            .flatMap(user -> approvalResultRepository.findById(new UserApprovalResult.Pk(user, clientRepository.getOne(clientId))))
+            .ifPresent(entityManager::remove);
     }
 }

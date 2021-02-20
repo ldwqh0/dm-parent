@@ -19,6 +19,11 @@ import static com.dm.collections.Sets.hashSet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 
+/**
+ * <p>Client</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 @Getter
 @Setter
 @Entity
@@ -81,12 +86,12 @@ public class Client implements Auditable<Audit, String, ZonedDateTime> {
     @ElementCollection
     @JoinTable(name = "dm_client_additional_information_", uniqueConstraints = {
         @UniqueConstraint(name = "UK_dm_client_additional_information_client_id_key_value_", columnNames = {"client_id_", "key_", "value_"})
-    },joinColumns = {
+    }, joinColumns = {
         @JoinColumn(name = "client_id_", foreignKey = @ForeignKey(name = "FK_dm_client_additional_information_client_id_"))
     })
     @MapKeyColumn(name = "key_")
     @Column(name = "value_", nullable = false)
-    private Map<String, String> additionalInformations;
+    private Map<String, String> additionalInformation = new HashMap<>();
 
     @ElementCollection
     @CollectionTable(name = "dm_client_registered_redirect_uri_", joinColumns = {
@@ -212,22 +217,18 @@ public class Client implements Auditable<Audit, String, ZonedDateTime> {
     }
 
     public synchronized void additionalInformation(String key, String value) {
-        if (this.additionalInformations == null) {
-            this.additionalInformations = new ConcurrentHashMap<>();
-        }
-        this.additionalInformations.put(key, value);
+        this.additionalInformation.put(key, value);
     }
 
-    public Map<String, String> getAdditionalInformations() {
-        // todo 这里有个bug Inconsistent synchronization of Client.additionalInformations; locked 50% of time
-        return unmodifiableMap(additionalInformations);
+    public Map<String, String> getAdditionalInformation() {
+        return unmodifiableMap(this.additionalInformation);
     }
 
     public String getAdditionalInformation(String key) {
-        if (Maps.isEmpty(this.additionalInformations)) {
+        if (Maps.isEmpty(this.additionalInformation)) {
             return null;
         } else {
-            return this.additionalInformations.get(key);
+            return this.additionalInformation.get(key);
         }
     }
 }

@@ -14,6 +14,12 @@ import org.xyyh.authorization.core.OAuth2ResourceServerTokenService;
 
 import java.util.Collections;
 
+/**
+ *
+ * <p>服务器安全配置</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -24,18 +30,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/oauth2/styles/**", "/oauth2/images/**", "/error*").permitAll();
         http.authorizeRequests()
-            .anyRequest().authenticated()
-            .and().formLogin().loginPage("/oauth2/login.html").loginProcessingUrl("/oauth2/login").permitAll()
-            .and().httpBasic().disable();
+                .anyRequest().authenticated()
+                .and().formLogin().loginPage("/oauth2/login.html").loginProcessingUrl("/oauth2/login").permitAll()
+                .and().httpBasic().disable();
         // 针对rest请求，返回401
-        MediaTypeRequestMatcher mtrm = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
-        mtrm.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
-        http.exceptionHandling().defaultAuthenticationEntryPointFor(new BearerTokenAuthenticationEntryPoint(), mtrm);
+        MediaTypeRequestMatcher mediaTypeRequestMatcher = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
+        mediaTypeRequestMatcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
+        http.exceptionHandling().defaultAuthenticationEntryPointFor(new BearerTokenAuthenticationEntryPoint(), mediaTypeRequestMatcher);
         // 这里不处理匿名用户的问题
         // 正常情况下，所有带token的请求都会认为是resource请求，会返回401状态码
-        http.oauth2ResourceServer()
-            .opaqueToken().introspector(opaqueTokenIntrospector());
+        http.oauth2ResourceServer().opaqueToken().introspector(opaqueTokenIntrospector());
     }
+
 
     @Bean
     public ServerOpaqueTokenIntrospector opaqueTokenIntrospector() {
@@ -44,8 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return tokenIntrospector;
     }
 
-    @Override
     @Bean
+    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }

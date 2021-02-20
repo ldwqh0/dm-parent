@@ -1,13 +1,19 @@
 package com.dm.server.authorization.converter;
 
-import  com.dm.server.authorization.dto.ClientDto;
-import  com.dm.server.authorization.entity.Client;
 import com.dm.collections.CollectionUtils;
 import com.dm.common.converter.AuditEntityConverter;
+import com.dm.server.authorization.dto.ClientDto;
+import com.dm.server.authorization.entity.Client;
 import org.springframework.stereotype.Component;
 import org.xyyh.authorization.client.BaseClientDetails;
 import org.xyyh.authorization.client.ClientDetails;
 
+/**
+ *
+ * <p>Client 转换器</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 @Component
 public class ClientConverter implements AuditEntityConverter<Client, ClientDto> {
 
@@ -29,15 +35,15 @@ public class ClientConverter implements AuditEntityConverter<Client, ClientDto> 
 
     public ClientDetails toClientDetails(Client model) {
         BaseClientDetails clientDetails = new BaseClientDetails(
-            model.getId(),
-            model.getSecret(),
-            model.isAutoApprove(),
-            model.getScopes(),
-            model.getRegisteredRedirectUris(),
-            model.getAuthorizedGrantTypes(),
-            model.getAccessTokenValiditySeconds(),
-            model.getRefreshTokenValiditySeconds(),
-            model.isRequirePkce());
+                model.getId(),
+                model.getSecret(),
+                model.isAutoApprove(),
+                model.getScopes(),
+                model.getRegisteredRedirectUris(),
+                model.getAuthorizedGrantTypes(),
+                model.getAccessTokenValiditySeconds(),
+                model.getRefreshTokenValiditySeconds(),
+                model.isRequirePkce());
         // bcd.setAccessTokenValiditySeconds(model.getAccessTokenValiditySeconds());
         // TODO bcd.setAdditionalInformation(model.getAdditionalInformation());
         if (CollectionUtils.isNotEmpty(model.getAuthorities())) {

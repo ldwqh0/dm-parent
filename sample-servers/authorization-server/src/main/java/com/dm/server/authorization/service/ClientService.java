@@ -1,26 +1,29 @@
 package com.dm.server.authorization.service;
 
-import java.util.Optional;
-
+import com.dm.server.authorization.dto.ClientDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import  com.dm.server.authorization.dto.ClientDto;
-import  com.dm.server.authorization.entity.Client;
 import org.xyyh.authorization.client.ClientDetailsService;
 
+import java.util.Optional;
 
+/**
+ *
+ * <p>服务器安全配置</p>
+ *
+ * @author ldwqh0@outlook.com
+ */
 public interface ClientService extends ClientDetailsService {
 
-    public Client save(ClientDto client);
+    ClientDto save(ClientDto client);
 
-    public boolean existAnyClient();
+    boolean existAnyClient();
 
-    public void delete(String clientId);
+    void delete(String clientId);
 
-    public Optional<Client> findById(String id);
+    Optional<ClientDto> findById(String id);
 
-    public Client update(String id, ClientDto client);
+    ClientDto update(String id, ClientDto client);
 
-    public Page<Client> find(String key, Pageable pageable);
+    Page<ClientDto> find(String key, Pageable pageable);
 }

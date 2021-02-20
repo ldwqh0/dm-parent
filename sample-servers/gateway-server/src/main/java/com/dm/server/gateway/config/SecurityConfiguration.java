@@ -1,7 +1,5 @@
 package com.dm.server.gateway.config;
 
-//import com.dm.gateway.security.DelegatingOAuth2LoginReactiveAuthenticationManager;
-//import com.dm.gateway.security.SynchronizeWebClientReactiveRefreshTokenTokenResponseClient;
 
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.security.oauth2.authorization.ServerHttpOauth2RequestReactiveAuthorizationManager;
@@ -48,18 +46,13 @@ public class SecurityConfiguration {
 
     private ReactiveClientRegistrationRepository clientRegistrationRepository;
 
-    private ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> defaultUserService;
+    private ServerOAuth2AuthorizedClientRepository authorizedClientRepository;
 
     @Autowired
     public void setReactiveClientRegistrationRepository(ReactiveClientRegistrationRepository reactiveClientRegistrationRepository) {
-//        Maps.entry("a","b").entry("c","d").build()
         this.clientRegistrationRepository = reactiveClientRegistrationRepository;
     }
 
-    @Autowired
-    public void setDefaultUserService(ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> userService) {
-        this.defaultUserService = userService;
-    }
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -115,7 +108,9 @@ public class SecurityConfiguration {
 
     @Bean
     public ReactiveAuthorizationManager<AuthorizationContext> reactiveAuthorizationManager() {
-        return new ServerHttpOauth2RequestReactiveAuthorizationManager();
+        ServerHttpOauth2RequestReactiveAuthorizationManager reactiveAuthorizationManager = new ServerHttpOauth2RequestReactiveAuthorizationManager();
+        reactiveAuthorizationManager.setAuthorizedClientRepository(authorizedClientRepository);
+        return reactiveAuthorizationManager;
     }
 
     @Bean
@@ -123,25 +118,5 @@ public class SecurityConfiguration {
         return new ServerLoginSuccessHandler();
     }
 
-    /**
-     * 不安全的ssl连接器器，不进行任何证书相关的客户端校验
-     *
-     * @return
-     * @throws SSLException
-     */
-    @Bean
-    public WebClient unsafeSSLWebClient() {
-        try {
-            SslContext sslContext = SslContextBuilder
-                .forClient()
-                .trustManager(InsecureTrustManagerFactory.INSTANCE)
-                .build();
-            TcpClient tcpClient = TcpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
-            HttpClient httpClient = HttpClient.from(tcpClient);
-            return WebClient.builder().clientConnector(new ReactorClientHttpConnector(httpClient)).build();
-        } catch (SSLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
 
