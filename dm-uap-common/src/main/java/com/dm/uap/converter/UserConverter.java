@@ -32,7 +32,6 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setRegionCode(user.getRegionCode());
         dto.setGrantedAuthority(user.getRoles());
         return dto;
-
     }
 
     private UserDto toDtoActual(User user) {

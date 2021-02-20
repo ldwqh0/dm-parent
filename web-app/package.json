@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "webpack serve --env CONTEXT_PATH=/app/ --config build/webpack.config.dev.js",
     "build": "webpack --env CONTEXT_PATH=/app/ --config build/webpack.config.prod.js",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "reinstall": "npm i --registry=http://registry.npm.taobao.org/"
   },
   "dependencies": {
     "axios": "^0.21.0",

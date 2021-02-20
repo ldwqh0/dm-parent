@@ -29,13 +29,11 @@ public class ServerOpaqueTokenIntrospector implements OpaqueTokenIntrospector, I
     public OAuth2AuthenticatedPrincipal introspect(String token) {
         OAuth2UserDetailsDto result = new OAuth2UserDetailsDto();
         Assert.notNull(accessTokenService, "the accessTokenService can not be null");
-        // TODO 这里待处理
-        OAuth2Authentication authentication = accessTokenService.loadAuthentication(token).orElse(null);
-        OAuth2ServerAccessToken storedToken = accessTokenService.readAccessToken(token).orElse(null);
+        OAuth2ServerAccessToken storedToken = accessTokenService.readAccessToken(token)
+            .orElseThrow(() -> new BadOpaqueTokenException("The token [" + token + "] is not exist"));
+        OAuth2Authentication authentication = accessTokenService.loadAuthentication(token)
+            .orElseThrow(() -> new BadOpaqueTokenException("The authentication with token [" + token + "] is not exist"));
         Map<String, Object> attributes = new HashMap<>();
-        if (Objects.isNull(storedToken)) {
-            throw new RuntimeException("获取token异常");
-        }
         Instant expiresAt = storedToken.getExpiresAt();
         Instant issuedAt = storedToken.getIssuedAt();
         Set<String> scopes = storedToken.getScopes();

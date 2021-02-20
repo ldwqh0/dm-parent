@@ -19,7 +19,7 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <el-form-item label="部门类型：" prop="type">
+        <el-form-item label="节点类型：" prop="type">
           <el-select v-model="department.type" placeholder="请选择">
             <el-option label="机构" value="ORGANS" />
             <el-option label="部门" value="DEPARTMENT" />
@@ -60,6 +60,7 @@
   import urls from '../URLS'
   import { listToTree } from '@/utils'
   import isNil from 'lodash/isNil'
+  import { Rules } from 'async-validator'
 
   @Component
   export default class Department extends Vue {
@@ -94,7 +95,11 @@
       emitPath: false
     }
 
-    rules = {
+    rules: Rules = {
+      type: [{
+        required: true,
+        message: '节点类型不能为空'
+      }],
       fullname: [{
         required: true,
         message: '部门全称不能为空',
