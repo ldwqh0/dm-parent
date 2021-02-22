@@ -78,8 +78,11 @@ public class FileConfig {
         this.mime.put("hqx", "application/mac-binhex40");
         this.mime.put("hta", "application/hta");
         this.mime.put("htc", "text/x-component");
-        this.mime.put("htm", "text/html");
-        this.mime.put("html", "text/html");
+        // 直接下载html文件会有漏洞，当用户上传html并在浏览器中输入html时，用户直接在浏览器中打开时会被浏览器直接解析执行
+        // 如果html中含有恶意js代码，会被直接执行。
+        // this.mime.put("htm", "text/html");
+        // this.mime.put("html", "text/html");
+        // this.mime.put("stm", "text/html");
         this.mime.put("htt", "text/webviewhtml");
         this.mime.put("ico", "image/x-icon");
         this.mime.put("ief", "image/ief");
@@ -170,7 +173,6 @@ public class FileConfig {
         this.mime.put("src", "application/x-wais-source");
         this.mime.put("sst", "application/vnd.ms-pkicertstore");
         this.mime.put("stl", "application/vnd.ms-pkistl");
-        this.mime.put("stm", "text/html");
         this.mime.put("svg", "image/svg+xml");
         this.mime.put("sv4cpio", "application/x-sv4cpio");
         this.mime.put("sv4crc", "application/x-sv4crc");
