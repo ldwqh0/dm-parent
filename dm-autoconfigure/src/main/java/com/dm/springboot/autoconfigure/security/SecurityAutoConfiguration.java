@@ -8,11 +8,8 @@ import com.dm.security.web.controller.CurrentUserController;
 import com.dm.security.web.controller.CurrentUserReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
+import org.springframework.boot.autoconfigure.condition.*;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -24,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -58,6 +56,25 @@ public class SecurityAutoConfiguration {
     }
 
     @Configuration
+    @ConditionalOnClass(name = {"com.dm.security.oauth2.server.resource.introspection.UserInfoOpaqueTokenIntrospector"})
+    @ConditionalOnProperty(name = "spring.security.oauth2.resourceserver.opaquetoken.introspection-uri")
+    static class DmOAuth2ResourceServerAutoConfiguration {
+        @Bean
+        @ConditionalOnMissingBean(OpaqueTokenIntrospector.class)
+        public OpaqueTokenIntrospector tokenIntrospector(OAuth2ResourceServerProperties properties) {
+            String clientId = properties.getOpaquetoken().getClientId();
+            String clientSecret = properties.getOpaquetoken().getClientSecret();
+            String introspectionUri = properties.getOpaquetoken().getIntrospectionUri();
+            return new com.dm.security.oauth2.server.resource.introspection.UserInfoOpaqueTokenIntrospector(
+                introspectionUri,
+                clientId,
+                clientSecret
+            );
+        }
+    }
+
+
+    @Configuration
     @ConditionalOnClass({ReactiveAuthenticationManager.class})
     @ConditionalOnBean({RequestMappingHandlerAdapter.class})
     @ConditionalOnMissingBean(type = {
@@ -87,7 +104,6 @@ public class SecurityAutoConfiguration {
         public ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> reactiveOAuth2UserService() {
             return new com.dm.security.oauth2.client.userinfo.DmReactiveOAuth2UserService();
         }
-
     }
 
     @ConditionalOnClass({Servlet.class, WebSecurityConfigurerAdapter.class})

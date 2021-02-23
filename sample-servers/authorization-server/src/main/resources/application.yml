@@ -7,6 +7,8 @@ server:
 spring:
   cache:
     type: jcache
+    jcache:
+      config: classpath:config/ehcache.xml
   datasource:
     url: 'jdbc:mysql://localhost/server_authorization?serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowPublicKeyRetrieval=true'
     username: 'root'
