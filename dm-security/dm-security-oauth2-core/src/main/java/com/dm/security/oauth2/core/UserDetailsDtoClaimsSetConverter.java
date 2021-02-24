@@ -15,12 +15,12 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
     @Override
     public OAuth2AuthenticatedPrincipal convert(Map<String, Object> map) {
         if (isActive(map)) {
-
+            OAuth2UserDetailsDto user = new OAuth2UserDetailsDto();
+            return user;
         } else {
             this.logger.trace("Did not validate token since it is inactive");
             throw new BadOpaqueTokenException("Provided token isn't active");
         }
-        return null;
     }
 
     boolean isActive(Map<String, Object> result) {

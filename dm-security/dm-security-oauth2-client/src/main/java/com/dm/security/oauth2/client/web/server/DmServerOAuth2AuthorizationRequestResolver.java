@@ -37,6 +37,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebSession;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
@@ -81,7 +82,7 @@ import java.util.*;
  * @since 5.1
  */
 public class DmServerOAuth2AuthorizationRequestResolver
-    implements ServerOAuth2AuthorizationRequestResolver {
+        implements ServerOAuth2AuthorizationRequestResolver {
 
     /**
      * The name of the path variable that contains the
@@ -89,12 +90,16 @@ public class DmServerOAuth2AuthorizationRequestResolver
      */
     public static final String DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME = "registrationId";
 
+    private static final String DEFAULT_SAVED_REQUEST_ATTR = "SPRING_SECURITY_SAVED_REQUEST";
+
+    private String sessionAttrName = DEFAULT_SAVED_REQUEST_ATTR;
+
     /**
      * The default pattern used to resolve the
      * {@link ClientRegistration#getRegistrationId()}
      */
     public static final String DEFAULT_AUTHORIZATION_REQUEST_PATTERN = "/oauth2/authorization/{"
-        + DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME + "}";
+            + DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME + "}";
 
     private static final char PATH_DELIMITER = '/';
 
@@ -105,11 +110,16 @@ public class DmServerOAuth2AuthorizationRequestResolver
     private final StringKeyGenerator stateGenerator = new Base64StringKeyGenerator(Base64.getUrlEncoder());
 
     private final StringKeyGenerator secureKeyGenerator = new Base64StringKeyGenerator(
-        Base64.getUrlEncoder().withoutPadding(), 96);
+            Base64.getUrlEncoder().withoutPadding(), 96);
+
     private String defaultPrefix = "/";
 
     public void setDefaultPrefix(String defaultPrefix) {
         this.defaultPrefix = defaultPrefix;
+    }
+
+    public void setSessionAttrName(String sessionAttrName) {
+        this.sessionAttrName = sessionAttrName;
     }
 
     /**
@@ -119,9 +129,9 @@ public class DmServerOAuth2AuthorizationRequestResolver
      *                                     {@link ClientRegistration}
      */
     public DmServerOAuth2AuthorizationRequestResolver(
-        ReactiveClientRegistrationRepository clientRegistrationRepository) {
+            ReactiveClientRegistrationRepository clientRegistrationRepository) {
         this(clientRegistrationRepository, new PathPatternParserServerWebExchangeMatcher(
-            DEFAULT_AUTHORIZATION_REQUEST_PATTERN));
+                DEFAULT_AUTHORIZATION_REQUEST_PATTERN));
     }
 
     /**
@@ -145,24 +155,31 @@ public class DmServerOAuth2AuthorizationRequestResolver
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange) {
         return this.authorizationRequestMatcher.matches(exchange)
-            .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
-            .map(ServerWebExchangeMatcher.MatchResult::getVariables)
-            .map(variables -> variables.get(DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME))
-            .cast(String.class)
-            .flatMap(clientRegistrationId -> resolve(exchange, clientRegistrationId));
+                .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
+                .map(ServerWebExchangeMatcher.MatchResult::getVariables)
+                .map(variables -> variables.get(DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME))
+                .cast(String.class)
+                .flatMap(clientRegistrationId -> resolve(exchange, clientRegistrationId));
     }
 
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange,
                                                     String clientRegistrationId) {
-        return this.findByRegistrationId(exchange, clientRegistrationId)
-            .map(clientRegistration -> authorizationRequest(exchange, clientRegistration));
+        // 将参数中的redirect保存到会话中
+        return exchange.getSession().map(WebSession::getAttributes).doOnNext(attrs -> {
+            String redirect = exchange.getRequest().getQueryParams().getFirst("redirect");
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(redirect)) {
+                attrs.put(sessionAttrName, redirect);
+            }
+        }).then(this.findByRegistrationId(exchange, clientRegistrationId)
+                .map(clientRegistration -> authorizationRequest(exchange, clientRegistration))
+        );
     }
 
     private Mono<ClientRegistration> findByRegistrationId(ServerWebExchange exchange, String clientRegistration) {
         return this.clientRegistrationRepository.findByRegistrationId(clientRegistration)
-            .switchIfEmpty(Mono.error(
-                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid client registration id")));
+                .switchIfEmpty(Mono.error(
+                        () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid client registration id")));
     }
 
     private OAuth2AuthorizationRequest authorizationRequest(ServerWebExchange exchange,
@@ -177,7 +194,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
             builder = OAuth2AuthorizationRequest.authorizationCode();
             Map<String, Object> additionalParameters = new HashMap<>();
             if (!CollectionUtils.isEmpty(clientRegistration.getScopes()) &&
-                clientRegistration.getScopes().contains(OidcScopes.OPENID)) {
+                    clientRegistration.getScopes().contains(OidcScopes.OPENID)) {
                 // Section 3.1.2.1 Authentication Request -
                 // https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
                 // scope
@@ -192,16 +209,16 @@ public class DmServerOAuth2AuthorizationRequestResolver
             builder = OAuth2AuthorizationRequest.implicit();
         } else {
             throw new IllegalArgumentException(
-                "Invalid Authorization Grant Type (" + clientRegistration.getAuthorizationGrantType().getValue()
-                    + ") for Client Registration with Id: " + clientRegistration.getRegistrationId());
+                    "Invalid Authorization Grant Type (" + clientRegistration.getAuthorizationGrantType().getValue()
+                            + ") for Client Registration with Id: " + clientRegistration.getRegistrationId());
         }
         return builder
-            .clientId(clientRegistration.getClientId())
-            .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
-            .redirectUri(redirectUriStr).scopes(clientRegistration.getScopes())
-            .state(this.stateGenerator.generateKey())
-            .attributes(attributes)
-            .build();
+                .clientId(clientRegistration.getClientId())
+                .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
+                .redirectUri(redirectUriStr).scopes(clientRegistration.getScopes())
+                .state(this.stateGenerator.generateKey())
+                .attributes(attributes)
+                .build();
     }
 
     /**
@@ -244,10 +261,10 @@ public class DmServerOAuth2AuthorizationRequestResolver
             uriVariables.put("prefix", this.defaultPrefix);
         }
         UriComponents uriComponents = UriComponentsBuilder.fromUri(request.getURI())
-            .replacePath(request.getPath().contextPath().value())
-            .replaceQuery(null)
-            .fragment(null)
-            .build();
+                .replacePath(request.getPath().contextPath().value())
+                .replaceQuery(null)
+                .fragment(null)
+                .build();
         String scheme = uriComponents.getScheme();
         uriVariables.put("baseScheme", scheme == null ? "" : scheme);
         String host = uriComponents.getHost();
@@ -271,8 +288,8 @@ public class DmServerOAuth2AuthorizationRequestResolver
         uriVariables.put("action", action);
 
         return UriComponentsBuilder.fromUriString(clientRegistration.getRedirectUri())
-            .buildAndExpand(uriVariables)
-            .toUriString();
+                .buildAndExpand(uriVariables)
+                .toUriString();
     }
 
     /**
