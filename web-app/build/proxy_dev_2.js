@@ -1,4 +1,5 @@
 module.exports = (env) => {
+  // 这个配置oauth2和gateway通过一个端口暴露
   return {
     '/oauth2/': {
       target: 'http://10.10.1.105',
@@ -8,8 +9,6 @@ module.exports = (env) => {
     },
     [`${env.CONTEXT_PATH}gw/`]: {
       target: 'http://10.10.1.105',
-      // xfwd: true,
-      pathRewrite: { [`^${env.CONTEXT_PATH}gw/`]: '/app/gw/' },
       cookiePathRewrite: {
         '/': `${env.CONTEXT_PATH}`
       }
