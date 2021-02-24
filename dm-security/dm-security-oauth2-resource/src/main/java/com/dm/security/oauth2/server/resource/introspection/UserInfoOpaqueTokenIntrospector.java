@@ -1,7 +1,5 @@
 package com.dm.security.oauth2.server.resource.introspection;
 
-import com.dm.security.oauth2.core.IntrospectorClaimsSetConverter;
-import com.dm.security.oauth2.core.UserDetailsDtoClaimsSetConverter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -18,14 +16,16 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * token内省，可以将内省结果转换为指定的{@link OAuth2AuthenticatedPrincipal}结构 ,但需要我们配置自己的转换器
+ * <p>在资源服务器中使用</p>
+ */
 public class UserInfoOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
     private final String url;
-    private final String clientId;
-    private final String clientSecret;
 
     private IntrospectorClaimsSetConverter claimsSetConverter = new UserDetailsDtoClaimsSetConverter();
 
-    private RestOperations restOperations;
+    private final RestOperations restOperations;
 
     public void setClaimsSetConverter(IntrospectorClaimsSetConverter claimsSetConverter) {
         this.claimsSetConverter = claimsSetConverter;
@@ -33,8 +33,6 @@ public class UserInfoOpaqueTokenIntrospector implements OpaqueTokenIntrospector 
 
     public UserInfoOpaqueTokenIntrospector(String introspectionUri, String clientId, String clientSecret) {
         this.url = introspectionUri;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
         RestTemplate restTemplate = new RestTemplate();
         new RestTemplate();
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(clientId, clientSecret));

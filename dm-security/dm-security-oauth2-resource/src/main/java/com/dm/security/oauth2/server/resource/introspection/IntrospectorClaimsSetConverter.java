@@ -1,4 +1,4 @@
-package com.dm.security.oauth2.core;
+package com.dm.security.oauth2.server.resource.introspection;
 
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 

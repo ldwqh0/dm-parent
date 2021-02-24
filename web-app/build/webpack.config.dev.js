@@ -1,6 +1,6 @@
 const { merge } = require('webpack-merge')
 const common = require('./webpack.config.common')
-const proxy = require('./proxy_dev_2')
+const proxy = require('./proxy_dev')
 module.exports = env => {
   return merge(common(env), {
     mode: 'development',
