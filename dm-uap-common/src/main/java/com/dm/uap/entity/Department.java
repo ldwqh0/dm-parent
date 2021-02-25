@@ -65,4 +65,12 @@ public class Department extends AbstractEntity {
 
     @Column(name = "order_")
     private Long order;
+
+    /**
+     * 部门的logo,可能是文件的ID,路径，或者文件的base64编码
+     */
+    @Column(name = "logo_")
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private String logo;
 }

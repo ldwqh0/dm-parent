@@ -53,4 +53,6 @@ public class DepartmentDto implements Serializable {
     @JsonIgnoreProperties({"parent", "description", "parents"})
     private DepartmentDto parent;
 
+    private String logo;
+
 }

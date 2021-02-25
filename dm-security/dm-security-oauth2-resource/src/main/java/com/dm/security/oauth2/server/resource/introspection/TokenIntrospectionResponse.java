@@ -2,8 +2,10 @@ package com.dm.security.oauth2.server.resource.introspection;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionClaimNames.*;
 
@@ -64,30 +66,42 @@ public class TokenIntrospectionResponse extends HashMap<String, Object> {
     }
 
     @JsonGetter("exp")
-    public long getExpiresAt() {
-        return (long) get(EXPIRES_AT);
+    public Instant getExpiresAt() {
+        return (Instant) get(EXPIRES_AT);
     }
 
-    public void setExpiresAt(long expiresAt) {
-        put(EXPIRES_AT, expiresAt);
+    public void setExpiresAt(Instant expiresAt) {
+        if (Objects.isNull(expiresAt)) {
+            remove(EXPIRES_AT);
+        } else {
+            put(EXPIRES_AT, expiresAt);
+        }
     }
 
     @JsonGetter("iat")
-    public long getIssuedAt() {
-        return (long) get(ISSUED_AT);
+    public Instant getIssuedAt() {
+        return (Instant) get(ISSUED_AT);
     }
 
-    public void setIssuedAt(long issuedAt) {
-        put(ISSUED_AT, issuedAt);
+    public void setIssuedAt(Instant issuedAt) {
+        if (Objects.isNull(issuedAt)) {
+            remove(ISSUED_AT);
+        } else {
+            put(ISSUED_AT, issuedAt);
+        }
     }
 
     @JsonGetter("nbf")
-    public long getNotBefore() {
-        return (long) get(NOT_BEFORE);
+    public Instant getNotBefore() {
+        return (Instant) get(NOT_BEFORE);
     }
 
-    public void setNotBefore(long notBefore) {
-        put(NOT_BEFORE, notBefore);
+    public void setNotBefore(Instant notBefore) {
+        if (Objects.isNull(notBefore)) {
+            remove(NOT_BEFORE);
+        } else {
+            put(NOT_BEFORE, notBefore);
+        }
     }
 
 }

@@ -18,6 +18,7 @@ public class DepartmentConverter implements Converter<Department, DepartmentDto>
         result.setShortname(model.getShortname());
         result.setDescription(model.getDescription());
         result.setType(model.getType());
+        result.setLogo(model.getLogo());
         return result;
     }
 
@@ -27,6 +28,7 @@ public class DepartmentConverter implements Converter<Department, DepartmentDto>
         model.setShortname(dto.getShortname());
         model.setDescription(dto.getDescription());
         model.setType(dto.getType());
+        model.setLogo(dto.getLogo());
         return model;
     }
 
