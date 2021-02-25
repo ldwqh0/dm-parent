@@ -16,6 +16,9 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+/**
+ * 部门管理
+ */
 @RestController
 @RequestMapping("departments")
 @RequiredArgsConstructor
@@ -23,12 +26,23 @@ public class DepartmentController {
 
     private final DepartmentService departmentService;
 
+    /**
+     * 新增部门
+     * @param data 新部门的信息
+     * @return
+     */
     @PostMapping
     @ResponseStatus(CREATED)
     public DepartmentDto save(@RequestBody DepartmentDto data) {
         return departmentService.save(data);
     }
 
+    /**
+     * 获取部门
+     * @param id 部门ID
+     *
+     * @return 部门信息
+     */
     @GetMapping("{id}")
     public DepartmentDto get(@PathVariable("id") Long id) {
         return departmentService.findById(id).orElseThrow(DataNotExistException::new);

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -73,4 +74,13 @@ public class Department extends AbstractEntity {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String logo;
+
+
+    @ManyToOne
+    @JoinColumn(name = "department_director_")
+    private User director;
+
+    public Optional<User> getDirector(){
+        return Optional.ofNullable(director);
+    }
 }

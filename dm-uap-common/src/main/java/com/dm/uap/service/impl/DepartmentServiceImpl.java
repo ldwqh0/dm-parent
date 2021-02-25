@@ -6,6 +6,7 @@ import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QDepartment;
 import com.dm.uap.repository.DepartmentRepository;
+import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.DepartmentService;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -34,17 +35,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentConverter departmentConverter;
 
+    private final UserRepository userRepository;
+
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Throwable.class)
     public DepartmentDto save(DepartmentDto data) {
         Department department = new Department();
         departmentConverter.copyProperties(department, data);
-        DepartmentDto parent = data.getParent();
-        if (Objects.isNull(parent)) {
-            department.setParent(null);
-        } else {
-            department.setParent(departmentRepository.getOne(parent.getId()));
-        }
+        data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
+        data.getDirector().map(userRepository::getByDto).ifPresent(department::setDirector);
         Department dep = departmentRepository.save(department);
         // 设置部门的顺序
         dep.setOrder(dep.getId());
@@ -57,15 +56,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Throwable.class)
     public DepartmentDto update(Long id, DepartmentDto data) {
         Department department = departmentRepository.getOne(id);
         departmentConverter.copyProperties(department, data);
-        Department parent = Optional.ofNullable(data.getParent())
-            .map(DepartmentDto::getId)
-            .map(departmentRepository::getOne)
-            .orElse(null);
-        department.setParent(parent);
+        // 更新时先清空父级和负责人的原始
+        department.setParent(null);
+        department.setDirector(null);
+        // 重新设置新的配置和原始数据
+        data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
+        data.getDirector().map(userRepository::getByDto).ifPresent(department::setDirector);
         return this.toDto(departmentRepository.save(department));
     }
 

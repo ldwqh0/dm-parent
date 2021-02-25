@@ -35,13 +35,8 @@ public class UserConverter implements Converter<User, UserDto> {
     }
 
     private UserDto toDtoActual(User user) {
-        UserDto dto = new UserDto();
-        dto.setEnabled(user.isEnabled());
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setFullname(user.getFullname());
-        dto.setMobile(user.getMobile());
-        dto.setEmail(user.getEmail());
+        UserDto dto = toSimpleDto(user);
+
         dto.setDescription(user.getDescription());
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
@@ -73,6 +68,17 @@ public class UserConverter implements Converter<User, UserDto> {
     @Override
     public UserDto toDto(User model) {
         return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
+    }
+
+    public UserDto toSimpleDto(User model) {
+        UserDto dto = new UserDto();
+        dto.setId(model.getId());
+        dto.setFullname(model.getFullname());
+        dto.setUsername(model.getUsername());
+        dto.setMobile(model.getMobile());
+        dto.setEmail(model.getEmail());
+        dto.setEnabled(model.isEnabled());
+        return dto;
     }
 
 
