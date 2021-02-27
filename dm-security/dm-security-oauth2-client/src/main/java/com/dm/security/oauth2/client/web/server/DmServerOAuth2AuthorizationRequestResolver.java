@@ -16,6 +16,7 @@
 
 package com.dm.security.oauth2.client.web.server;
 
+import com.dm.collections.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
@@ -33,11 +34,9 @@ import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebSession;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
@@ -90,10 +89,6 @@ public class DmServerOAuth2AuthorizationRequestResolver
      */
     public static final String DEFAULT_REGISTRATION_ID_URI_VARIABLE_NAME = "registrationId";
 
-    private static final String DEFAULT_SAVED_REQUEST_ATTR = "SPRING_SECURITY_SAVED_REQUEST";
-
-    private String sessionAttrName = DEFAULT_SAVED_REQUEST_ATTR;
-
     /**
      * The default pattern used to resolve the
      * {@link ClientRegistration#getRegistrationId()}
@@ -111,16 +106,6 @@ public class DmServerOAuth2AuthorizationRequestResolver
 
     private final StringKeyGenerator secureKeyGenerator = new Base64StringKeyGenerator(
             Base64.getUrlEncoder().withoutPadding(), 96);
-
-    private String defaultPrefix = "/";
-
-    public void setDefaultPrefix(String defaultPrefix) {
-        this.defaultPrefix = defaultPrefix;
-    }
-
-    public void setSessionAttrName(String sessionAttrName) {
-        this.sessionAttrName = sessionAttrName;
-    }
 
     /**
      * Creates a new instance
@@ -154,6 +139,11 @@ public class DmServerOAuth2AuthorizationRequestResolver
 
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange) {
+        ServerWebExchangeMatcher authorizationRequestMatcher = this.authorizationRequestMatcher;
+//        List<String> proxyPath = exchange.getRequest().getHeaders().get("x-forwarded-proxy-path");
+//        if (CollectionUtils.isNotEmpty(proxyPath)) {
+//            authorizationRequestMatcher = new PathPatternParserServerWebExchangeMatcher("/" + proxyPath.get(0) + DEFAULT_AUTHORIZATION_REQUEST_PATTERN);
+//        }
         return this.authorizationRequestMatcher.matches(exchange)
                 .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
                 .map(ServerWebExchangeMatcher.MatchResult::getVariables)
@@ -166,14 +156,8 @@ public class DmServerOAuth2AuthorizationRequestResolver
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange,
                                                     String clientRegistrationId) {
         // 将参数中的redirect保存到会话中
-        return exchange.getSession().map(WebSession::getAttributes).doOnNext(attrs -> {
-            String redirect = exchange.getRequest().getQueryParams().getFirst("redirect");
-            if (org.apache.commons.lang3.StringUtils.isNotBlank(redirect)) {
-                attrs.put(sessionAttrName, redirect);
-            }
-        }).then(this.findByRegistrationId(exchange, clientRegistrationId)
-                .map(clientRegistration -> authorizationRequest(exchange, clientRegistration))
-        );
+        return this.findByRegistrationId(exchange, clientRegistrationId)
+                .map(clientRegistration -> authorizationRequest(exchange, clientRegistration))         ;
     }
 
     private Mono<ClientRegistration> findByRegistrationId(ServerWebExchange exchange, String clientRegistration) {
@@ -244,6 +228,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
         uriVariables.put("registrationId", clientRegistration.getRegistrationId());
         List<String> xForwardedHost = request.getHeaders().get("x-forwarded-host");
         List<String> xForwardedProto = request.getHeaders().get("x-forwarded-proto");
+        List<String> xProxyPath = request.getHeaders().get("x-forwarded-proxy-prefix");
         if (Objects.nonNull(xForwardedHost) && xForwardedHost.size() > 0) {
             uriVariables.put("xForwardedHost", xForwardedHost.get(0));
         } else {
@@ -254,11 +239,10 @@ public class DmServerOAuth2AuthorizationRequestResolver
         } else {
             uriVariables.put("xForwardedProto", "");
         }
-        List<String> prefix = request.getQueryParams().get("prefix");
-        if (com.dm.collections.CollectionUtils.isNotEmpty(prefix)) {
-            uriVariables.put("prefix", org.apache.commons.lang3.StringUtils.join(prefix, PATH_DELIMITER));
+        if (Objects.nonNull(xProxyPath)) {
+            uriVariables.put("xForwardedProxyPrefix", xProxyPath.get(0));
         } else {
-            uriVariables.put("prefix", this.defaultPrefix);
+            uriVariables.put("xForwardedProxyPrefix", "");
         }
         UriComponents uriComponents = UriComponentsBuilder.fromUri(request.getURI())
                 .replacePath(request.getPath().contextPath().value())

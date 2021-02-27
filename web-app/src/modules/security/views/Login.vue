@@ -77,7 +77,7 @@
       // if (this.redirect) {
       //   sessionStorage.setItem('SAVED_REQUEST', this.redirect)
       // }
-      window.location.href = `${env.CONTEXT_PATH}gw/oauth2/authorization/oauth2?prefix=${env.CONTEXT_PATH}&redirect=${encodeURI(this.redirect)}`
+      // window.location.href = `${env.CONTEXT_PATH}gw/oauth2/authorization/oauth2?prefix=${env.CONTEXT_PATH}&redirect=${encodeURI(this.redirect)}`
     }
   }
 </script>
