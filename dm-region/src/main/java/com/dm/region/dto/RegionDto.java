@@ -1,14 +1,13 @@
 package com.dm.region.dto;
 
-import java.io.Serializable;
-
-import javax.validation.constraints.NotEmpty;
-
 import com.dm.common.validation.groups.ReferenceGroup;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
+
+import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
 @Data
 @JsonInclude(Include.NON_EMPTY)
@@ -29,8 +28,13 @@ public class RegionDto implements Serializable {
     @NotEmpty
     private String name;
 
+    /**
+     * 经度
+     */
     private Double longitude;
-
+    /**
+     * 纬度
+     */
     private Double latitude;
 
     /**

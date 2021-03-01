@@ -1,7 +1,5 @@
 package com.dm.common.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,32 +11,28 @@ import java.util.Optional;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAuditEntity extends AbstractEntity implements Auditable<Audit, Long, ZonedDateTime> {
+public class AbstractAuditEntity extends AbstractEntity implements Auditable<Audit, Long, ZonedDateTime> {
 
     /**
      * 增加几个JSON忽略属性，主要在于不使用DTO的时候，
      */
-    @JsonProperty(access = Access.READ_ONLY)
     private CreateAudit createdBy;
 
-    @JsonProperty(access = Access.READ_ONLY)
     private ModifyAudit lastModifiedBy;
 
     /**
      * 创建时间 <br>
      * 字段不能被更新
      */
-    @Column(name = "created_date_", updatable = false)
-    @JsonProperty(access = Access.READ_ONLY)
-    private ZonedDateTime createdDate;
+    @Column(name = "created_time_", updatable = false)
+    private ZonedDateTime createdTime;
 
-    @Column(name = "last_modified_date_")
-    @JsonProperty(access = Access.READ_ONLY)
-    private ZonedDateTime lastModifiedDate;
+    @Column(name = "last_modified_time_")
+    private ZonedDateTime lastModifiedTime;
 
     @Override
     public Optional<Audit> getCreatedBy() {
-        return Optional.ofNullable(this.createdBy);
+        return Optional.ofNullable(createdBy);
     }
 
     @Override
@@ -48,12 +42,12 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 
     @Override
     public Optional<ZonedDateTime> getCreatedDate() {
-        return Optional.ofNullable(this.createdDate);
+        return Optional.ofNullable(this.createdTime);
     }
 
     @Override
-    public void setCreatedDate(ZonedDateTime createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedDate(ZonedDateTime creationDate) {
+        this.createdTime = creationDate;
     }
 
     @Override
@@ -68,11 +62,11 @@ public abstract class AbstractAuditEntity extends AbstractEntity implements Audi
 
     @Override
     public Optional<ZonedDateTime> getLastModifiedDate() {
-        return Optional.ofNullable(this.lastModifiedDate);
+        return Optional.ofNullable(this.lastModifiedTime);
     }
 
     @Override
     public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+        this.lastModifiedTime = lastModifiedDate;
     }
 }

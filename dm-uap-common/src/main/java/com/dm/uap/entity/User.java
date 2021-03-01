@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -103,6 +104,10 @@ public class User extends AbstractEntity {
     @MapKeyColumn(name = "key")
     @Column(name = "value")
     private Map<String, String> attributes;
+
+
+    @Column(name = "birth_date_")
+    private LocalDate birthDate;
 
     @Column(name = "scenic_name_", length = 200)
     private String scenicName;

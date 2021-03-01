@@ -11,8 +11,18 @@ import java.io.Serializable;
  */
 public interface Audit extends Serializable {
 
+    /**
+     * 用户ID
+     *
+     * @return ID
+     */
     Long getUserid();
 
+    /**
+     * 用户名
+     *
+     * @return 用户名
+     */
     String getUsername();
 
     static Audit of(Long userid, String username) {
