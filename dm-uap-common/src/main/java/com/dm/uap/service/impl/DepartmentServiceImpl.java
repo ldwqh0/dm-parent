@@ -23,7 +23,6 @@ import java.util.Optional;
 /**
  *
  */
-// todo 这个数据不会经常变动，可能需要使用缓存
 // 使用dto返回数据，方便缓存
 @Service
 @RequiredArgsConstructor
@@ -76,6 +75,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<DepartmentDto> find(Long parentId, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (Objects.isNull(parentId)) {

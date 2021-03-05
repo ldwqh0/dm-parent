@@ -9,11 +9,14 @@ import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.MenuService;
 import com.dm.collections.CollectionUtils;
+import com.dm.collections.Lists;
 import com.dm.common.exception.DataValidateException;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
@@ -36,12 +40,6 @@ public class MenuServiceImpl implements MenuService {
 
     private final QMenu qMenu = QMenu.menu;
 
-    public MenuServiceImpl(MenuRepository menuRepository, MenuConverter menuConverter,
-                           RoleRepository authorityRepository) {
-        this.menuRepository = menuRepository;
-        this.menuConverter = menuConverter;
-        this.roleRepository = authorityRepository;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -218,6 +216,12 @@ public class MenuServiceImpl implements MenuService {
                 parent = parent.getParent();
             }
         }
+    }
+
+    @Cacheable(cacheNames = "AuthorityMenus", key = "'type_'.concat(#p0)")
+    @Override
+    public List<MenuDto> listAllByType(Menu.MenuType type) {
+        return Lists.transform(menuRepository.findByType(type), menuConverter::toDto);
     }
 
     @Override

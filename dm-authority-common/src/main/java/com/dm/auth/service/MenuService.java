@@ -36,6 +36,8 @@ public interface MenuService {
 
     Menu moveDown(long id);
 
+    List<MenuDto> listAllByType(Menu.MenuType type);
+
     List<Menu> listAllEnabled(Sort sort);
 
     boolean exists();

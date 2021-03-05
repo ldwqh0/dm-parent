@@ -1,7 +1,7 @@
 const http = require('http')
 module.exports = (env) => {
   // 这个配置oauth2和gateway没有通过一个端口暴露
-  const APP_NAME = 'app' //这个字符串是context_path去掉前后斜杠组成的
+  const APP_NAME = 'admin' //这个字符串是context_path去掉前后斜杠组成的
   let index = ''
   return {
     [`${env.CONTEXT_PATH}login`]: {
@@ -48,10 +48,11 @@ module.exports = (env) => {
           if (location === '/oauth2/authorization/oauth2') {
             headers.location = `${env.CONTEXT_PATH}oauth2/authorization/oauth2`
           }
-        } else if (statusCode === 200 && headers['x-accel-redirect']) {
+        } else if (headers['x-accel-redirect']) {
           // 针对单页面应用，直接返回响应体
           headers['content-type'] = 'text/html; charset=UTF-8'
           res.write(index, 'utf8', (a, b, c) => {})
+          res.end()
         }
       }
     }

@@ -3,8 +3,8 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "serve": "webpack serve --env CONTEXT_PATH=/app/ --config build/webpack.config.dev.js",
-    "build": "webpack --env CONTEXT_PATH=/app/ --config build/webpack.config.prod.js",
+    "serve": "webpack serve --env CONTEXT_PATH=/admin/ --config build/webpack.config.dev.js",
+    "build": "webpack --env CONTEXT_PATH=/admin/ --config build/webpack.config.prod.js",
     "lint": "vue-cli-service lint",
     "reinstall": "npm i --registry=http://registry.npm.taobao.org/"
   },

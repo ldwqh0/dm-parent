@@ -100,7 +100,7 @@ public class UapAutoConfiguration implements InitializingBean {
         public void setCacheManager(CacheManager cacheManager) {
             MutableConfiguration<String, Object> configuration = new MutableConfiguration<String, Object>()
                 .setTypes(String.class, Object.class).setStoreByValue(false)
-                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES));
             // 创建默认的用户cache
             Cache<String, Object> userCache = cacheManager.getCache("users");
             if (Objects.isNull(userCache)) {
