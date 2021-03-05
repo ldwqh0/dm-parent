@@ -197,39 +197,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean userExistsByUsername(Long id, String username) {
+    public boolean userExistsByUsername(Long exclude, String username) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.username.equalsIgnoreCase(username));
-        if (Objects.nonNull(id)) {
-            query.and(qUser.id.ne(id));
+        if (Objects.nonNull(exclude)) {
+            query.and(qUser.id.ne(exclude));
         }
         return userRepository.exists(query);
     }
 
     @Override
-    public boolean userExistsByEmail(Long id, String email) {
+    public boolean userExistsByEmail(Long exclude, String email) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.email.equalsIgnoreCase(email));
-        if (Objects.nonNull(id)) {
-            query.and(qUser.id.ne(id));
+        if (Objects.nonNull(exclude)) {
+            query.and(qUser.id.ne(exclude));
         }
         return userRepository.exists(query);
     }
 
     @Override
-    public boolean userExistsByMobile(Long id, String mobile) {
+    public boolean userExistsByMobile(Long exclude, String mobile) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.mobile.equalsIgnoreCase(mobile));
-        if (Objects.nonNull(id)) {
-            query.and(qUser.id.ne(id));
+        if (Objects.nonNull(exclude)) {
+            query.and(qUser.id.ne(exclude));
         }
         return userRepository.exists(query);
     }
 
     @Override
     @Transactional
-    public User patch(long id, UserDto user) {
-        User originUser = userRepository.getOne(id);
+    public User patch(long exclude, UserDto user) {
+        User originUser = userRepository.getOne(exclude);
         if (Objects.nonNull(user.getEnabled())) {
             originUser.setEnabled(user.getEnabled());
         }

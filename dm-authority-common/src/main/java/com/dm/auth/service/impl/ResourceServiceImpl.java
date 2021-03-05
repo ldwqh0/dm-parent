@@ -69,12 +69,12 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AuthResource> search(String keywords, Pageable pageable) {
+    public Page<AuthResource> search(String keyword, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
-        if (StringUtils.isNotBlank(keywords)) {
-            query.or(qResource.name.containsIgnoreCase(keywords))
-                .or(qResource.description.containsIgnoreCase(keywords))
-                .or(qResource.matcher.containsIgnoreCase(keywords));
+        if (StringUtils.isNotBlank(keyword)) {
+            query.or(qResource.name.containsIgnoreCase(keyword))
+                .or(qResource.description.containsIgnoreCase(keyword))
+                .or(qResource.matcher.containsIgnoreCase(keyword));
         }
         return resourceRepository.findAll(query, pageable);
     }

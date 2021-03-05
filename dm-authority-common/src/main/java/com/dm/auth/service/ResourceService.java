@@ -17,7 +17,7 @@ public interface ResourceService {
 
     AuthResource update(long id, ResourceDto _resource);
 
-    Page<AuthResource> search(String keywords, Pageable pageable);
+    Page<AuthResource> search(String keyword, Pageable pageable);
 
     Optional<AuthResource> findById(long id);
 

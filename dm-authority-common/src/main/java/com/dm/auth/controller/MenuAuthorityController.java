@@ -50,12 +50,11 @@ public class MenuAuthorityController {
     }
 
     /**
-     * 获取某个角色的可视菜单，<br />
-     * <p>
-     * 只会列出明确标记为选中的菜单项。
+     * 获取某个角色的可视菜单，
      *
      * @param roleId 角色名称
      * @return 角色的菜单授权
+     * @apiNote 只会列出明确标记为选中的菜单项。
      */
     @GetMapping("{roleId}")
     @Transactional(readOnly = true)
@@ -65,12 +64,11 @@ public class MenuAuthorityController {
     }
 
     /**
-     * 获取当前用户的可用菜单项，当某个子菜单可用时，父菜单也会被列出来
-     * <p>
-     * Description: 根据登录用户获取菜单
+     * 获取当前用户的可用菜单项
      *
      * @param user 当前用户信息
      * @return 可见菜单项目的列表
+     * @apiNote 根据登录用户获取菜单, 当某个子菜单可用时，父菜单也会被列出来
      */
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")

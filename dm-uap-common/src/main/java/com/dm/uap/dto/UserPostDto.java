@@ -17,10 +17,16 @@ public class UserPostDto implements Serializable {
 
     private static final long serialVersionUID = -1344418453725050901L;
 
+    /**
+     * 用户所在部门
+     */
     @Valid
     @NotNull(groups = {UserDto.Default.class})
     private DepartmentDto department;
 
+    /**
+     * 用户在该部门所属的职务
+     */
     @NotNull(groups = {UserDto.Default.class})
     private String post;
 

@@ -40,7 +40,7 @@ public class ResourceAuthorityController {
     /**
      * 获取指定角色的资源授权设置
      *
-     * @param roleName 角色名称
+     * @param roleId 角色Id
      * @return 角色的资源授权信息
      */
     // 增加事务的目的是为了在序列化的过程中，某些延迟加载的对象能找到连接
@@ -49,6 +49,19 @@ public class ResourceAuthorityController {
     @GetMapping("{roleId}")
     public ResourceAuthorityDto get(@PathVariable("roleId") Long roleId) {
         return authorityService.findById(roleId).map(this::toResourceAuthorityDto).orElse(null);
+    }
+
+
+    /**
+     * 删除指定角色的资源授权设置
+     *
+     * @param roleId 角色名称
+     * @ignore 暂时不输出该接口
+     */
+    @DeleteMapping("{roleId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteByRoleId(@PathVariable("roleId") Long roleId) {
+//        authorityService.deleteResourceAuthoritiesByRoleName(roleId);
     }
 
     private ResourceAuthorityDto toResourceAuthorityDto(Role authority) {
@@ -60,16 +73,4 @@ public class ResourceAuthorityController {
         dto.setResourceAuthorities(result);
         return dto;
     }
-
-    /**
-     * 删除指定角色的资源授权设置
-     *
-     * @param rolename 角色名称
-     */
-    @DeleteMapping("{roleId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteByRoleId(@PathVariable("roleId") Long roleId) {
-//        authorityService.deleteResourceAuthoritiesByRoleName(roleId);
-    }
-
 }

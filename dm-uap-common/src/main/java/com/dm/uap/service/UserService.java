@@ -50,10 +50,10 @@ public interface UserService extends UserDetailsService {
      * 规则:用户等于username,但id不等于指定id的用户如果存在,则表示存在同名用户<br>
      * 用户新增用户或者修改用户名时的预检测
      *
-     * @param id
+     * @param exclude
      * @param username
      */
-    boolean userExistsByUsername(Long id, String username);
+    boolean userExistsByUsername(Long exclude, String username);
 
     /**
      * 检测是否存在同名用户<br>

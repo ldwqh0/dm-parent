@@ -25,6 +25,9 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
 
     private static final long serialVersionUID = -4966481409754529111L;
 
+    /**
+     * 部门ID
+     */
     @NotNull(groups = ReferenceBy.class)
     private Long id;
 
@@ -46,7 +49,7 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     private String description;
 
     /**
-     * 部门类型 ，分别是 ORGANS=机构/,DEPARTMENT=部门/,GROUP=分组/
+     * 部门类型 ，分别是 ORGANS=机构,DEPARTMENT=部门,GROUP=分组
      */
     @NotNull(groups = {New.class})
     private Types type;
@@ -55,8 +58,14 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         super();
     }
 
+    /**
+     * 是否有子部门
+     */
     private boolean hasChildren = false;
 
+    /**
+     * 子部门个数
+     */
     private long childrenCount = 0;
 
     public DepartmentDto(Long id) {
@@ -64,6 +73,9 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         this.id = id;
     }
 
+    /**
+     * 上级部门信息
+     */
     @JsonIgnoreProperties({"parent", "description", "parents"})
     private DepartmentDto parent;
 
@@ -71,12 +83,19 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         return Optional.ofNullable(parent);
     }
 
+    /**
+     * 负责人
+     */
     private UserDto director;
+
 
     public Optional<UserDto> getDirector() {
         return Optional.ofNullable(director);
     }
 
+    /**
+     * logo, 部门的logo字符串表现方式
+     */
     private String logo;
 
 }

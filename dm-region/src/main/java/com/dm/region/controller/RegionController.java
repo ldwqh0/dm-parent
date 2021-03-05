@@ -57,9 +57,9 @@ public class RegionController {
 
     @GetMapping(params = {"draw"})
     public Page<RegionDto> find(@RequestParam("draw") Long draw,
-                                @RequestParam(value = "keywords", required = false) String keywords,
+                                @RequestParam(value = "keyword", required = false) String keyword,
                                 @PageableDefault Pageable pageable) {
-        return regionService.find(keywords, pageable).map(regionConverter::toDto);
+        return regionService.find(keyword, pageable).map(regionConverter::toDto);
     }
 
     @GetMapping(value = "children")

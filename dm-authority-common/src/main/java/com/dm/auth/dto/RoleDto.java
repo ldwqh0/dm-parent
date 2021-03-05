@@ -36,28 +36,45 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
     }
 
     /**
-     *
+     * 角色ID
      */
     @NotNull(groups = ReferenceBy.class)
     private Long id;
 
     /**
-     * 任何时候，角色名称不能为空
+     * 角色名称
+     *
+     * @apiNote 任何时候，角色名称不能为空
      */
     @NotBlank(groups = {New.class, Update.class})
     @Size(max = 100, groups = {Default.class})
     private String name;
 
+    /**
+     * 角色描述
+     */
     @Size(max = 2000, groups = {Default.class})
     private String description;
 
+    /**
+     * 角色状态
+     */
     @NotNull(groups = {New.class, Update.class})
     private Status state = Status.ENABLED;
 
+    /**
+     * 角色所属组
+     */
     @Valid
     @NotNull(groups = {New.class, Update.class})
     private String group;
 
+    /**
+     * 角色全称
+     *
+     * @return 获取角色的全程
+     * @apiNote 角色的全称是 {group}_{name}
+     */
     public String getFullname() {
         return group + "_" + name;
     }

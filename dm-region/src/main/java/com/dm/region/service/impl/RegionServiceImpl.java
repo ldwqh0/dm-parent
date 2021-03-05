@@ -72,10 +72,10 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Page<Region> find(String keywords, Pageable pageable) {
+    public Page<Region> find(String keyword, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
-        if (StringUtils.isNoneBlank(keywords)) {
-            query.and(qRegion.name.containsIgnoreCase(keywords).or(qRegion.code.containsIgnoreCase(keywords)));
+        if (StringUtils.isNoneBlank(keyword)) {
+            query.and(qRegion.name.containsIgnoreCase(keyword).or(qRegion.code.containsIgnoreCase(keyword)));
         }
         return regionRepository.findAll(query, pageable);
     }

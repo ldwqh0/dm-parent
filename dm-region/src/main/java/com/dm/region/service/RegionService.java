@@ -13,21 +13,21 @@ public interface RegionService {
 
     /**
      * 查询所有
-     * 
+     *
      * @return
      */
     List<Region> findAll();
 
     /**
      * 查询省会
-     * 
+     *
      * @return
      */
     List<Region> findProvincials();
 
     /**
      * 查询下级区县
-     * 
+     *
      * @param code
      * @return
      */
@@ -42,7 +42,7 @@ public interface RegionService {
 
     /**
      * 获取指定节点的所有子代
-     * 
+     *
      * @param parentCode
      * @return
      */
@@ -50,5 +50,5 @@ public interface RegionService {
 
     Optional<Region> findByCode(String parent);
 
-    Page<Region> find(String keywords, Pageable pageable);
+    Page<Region> find(String keyword, Pageable pageable);
 }

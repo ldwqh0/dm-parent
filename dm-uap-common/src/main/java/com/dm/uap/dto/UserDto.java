@@ -46,32 +46,56 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     @NotNull(groups = ReferenceBy.class)
     private Long id;
 
+    /**
+     * 用户名
+     */
     @NotNull(groups = {New.class, Update.class})
     @Size(max = 50, groups = {Default.class})
     private String username;
 
+    /**
+     * 用户全称
+     */
     @NotNull(groups = {New.class, Update.class})
     @Size(max = 200, groups = {Default.class})
     private String fullname;
 
+    /**
+     * 密码
+     */
     @NotNull(groups = {New.class})
     @Size(min = 6, max = 100, groups = {Default.class})
     private String password;
 
+    /**
+     * 用户是否被启用
+     */
     @NotNull(groups = {New.class, Update.class})
     private Boolean enabled = Boolean.FALSE;
 
+    /**
+     * 用户email
+     */
     @Email(groups = {Default.class})
     @Size(max = 100, groups = {Default.class})
     private String email;
 
+    /**
+     * 用户手机号
+     */
     @Mobile(groups = {Default.class})
     @Size(max = 20, groups = {Default.class})
     private String mobile;
 
+    /**
+     * 用户描述信息
+     */
     @Size(max = 2000, groups = {Default.class})
     private String description;
 
+    /**
+     * 用户角色
+     */
     @Valid
     @NotEmpty(groups = {New.class, Update.class})
     private List<Role> roles;
