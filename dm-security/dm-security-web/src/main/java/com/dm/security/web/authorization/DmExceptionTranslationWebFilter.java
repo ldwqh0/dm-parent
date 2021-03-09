@@ -93,8 +93,9 @@ public class DmExceptionTranslationWebFilter implements WebFilter {
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
-    private <T> Mono<T> commenceAuthentication(ServerWebExchange exchange, AccessDeniedException denied) {
-        return this.authenticationEntryPoint.commence(exchange, new AuthenticationCredentialsNotFoundException("Not Authenticated", denied))
+    protected <T> Mono<T> commenceAuthentication(ServerWebExchange exchange, Exception exception) {
+        return this.authenticationEntryPoint
+            .commence(exchange, new AuthenticationCredentialsNotFoundException("Not Authenticated", exception))
             .then(Mono.empty());
     }
 }

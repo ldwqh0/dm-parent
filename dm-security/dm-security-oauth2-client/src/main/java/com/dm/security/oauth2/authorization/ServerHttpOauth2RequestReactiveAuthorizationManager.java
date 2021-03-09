@@ -39,7 +39,8 @@ public class ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerH
             return this.authorizedClientRepository.loadAuthorizedClient(
                 token.getAuthorizedClientRegistrationId(),
                 token, context.getExchange())
-                .map(client -> containsScope(client, attribute));
+                .map(client -> containsScope(client, attribute))
+                .switchIfEmpty(Mono.error(AuthorizedClientNotFoundException::new));
         } else {
             return Mono.just(Boolean.TRUE);
         }
