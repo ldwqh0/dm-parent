@@ -1,5 +1,6 @@
 package com.dm.uap.controller;
 
+import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;
@@ -7,7 +8,6 @@ import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.dto.UpdatePasswordDto;
 import com.dm.uap.dto.UserDto;
-import com.dm.uap.dto.ValidationResult;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
 import io.swagger.annotations.ApiOperation;

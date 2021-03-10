@@ -50,17 +50,20 @@ public class MenuServiceImpl implements MenuService {
         menuConverter.copyProperties(menu, menuDto);
         // 在保存新菜单时，继承父菜单的权限设置
         menuDto.getParent().map(MenuDto::getId)
-            .map(menuRepository::getOne)
-            .ifPresent(parent -> {
-                menu.setParent(parent);
-                // 添加权限信息
-                List<Role> authorities = roleRepository.findByMenu(parent);
-                if (CollectionUtils.isNotEmpty(authorities)) {
-                    authorities.stream().map(Role::getMenus).forEach(menus -> menus.add(menu));
-                }
-            });
+                .map(menuRepository::getOne)
+                .ifPresent(parent -> {
+                    menu.setParent(parent);
+                    // 添加权限信息
+                    List<Role> authorities = roleRepository.findByMenu(parent);
+                    if (CollectionUtils.isNotEmpty(authorities)) {
+                        authorities.stream().map(Role::getMenus).forEach(menus -> menus.add(menu));
+                    }
+                });
         Menu menuResult = menuRepository.save(menu);
-        menuResult.setOrder(menu.getId());
+        // 如果前端没有设置排序，会自动生成一个排序
+        if (Objects.isNull(menu.getOrder())) {
+            menuResult.setOrder(menu.getId());
+        }
         return menuResult;
     }
 
@@ -92,9 +95,9 @@ public class MenuServiceImpl implements MenuService {
         menuConverter.copyProperties(menu, menuDto);
         menu.setParent(null);
         menuDto.getParent()
-            .map(MenuDto::getId)
-            .map(menuRepository::getOne)
-            .ifPresent(menu::setParent);
+                .map(MenuDto::getId)
+                .map(menuRepository::getOne)
+                .ifPresent(menu::setParent);
         menuRepository.save(menu);
         return menu;
     }
@@ -134,9 +137,9 @@ public class MenuServiceImpl implements MenuService {
         }
         if (StringUtils.isNotBlank(key)) {
             builder.and(qMenu.name.containsIgnoreCase(key)
-                .or(qMenu.title.containsIgnoreCase(key))
-                .or(qMenu.url.containsIgnoreCase(key))
-                .or(qMenu.description.containsIgnoreCase(key)));
+                    .or(qMenu.title.containsIgnoreCase(key))
+                    .or(qMenu.url.containsIgnoreCase(key))
+                    .or(qMenu.description.containsIgnoreCase(key)));
         }
         return menuRepository.findAll(builder, pageable);
     }

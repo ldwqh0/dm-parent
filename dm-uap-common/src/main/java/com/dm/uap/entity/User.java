@@ -14,17 +14,30 @@ import java.util.Map;
 @Setter
 @Entity
 @Table(name = "dm_user_", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_dm_user_username_", columnNames = {"username_"}),
-    @UniqueConstraint(name = "UK_dm_user_email_", columnNames = {"email_"}),
-    @UniqueConstraint(name = "UK_dm_user_mobile_", columnNames = {"mobile_"})
+        @UniqueConstraint(name = "UK_dm_user_username_", columnNames = {"username_"}),
+        @UniqueConstraint(name = "UK_dm_user_email_", columnNames = {"email_"}),
+        @UniqueConstraint(name = "UK_dm_user_mobile_", columnNames = {"mobile_"}),
+        @UniqueConstraint(name = "UK_dm_user_no_", columnNames = "no_")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User extends AbstractEntity {
 
+    /**
+     * 用户工号
+     */
+    @Column(name = "no_", length = 50)
+    private String no;
+
+    /**
+     * 用户名
+     */
     @Column(name = "username_", unique = true, length = 50)
     @NotNull
     private String username;
 
+    /**
+     * 用户密码
+     */
     @Column(name = "password_", length = 100)
     private String password;
 
@@ -57,9 +70,9 @@ public class User extends AbstractEntity {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "dm_user_role_", joinColumns = {
-        @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_role_user_"))
+            @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_role_user_"))
     }, uniqueConstraints = {
-        @UniqueConstraint(name = "UK_dm_user_role_user_role_", columnNames = {"user_id_", "role_id_"})
+            @UniqueConstraint(name = "UK_dm_user_role_user_role_", columnNames = {"user_id_", "role_id_"})
     })
     private List<Role> roles;
 
@@ -68,12 +81,12 @@ public class User extends AbstractEntity {
      */
     @ElementCollection
     @JoinTable(name = "dm_user_post_", joinColumns = {
-        @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_post_user_id_"))
+            @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_post_user_id_"))
     }, uniqueConstraints = {
-        @UniqueConstraint(name = "UK_user_id_department_id_post_", columnNames = {"user_id_", "department_id_", "post_"})
+            @UniqueConstraint(name = "UK_user_id_department_id_post_", columnNames = {"user_id_", "department_id_", "post_"})
     }, indexes = {
-        @Index(name = "IDX_dm_user_post_user_id_", columnList = "user_id_"),
-        @Index(name = "IDX_dm_user_post_department_id_", columnList = "department_id_")
+            @Index(name = "IDX_dm_user_post_user_id_", columnList = "user_id_"),
+            @Index(name = "IDX_dm_user_post_department_id_", columnList = "department_id_")
     })
     @MapKeyJoinColumn(name = "department_id_", foreignKey = @ForeignKey(name = "FK_dm_user_post_department_id_"))
     @Column(name = "post_", length = 50)
@@ -84,10 +97,10 @@ public class User extends AbstractEntity {
      */
     @ElementCollection
     @JoinTable(name = "dm_user_order_", joinColumns = {
-        @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_order_user_id_"))
+            @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_order_user_id_"))
     }, indexes = {
-        @Index(name = "IDX_department_id_user_id_", columnList = "user_id_"),
-        @Index(name = "IDX_department_id_department_id_", columnList = "department_id_")
+            @Index(name = "IDX_department_id_user_id_", columnList = "user_id_"),
+            @Index(name = "IDX_department_id_department_id_", columnList = "department_id_")
     })
     @MapKeyJoinColumn(name = "department_id_", foreignKey = @ForeignKey(name = "FK_dm_user_order_department_id_"))
     @Column(name = "order_")
@@ -98,9 +111,9 @@ public class User extends AbstractEntity {
 
     @ElementCollection
     @JoinTable(name = "dm_user_attribute_",
-        joinColumns = {
-            @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_dm_user_attribute_user_id_"))
-        })
+            joinColumns = {
+                    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_dm_user_attribute_user_id_"))
+            })
     @MapKeyColumn(name = "key")
     @Column(name = "value")
     private Map<String, String> attributes;

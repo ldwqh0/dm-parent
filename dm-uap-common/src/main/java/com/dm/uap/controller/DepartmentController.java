@@ -1,5 +1,6 @@
 package com.dm.uap.controller;
 
+import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.service.DepartmentService;
@@ -97,4 +98,26 @@ public class DepartmentController {
     public List<DepartmentDto> listAll(@PageableDefault(size = 10000, sort = "order", direction = Sort.Direction.ASC) Pageable pageable) {
         return departmentService.findAll();
     }
+
+    /**
+     * 验证名称是否被占用
+     *
+     * @param fullname 要验证的名称
+     * @param parentId 要验证的父级的范围
+     * @param exclude  要排除的id
+     * @return 验证结果
+     * @apiNote 验证部门名称是否被占用，在同一个父级部门下，不允许有同名部门存在
+     */
+    @GetMapping(value = "validation", params = "fullname")
+    public ValidationResult validationFullName(
+            @RequestParam("fullname") String fullname,
+            @RequestParam("parentId") Long parentId,
+            @RequestParam("exclude") Long exclude) {
+        if (departmentService.existsByNameAndParent(fullname, parentId, exclude)) {
+            return ValidationResult.failure("部门名称已经被占用");
+        } else {
+            return ValidationResult.success();
+        }
+    }
 }
+

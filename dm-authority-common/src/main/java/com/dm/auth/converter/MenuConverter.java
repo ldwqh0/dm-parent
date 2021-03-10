@@ -1,12 +1,11 @@
 package com.dm.auth.converter;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.entity.Menu;
 import com.dm.common.converter.Converter;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class MenuConverter implements Converter<Menu, MenuDto> {
@@ -23,6 +22,7 @@ public class MenuConverter implements Converter<Menu, MenuDto> {
         menuDto.setParent(toDto(model.getParent()));
         menuDto.setDescription(model.getDescription());
         menuDto.setType(model.getType());
+        menuDto.setOrder(model.getOrder());
         return menuDto;
     }
 
@@ -35,6 +35,7 @@ public class MenuConverter implements Converter<Menu, MenuDto> {
         model.setIcon(dto.getIcon());
         model.setDescription(dto.getDescription());
         model.setType(dto.getType());
+        model.setOrder(dto.getOrder());
         model.setOpenInNewWindow(dto.getOpenInNewWindow());
         return model;
     }

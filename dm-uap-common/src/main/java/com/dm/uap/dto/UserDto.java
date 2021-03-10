@@ -47,6 +47,12 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     private Long id;
 
     /**
+     * 工号
+     */
+    @Size(max = 50, groups = {Default.class})
+    private String no;
+
+    /**
      * 用户名
      */
     @NotNull(groups = {New.class, Update.class})

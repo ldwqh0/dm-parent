@@ -21,4 +21,5 @@ public interface DepartmentService {
 
     List<DepartmentDto> findAll();
 
+    boolean existsByNameAndParent(String fullname, Long parentId, Long exclude);
 }

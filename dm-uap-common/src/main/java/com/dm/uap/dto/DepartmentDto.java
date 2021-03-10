@@ -5,6 +5,7 @@ import com.dm.uap.entity.Department.Types;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -61,12 +62,17 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     /**
      * 是否有子部门
      */
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean hasChildren = false;
 
     /**
      * 子部门个数
      */
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long childrenCount = 0;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private long userCount=0;
 
     public DepartmentDto(Long id) {
         super();

@@ -1,4 +1,4 @@
-package com.dm.uap.dto;
+package com.dm.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

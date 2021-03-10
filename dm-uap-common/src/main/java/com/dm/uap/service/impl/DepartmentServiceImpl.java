@@ -85,8 +85,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         if (StringUtils.isNotBlank(key)) {
             query.and(qDepartment.fullname.containsIgnoreCase(key)
-                .or(qDepartment.shortname.containsIgnoreCase(key))
-                .or(qDepartment.description.containsIgnoreCase(key))
+                    .or(qDepartment.shortname.containsIgnoreCase(key))
+                    .or(qDepartment.description.containsIgnoreCase(key))
             );
         }
         return departmentRepository.findAll(query, pageable).map(this::toDto);
@@ -97,12 +97,29 @@ public class DepartmentServiceImpl implements DepartmentService {
         return CollectionUtils.transform(departmentRepository.findAll(), this::toDto);
     }
 
+    @Override
+    public boolean existsByNameAndParent(String fullname, Long parentId, Long exclude) {
+        BooleanBuilder query = new BooleanBuilder();
+        query.and(qDepartment.fullname.eq(fullname));
+        if (Objects.isNull(parentId)) {
+            query.and(qDepartment.parent.isNull());
+        } else {
+            query.and(qDepartment.parent.id.eq(parentId));
+        }
+        if (!Objects.isNull(exclude)) {
+            query.and(qDepartment.id.ne(exclude));
+        }
+        return departmentRepository.exists(query);
+    }
+
     private DepartmentDto toDto(Department department) {
         DepartmentDto result = departmentConverter.toDto(department);
         assert result != null;
         long childrenCount = departmentRepository.childrenCounts(department);
         result.setHasChildren(childrenCount > 0);
         result.setChildrenCount(childrenCount);
+        long userCount = departmentRepository.userCounts(department);
+        result.setUserCount(userCount);
         return result;
     }
 }

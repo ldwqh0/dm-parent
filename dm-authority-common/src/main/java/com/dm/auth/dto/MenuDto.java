@@ -51,6 +51,8 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
      * 菜单类型
      */
     private MenuType type = MenuType.COMPONENT;
+
+    private Long order;
     /**
      * 父菜单
      */
