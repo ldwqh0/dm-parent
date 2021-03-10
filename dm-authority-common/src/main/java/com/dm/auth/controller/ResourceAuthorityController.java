@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * 资源授权配置
+ */
 @RestController
 @RequestMapping({"resourceAuthorities", "p/resourceAuthorities"})
 @RequiredArgsConstructor

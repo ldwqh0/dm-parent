@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * 菜单权限配置
+ */
 @RestController
 @RequestMapping({"menuAuthorities", "p/menuAuthorities"})
 @RequiredArgsConstructor

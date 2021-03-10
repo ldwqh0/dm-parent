@@ -6,6 +6,7 @@ import com.dm.auth.dto.OrderDto;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.MenuService;
 import com.dm.collections.Lists;
+import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,9 @@ import static com.dm.auth.dto.OrderDto.Position.UP;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
+/**
+ * 菜单管理
+ */
 @Api(tags = {"menu"})
 @RequestMapping({"menus", "p/menus"})
 @RestController
@@ -152,6 +156,15 @@ public class MenuController {
             menu = menuService.moveDown(id);
         }
         return menuConverter.toDto(menu);
+    }
+
+    @GetMapping(value = "validation", params = {"name"})
+    public ValidationResult validate(@RequestParam("name") String name, @RequestParam("exclude") Long exclude) {
+        if (menuService.existsByName(name, exclude)) {
+            return ValidationResult.failure("指定名称已经被占用");
+        } else {
+            return ValidationResult.success();
+        }
     }
 
 }

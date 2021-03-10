@@ -44,4 +44,5 @@ public interface MenuService {
 
     long count();
 
+    boolean existsByName(String name, Long exclude);
 }

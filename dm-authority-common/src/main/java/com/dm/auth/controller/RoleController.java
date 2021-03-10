@@ -22,6 +22,9 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
+/**
+ * 角色管理
+ */
 @RestController
 @RequestMapping({"roles", "p/roles"})
 @Validated
@@ -85,7 +88,7 @@ public class RoleController {
     }
 
     /**
-     * 删除指定的角色，不能删除系统内置的角色
+     * 删除指定的角色
      *
      * @param id 待删除的角色的ID
      * @apiNote 内置的三个角色不允许被修改, 也就是id<3 的角色不允许被修改
