@@ -63,7 +63,7 @@ public class MenuAuthorityController {
     @Transactional(readOnly = true)
     public MenuAuthorityDto get(@PathVariable("roleId") Long roleId) {
         return roleService.findById(roleId).map(roleConverter::toMenuAuthorityDto)
-            .orElseThrow(DataNotExistException::new);
+                .orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -75,13 +75,14 @@ public class MenuAuthorityController {
      */
     @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
-    public List<MenuDto> systemMenu(Authentication user) {
+    public List<MenuDto> systemMenu(Authentication user,
+                                    @RequestParam(value = "parentId", required = false) Long parentId) {
         if (!Objects.isNull(user)) {
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
             if (CollectionUtils.isNotEmpty(authorities)) {
                 List<Menu> result = authorities.stream().map(GrantedAuthority::getAuthority)
-                    .map(roleService::findAuthorityMenus).flatMap(Set::stream).distinct()
-                    .sorted(Comparator.comparing(Menu::getOrder)).collect(Collectors.toList());
+                        .map((authority) -> roleService.findAuthorityMenus(authority, parentId)).flatMap(Set::stream).distinct()
+                        .sorted(Comparator.comparing(Menu::getOrder)).collect(Collectors.toList());
                 return Lists.transform(result, menuConverter::toDto);
             }
         }

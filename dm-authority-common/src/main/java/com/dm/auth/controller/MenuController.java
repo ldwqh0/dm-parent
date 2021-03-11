@@ -132,7 +132,7 @@ public class MenuController {
      *
      * @param sort     排序方式
      * @param parentId 要获取的节点的id,如果不传入，则获取所有可以用菜单
-     * @param enabled  是否仅仅获取可以用的菜单项
+     * @param enabled  是否仅仅获取可以用的菜单项，为否或者为空表示获取所有菜单项
      * @return 所有的菜单的列表
      */
     @ApiOperation("获取可用菜单树")

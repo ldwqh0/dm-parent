@@ -22,7 +22,9 @@ public class MenuRepositoryImpl {
         if (!Objects.isNull(enabled)) {
             query.and(qMenu.enabled.eq(enabled));
         }
-        if (!Objects.isNull(parentId)) {
+        if (Objects.isNull(parentId)) {
+            query.and(qMenu.parent.isNull());
+        } else {
             query.and(qMenu.parent.id.eq(parentId));
         }
         return queryFactory.select(qMenu).from(qMenu).where(query).fetch();

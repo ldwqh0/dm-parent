@@ -46,13 +46,13 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     // 进行请求限定的请求类型
     private final HttpMethod[] methods = {
-        HttpMethod.GET,
-        HttpMethod.POST,
-        HttpMethod.PUT,
-        HttpMethod.DELETE,
-        HttpMethod.PATCH,
-        HttpMethod.HEAD,
-        HttpMethod.OPTIONS,
+            HttpMethod.GET,
+            HttpMethod.POST,
+            HttpMethod.PUT,
+            HttpMethod.DELETE,
+            HttpMethod.PATCH,
+            HttpMethod.HEAD,
+            HttpMethod.OPTIONS,
     };
 
     @Override
@@ -135,7 +135,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         } else {
             throw new DataNotExistException("指定角色不存在");
         }
-
     }
 
     /**
@@ -145,18 +144,22 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
      * @return 角色的授权菜单列表
      */
     @Override
-    @Cacheable(cacheNames = "AuthorityMenus", sync = true)
+    @Cacheable(cacheNames = "AuthorityMenus", sync = true, key = "#p0+#p1")
     @Transactional(readOnly = true)
-    public Set<Menu> findAuthorityMenus(String authority) {
+    public Set<Menu> findAuthorityMenus(String authority, Long root) {
         Set<Menu> parents = new HashSet<>();
         Set<Menu> menus = findByFullname(authority).map(Role::getMenus)
-            .orElseGet(Collections::emptySet);
+                .orElseGet(Collections::emptySet);
         // 递归添加所有父级菜单
         for (Menu menu : menus) {
             addParent(menu, parents);
         }
         menus.addAll(parents);
         menus.removeIf(this::isDisabled);
+        if (!Objects.isNull(root)) {
+            // 移除不是root的儿孙的菜单项
+            menus.removeIf(menu -> !this.isOffspringOf(menu, root));
+        }
         return menus;
     }
 
@@ -173,7 +176,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         if (roleRepository.existsById(roleId)) {
             Role role = roleRepository.getOne(roleId);
             Map<AuthResource, ResourceOperation> resultOperations = Maps
-                .transformKeys(authorityDto.getResourceAuthorities(), resourceRepository::getOne);
+                    .transformKeys(authorityDto.getResourceAuthorities(), resourceRepository::getOne);
             role.setResourceOperations(resultOperations);
             return roleRepository.save(role);
         } else {
@@ -212,14 +215,22 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
      * @return 返回是否会被禁用
      */
     private boolean isEnabled(Menu menu) {
-        if (menu == null) {
-            return true;
+        return menu == null || (menu.isEnabled() && isEnabled(menu.getParent()));
+    }
+
+    /**
+     * 判断给定菜单是不是指定菜单的儿孙代
+     *
+     * @param menu     要判定的菜单
+     * @param parentId 根菜单
+     * @return 判定结果
+     */
+    private boolean isOffspringOf(Menu menu, Long parentId) {
+        if (Objects.isNull(menu.getParent())) {
+            return Objects.isNull(parentId);
         } else {
-            if (menu.isEnabled()) {
-                return isEnabled(menu.getParent());
-            } else {
-                return false;
-            }
+            Menu parent = menu.getParent();
+            return Objects.equals(parent.getId(), parentId) || isOffspringOf(parent, parentId);
         }
     }
 
@@ -242,7 +253,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
     private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map, AuthResource resource,
                               HttpMethod method, ResourceOperation operation, String authority) {
         UriResource ur = UriResource.of(method.toString(), resource.getMatcher(), resource.getMatchType(),
-            resource.getScope());
+                resource.getScope());
         Boolean access = null;
         switch (method) {
             case POST:

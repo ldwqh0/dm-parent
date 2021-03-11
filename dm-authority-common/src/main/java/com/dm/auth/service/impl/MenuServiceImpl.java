@@ -50,15 +50,15 @@ public class MenuServiceImpl implements MenuService {
         menuConverter.copyProperties(menu, menuDto);
         // 在保存新菜单时，继承父菜单的权限设置
         menuDto.getParent().map(MenuDto::getId)
-            .map(menuRepository::getOne)
-            .ifPresent(parent -> {
-                menu.setParent(parent);
-                // 添加权限信息
-                List<Role> authorities = roleRepository.findByMenu(parent);
-                if (CollectionUtils.isNotEmpty(authorities)) {
-                    authorities.stream().map(Role::getMenus).forEach(menus -> menus.add(menu));
-                }
-            });
+                .map(menuRepository::getOne)
+                .ifPresent(parent -> {
+                    menu.setParent(parent);
+                    // 添加权限信息
+                    List<Role> authorities = roleRepository.findByMenu(parent);
+                    if (CollectionUtils.isNotEmpty(authorities)) {
+                        authorities.stream().map(Role::getMenus).forEach(menus -> menus.add(menu));
+                    }
+                });
         Menu menuResult = menuRepository.save(menu);
         // 如果前端没有设置排序，会自动生成一个排序
         if (Objects.isNull(menu.getOrder())) {
@@ -95,9 +95,9 @@ public class MenuServiceImpl implements MenuService {
         menuConverter.copyProperties(menu, menuDto);
         menu.setParent(null);
         menuDto.getParent()
-            .map(MenuDto::getId)
-            .map(menuRepository::getOne)
-            .ifPresent(menu::setParent);
+                .map(MenuDto::getId)
+                .map(menuRepository::getOne)
+                .ifPresent(menu::setParent);
         menuRepository.save(menu);
         return menu;
     }
@@ -137,9 +137,9 @@ public class MenuServiceImpl implements MenuService {
         }
         if (StringUtils.isNotBlank(key)) {
             builder.and(qMenu.name.containsIgnoreCase(key)
-                .or(qMenu.title.containsIgnoreCase(key))
-                .or(qMenu.url.containsIgnoreCase(key))
-                .or(qMenu.description.containsIgnoreCase(key)));
+                    .or(qMenu.title.containsIgnoreCase(key))
+                    .or(qMenu.url.containsIgnoreCase(key))
+                    .or(qMenu.description.containsIgnoreCase(key)));
         }
         return menuRepository.findAll(builder, pageable);
     }
@@ -232,9 +232,17 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuDto> listOffspring(Long parentId, Boolean enabled, Sort sort) {
         List<Menu> menus = new ArrayList<>();
         this.listChildren(menus, enabled, parentId, sort);
-        return menus.stream().filter(menu -> !isDisabled(menu))
-            .map(menuConverter::toDto)
-            .collect(Collectors.toList());
+        return menus.stream()
+                .filter(menu -> {
+                    // 如果只查询已经启用的菜单，则只返回已经启用的菜单
+                    if (Boolean.TRUE.equals(enabled)) {
+                        return !isDisabled(menu);
+                    } else {
+                        return true;
+                    }
+                })
+                .map(menuConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     /**

@@ -94,9 +94,10 @@ public interface RoleService {
      * 根据角色查询菜单项目
      *
      * @param authority 角色名称
+     * @param root 父级菜单，如果指定菜单根，则只返回该根下的菜单可以用菜单
      * @return 角色的授权菜单列表
      */
-    Set<Menu> findAuthorityMenus(String authority);
+    Set<Menu> findAuthorityMenus(String authority,Long root);
 
     /**
      * 查询所有的角色组
