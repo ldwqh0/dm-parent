@@ -51,20 +51,20 @@ public class UserServiceImpl implements UserService {
     @Cacheable(cacheNames = {"users"}, sync = true, key = "#username.toLowerCase()")
     public UserDetailsDto loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional.ofNullable(username)
-            .filter(StringUtils::isNotEmpty)
-            .flatMap(userRepository::findOneByUsernameIgnoreCase)
-            .map(userConverter::toUserDetailsDto)
-            .orElseThrow(() -> new UsernameNotFoundException(username));
+                .filter(StringUtils::isNotEmpty)
+                .flatMap(userRepository::findOneByUsernameIgnoreCase)
+                .map(userConverter::toUserDetailsDto)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
         return Optional.ofNullable(mobile)
-            .filter(StringUtils::isNotEmpty)
-            .flatMap(userRepository::findByMobileIgnoreCase)
-            .map(userConverter::toUserDetailsDto)
-            .orElseThrow(() -> new UsernameNotFoundException(mobile));
+                .filter(StringUtils::isNotEmpty)
+                .flatMap(userRepository::findByMobileIgnoreCase)
+                .map(userConverter::toUserDetailsDto)
+                .orElseThrow(() -> new UsernameNotFoundException(mobile));
     }
 
     @Override
@@ -113,8 +113,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> get(long id) {
-        return userRepository.findById(id);
+    public Optional<UserDto> findById(long id) {
+        return userRepository.findById(id).map(userConverter::toDto);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
     public Page<User> search(String key, Pageable pageable) {
         if (StringUtils.isNotBlank(key)) {
             BooleanExpression expression = qUser.username.containsIgnoreCase(key)
-                .or(qUser.fullname.containsIgnoreCase(key));
+                    .or(qUser.fullname.containsIgnoreCase(key));
             return userRepository.findAll(expression, pageable);
         } else {
             return userRepository.findAll(pageable);
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
         }
         if (StringUtils.isNotBlank(key)) {
             query.and(qUser.username.containsIgnoreCase(key)
-                .or(qUser.fullname.containsIgnoreCase(key)));
+                    .or(qUser.fullname.containsIgnoreCase(key)));
         }
         return userRepository.findAll(query, pageable);
     }
@@ -228,12 +228,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User patch(long exclude, UserDto user) {
-        User originUser = userRepository.getOne(exclude);
+    public User patch(long id, UserDto user) {
+        User originUser = userRepository.getOne(id);
         if (Objects.nonNull(user.getEnabled())) {
             originUser.setEnabled(user.getEnabled());
         }
         return userRepository.save(originUser);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public UserDto saveOwnerInfo(Long userId, UserDto user) {
+        User originUser = userRepository.getOne(userId);
+        originUser.setBirthDate(user.getBirthDate());
+        originUser.setDescription(user.getDescription());
+        originUser.setEmail(user.getEmail());
+        originUser.setFullname(user.getFullname());
+        originUser.setMobile(user.getMobile());
+        originUser.setNo(user.getNo());
+        originUser.setRegionCode(user.getRegionCode());
+        originUser.setScenicName(user.getScenicName());
+        originUser.setUsername(user.getUsername());
+        return userConverter.toDto(userRepository.save(originUser));
     }
 
     @Override

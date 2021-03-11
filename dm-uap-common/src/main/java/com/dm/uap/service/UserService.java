@@ -27,7 +27,7 @@ public interface UserService extends UserDetailsService {
      */
     User save(UserDto user);
 
-    Optional<User> get(long id);
+    Optional<UserDto> findById(long id);
 
     User delete(long id);
 
@@ -76,4 +76,13 @@ public interface UserService extends UserDetailsService {
     boolean userExistsByMobile(Long id, String mobile);
 
     User patch(long id, UserDto user);
+
+    /**
+     * 保存用户的一部分信息
+     *
+     * @param userId
+     * @param user
+     * @return
+     */
+    UserDto saveOwnerInfo(Long userId, UserDto user);
 }

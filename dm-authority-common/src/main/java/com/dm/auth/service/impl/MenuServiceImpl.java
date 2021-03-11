@@ -89,7 +89,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
-    public Menu update(long id, MenuDto menuDto) {
+    public MenuDto update(long id, MenuDto menuDto) {
         preCheck(menuDto);
         Menu menu = menuRepository.getOne(id);
         menuConverter.copyProperties(menu, menuDto);
@@ -99,13 +99,13 @@ public class MenuServiceImpl implements MenuService {
                 .map(menuRepository::getOne)
                 .ifPresent(menu::setParent);
         menuRepository.save(menu);
-        return menu;
+        return menuConverter.toDto(menu);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Menu> get(long id) {
-        return menuRepository.findById(id);
+    public Optional<MenuDto> findById(long id) {
+        return menuRepository.findById(id).map(menuConverter::toDto);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Menu> search(Long parentId, String key, Pageable pageable) {
+    public Page<MenuDto> search(Long parentId, String key, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         if (Objects.isNull(parentId)) {
             builder.and(qMenu.parent.isNull());
@@ -141,18 +141,18 @@ public class MenuServiceImpl implements MenuService {
                     .or(qMenu.url.containsIgnoreCase(key))
                     .or(qMenu.description.containsIgnoreCase(key)));
         }
-        return menuRepository.findAll(builder, pageable);
+        return menuRepository.findAll(builder, pageable).map(menuConverter::toDto);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
-    public Menu patch(long id, MenuDto _menu) {
+    public MenuDto patch(long id, MenuDto source) {
         Menu menu = menuRepository.getOne(id);
-        if (Objects.nonNull(_menu.getEnabled())) {
-            menu.setEnabled(_menu.getEnabled());
+        if (Objects.nonNull(source.getEnabled())) {
+            menu.setEnabled(source.getEnabled());
         }
-        return menu;
+        return menuConverter.toDto(menu);
     }
 
     @Override
@@ -210,10 +210,11 @@ public class MenuServiceImpl implements MenuService {
      * 在保存前对菜单进行校验
      */
     private void preCheck(MenuDto menu) {
-        if (Objects.nonNull(menu.getId())) {
+        Long menuId = menu.getId();
+        if (Objects.nonNull(menuId)) {
             Menu parent = menu.getParent().map(MenuDto::getId).flatMap(menuRepository::findById).orElse(null);
             while (Objects.nonNull(parent)) {
-                if (menu.getId().equals(parent.getId())) {
+                if (Objects.equals(menuId, parent.getId())) {
                     throw new DataValidateException("不能将一个节点的父级节点设置为它自身或它的叶子节点");
                 }
                 parent = parent.getParent();
@@ -221,6 +222,12 @@ public class MenuServiceImpl implements MenuService {
         }
     }
 
+    /**
+     * 根据菜单类型获取菜单，
+     *
+     * @param type 要查找的菜单的类型
+     * @return 获取到的菜单的列表
+     */
     @Cacheable(cacheNames = "AuthorityMenus", key = "'type_'.concat(#p0)")
     @Override
     public List<MenuDto> listAllByType(Menu.MenuType type) {
@@ -230,13 +237,18 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional(readOnly = true)
     public List<MenuDto> listOffspring(Long parentId, Boolean enabled, Sort sort) {
-        List<Menu> menus = new ArrayList<>();
-        this.listChildren(menus, enabled, parentId, sort);
+        List<Menu> menus;
+        if (Objects.isNull(parentId)) {
+            menus = menuRepository.findAll();
+        } else {
+            menus = new ArrayList<>();
+            listChildren(menus, parentId, sort);
+        }
         return menus.stream()
                 .filter(menu -> {
                     // 如果只查询已经启用的菜单，则只返回已经启用的菜单
                     if (Boolean.TRUE.equals(enabled)) {
-                        return !isDisabled(menu);
+                        return isEnabled(menu);
                     } else {
                         return true;
                     }
@@ -246,26 +258,18 @@ public class MenuServiceImpl implements MenuService {
     }
 
     /**
-     * 判断一个菜单的父级菜单是否被禁用
+     * 判断一个菜单的父级菜单是否被启用
      *
      * @param menu 要检查的菜单项
-     * @return 如果没禁用返回true, 否则返回false
+     * @return 如果被启用返回true, 否则返回false
      */
-    private boolean isDisabled(Menu menu) {
-        if (menu == null) {
-            return false;
-        } else {
-            return !menu.isEnabled() || isDisabled(menu.getParent());
-        }
+    private boolean isEnabled(Menu menu) {
+        return menu == null || (menu.isEnabled() && isEnabled(menu.getParent()));
     }
 
     @Override
     public boolean exists() {
         return menuRepository.count() > 0;
-    }
-
-    public long count() {
-        return menuRepository.count();
     }
 
     @Override
@@ -284,9 +288,9 @@ public class MenuServiceImpl implements MenuService {
      * @param container 保存子菜单项目的容器
      * @param parentId  要查找子菜单的菜单id
      */
-    private void listChildren(List<Menu> container, Boolean enabled, Long parentId, Sort sort) {
-        List<Menu> children = menuRepository.findByEnabledAndParentId(enabled, parentId, sort);
+    private void listChildren(List<Menu> container, Long parentId, Sort sort) {
+        List<Menu> children = menuRepository.findByParentId(parentId, sort);
         container.addAll(children);
-        children.forEach(child -> listChildren(container, enabled, child.getId(), sort));
+        children.forEach(child -> listChildren(container, child.getId(), sort));
     }
 }

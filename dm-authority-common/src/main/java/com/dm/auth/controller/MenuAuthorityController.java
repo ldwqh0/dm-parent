@@ -4,11 +4,9 @@ import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
-import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.Role;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.CollectionUtils;
-import com.dm.collections.Lists;
 import com.dm.common.exception.DataNotExistException;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -80,10 +78,12 @@ public class MenuAuthorityController {
         if (!Objects.isNull(user)) {
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
             if (CollectionUtils.isNotEmpty(authorities)) {
-                List<Menu> result = authorities.stream().map(GrantedAuthority::getAuthority)
-                        .map((authority) -> roleService.findAuthorityMenus(authority, parentId)).flatMap(Set::stream).distinct()
-                        .sorted(Comparator.comparing(Menu::getOrder)).collect(Collectors.toList());
-                return Lists.transform(result, menuConverter::toDto);
+                return authorities.stream().map(GrantedAuthority::getAuthority)
+                        .map((authority) -> roleService.findAuthorityMenus(authority, parentId))
+                        .flatMap(Set::stream)
+                        .distinct()
+                        .sorted(Comparator.comparing(MenuDto::getOrder))
+                        .collect(Collectors.toList());
             }
         }
         return Collections.emptyList();

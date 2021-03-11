@@ -50,7 +50,7 @@ public class UserController {
     @ApiOperation("根据ID获取用户")
     @GetMapping("{id}")
     public UserDto findById(@PathVariable("id") Long id) {
-        return userConverter.toDto(userService.get(id).orElseThrow(DataNotExistException::new));
+        return userService.findById(id).orElseThrow(DataNotExistException::new) ;
     }
 
     /**

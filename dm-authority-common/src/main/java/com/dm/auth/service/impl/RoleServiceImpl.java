@@ -1,5 +1,6 @@
 package com.dm.auth.service.impl;
 
+import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
@@ -27,6 +28,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +43,8 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
     private final MenuRepository menuRepository;
 
     private final ResourceRepository resourceRepository;
+
+    private final MenuConverter menuConverter;
 
     private final QRole qRole = QRole.role;
 
@@ -144,23 +148,23 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
      * @return 角色的授权菜单列表
      */
     @Override
-    @Cacheable(cacheNames = "AuthorityMenus", sync = true, key = "#p0+#p1")
+    @Cacheable(cacheNames = "AuthorityMenus", sync = true)
     @Transactional(readOnly = true)
-    public Set<Menu> findAuthorityMenus(String authority, Long root) {
+    public Set<MenuDto> findAuthorityMenus(String authority, final Long root) {
         Set<Menu> parents = new HashSet<>();
-        Set<Menu> menus = findByFullname(authority).map(Role::getMenus)
-                .orElseGet(Collections::emptySet);
+        Set<Menu> menus = findByFullname(authority).map(Role::getMenus).orElseGet(Collections::emptySet);
         // 递归添加所有父级菜单
-        for (Menu menu : menus) {
-            addParent(menu, parents);
-        }
+        menus.forEach(menu -> addParent(menu, parents));
         menus.addAll(parents);
-        menus.removeIf(this::isDisabled);
-        if (!Objects.isNull(root)) {
-            // 移除不是root的儿孙的菜单项
-            menus.removeIf(menu -> !this.isOffspringOf(menu, root));
-        }
-        return menus;
+        return menus.stream()
+                // 只查找启用的项目
+                .filter(this::isEnabled)
+                // 如果root是空，不做过滤
+                // 如果root不是空，则查找root的子孙代
+                .filter(menu -> Objects.isNull(root) || (!Objects.equals(menu.getId(), root) && this.isOffspringOf(menu, root))) // 只需要是
+                .map(menuConverter::toDto)
+                .collect(Collectors.toSet());
+
     }
 
     @Override
@@ -204,10 +208,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         }
     }
 
-    private boolean isDisabled(Menu menu) {
-        return !isEnabled(menu);
-    }
-
     /**
      * 判断某个菜单是否被禁用，判断的标准是依次判断父级菜单是否被禁用，如果某个菜单的父级菜单被禁用，那么该菜单的子菜单也是被禁用的
      *
@@ -219,18 +219,20 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
     }
 
     /**
-     * 判断给定菜单是不是指定菜单的儿孙代
+     * 判断给定菜单menu是不是指定菜单parentid的儿孙代
      *
-     * @param menu     要判定的菜单
-     * @param parentId 根菜单
+     * @param menu 要判定的菜单,不能为空
+     * @param root 要判断是否为parentId的子菜单
      * @return 判定结果
      */
-    private boolean isOffspringOf(Menu menu, Long parentId) {
-        if (Objects.isNull(menu.getParent())) {
-            return Objects.isNull(parentId);
+    private boolean isOffspringOf(@Nonnull Menu menu, Long root) {
+        Menu parent = menu.getParent();
+        if (Objects.isNull(parent)) {
+            return Objects.isNull(root);
+        } else if (Objects.equals(parent.getId(), root)) {
+            return true;
         } else {
-            Menu parent = menu.getParent();
-            return Objects.equals(parent.getId(), parentId) || isOffspringOf(parent, parentId);
+            return isOffspringOf(parent, root);
         }
     }
 

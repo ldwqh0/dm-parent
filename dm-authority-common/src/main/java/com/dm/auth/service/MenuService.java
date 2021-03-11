@@ -22,15 +22,15 @@ public interface MenuService {
      */
     List<Menu> save(Collection<Menu> menus);
 
-    Menu update(long id, MenuDto menuDto);
+    MenuDto update(long id, MenuDto menuDto);
 
-    Optional<Menu> get(long id);
+    Optional<MenuDto> findById(long id);
 
     void delete(long id);
 
-    Page<Menu> search(Long parentId, String key, Pageable pageable);
+    Page<MenuDto> search(Long parentId, String key, Pageable pageable);
 
-    Menu patch(long id, MenuDto _menu);
+    MenuDto patch(long id, MenuDto menu);
 
     Menu moveUp(long id);
 
@@ -42,15 +42,13 @@ public interface MenuService {
      * 获取一个菜单的子孙后代菜单项目
      *
      * @param parentId 要获取子孙后代的菜单项,如果为空，代表获取所有菜单项目
-     * @param enabled  是否仅获取被启用的菜单项，如果不指定，获取所有的菜单项目，为False行为不可测
+     * @param enabled  是否仅获取被启用的菜单项，为false和null表示获取所有菜单
      * @param sort     排序方式
      * @return 获取到的菜单项目
      */
     List<MenuDto> listOffspring(Long parentId, Boolean enabled, Sort sort);
 
     boolean exists();
-
-    long count();
 
     boolean existsByName(String name, Long exclude);
 

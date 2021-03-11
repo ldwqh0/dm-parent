@@ -1,6 +1,7 @@
 package com.dm.auth.service;
 
 import com.dm.auth.dto.MenuAuthorityDto;
+import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.dto.RoleDto;
 import com.dm.auth.entity.Menu;
@@ -97,7 +98,7 @@ public interface RoleService {
      * @param root 父级菜单，如果指定菜单根，则只返回该根下的菜单可以用菜单
      * @return 角色的授权菜单列表
      */
-    Set<Menu> findAuthorityMenus(String authority,Long root);
+    Set<MenuDto> findAuthorityMenus(String authority, Long root);
 
     /**
      * 查询所有的角色组

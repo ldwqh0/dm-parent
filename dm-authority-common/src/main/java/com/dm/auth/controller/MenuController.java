@@ -65,8 +65,7 @@ public class MenuController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public MenuDto update(@PathVariable("id") long id, @RequestBody MenuDto menuDto) {
-        Menu menu = menuService.update(id, menuDto);
-        return menuConverter.toDto(menu);
+        return menuService.update(id, menuDto);
     }
 
     /**
@@ -78,7 +77,7 @@ public class MenuController {
     @ApiOperation("获取菜单")
     @GetMapping("{id}")
     public MenuDto findById(@PathVariable("id") Long id) {
-        return menuService.get(id).map(menuConverter::toDto).orElseThrow(DataNotExistException::new);
+        return menuService.findById(id).orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -106,7 +105,7 @@ public class MenuController {
     @ApiOperation("更新菜单部分信息")
     @PatchMapping("{id}")
     public MenuDto patch(@PathVariable("id") long id, @RequestBody MenuDto menu) {
-        return menuConverter.toDto(menuService.patch(id, menu));
+        return menuService.patch(id, menu);
     }
 
     /**
@@ -120,17 +119,17 @@ public class MenuController {
     @ApiOperation("根据关键字查询菜单")
     @GetMapping(params = {"page"})
     public Page<MenuDto> list(
-        @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable,
-        @RequestParam(value = "keyword", required = false) String keyword,
-        @RequestParam(value = "parentId", required = false) Long parentId) {
-        return menuService.search(parentId, keyword, pageable).map(menuConverter::toDto);
+            @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "parentId", required = false) Long parentId) {
+        return menuService.search(parentId, keyword, pageable);
     }
 
 
     /**
-     * 获取所有可用的菜单树
+     * 获取菜单树
      *
-     * @param sort     排序方式
+     * @param sort     排序方式,默认安装order排序，暂不支持改变，也不要传入
      * @param parentId 要获取的节点的id,如果不传入，则获取所有可以用菜单
      * @param enabled  是否仅仅获取可以用的菜单项，为否或者为空表示获取所有菜单项
      * @return 所有的菜单的列表
@@ -138,9 +137,9 @@ public class MenuController {
     @ApiOperation("获取可用菜单树")
     @GetMapping
     public List<MenuDto> list(
-        @RequestParam(value = "parentId", required = false) Long parentId,
-        @RequestParam(value = "enabled", required = false) Boolean enabled,
-        @SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
+            @RequestParam(value = "parentId", required = false) Long parentId,
+            @RequestParam(value = "enabled", required = false) Boolean enabled,
+            @SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
         return menuService.listOffspring(parentId, enabled, sort);
     }
 
