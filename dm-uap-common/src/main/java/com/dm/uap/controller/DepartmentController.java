@@ -111,8 +111,8 @@ public class DepartmentController {
     @GetMapping(value = "validation", params = "fullname")
     public ValidationResult validationFullName(
             @RequestParam("fullname") String fullname,
-            @RequestParam("parentId") Long parentId,
-            @RequestParam("exclude") Long exclude) {
+            @RequestParam(value = "parentId", required = false) Long parentId,
+            @RequestParam(value = "exclude", required = false) Long exclude) {
         if (departmentService.existsByNameAndParent(fullname, parentId, exclude)) {
             return ValidationResult.failure("部门名称已经被占用");
         } else {
