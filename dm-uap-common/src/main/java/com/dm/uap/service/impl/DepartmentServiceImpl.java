@@ -1,6 +1,7 @@
 package com.dm.uap.service.impl;
 
 import com.dm.collections.CollectionUtils;
+import com.dm.common.exception.DataValidateException;
 import com.dm.uap.converter.DepartmentConverter;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.entity.Department;
@@ -39,6 +40,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public DepartmentDto save(DepartmentDto data) {
+        preCheck(data);
         Department department = new Department();
         departmentConverter.copyProperties(department, data);
         data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
@@ -49,6 +51,20 @@ public class DepartmentServiceImpl implements DepartmentService {
         return this.toDto(dep);
     }
 
+    // 保存前对进行前置校验，避免节点递归
+    private void preCheck(DepartmentDto data) {
+        Long departmentId = data.getId();
+        if (Objects.nonNull(departmentId)) {
+            Department parent = data.getParent().map(DepartmentDto::getId).flatMap(departmentRepository::findById).orElse(null);
+            while (Objects.nonNull(parent)) {
+                if (Objects.equals(departmentId, parent.getId())) {
+                    throw new DataValidateException("不能将一个节点的父级节点设置为它自身或它的叶子节点");
+                }
+                parent = parent.getParent();
+            }
+        }
+    }
+
     @Override
     public Optional<DepartmentDto> findById(Long id) {
         return departmentRepository.findById(id).map(departmentConverter::toDto);
@@ -57,6 +73,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public DepartmentDto update(Long id, DepartmentDto data) {
+        preCheck(data);
         Department department = departmentRepository.getOne(id);
         departmentConverter.copyProperties(department, data);
         // 更新时先清空父级和负责人的原始
