@@ -1,11 +1,6 @@
 package com.dm.springboot.autoconfigure.authority;
 
-import com.dm.auth.dto.MenuAuthorityDto;
-import com.dm.auth.dto.MenuDto;
-import com.dm.auth.dto.ResourceAuthorityDto;
-import com.dm.auth.dto.ResourceDto;
-import com.dm.auth.dto.RoleDto;
-import com.dm.auth.entity.Menu;
+import com.dm.auth.dto.*;
 import com.dm.auth.entity.ResourceOperation;
 import com.dm.auth.entity.Role;
 import com.dm.auth.entity.Role.Status;
@@ -66,7 +61,7 @@ public class AuthAutoConfiguration {
     }
 
     private void initAuthority(Role role) {
-        List<Menu> menus = menuService.listAllEnabled(Sort.by("order"));
+        List<MenuDto> menus = menuService.listOffspring(null, null, Sort.by("order"));
         Long roleId = role.getId();
         // 判断是否
         // 默认角色ID

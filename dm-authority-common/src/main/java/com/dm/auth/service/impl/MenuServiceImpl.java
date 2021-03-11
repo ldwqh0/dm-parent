@@ -44,7 +44,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
-    public Menu save(MenuDto menuDto) {
+    public MenuDto save(MenuDto menuDto) {
         preCheck(menuDto);
         final Menu menu = new Menu();
         menuConverter.copyProperties(menu, menuDto);
@@ -64,7 +64,7 @@ public class MenuServiceImpl implements MenuService {
         if (Objects.isNull(menu.getOrder())) {
             menuResult.setOrder(menu.getId());
         }
-        return menuResult;
+        return menuConverter.toDto(menuResult);
     }
 
     @Override
@@ -229,9 +229,12 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Menu> listAllEnabled(Sort sort) {
-        List<Menu> menus = menuRepository.findByEnabled(true, sort);
-        return menus.stream().filter(menu -> !isDisabled(menu)).collect(Collectors.toList());
+    public List<MenuDto> listOffspring(Long parentId, Boolean enabled, Sort sort) {
+        List<Menu> menus = new ArrayList<>();
+        this.listChildren(menus, enabled, parentId, sort);
+        return menus.stream().filter(menu -> !isDisabled(menu))
+            .map(menuConverter::toDto)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -267,4 +270,15 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.exists(query);
     }
 
+    /**
+     * 递归的获取所有子菜单项目
+     *
+     * @param container 保存子菜单项目的容器
+     * @param parentId  要查找子菜单的菜单id
+     */
+    private void listChildren(List<Menu> container, Boolean enabled, Long parentId, Sort sort) {
+        List<Menu> children = menuRepository.findByEnabledAndParentId(enabled, parentId, sort);
+        container.addAll(children);
+        children.forEach(child -> listChildren(container, enabled, child.getId(), sort));
+    }
 }

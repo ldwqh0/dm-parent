@@ -11,8 +11,12 @@ import java.util.List;
 public interface MenuRepository
     extends JpaRepository<Menu, Long>, QuerydslPredicateExecutor<Menu>, IdentifiableDtoRepository<Menu, Long> {
 
-    List<Menu> findByEnabled(boolean b, Sort sort);
+//    List<Menu> findByEnabled(boolean b, Sort sort);
 
     List<Menu> findByType(Menu.MenuType type);
+
+    List<Menu> findByEnabledAndParentId(Boolean enabled, Long parentId, Sort sort);
+
+//    List<Menu> findByParentId(Long parentId);
 
 }

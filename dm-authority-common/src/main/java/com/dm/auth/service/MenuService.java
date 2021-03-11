@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface MenuService {
 
-    Menu save(MenuDto menuDto);
+    MenuDto save(MenuDto menuDto);
 
     /**
      * 批量保存菜单信息,用于菜单初始化,其它地方不用
@@ -38,11 +38,20 @@ public interface MenuService {
 
     List<MenuDto> listAllByType(Menu.MenuType type);
 
-    List<Menu> listAllEnabled(Sort sort);
+    /**
+     * 获取一个菜单的子孙后代菜单项目
+     *
+     * @param parentId 要获取子孙后代的菜单项,如果为空，代表获取所有菜单项目
+     * @param enabled  是否仅获取被启用的菜单项，如果不指定，获取所有的菜单项目，为False行为不可测
+     * @param sort     排序方式
+     * @return 获取到的菜单项目
+     */
+    List<MenuDto> listOffspring(Long parentId, Boolean enabled, Sort sort);
 
     boolean exists();
 
     long count();
 
     boolean existsByName(String name, Long exclude);
+
 }

@@ -5,7 +5,6 @@ import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.OrderDto;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.service.MenuService;
-import com.dm.collections.Lists;
 import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import io.swagger.annotations.Api;
@@ -51,7 +50,7 @@ public class MenuController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public MenuDto save(@RequestBody MenuDto menuDto) {
-        return menuConverter.toDto(menuService.save(menuDto));
+        return menuService.save(menuDto);
     }
 
     /**
@@ -97,6 +96,20 @@ public class MenuController {
     }
 
     /**
+     * 更新部分菜单信息
+     *
+     * @param id   要更新的菜单的id
+     * @param menu 要更新菜单信息
+     * @return 更新后的菜单信息
+     * @apiNote 当前只能改变菜单的enabled状态
+     */
+    @ApiOperation("更新菜单部分信息")
+    @PatchMapping("{id}")
+    public MenuDto patch(@PathVariable("id") long id, @RequestBody MenuDto menu) {
+        return menuConverter.toDto(menuService.patch(id, menu));
+    }
+
+    /**
      * 根据关键字查询子菜单
      *
      * @param pageable 分页信息
@@ -105,7 +118,7 @@ public class MenuController {
      * @return 查询到的菜单列表
      */
     @ApiOperation("根据关键字查询菜单")
-    @GetMapping(params = {"draw"})
+    @GetMapping(params = {"page"})
     public Page<MenuDto> list(
         @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable,
         @RequestParam(value = "keyword", required = false) String keyword,
@@ -113,30 +126,22 @@ public class MenuController {
         return menuService.search(parentId, keyword, pageable).map(menuConverter::toDto);
     }
 
-    /**
-     * 更新部分菜单信息
-     *
-     * @param id    要更新的菜单的id
-     * @param _menu 要更新菜单信息
-     * @return 更新后的菜单信息
-     */
-    @ApiOperation("更新菜单部分信息")
-    @PatchMapping("{id}")
-    public MenuDto patch(@PathVariable("id") long id, @RequestBody MenuDto _menu) {
-        return menuConverter.toDto(menuService.patch(id, _menu));
-    }
 
     /**
      * 获取所有可用的菜单树
      *
-     * @param sort 排序方式
+     * @param sort     排序方式
+     * @param parentId 要获取的节点的id,如果不传入，则获取所有可以用菜单
+     * @param enabled  是否仅仅获取可以用的菜单项
      * @return 所有的菜单的列表
      */
     @ApiOperation("获取可用菜单树")
     @GetMapping
-    public List<MenuDto> getAllMenuEnabled(@SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
-        List<Menu> allMenuEnabled = menuService.listAllEnabled(sort);
-        return Lists.transform(allMenuEnabled, menuConverter::toDto);
+    public List<MenuDto> list(
+        @RequestParam(value = "parentId", required = false) Long parentId,
+        @RequestParam(value = "enabled", required = false) Boolean enabled,
+        @SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
+        return menuService.listOffspring(parentId, enabled, sort);
     }
 
     /**
@@ -158,8 +163,16 @@ public class MenuController {
         return menuConverter.toDto(menu);
     }
 
+    /**
+     * 对菜单名字进行校验
+     *
+     * @param name    要校验的菜单的名称
+     * @param exclude 要排除的菜单id
+     * @return 验证结果
+     */
     @GetMapping(value = "validation", params = {"name"})
-    public ValidationResult validate(@RequestParam("name") String name, @RequestParam("exclude") Long exclude) {
+    public ValidationResult validate(@RequestParam("name") String name,
+                                     @RequestParam(value = "exclude", required = false) Long exclude) {
         if (menuService.existsByName(name, exclude)) {
             return ValidationResult.failure("指定名称已经被占用");
         } else {

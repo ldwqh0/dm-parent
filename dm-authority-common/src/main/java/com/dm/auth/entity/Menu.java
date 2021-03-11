@@ -76,7 +76,7 @@ public class Menu extends AbstractEntity {
     @Column(name = "description_", length = 1000)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "parent_", foreignKey = @ForeignKey(name = "FK_dm_menu_parent_"))
     private Menu parent;
 

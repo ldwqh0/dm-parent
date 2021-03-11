@@ -36,7 +36,6 @@ public class UserConverter implements Converter<User, UserDto> {
 
     private UserDto toDtoActual(User user) {
         UserDto dto = toSimpleDto(user);
-
         dto.setDescription(user.getDescription());
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
@@ -61,6 +60,7 @@ public class UserConverter implements Converter<User, UserDto> {
             user.setEmail(userDto.getEmail());
             user.setScenicName(userDto.getScenicName());
             user.setRegionCode(userDto.getRegionCode());
+            user.setBirthDate(userDto.getBirthDate());
         }
         return user;
     }
@@ -78,6 +78,7 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setMobile(model.getMobile());
         dto.setEmail(model.getEmail());
         dto.setEnabled(model.isEnabled());
+        dto.setBirthDate(model.getBirthDate());
         return dto;
     }
 
