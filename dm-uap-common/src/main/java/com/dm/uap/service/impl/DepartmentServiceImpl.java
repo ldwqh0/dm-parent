@@ -55,7 +55,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     private void preCheck(DepartmentDto data) {
         Long departmentId = data.getId();
         if (Objects.nonNull(departmentId)) {
-            Department parent = data.getParent().map(DepartmentDto::getId).flatMap(departmentRepository::findById).orElse(null);
+            Department parent = data.getParent()
+                .map(DepartmentDto::getId)
+                .flatMap(departmentRepository::findById)
+                .orElse(null);
             while (Objects.nonNull(parent)) {
                 if (Objects.equals(departmentId, parent.getId())) {
                     throw new DataValidateException("不能将一个节点的父级节点设置为它自身或它的叶子节点");
@@ -102,8 +105,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         if (StringUtils.isNotBlank(key)) {
             query.and(qDepartment.fullname.containsIgnoreCase(key)
-                    .or(qDepartment.shortname.containsIgnoreCase(key))
-                    .or(qDepartment.description.containsIgnoreCase(key))
+                .or(qDepartment.shortname.containsIgnoreCase(key))
+                .or(qDepartment.description.containsIgnoreCase(key))
             );
         }
         return departmentRepository.findAll(query, pageable).map(this::toDto);

@@ -5,6 +5,7 @@ import com.dm.auth.dto.RoleDto;
 import com.dm.auth.entity.Role;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Lists;
+import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import io.swagger.annotations.ApiOperation;
@@ -113,9 +114,9 @@ public class RoleController {
     @ApiOperation("查询角色")
     @GetMapping(params = {"page", "size"})
     public Page<RoleDto> list(
-        @RequestParam(value = "group", required = false) String group,
-        @RequestParam(value = "keyword", required = false) String keyword,
-        @PageableDefault Pageable pageable) {
+            @RequestParam(value = "group", required = false) String group,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @PageableDefault Pageable pageable) {
         return roleService.search(group, keyword, pageable).map(roleConverter::toDto);
     }
 
@@ -128,5 +129,17 @@ public class RoleController {
     @GetMapping
     public List<RoleDto> listEnabled() {
         return Lists.transform(roleService.listAllEnabled(), roleConverter::toDto);
+    }
+
+    @GetMapping("validation")
+    public ValidationResult validate(
+            @RequestParam("name") String name,
+            @RequestParam("group") String group,
+            @RequestParam(value = "exclude", required = false) Long exclude) {
+        if (roleService.existsByFullname(name, group, exclude)) {
+            return ValidationResult.failure("指定角色已经存在");
+        } else {
+            return ValidationResult.success();
+        }
     }
 }

@@ -4,7 +4,7 @@ import com.dm.security.core.userdetails.GrantedAuthorityDto;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.security.web.authentication.LoginFailureHandler;
 import com.dm.security.web.authentication.LoginSuccessHandler;
-import com.dm.security.web.controller.CurrentUserController;
+import com.dm.security.web.controller.CurrentAuthorityController;
 import com.dm.security.web.controller.CurrentUserReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +38,8 @@ public class SecurityAutoConfiguration {
     @ConditionalOnClass(name = {"javax.servlet.Servlet", "com.dm.security.core.userdetails.UserDetailsDto"})
     static class CurrentUserConfiguration {
         @Bean
-        public CurrentUserController currentUserController() {
-            return new CurrentUserController();
+        public CurrentAuthorityController currentAuthorityController() {
+            return new CurrentAuthorityController();
         }
     }
 

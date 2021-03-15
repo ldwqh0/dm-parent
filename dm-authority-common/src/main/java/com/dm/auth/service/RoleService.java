@@ -73,6 +73,8 @@ public interface RoleService {
      */
     boolean existsByFullname(String authority);
 
+    boolean existsByFullname(String name,String group,Long exclude);
+
 
     /**
      * 保存角色的菜单授权信息

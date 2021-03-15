@@ -148,7 +148,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
      * @return 角色的授权菜单列表
      */
     @Override
-    @Cacheable(cacheNames = "AuthorityMenus", sync = true)
+    @Cacheable(cacheNames = "AuthorityMenus", sync = true, key = "#p0+'_p_'+#p1")
     @Transactional(readOnly = true)
     public Set<MenuDto> findAuthorityMenus(String authority, final Long root) {
         Set<Menu> parents = new HashSet<>();
@@ -300,6 +300,19 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
     public boolean existsByFullname(String authority) {
         String[] groupName = authority.split("\\_", 2);
         return roleRepository.existsByGroupAndName(groupName[0], groupName[1]);
+    }
+
+    @Override
+    public boolean existsByFullname(String name, String group, Long exclude) {
+        BooleanBuilder query = new BooleanBuilder();
+        query.and(qRole.name.eq(name)).and(qRole.group.eq(group))
+        ;
+        if (!Objects.isNull(exclude)) {
+            query.and(qRole.id.ne(exclude));
+        }
+
+
+        return roleRepository.exists(query);
     }
 
 }
