@@ -4,6 +4,7 @@ import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
+import com.dm.auth.dto.MenuTreeDto;
 import com.dm.auth.entity.Role;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.CollectionUtils;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +63,7 @@ public class MenuAuthorityController {
     @Transactional(readOnly = true)
     public MenuAuthorityDto get(@PathVariable("roleId") Long roleId) {
         return roleService.findById(roleId).map(roleConverter::toMenuAuthorityDto)
-                .orElseThrow(DataNotExistException::new);
+            .orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -79,13 +81,54 @@ public class MenuAuthorityController {
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
             if (CollectionUtils.isNotEmpty(authorities)) {
                 return authorities.stream().map(GrantedAuthority::getAuthority)
-                        .map((authority) -> roleService.findAuthorityMenus(authority, parentId))
-                        .flatMap(Set::stream)
-                        .distinct()
-                        .sorted(Comparator.comparing(MenuDto::getOrder))
-                        .collect(Collectors.toList());
+                    .map((authority) -> roleService.findAuthorityMenus(authority, parentId))
+                    .flatMap(Set::stream)
+                    .distinct()
+                    .sorted(Comparator.comparing(MenuDto::getOrder))
+                    .collect(Collectors.toList());
             }
         }
         return Collections.emptyList();
+    }
+
+
+    @GetMapping(value = "current", params = {"type=tree"})
+    public List<MenuTreeDto> systemMenuTree(Authentication user,
+                                            @RequestParam(value = "parentId", required = false) Long parentId) {
+        List<MenuTreeDto> menus = this.systemMenu(user, parentId).stream().map(this::toTree).collect(Collectors.toList());
+        Map<Long, MenuTreeDto> menuMap = menus.stream().collect(Collectors.toMap(MenuTreeDto::getId, Function.identity()));
+        menus.forEach(menu -> {
+            Long pId = menu.getParentId();
+            // 将菜单添加到它的父菜单的children下
+            if (!Objects.isNull(pId)) {
+                // 如果存在才添加，不存在则不添加
+                MenuTreeDto p = menuMap.get(pId);
+                if (!Objects.isNull(p)) {
+                    p.addChild(menu);
+                }
+            }
+        });
+        if (!Objects.isNull(parentId)) {
+            return menus.stream().filter(menu -> Objects.equals(menu.getParentId(), parentId)).collect(Collectors.toList());
+        } else {
+            return menus.stream().filter(menu -> Objects.isNull(menu.getParentId())).collect(Collectors.toList());
+        }
+    }
+
+
+    private MenuTreeDto toTree(MenuDto menu) {
+        MenuTreeDto treeDto = new MenuTreeDto();
+        treeDto.setId(menu.getId());
+        menu.getParent().map(MenuDto::getId).ifPresent(treeDto::setParentId);
+        treeDto.setName(menu.getName());
+        treeDto.setDescription(menu.getDescription());
+        treeDto.setEnabled(menu.getEnabled());
+        treeDto.setIcon(menu.getIcon());
+        treeDto.setOpenInNewWindow(menu.getOpenInNewWindow());
+        treeDto.setOrder(menu.getOrder());
+        treeDto.setTitle(menu.getTitle());
+        treeDto.setType(menu.getType());
+        treeDto.setUrl(menu.getUrl());
+        return treeDto;
     }
 }

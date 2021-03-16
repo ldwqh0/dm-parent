@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 @RestController
 public class CurrentUserReactiveController {
 
-    @GetMapping("/authorities/current")
+    @GetMapping({"/authorities/current", "/p/authorities/current"})
     @ResponseBody
     public Mono<UserDetailsDto> currentUser(@CurrentUser UserDetailsDto user) {
         return Mono.justOrEmpty(user);

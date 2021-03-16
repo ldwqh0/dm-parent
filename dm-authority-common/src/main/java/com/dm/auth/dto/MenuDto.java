@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -63,6 +64,7 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
      * 是否在新窗口中打开菜单
      */
     private Boolean openInNewWindow = Boolean.FALSE;
+
 
     public Optional<MenuDto> getParent() {
         return Optional.ofNullable(parent);
