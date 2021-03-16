@@ -3,10 +3,8 @@ package com.dm.uap.controller;
 import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
-import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.DepartmentDto;
-import com.dm.uap.dto.UpdatePasswordDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
@@ -18,11 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -50,7 +46,7 @@ public class UserController {
     @ApiOperation("根据ID获取用户")
     @GetMapping("{id}")
     public UserDto findById(@PathVariable("id") Long id) {
-        return userService.findById(id).orElseThrow(DataNotExistException::new) ;
+        return userService.findById(id).orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -99,30 +95,12 @@ public class UserController {
         if (id == 2) {
             throw new DataValidateException("不能修改系统内置匿名用户");
         }
-        validRePassword(password, rePassword);
+        if (!StringUtils.equals(password, rePassword)) {
+            throw new DataValidateException("两次密码输入不一致");
+        }
         return userConverter.toDto(userService.repassword(id, password));
     }
 
-    /**
-     * 修改当前用户的密码
-     *
-     * @param user 要修改密码的用户
-     * @param data 修改密码后的用户信息
-     * @return 修改密码之后的用户信息
-     */
-    @ApiOperation("修改当前用户密码")
-    @PatchMapping("current/password")
-    @ResponseStatus(CREATED)
-    public UserDto changePassword(
-        @AuthenticationPrincipal UserDetailsDto user,
-        @Valid @RequestBody UpdatePasswordDto data) {
-        Long id = user.getId();
-        validRePassword(data.getPassword(), data.getRepassword());
-        if (userService.checkPassword(id, data.getOldPassword())) {
-            throw new DataValidateException("原始密码校验错误");
-        }
-        return userConverter.toDto(userService.repassword(id, data.getPassword()));
-    }
 
     /**
      * 更新用户信息
@@ -147,11 +125,10 @@ public class UserController {
     /**
      * 更新用户的部分信息
      *
-     * @apiNote  暂时只支持修改用户的禁用信息,其他的暂时不做修改
-     *
      * @param id   要更新的用户的ID
      * @param user 用户信息
      * @return 更新后的用户信息
+     * @apiNote 暂时只支持修改用户的禁用信息, 其他的暂时不做修改
      */
     @ApiOperation("更新用户指定信息，未明确指定的信息不会被修改")
     @PatchMapping("{id}")
@@ -183,11 +160,6 @@ public class UserController {
         return result.map(userConverter::toDto);
     }
 
-    private void validRePassword(String password, String rePassword) {
-        if (!StringUtils.equals(password, rePassword)) {
-            throw new DataValidateException("两次密码输入不一致");
-        }
-    }
 
     /**
      * 校验用户名是否被使用

@@ -71,6 +71,9 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long childrenCount = 0;
 
+    /**
+     * 用户数量
+     */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long userCount=0;
 
@@ -100,7 +103,7 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     }
 
     /**
-     * logo, 部门的logo字符串表现方式
+     * logo, 部门的logo字符串表现方式，可能是文件的ID，URL路径，或者BASE64形式的字符串，具体由前端控制
      */
     private String logo;
 

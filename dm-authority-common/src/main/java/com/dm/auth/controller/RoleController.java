@@ -131,6 +131,14 @@ public class RoleController {
         return Lists.transform(roleService.listAllEnabled(), roleConverter::toDto);
     }
 
+    /**
+     * 验证角色是否存在
+     *
+     * @param name    要验证的角色
+     * @param group   要验证的角色所在的角色组
+     * @param exclude 要排除的id
+     * @return 验证结果
+     */
     @GetMapping("validation")
     public ValidationResult validate(
             @RequestParam("name") String name,
