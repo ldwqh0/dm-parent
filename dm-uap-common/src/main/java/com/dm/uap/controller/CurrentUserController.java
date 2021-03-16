@@ -32,7 +32,6 @@ public class CurrentUserController {
      *
      * @param userId 用户id, 后台自动获取，不要传入
      * @return 用户信息
-     * @ignore userId
      */
     @GetMapping
     public UserDto current(@AuthenticationPrincipal(expression = "id") Long userId) {
@@ -45,7 +44,6 @@ public class CurrentUserController {
      * @param userId 用户id，系统自动获取，不要传入
      * @param user   新的用户信息
      * @return 更新后的用户信息
-     * @ignore userId
      */
     @PutMapping
     public UserDto update(@AuthenticationPrincipal(expression = "id") Long userId, @RequestBody UserDto user) {
@@ -58,7 +56,6 @@ public class CurrentUserController {
      * @param userId 要修改密码的用户,后台自动获取，前端不需要传入
      * @param data   修改密码后的用户信息
      * @return 修改密码之后的用户信息
-     * @ignore userId
      */
     @ApiOperation("修改当前用户密码")
     @PatchMapping("password")
