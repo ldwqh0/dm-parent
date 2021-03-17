@@ -128,5 +128,10 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
      * 出生日期
      */
     private LocalDate birthDate;
+
+    /**
+     * 用户头像
+     */
+    private String profilePhoto;
 }
 

@@ -124,4 +124,7 @@ public class User extends AbstractEntity {
 
     @Column(name = "scenic_name_", length = 200)
     private String scenicName;
+
+    @Column(name = "profile_photo_",length = 4000)
+    private String profilePhoto;
 }

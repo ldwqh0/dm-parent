@@ -39,6 +39,7 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setDescription(user.getDescription());
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
+
         Map<Department, String> _posts = user.getPosts();
         if (Maps.isNotEmpty(_posts)) {
             List<UserPostDto> posts = new ArrayList<>();
@@ -55,12 +56,14 @@ public class UserConverter implements Converter<User, UserDto> {
             user.setEnabled(userDto.getEnabled());
             user.setUsername(userDto.getUsername());
             user.setFullname(userDto.getFullname());
+            user.setProfilePhoto(userDto.getProfilePhoto());
             user.setMobile(userDto.getMobile());
             user.setDescription(userDto.getDescription());
             user.setEmail(userDto.getEmail());
             user.setScenicName(userDto.getScenicName());
             user.setRegionCode(userDto.getRegionCode());
             user.setBirthDate(userDto.getBirthDate());
+            user.setNo(userDto.getNo());
         }
         return user;
     }
@@ -79,6 +82,7 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setEmail(model.getEmail());
         dto.setEnabled(model.isEnabled());
         dto.setBirthDate(model.getBirthDate());
+        dto.setProfilePhoto(model.getProfilePhoto());
         return dto;
     }
 
