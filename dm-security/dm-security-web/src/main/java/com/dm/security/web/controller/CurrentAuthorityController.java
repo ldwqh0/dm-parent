@@ -8,7 +8,7 @@ import org.springframework.web.context.request.WebRequest;
 
 @Controller
 public class CurrentAuthorityController {
-    @GetMapping("/authorities/current")
+    @GetMapping({"/authorities/current","/p/authorities/current"})
     @ResponseBody
     public Object currentUser(@CurrentUser Object p) {
         return p;

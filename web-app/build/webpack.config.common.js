@@ -8,7 +8,7 @@ const webpack = require('webpack')
 module.exports = env => {
   return {
     entry: {
-      main: ['core-js/stable', path.resolve(__dirname, '..', env.entry ?? 'src')]
+      main: ['core-js/stable', path.resolve(__dirname, '..', env.entry || 'src')]
     },
     module: {
       rules: [{
