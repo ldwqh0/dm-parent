@@ -83,6 +83,7 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setEnabled(model.isEnabled());
         dto.setBirthDate(model.getBirthDate());
         dto.setProfilePhoto(model.getProfilePhoto());
+        dto.setNo(model.getNo());
         return dto;
     }
 
