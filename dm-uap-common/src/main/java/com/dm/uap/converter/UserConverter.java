@@ -86,6 +86,4 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setNo(model.getNo());
         return dto;
     }
-
-
 }
