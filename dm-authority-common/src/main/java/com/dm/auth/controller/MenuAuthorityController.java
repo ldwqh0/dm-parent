@@ -1,6 +1,5 @@
 package com.dm.auth.controller;
 
-import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
@@ -31,8 +30,6 @@ import java.util.stream.Collectors;
 public class MenuAuthorityController {
 
     private final RoleService roleService;
-
-    private final MenuConverter menuConverter;
 
     private final RoleConverter roleConverter;
 

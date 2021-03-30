@@ -4,7 +4,6 @@ import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.dto.RoleDto;
-import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

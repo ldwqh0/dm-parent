@@ -4,27 +4,25 @@ import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 @Embeddable
 @Getter
-public class CreateAudit<ID extends Serializable, NAME extends Serializable> implements Audit<ID, NAME> {
+public class CreateAudit implements Audit<Long, String> {
 
-    private static final long serialVersionUID = 379407708683930698L;
 
     /**
      * 创建人相关信息不能被修改
      */
     @Column(name = "created_user_id_", updatable = false)
-    private ID userid;
+    private Long userid;
 
     /**
      * 创建人相关信息不能被修改
      */
     @Column(name = "created_user_name_", updatable = false)
-    private NAME username;
+    private String username;
 
-    public CreateAudit(ID createUserId, NAME createUserName) {
+    public CreateAudit(Long createUserId, String createUserName) {
         super();
         this.userid = createUserId;
         this.username = createUserName;
@@ -33,7 +31,7 @@ public class CreateAudit<ID extends Serializable, NAME extends Serializable> imp
     public CreateAudit() {
     }
 
-    public CreateAudit(Audit<ID, NAME> audit) {
+    public CreateAudit(Audit<Long, String> audit) {
         this(audit.getUserid(), audit.getUsername());
     }
 

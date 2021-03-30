@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Optional;
 
 /**

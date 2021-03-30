@@ -39,13 +39,13 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
     })
     private UUID id;
 
-    private CreateAudit<Long, String> createdBy;
+    private CreateAudit createdBy;
 
     @Column(name = "created_date_")
     @CreatedDate
     private ZonedDateTime createdDate = ZonedDateTime.now();
 
-    private ModifyAudit<Long, String> lastModifiedBy;
+    private ModifyAudit lastModifiedBy;
 
     @Column(name = "last_modified_date_")
     @LastModifiedDate
@@ -93,12 +93,12 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
 
     @Override
     public void setLastModifiedBy(Audit<Long,String> lastModifiedBy) {
-        this.lastModifiedBy = new ModifyAudit<>(lastModifiedBy);
+        this.lastModifiedBy = new ModifyAudit(lastModifiedBy);
     }
 
     @Override
     public void setCreatedBy(Audit<Long,String> createBy) {
-        this.createdBy = new CreateAudit<>(createBy);
+        this.createdBy = new CreateAudit(createBy);
     }
 
     @Override

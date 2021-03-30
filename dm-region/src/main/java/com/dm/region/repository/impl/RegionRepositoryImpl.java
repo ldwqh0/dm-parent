@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.dm.collections.CollectionUtils;
 import com.dm.region.entity.QRegion;
 import com.dm.region.entity.Region;
