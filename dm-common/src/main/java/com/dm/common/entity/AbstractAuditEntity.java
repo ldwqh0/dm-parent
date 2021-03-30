@@ -11,14 +11,14 @@ import java.util.Optional;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AbstractAuditEntity extends AbstractEntity implements Auditable<Audit, Long, ZonedDateTime> {
+public class AbstractAuditEntity extends AbstractEntity implements Auditable<Audit<Long, String>, Long, ZonedDateTime> {
 
     /**
      * 增加几个JSON忽略属性，主要在于不使用DTO的时候，
      */
-    private CreateAudit createdBy;
+    private CreateAudit<Long, String> createdBy;
 
-    private ModifyAudit lastModifiedBy;
+    private ModifyAudit<Long, String> lastModifiedBy;
 
     /**
      * 创建时间 <br>
@@ -31,13 +31,13 @@ public class AbstractAuditEntity extends AbstractEntity implements Auditable<Aud
     private ZonedDateTime lastModifiedTime;
 
     @Override
-    public Optional<Audit> getCreatedBy() {
+    public Optional<Audit<Long, String>> getCreatedBy() {
         return Optional.ofNullable(createdBy);
     }
 
     @Override
-    public void setCreatedBy(Audit createdBy) {
-        this.createdBy = new CreateAudit(createdBy);
+    public void setCreatedBy( Audit<Long, String> createdBy) {
+        this.createdBy = new CreateAudit<>(createdBy);
     }
 
     @Override
@@ -51,13 +51,13 @@ public class AbstractAuditEntity extends AbstractEntity implements Auditable<Aud
     }
 
     @Override
-    public Optional<Audit> getLastModifiedBy() {
+    public Optional<Audit<Long, String>> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
     @Override
-    public void setLastModifiedBy(Audit lastModifiedBy) {
-        this.lastModifiedBy = new ModifyAudit(lastModifiedBy);
+    public void setLastModifiedBy(Audit<Long, String> lastModifiedBy) {
+        this.lastModifiedBy = new ModifyAudit<>(lastModifiedBy);
     }
 
     @Override

@@ -43,13 +43,13 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
      * 创建人
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Audit createdBy;
+    private Audit<Long, String> createdBy;
 
     /**
      * 最后修改人
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Audit lastModifiedBy;
+    private Audit<Long, String> lastModifiedBy;
 
     /**
      * 创建时间

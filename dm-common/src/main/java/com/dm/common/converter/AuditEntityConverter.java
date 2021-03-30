@@ -14,8 +14,8 @@ import java.time.ZonedDateTime;
  * @param <M>   模型类
  * @param <DTO> DTO类对象
  */
-public interface AuditEntityConverter<M extends Auditable<Audit, ? extends Serializable, ZonedDateTime>, DTO extends AuditableDto>
-        extends Converter<M, DTO> {
+public interface AuditEntityConverter<M extends Auditable<Audit<?, ?>, ? extends Serializable, ZonedDateTime>, DTO extends AuditableDto>
+    extends Converter<M, DTO> {
 
     @Override
     default DTO toDto(@NotNull M model) {

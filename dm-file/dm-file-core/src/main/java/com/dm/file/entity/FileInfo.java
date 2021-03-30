@@ -4,9 +4,6 @@ import com.dm.common.entity.Audit;
 import com.dm.common.entity.CreateAudit;
 import com.dm.common.entity.ModifyAudit;
 import com.dm.file.listener.FileListener;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -30,8 +27,7 @@ import java.util.UUID;
     @Index(name = "idx_dm_file_created_user_name_", columnList = "created_user_name_"),
     @Index(name = "idx_dm_file_hash", columnList = "file_name_,sha256_,md5_")
 })
-@JsonIgnoreProperties(value = {"lastModifiedBy", "createdBy", "createdDate", "lastModifiedDate"}, allowGetters = true)
-public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializable {
+public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateTime>, Serializable {
     private static final long serialVersionUID = -914974010332311193L;
 
     @Id
@@ -43,13 +39,13 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
     })
     private UUID id;
 
-    private CreateAudit createdBy;
+    private CreateAudit<Long, String> createdBy;
 
     @Column(name = "created_date_")
     @CreatedDate
     private ZonedDateTime createdDate = ZonedDateTime.now();
 
-    private ModifyAudit lastModifiedBy;
+    private ModifyAudit<Long, String> lastModifiedBy;
 
     @Column(name = "last_modified_date_")
     @LastModifiedDate
@@ -86,25 +82,23 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
     private Long size;
 
     @Override
-    public Optional<Audit> getCreatedBy() {
+    public Optional<Audit<Long, String>> getCreatedBy() {
         return Optional.ofNullable(this.createdBy);
     }
 
     @Override
-    public Optional<Audit> getLastModifiedBy() {
+    public Optional<Audit<Long,String>> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
     @Override
-    @JsonProperty(access = Access.READ_ONLY)
-    public void setLastModifiedBy(Audit lastModifiedBy) {
-        this.lastModifiedBy = new ModifyAudit(lastModifiedBy);
+    public void setLastModifiedBy(Audit<Long,String> lastModifiedBy) {
+        this.lastModifiedBy = new ModifyAudit<>(lastModifiedBy);
     }
 
     @Override
-    @JsonProperty(access = Access.READ_ONLY)
-    public void setCreatedBy(Audit createBy) {
-        this.createdBy = new CreateAudit(createBy);
+    public void setCreatedBy(Audit<Long,String> createBy) {
+        this.createdBy = new CreateAudit<>(createBy);
     }
 
     @Override
@@ -113,7 +107,6 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
     }
 
     @Override
-    @JsonProperty(access = Access.READ_ONLY)
     public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
@@ -124,7 +117,6 @@ public class FileInfo implements Auditable<Audit, UUID, ZonedDateTime>, Serializ
     }
 
     @Override
-    @JsonProperty(access = Access.READ_ONLY)
     public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
