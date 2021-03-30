@@ -15,13 +15,13 @@ public class AuditableDto implements Serializable {
      * 创建人
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Audit createBy;
+    private Audit<Long,String> createBy;
 
     /**
      * 最后修改人
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Audit lastModifiedBy;
+    private Audit<Long,String> lastModifiedBy;
 
     /**
      * 创建时间
