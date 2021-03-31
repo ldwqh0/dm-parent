@@ -21,7 +21,7 @@ public class DefaultNoise extends Configurable implements NoiseProducer {
     /**
      * Draws a noise on the image. The noise curve depends on the factor values.
      * Noise won't be visible if all factors have the value > 1.0f
-     * 
+     *
      * @param image       the image to add the noise to
      * @param factorOne
      * @param factorTwo
@@ -53,7 +53,7 @@ public class DefaultNoise extends Configurable implements NoiseProducer {
 
         // creates an iterator to define the boundary of the flattened curve
         PathIterator pi = cc.getPathIterator(null, 2);
-        Point2D tmp[] = new Point2D[200];
+        Point2D[] tmp = new Point2D[200];
         int i = 0;
 
         // while pi is iterating the curve, adds points to tmp array

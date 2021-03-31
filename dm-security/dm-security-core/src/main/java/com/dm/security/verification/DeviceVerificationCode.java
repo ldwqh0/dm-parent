@@ -1,15 +1,14 @@
 package com.dm.security.verification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * 第三方工具验证码实体
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public class DeviceVerificationCode implements Serializable {
 
@@ -39,8 +38,8 @@ public class DeviceVerificationCode implements Serializable {
 
     /**
      * 验证码ID
-     * 
-     * @return
+     *
+     * @return 验证码ID字符串
      */
     public String getId() {
         return this.id;
@@ -48,8 +47,6 @@ public class DeviceVerificationCode implements Serializable {
 
     /**
      * 要验证的第三方工具，通常是手机号，邮箱地址等
-     * 
-     * @return
      */
     @JsonIgnore
     public String getKey() {
@@ -58,8 +55,6 @@ public class DeviceVerificationCode implements Serializable {
 
     /**
      * 生成的验证码
-     * 
-     * @return
      */
     @JsonIgnore
     public String getCode() {
@@ -68,8 +63,6 @@ public class DeviceVerificationCode implements Serializable {
 
     /**
      * 验证码生成时间
-     * 
-     * @return
      */
     public ZonedDateTime getCreatedDate() {
         return this.createdDate;
@@ -77,8 +70,6 @@ public class DeviceVerificationCode implements Serializable {
 
     /**
      * 失效时间
-     * 
-     * @return
      */
     public ZonedDateTime getExpireAt() {
         return this.expireAt;
@@ -146,11 +137,8 @@ public class DeviceVerificationCode implements Serializable {
         } else if (!id.equals(other.id))
             return false;
         if (key == null) {
-            if (other.key != null)
-                return false;
-        } else if (!key.equals(other.key))
-            return false;
-        return true;
+            return other.key == null;
+        } else return key.equals(other.key);
     }
 
 }

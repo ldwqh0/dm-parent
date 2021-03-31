@@ -5,12 +5,12 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 
 public class DelegateLogoutSuccessEntry {
     private final ServerWebExchangeMatcher matcher;
-    private final ServerLogoutSuccessHandler sucessHandler;
+    private final ServerLogoutSuccessHandler successHandler;
 
-    public DelegateLogoutSuccessEntry(ServerWebExchangeMatcher matcher, ServerLogoutSuccessHandler sucessHandler) {
+    public DelegateLogoutSuccessEntry(ServerWebExchangeMatcher matcher, ServerLogoutSuccessHandler successHandler) {
         super();
         this.matcher = matcher;
-        this.sucessHandler = sucessHandler;
+        this.successHandler = successHandler;
     }
 
     public ServerWebExchangeMatcher getMatcher() {
@@ -18,7 +18,7 @@ public class DelegateLogoutSuccessEntry {
     }
 
     public ServerLogoutSuccessHandler getLogoutSuccessHandler() {
-        return this.sucessHandler;
+        return this.successHandler;
     }
 
 }

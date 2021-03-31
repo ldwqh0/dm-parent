@@ -34,8 +34,7 @@ public class UapAnonymousCustomizer implements Customizer<AnonymousConfigurer<Ht
     @Override
     public void customize(AnonymousConfigurer<HttpSecurity> http) {
         UserDetails anonymousDetails = userService.loadUserByUsername("ANONYMOUS");
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.addAll(anonymousDetails.getAuthorities());
+        List<GrantedAuthority> authorities = new ArrayList<>(anonymousDetails.getAuthorities());
         http.authorities(authorities).principal(anonymousDetails);
     }
 }

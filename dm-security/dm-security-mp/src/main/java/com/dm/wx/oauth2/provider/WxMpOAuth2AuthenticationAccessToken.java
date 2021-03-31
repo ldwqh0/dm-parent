@@ -13,7 +13,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 
 /**
  * 微信公众号用户Token包装
- * 
+ *
  * @author LiDong
  *
  */
@@ -23,7 +23,7 @@ public class WxMpOAuth2AuthenticationAccessToken extends AbstractAuthenticationT
 
     private WxMpOAuth2AccessToken token;
 
-    private WxUserDetails userDetails;
+    private final WxUserDetails userDetails;
 
     public WxMpOAuth2AuthenticationAccessToken(WxMpOAuth2AccessToken token) {
         this(new WxUserDetails(token.getOpenId(), Collections.singleton(new SimpleGrantedAuthority("ROLE_WX_USER"))));

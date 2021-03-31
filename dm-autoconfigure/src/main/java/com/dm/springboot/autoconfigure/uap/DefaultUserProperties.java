@@ -4,9 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 系统默认的初始化用户名和密码
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 @ConfigurationProperties(prefix = "system.default.su")
 public class DefaultUserProperties {
@@ -26,8 +25,8 @@ public class DefaultUserProperties {
 
     /**
      * 获取系统初始化默认用户的用户名
-     * 
-     * @return
+     *
+     * @return 用户名
      */
     public String getUsername() {
         return username;
@@ -35,8 +34,6 @@ public class DefaultUserProperties {
 
     /**
      * 设置系统初始化默认用户的用户名
-     * 
-     * @return
      */
     public void setUsername(String username) {
         this.username = username;
@@ -44,8 +41,8 @@ public class DefaultUserProperties {
 
     /**
      * 获取系统初始化默认用户的密码
-     * 
-     * @return
+     *
+     * @return 密码
      */
     public String getPassword() {
         return password;
@@ -53,8 +50,6 @@ public class DefaultUserProperties {
 
     /**
      * 设置系统初始化默认用户的密码
-     * 
-     * @return
      */
     public void setPassword(String password) {
         this.password = password;
@@ -62,8 +57,8 @@ public class DefaultUserProperties {
 
     /**
      * 设置系统初始化默认用户的全名称
-     * 
-     * @return
+     *
+     * @return 全名
      */
     public String getFullname() {
         return fullname;
@@ -71,8 +66,6 @@ public class DefaultUserProperties {
 
     /**
      * 获取系统初始化默认用户的全名称
-     * 
-     * @return
      */
     public void setFullname(String fullname) {
         this.fullname = fullname;

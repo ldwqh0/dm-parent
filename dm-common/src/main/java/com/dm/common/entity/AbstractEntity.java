@@ -53,6 +53,10 @@ public abstract class AbstractEntity implements Persistable<Long> {
         return version;
     }
 
+    protected void setVersion(Long version) {
+        this.version = version;
+    }
+
     /**
      * <p>
      * 对实体进行版本检查

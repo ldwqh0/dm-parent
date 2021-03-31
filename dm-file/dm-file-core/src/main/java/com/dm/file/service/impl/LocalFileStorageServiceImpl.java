@@ -74,12 +74,12 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public Resource getResource(String filename, Long start, Long end, String... parents) {
+    public Resource getResource(String filename, Long start, Long end, String... parents) throws IOException {
         return getResource(filename, parents);
     }
 
     @Override
-    public Resource getResource(String filename, String... parents) {
+    public Resource getResource(String filename, String... parents) throws IOException {
         return new FileSystemResource(getPath(filename, parents));
     }
 

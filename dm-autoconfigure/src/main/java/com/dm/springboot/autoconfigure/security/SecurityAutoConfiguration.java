@@ -92,8 +92,6 @@ public class SecurityAutoConfiguration {
 
         /**
          * 从oauth2服务器获取用户信息的实现
-         *
-         * @return
          */
         @ConditionalOnClass(name = {
             "org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService",

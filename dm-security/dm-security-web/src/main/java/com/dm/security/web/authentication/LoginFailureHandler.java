@@ -1,28 +1,30 @@
 package com.dm.security.web.authentication;
 
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.dm.security.web.RequestUtils.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import static com.dm.security.web.RequestUtils.isJsonRequest;
 
 public class LoginFailureHandler implements AuthenticationFailureHandler, InitializingBean {
 
-    @Autowired(required = false)
     private ObjectMapper objectMapper;
+
+    @Autowired(required = false)
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public LoginFailureHandler() {
         this(new ObjectMapper());

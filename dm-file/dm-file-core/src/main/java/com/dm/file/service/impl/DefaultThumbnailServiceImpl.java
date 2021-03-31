@@ -62,7 +62,7 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
     }
 
     @Override
-    public Resource getResource(String filename, int level) {
+    public Resource getResource(String filename, int level) throws IOException {
         return storageService.getResource(filename, "th" + level);
     }
 

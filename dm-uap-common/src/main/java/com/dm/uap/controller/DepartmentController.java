@@ -30,7 +30,7 @@ public class DepartmentController {
      * 新增部门
      *
      * @param data 新部门的信息
-     * @return
+     * @return 保存之后的部门信息
      */
     @PostMapping
     @ResponseStatus(CREATED)

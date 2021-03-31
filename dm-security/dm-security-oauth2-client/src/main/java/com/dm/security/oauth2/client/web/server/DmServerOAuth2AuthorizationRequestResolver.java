@@ -140,10 +140,6 @@ public class DmServerOAuth2AuthorizationRequestResolver
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange) {
         ServerWebExchangeMatcher authorizationRequestMatcher = this.authorizationRequestMatcher;
-//        List<String> proxyPath = exchange.getRequest().getHeaders().get("x-forwarded-proxy-path");
-//        if (CollectionUtils.isNotEmpty(proxyPath)) {
-//            authorizationRequestMatcher = new PathPatternParserServerWebExchangeMatcher("/" + proxyPath.get(0) + DEFAULT_AUTHORIZATION_REQUEST_PATTERN);
-//        }
         return this.authorizationRequestMatcher.matches(exchange)
                 .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
                 .map(ServerWebExchangeMatcher.MatchResult::getVariables)

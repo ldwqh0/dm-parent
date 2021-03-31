@@ -92,18 +92,20 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
      *
      * @param attribute      要验证的对象
      * @param authentication 当前对象
-     * @return
+     * @return 验证成功返回 true, 验证失败返回 false
      */
     private boolean validScope(ResourceAuthorityAttribute attribute, Authentication authentication) {
         // TODO 这里进行scope校验
-        // if (authentication instanceof OAuth2Authentication) {
-        // Set<String> resourceScope = attribute.getScope();
-        // Set<String> requestScopes = ((OAuth2Authentication)
-        // authentication).getOAuth2Request().getScope();
-        // if (CollectionUtils.isNotEmpty(resourceScope)) {
-        // return CollectionUtils.containsAny(requestScopes, resourceScope);
-        // }
-        // }
+        /*
+         if (authentication instanceof OAuth2Authentication) {
+         Set<String> resourceScope = attribute.getScope();
+         Set<String> requestScopes = ((OAuth2Authentication)
+         authentication).getOAuth2Request().getScope();
+         if (CollectionUtils.isNotEmpty(resourceScope)) {
+         return CollectionUtils.containsAny(requestScopes, resourceScope);
+         }
+         }
+         */
         return true;
     }
 

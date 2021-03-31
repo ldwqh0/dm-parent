@@ -68,7 +68,7 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
             user.setGrantedAuthority(authorities);
             return user;
         } else {
-            this.logger.trace("Did not validate token since it is inactive");
+            logger.trace("Did not validate token since it is inactive");
             throw new BadOpaqueTokenException("Provided token isn't active");
         }
     }

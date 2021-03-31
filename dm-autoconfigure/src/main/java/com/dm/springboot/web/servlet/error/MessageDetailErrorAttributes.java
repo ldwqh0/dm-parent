@@ -1,10 +1,10 @@
 package com.dm.springboot.web.servlet.error;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.RequestAttributes;
@@ -111,7 +111,7 @@ public class MessageDetailErrorAttributes implements ErrorAttributes, HandlerExc
         }
         // 调整处理错误消息的顺序，优先使用 exception中的消息。在使用attributes中的消息
         if (errorAttributes.get("message") == null) {
-            Object message = getAttribute(webRequest, "javax.servlet.error.message");
+            String message = getAttribute(webRequest, "javax.servlet.error.message");
             if ((!StringUtils.isEmpty(message) || errorAttributes.get("message") == null)
                 && !(error instanceof BindingResult)) {
                 errorAttributes.put("message", StringUtils.isEmpty(message) ? "No message available" : message);

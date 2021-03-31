@@ -8,16 +8,11 @@ import reactor.core.publisher.Mono;
 
 public class ReactiveUserDetailsServiceImpl implements ReactiveUserDetailsService {
 
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-
     @Override
     public Mono<UserDetails> findByUsername(String username) {
 
         // TODO 这里待实现
-        CompletableFuture.supplyAsync(() -> {
-            return null;
-        });
+        CompletableFuture.supplyAsync(() -> null);
         UserDetails ud = null;// userDetailsService.loadUserByUsername(username);
         return Mono.fromFuture(CompletableFuture.completedFuture(null));
     }

@@ -32,7 +32,7 @@ public class FileListener {
     /**
      * 当从数据库删除文件时，一并从存储中删除文件
      *
-     * @param file
+     * @param file 要删除的文件
      */
     @PostRemove
     public void postDelete(FileInfo file) {

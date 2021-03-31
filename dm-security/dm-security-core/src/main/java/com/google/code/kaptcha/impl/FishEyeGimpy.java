@@ -12,7 +12,7 @@ import com.google.code.kaptcha.GimpyEngine;
 public class FishEyeGimpy implements GimpyEngine {
     /**
      * Applies distortion by adding fish eye effect and horizontal vertical lines.
-     * 
+     *
      * @param baseImage the base image
      * @return the distorted image
      */
@@ -47,7 +47,7 @@ public class FishEyeGimpy implements GimpyEngine {
 
         // create a pixel array of the original image.
         // we need this later to do the operations on..
-        int pix[] = new int[imageHeight * imageWidth];
+        int[] pix = new int[imageHeight * imageWidth];
         int j = 0;
 
         for (int j1 = 0; j1 < imageWidth; j1++) {
@@ -99,7 +99,7 @@ public class FishEyeGimpy implements GimpyEngine {
 
     /**
      * implementation of: g(s) = - (3/4)s3 + (3/2)s2 + (1/4)s, with s from 0 to 1
-     * 
+     *
      * @param s
      * @return
      */

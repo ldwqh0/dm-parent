@@ -1,6 +1,5 @@
 package com.dm.jdbc;
 
-
 public class ColumnMeta {
     private String tableCat;  //1
     private String tableSchem;//2

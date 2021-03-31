@@ -6,7 +6,9 @@ import org.hibernate.dialect.Dialect;
 import java.util.Set;
 
 public interface DataSourceProvider {
-    String getDriverClassName();
+    default String getDriverClassName() {
+        return "com.mysql.cj.jdbc.Driver";
+    }
 
     String getUrl(DataSourceProperties info);
 

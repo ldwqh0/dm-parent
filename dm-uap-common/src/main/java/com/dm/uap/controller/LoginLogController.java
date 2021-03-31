@@ -26,13 +26,13 @@ public class LoginLogController {
     /**
      * 查询登录请求列表
      * @param pageable 查参数
-     * @param query
-     * @return
+     * @param keyword 要查询的关键字
+     * @return 查询结果
      */
     @GetMapping(params = "draw")
     public Page<LoginLogDto> search(
         Pageable pageable, // 分页请求的入参，是page,size
-        @RequestParam(value = "keyword", required = false) String query) {
-        return loginLogService.list(query, pageable).map(loginLogConverter::toDto);
+        @RequestParam(value = "keyword", required = false) String keyword) {
+        return loginLogService.list(keyword, pageable).map(loginLogConverter::toDto);
     }
 }

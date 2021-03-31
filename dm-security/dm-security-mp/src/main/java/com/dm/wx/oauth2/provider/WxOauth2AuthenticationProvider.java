@@ -27,14 +27,14 @@ import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 
 /**
  * 通过微信oauth2登录的适配器
- * 
+ *
  * @author LiDong
  *
  */
 public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
         InitializingBean, MessageSourceAware {
 
-    private Logger logger = LoggerFactory.getLogger(WxOauth2AuthenticationProvider.class);
+    private final Logger logger = LoggerFactory.getLogger(WxOauth2AuthenticationProvider.class);
 
     private MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
@@ -42,9 +42,9 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
 
     private WxMpService wxMpService;
 
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
-    private UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
+    private final UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
 
     public void setWxMpService(WxMpService wxMpService) {
         this.wxMpService = wxMpService;
@@ -56,7 +56,7 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
 
     }
 
@@ -80,8 +80,6 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
             }
         } catch (WxErrorException e) {
             throw new RuntimeException(e);
-        } catch (AuthenticationException e) {
-            throw e;
         }
     }
 

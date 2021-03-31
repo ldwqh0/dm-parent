@@ -11,9 +11,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class WxUserDetails implements UserDetails {
 
     private static final long serialVersionUID = 874394269828106471L;
-    private Collection<? extends GrantedAuthority> authorities;
-    private String username;
-    private String openId;
+    private final Collection<? extends GrantedAuthority> authorities;
+    private final String username;
+    private final String openId;
     /**
      * 密码仅仅作为测试使用的
      */
@@ -27,7 +27,7 @@ public class WxUserDetails implements UserDetails {
 
     /**
      * 这个方法仅仅作为测试用
-     * 
+     *
      * @param openId
      * @param password
      * @param authorities

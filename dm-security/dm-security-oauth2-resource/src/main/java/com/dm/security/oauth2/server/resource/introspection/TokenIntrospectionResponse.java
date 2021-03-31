@@ -11,6 +11,8 @@ import static org.springframework.security.oauth2.server.resource.introspection.
 
 public class TokenIntrospectionResponse extends HashMap<String, Object> {
 
+    private static final long serialVersionUID = 9013023971620934272L;
+
     public TokenIntrospectionResponse(Map<String, ?> map) {
         this.putAll(map);
     }

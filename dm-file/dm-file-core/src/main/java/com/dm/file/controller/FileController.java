@@ -72,8 +72,8 @@ public class FileController {
      * @return 文件信息
      */
     @GetMapping(value = "{id}", produces = {
-            MediaType.TEXT_PLAIN_VALUE,
-            MediaType.APPLICATION_JSON_VALUE
+        MediaType.TEXT_PLAIN_VALUE,
+        MediaType.APPLICATION_JSON_VALUE
     })
     public FileInfoDto get(@PathVariable("id") UUID id) {
         return fileInfoConverter.toDto(fileService.findById(id).orElseThrow(DataNotExistException::new));
@@ -82,9 +82,9 @@ public class FileController {
     /**
      * 上传文件
      *
-     * @param file
-     * @return
-     * @throws Exception
+     * @param file 上传的文件
+     * @return 文件信息
+     * @throws Exception 上传时发生错误，抛出异常
      */
     @PostMapping
     @ApiOperation("上传文件")
@@ -106,7 +106,7 @@ public class FileController {
      * @param filename 文件名称
      * @param sha256   sha256值
      * @param md5      md5值
-     * @return
+     * @return 查找到的文件信息
      */
     @GetMapping(params = {"filename", "sha256", "md5"})
     public FileInfoDto findByNameAndHash(@RequestParam("filename") String filename,
@@ -122,7 +122,7 @@ public class FileController {
      * @param sha256    sha256值
      * @param filename  文件名称
      * @param chunkFile 文件的分块
-     * @return
+     * @return 上传之后的文件信息
      * @ignore 这个接口暂时不做分析
      */
     @PostMapping(params = {"filename", "sha256", "md5"})
@@ -153,11 +153,11 @@ public class FileController {
     @PostMapping(headers = {"chunk-index"})
     @ApiOperation("文件分块上传文件")
     public FileInfoDto upload(
-            @RequestHeader("chunk-index") int chunkIndex,
-            @RequestHeader("file-id") String tempId,
-            @RequestHeader("chunk-count") int chunkCount,
-            @RequestParam("filename") String filename,
-            @RequestParam("file") MultipartFile chunkFile) throws Exception {
+        @RequestHeader("chunk-index") int chunkIndex,
+        @RequestHeader("file-id") String tempId,
+        @RequestHeader("chunk-count") int chunkCount,
+        @RequestParam("filename") String filename,
+        @RequestParam("file") MultipartFile chunkFile) throws Exception {
         // 保存临时文件
         chunkFile.transferTo(getTempChunkPath(tempId, chunkIndex));
         // 如果临时文件上传完成，组装所有的文件
@@ -213,20 +213,20 @@ public class FileController {
      * @return 重定向的响应信息
      */
     @GetMapping(value = "{id}", headers = {"X-Real-IP"}, produces = {
-            MediaType.IMAGE_GIF_VALUE,
-            MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE,
-            "image/webp",
-            "image/*",
-            "*/*",
-            "!application/json",
-            "!text/plain"})
+        MediaType.IMAGE_GIF_VALUE,
+        MediaType.IMAGE_JPEG_VALUE,
+        MediaType.IMAGE_PNG_VALUE,
+        "image/webp",
+        "image/*",
+        "*/*",
+        "!application/json",
+        "!text/plain"})
     public ResponseEntity<?> preview(
-            @PathVariable("id") UUID id) {
+        @PathVariable("id") UUID id) {
         return fileService.findById(id)
-                .map(FileInfo::getPath)
-                .map(this::buildAccessRedirectResponse)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+            .map(FileInfo::getPath)
+            .map(this::buildAccessRedirectResponse)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
@@ -237,22 +237,22 @@ public class FileController {
      * @return 响应体
      */
     @GetMapping(value = "thumbnails/{id}", headers = {"X-Real-IP"}, produces = {
-            MediaType.IMAGE_GIF_VALUE,
-            MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE,
-            "image/webp",
-            "image/*",
-            "*/*",
-            "!application/json", "!text/plain"
+        MediaType.IMAGE_GIF_VALUE,
+        MediaType.IMAGE_JPEG_VALUE,
+        MediaType.IMAGE_PNG_VALUE,
+        "image/webp",
+        "image/*",
+        "*/*",
+        "!application/json", "!text/plain"
     })
     public ResponseEntity<?> previewThumbnails(@PathVariable("id") UUID id,
                                                @RequestParam(value = "level", defaultValue = "1") int level) {
         return fileService.findById(id)
-                .map(FileInfo::getPath)
-                // 构建缩略图路径
-                .map(path -> StringUtils.join("th", level, "/", path, ".jpg"))
-                .map(this::buildAccessRedirectResponse)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+            .map(FileInfo::getPath)
+            // 构建缩略图路径
+            .map(path -> StringUtils.join("th", level, "/", path, ".jpg"))
+            .map(this::buildAccessRedirectResponse)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
@@ -307,9 +307,9 @@ public class FileController {
                 }
             };
             return ResponseEntity.ok()
-                    .header("Content-Type", config.getMime("zip"))
-                    .header("Content-Disposition", generateAttachmentFilename(userAgent, filename))
-                    .body(body);
+                .header("Content-Type", config.getMime("zip"))
+                .header("Content-Disposition", generateAttachmentFilename(userAgent, filename))
+                .body(body);
         }
     }
 
@@ -333,21 +333,21 @@ public class FileController {
      *
      * @param id        通过上面的生成打包文件api生成的id
      * @param userAgent 用户浏览器信息，浏览器自动提交，不需干预
-     * @return
+     * @return 下载响应体
      * @download 这是一个文件下载接口
      */
     @GetMapping("zip/{id}")
     public ResponseEntity<StreamingResponseBody> zip(@PathVariable("id") String id,
                                                      @RequestHeader(value = "user-agent", required = false) String userAgent) {
         return packageFileService.findAndRemoveById(id)
-                .map(request -> {
-                    try {
-                        return zip(request.getFiles(), userAgent, request.getFilename());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
+            .map(request -> {
+                try {
+                    return zip(request.getFiles(), userAgent, request.getFilename());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            })
+            .orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -358,8 +358,8 @@ public class FileController {
      */
     private ResponseEntity<?> buildAccessRedirectResponse(String path) {
         return ResponseEntity.ok()
-                .header("X-Accel-Redirect", config.getAccelRedirectPath() + path)
-                .build();
+            .header("X-Accel-Redirect", config.getAccelRedirectPath() + path)
+            .build();
     }
 
     // 使用produces指定可以接受的accept类型，当accept中包含如下信息时，返回图片
@@ -367,40 +367,47 @@ public class FileController {
     /**
      * 文件的预览和下载
      *
-     * @param id
-     * @param download
-     * @param range
-     * @param userAgent
-     * @param request
-     * @return
+     * @param id 要下载的文件的id
+     * @param download 只是这个请求是下载，而不是预览。下载会返回特殊的请求头
+     * @param range 文件范围
+     * @param userAgent 用户浏览器 agent 头
+     * @param request 下载请求
+     * @return 下载响应实体
      * @download 这是一个文件下载请求
      */
     @ApiOperation("预览/下载文件")
     @GetMapping(value = "{id}", produces = {
-            MediaType.IMAGE_GIF_VALUE,
-            MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE,
-            "image/webp",
-            "image/*",
-            "*/*",
-            "!application/json",
-            "!text/plain"})
+        MediaType.IMAGE_GIF_VALUE,
+        MediaType.IMAGE_JPEG_VALUE,
+        MediaType.IMAGE_PNG_VALUE,
+        "image/webp",
+        "image/*",
+        "*/*",
+        "!application/json",
+        "!text/plain"})
     public ResponseEntity<?> preview(
-            @PathVariable("id") UUID id,
-            @RequestParam(value = "download", required = false) String download,
-            @RequestHeader(value = "range", required = false) String range,
-            @RequestHeader("user-agent") String userAgent,
-            WebRequest request) {
+        @PathVariable("id") UUID id,
+        @RequestParam(value = "download", required = false) String download,
+        @RequestHeader(value = "range", required = false) String range,
+        @RequestHeader("user-agent") String userAgent,
+        WebRequest request) {
         // 统一下载接口和预览接口的实现
         final String agentUse = download == null ? null : userAgent;
         return fileService.findById(id)
-                // 判断文件是否存在
-                .filter(item -> fileStorageService.exist(item.getPath()))
-                .map(fileItem -> fileItem.getLastModifiedDate()
-                        .filter(lastModified -> checkNotModified(request, lastModified))
-                        .map(lastModified -> this.<Resource>buildNotModified())
-                        .orElseGet(() -> this.buildDownloadBody(fileItem, getRanges(range, fileItem), agentUse)))
-                .orElseGet(this::buildNotFount);
+            // 判断文件是否存在
+            .filter(item -> fileStorageService.exist(item.getPath()))
+            .map(fileItem -> fileItem.getLastModifiedDate()
+                .filter(lastModified -> checkNotModified(request, lastModified))
+                .map(lastModified -> this.<Resource>buildNotModified())
+                .orElseGet(() -> {
+                    try {
+                        return this.buildDownloadBody(fileItem, getRanges(range, fileItem), agentUse);
+                    } catch (IOException e) {
+                        log.error("下载文件时发送错误", e);
+                        throw new RuntimeException(e);
+                    }
+                }))
+            .orElseGet(this::buildNotFount);
     }
 
     /**
@@ -412,27 +419,34 @@ public class FileController {
      * @download
      */
     @GetMapping(value = "thumbnails/{id}", produces = {
-            MediaType.IMAGE_GIF_VALUE,
-            MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE,
-            "image/webp",
-            "image/*",
-            "*/*", "!application/json", "!text/plain"})
+        MediaType.IMAGE_GIF_VALUE,
+        MediaType.IMAGE_JPEG_VALUE,
+        MediaType.IMAGE_PNG_VALUE,
+        "image/webp",
+        "image/*",
+        "*/*", "!application/json", "!text/plain"})
     public ResponseEntity<?> previewThumbnails(
-            @PathVariable("id") UUID id,
-            @RequestParam(value = "level", defaultValue = "1") int level,
-            WebRequest request) {
+        @PathVariable("id") UUID id,
+        @RequestParam(value = "level", defaultValue = "1") int level,
+        WebRequest request) {
         return fileService.findById(id).filter(fileInfo -> thumbnailService.exists(fileInfo.getPath(), level)).map(
-                file -> file.getLastModifiedDate()
-                        .filter(lastModify -> this.checkNotModified(request, lastModify))
-                        .map(lastModify -> this.<Resource>buildNotModified())
-                        .orElseGet(() -> this.buildThumbnailResponse(file, level)))
-                .orElseGet(this::buildNotFount);
+            file -> file.getLastModifiedDate()
+                .filter(lastModify -> this.checkNotModified(request, lastModify))
+                .map(lastModify -> this.<Resource>buildNotModified())
+                .orElseGet(() -> {
+                    try {
+                        return this.buildThumbnailResponse(file, level);
+                    } catch (IOException e) {
+                        log.error("构建缩略图时发生错误", e);
+                        throw new RuntimeException(e);
+                    }
+                }))
+            .orElseGet(this::buildNotFount);
     }
 
-    private ResponseEntity<Resource> buildThumbnailResponse(FileInfo file, int level) {
+    private ResponseEntity<Resource> buildThumbnailResponse(FileInfo file, int level) throws IOException {
         BodyBuilder builder = ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG);
+            .contentType(MediaType.IMAGE_JPEG);
         file.getLastModifiedDate().ifPresent(lastModifiedDate -> {
             builder.lastModified(lastModifiedDate);
             builder.cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
@@ -459,7 +473,7 @@ public class FileController {
     }
 
     // 构建下载响应体
-    private ResponseEntity<Resource> buildDownloadBody(FileInfo file, List<Range> ranges, String userAgent) {
+    private ResponseEntity<Resource> buildDownloadBody(FileInfo file, List<Range> ranges, String userAgent) throws IOException {
         try {
             String filename = file.getFilename();
             long fileSize = file.getSize();
@@ -498,7 +512,7 @@ public class FileController {
                 }
                 bodyBuilder.header("Content-Type", contentType);
                 bodyBuilder.header("Accept-Ranges", "bytes")
-                        .contentLength(contentLength);
+                    .contentLength(contentLength);
             }
             if (StringUtils.isNotBlank(userAgent)) {
                 bodyBuilder.header("Content-Disposition", generateAttachmentFilename(userAgent, filename));
@@ -517,8 +531,8 @@ public class FileController {
 
     private String generateFilename(String userAgent, String filename) throws UnsupportedEncodingException {
         if (StringUtils.isNotBlank(userAgent) && (StringUtils.contains(userAgent, "Trident")
-                || StringUtils.contains(userAgent, "Edge")
-                || StringUtils.contains(userAgent, "MSIE"))) {
+            || StringUtils.contains(userAgent, "Edge")
+            || StringUtils.contains(userAgent, "MSIE"))) {
             return URLEncoder.encode(filename, "UTF-8");
         } else {
             return new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);

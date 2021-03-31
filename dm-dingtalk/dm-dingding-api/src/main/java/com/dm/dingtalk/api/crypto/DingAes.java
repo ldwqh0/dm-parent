@@ -1,19 +1,16 @@
 package com.dm.dingtalk.api.crypto;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.Base64;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
 
 public class DingAes {
 
@@ -27,7 +24,7 @@ public class DingAes {
 
     /**
      * 加密字节
-     * 
+     *
      * @param value
      * @return
      * @throws NoSuchAlgorithmException
@@ -54,7 +51,7 @@ public class DingAes {
 
     /**
      * 将Base64编码的加密字符串解密
-     * 
+     *
      * @param value
      * @return
      * @throws InvalidKeyException

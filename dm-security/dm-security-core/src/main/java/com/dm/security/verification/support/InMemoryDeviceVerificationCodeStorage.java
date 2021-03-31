@@ -45,7 +45,7 @@ public class InMemoryDeviceVerificationCodeStorage implements DeviceVerification
 
     @Override
     public Optional<DeviceVerificationCode> findById(String id) {
-        return Optional.<DeviceVerificationCode>ofNullable(idKeyMap.get(id));
+        return Optional.ofNullable(idKeyMap.get(id));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class InMemoryDeviceVerificationCodeStorage implements DeviceVerification
                 }
             }
         }
-        return Optional.<DeviceVerificationCode>ofNullable(c);
+        return Optional.ofNullable(c);
     }
 
     /**

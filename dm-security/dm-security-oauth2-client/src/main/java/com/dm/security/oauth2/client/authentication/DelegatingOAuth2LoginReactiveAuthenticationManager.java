@@ -4,6 +4,7 @@ import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthorizationCodeAuthenticationToken;
 import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationToken;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -33,8 +34,7 @@ public class DelegatingOAuth2LoginReactiveAuthenticationManager implements
     private final Map<String, ReactiveAuthenticationManager> authenticationManagerDelegates = new HashMap<>();
 
     private final Map<String, ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User>> userServiceDelegates = new HashMap<>();
-
-    private GrantedAuthoritiesMapper authoritiesMapper = (authorities -> authorities);
+    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     public DelegatingOAuth2LoginReactiveAuthenticationManager(
         ReactiveAuthenticationManager defaultAuthenticationManager,
@@ -84,14 +84,13 @@ public class DelegatingOAuth2LoginReactiveAuthenticationManager implements
             .map(oauth2User -> {
                 Collection<? extends GrantedAuthority> mappedAuthorities =
                     this.authoritiesMapper.mapAuthorities(oauth2User.getAuthorities());
-                OAuth2LoginAuthenticationToken authenticationResult = new OAuth2LoginAuthenticationToken(
+                return new OAuth2LoginAuthenticationToken(
                     authentication.getClientRegistration(),
                     authentication.getAuthorizationExchange(),
                     oauth2User,
                     mappedAuthorities,
                     accessToken,
                     authentication.getRefreshToken());
-                return authenticationResult;
             });
     }
 }

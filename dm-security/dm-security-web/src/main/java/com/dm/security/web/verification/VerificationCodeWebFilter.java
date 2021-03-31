@@ -120,7 +120,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
             result.put("message", "验证码输入错误");
             result.put("status", HttpStatus.FORBIDDEN.value());
             result.put("timestamp", ZonedDateTime.now());
-            byte[] bf = null;
+            byte[] bf;
             try {
                 // TODO 这里不对
                 bf = om.writeValueAsBytes(result);
