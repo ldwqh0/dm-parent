@@ -7,7 +7,7 @@
   <version>2.0.0-SNAPSHOT</version>
   <properties>
     <java.version>1.8</java.version>
-    <kotlin.version>1.4.31</kotlin.version>
+    <kotlin.version>1.4.21</kotlin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -275,6 +275,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
           <configuration>
             <parameters>true</parameters>
             <annotationProcessorPaths>
@@ -371,7 +372,7 @@
           </executions>
         </plugin>
         <!-- Apply more sensible defaults for user projects -->
-
+        <!--kotlin编译插件-->
         <plugin>
           <groupId>org.jetbrains.kotlin</groupId>
           <artifactId>kotlin-maven-plugin</artifactId>
@@ -455,6 +456,7 @@
             <classesDirectory>${project.build.outputDirectory}</classesDirectory>
           </configuration>
         </plugin>
+        <!--jar包构建插件-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -467,6 +469,7 @@
             </archive>
           </configuration>
         </plugin>
+        <!--war包构建插件-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
@@ -479,6 +482,7 @@
             </archive>
           </configuration>
         </plugin>
+        <!--资源构建插件-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
@@ -507,6 +511,7 @@
             </generateGitPropertiesFilename>
           </configuration>
         </plugin>
+        <!--spring boot 插件，用户构建spring-boot可执行jar文件-->
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
@@ -585,7 +590,7 @@
             </execution>
           </executions>
         </plugin>
-
+        <!---typescript 定义生成文件-->
         <plugin>
           <!-- https://mvnrepository.com/artifact/cz.habarta.typescript-generator/typescript-generator-maven-plugin -->
           <groupId>cz.habarta.typescript-generator</groupId>
@@ -613,7 +618,6 @@
             </customTypeMappings>
           </configuration>
         </plugin>
-
       </plugins>
     </pluginManagement>
     <plugins>
