@@ -87,6 +87,7 @@ public class FileController {
      * @throws Exception 上传时发生错误，抛出异常
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("上传文件")
     public FileInfoDto upload(@RequestParam("file") MultipartFile file) throws Exception {
         String originalFilename = file.getOriginalFilename();
@@ -323,6 +324,7 @@ public class FileController {
      * @param request 要下载的文件的清单
      * @return 一个打包下载请求
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "zip", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     public PackageFileDto save(@RequestBody PackageFileDto request) {
         return packageFileService.save(request);
