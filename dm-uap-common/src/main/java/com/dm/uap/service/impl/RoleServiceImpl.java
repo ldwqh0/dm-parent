@@ -4,6 +4,7 @@ import com.dm.uap.entity.Role;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.RoleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = {"users"}, allEntries = true)
     public int update(Long id, Role role) {
         return userRepository.updateRole(id, role.getName(), role.getGroup());
     }
