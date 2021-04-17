@@ -1,13 +1,14 @@
 package com.dm.springboot.autoconfigure.authority;
 
-import com.dm.auth.dto.*;
-import com.dm.auth.entity.ResourceOperation;
+import com.dm.auth.dto.MenuAuthorityDto;
+import com.dm.auth.dto.MenuDto;
+import com.dm.auth.dto.ResourceDto;
+import com.dm.auth.dto.RoleDto;
 import com.dm.auth.entity.Role;
 import com.dm.auth.entity.Role.Status;
 import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
-import com.dm.collections.Maps;
 import com.dm.security.authentication.UriResource.MatchType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -19,7 +20,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -77,14 +77,15 @@ public class AuthAutoConfiguration {
         // 初始化管理员角色的资源权限，默认授予default资源的全部权限
         resourceService.findByName("default").ifPresent(resource -> {
             // 将知道的授权组装为一个授权对象
-            ResourceAuthorityDto resourceAuthority = new ResourceAuthorityDto();
-            resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
-            resourceAuthority.setRoleId(roleId);
-            Map<Long, ResourceOperation> operations = Maps
-                .entry(resource.getId(), ResourceOperation.accessAll())
-                .build();
-            resourceAuthority.setResourceAuthorities(operations);
-            roleService.saveAuthority(resourceAuthority);
+            // TODO　这里待处理
+//            ResourceAuthorityDto resourceAuthority = new ResourceAuthorityDto();
+//            resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
+//            resourceAuthority.setRoleId(roleId);
+//            Map<Long, ResourceOperation> operations = Maps
+//                .entry(resource.getId(), ResourceOperation.accessAll())
+//                .build();
+//            resourceAuthority.setResourceAuthorities(operations);
+//            roleService.saveAuthority(resourceAuthority);
         });
 
         menuAuthority.setAuthorityMenus(menus_);

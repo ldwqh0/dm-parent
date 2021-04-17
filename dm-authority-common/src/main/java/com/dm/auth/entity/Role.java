@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -48,17 +47,6 @@ public class Role extends AbstractEntity {
         @Index(columnList = "menu_id_", name = "IDX_dm_role_menu_menu_id_")
     })
     private Set<Menu> menus;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @JoinTable(name = "dm_role_resource_operation_", joinColumns = {
-        @JoinColumn(name = "role_id_", referencedColumnName = "id_", foreignKey = @ForeignKey(name = "FK_dm_role_resource_operation_role_id_"))
-    }, indexes = {
-        @Index(name = "IDX_dm_role_resource_operation_role_id_", columnList = "role_id_"),
-        @Index(name = "IDX_dm_role_resource_operation_resource_id_", columnList = "resource_id_"),
-    })
-    @OrderColumn(name = "order_by_")
-    @MapKeyJoinColumn(name = "resource_id_", foreignKey = @ForeignKey(name = "FK_dm_role_resource_operation_resource_id_"))
-    private Map<AuthResource, ResourceOperation> resourceOperations;
 
     public String getFullName() {
         return group + "_" + name;

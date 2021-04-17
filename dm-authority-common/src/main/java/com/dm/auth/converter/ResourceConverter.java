@@ -1,15 +1,20 @@
 package com.dm.auth.converter;
 
-import java.util.Optional;
-
+import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.entity.AuthResource;
+import com.dm.collections.Sets;
+import com.dm.common.converter.Converter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import com.dm.auth.dto.ResourceDto;
-import com.dm.common.converter.Converter;
+import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class ResourceConverter implements Converter<AuthResource, ResourceDto> {
+
+    private final RoleConverter roleConverter;
+
     private ResourceDto toDtoActual(AuthResource model) {
         ResourceDto dto = new ResourceDto();
         dto.setId(model.getId());
@@ -18,6 +23,11 @@ public class ResourceConverter implements Converter<AuthResource, ResourceDto> {
         dto.setDescription(model.getDescription());
         dto.setMatchType(model.getMatchType());
         dto.setScope(model.getScope());
+        dto.setMethods(model.getMethods());
+        dto.setDenyAll(model.isDenyAll());
+        dto.setAuthenticated(model.isAuthenticated());
+        dto.setAccessAuthorities(Sets.transform(model.getAccessAuthorities(), roleConverter::toDto));
+        dto.setDenyAuthorities(Sets.transform(model.getDenyAuthorities(), roleConverter::toDto));
         return dto;
     }
 
@@ -28,6 +38,9 @@ public class ResourceConverter implements Converter<AuthResource, ResourceDto> {
         model.setName(dto.getName());
         model.setMatchType(dto.getMatchType());
         model.setScope(dto.getScope());
+        model.setDenyAll(dto.isDenyAll());
+        model.setMethods(dto.getMethods());
+        model.setAuthenticated(dto.isAuthenticated());
         return model;
     }
 

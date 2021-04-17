@@ -22,9 +22,6 @@ public interface RoleRepository extends IdentifiableDtoRepository<Role, Long>, Q
     @Query("select r from Role r left join r.menus m where m=:menu")
     List<Role> findByMenu(@Param("menu") Menu menu);
 
-    @Query("select r from Role r join r.resourceOperations ro where KEY(ro).id=:resourceId")
-    List<Role> findByResourceOperationsResourceId(@Param("resourceId") Long resourceId);
-
     @Query("select distinct(r.group) from Role r")
     List<String> listGroups();
 }

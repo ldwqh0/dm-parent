@@ -4,7 +4,6 @@ import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
-import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.dto.RoleDto;
 import com.dm.auth.entity.*;
 import com.dm.auth.entity.Role.Status;
@@ -15,7 +14,6 @@ import com.dm.auth.service.RoleService;
 import com.dm.collections.Maps;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.security.authentication.ResourceAuthorityAttribute;
-import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
+public class RoleServiceImpl implements RoleService {
 
     private final RoleConverter roleConverter;
 
@@ -50,13 +48,13 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     // 进行请求限定的请求类型
     private final HttpMethod[] methods = {
-            HttpMethod.GET,
-            HttpMethod.POST,
-            HttpMethod.PUT,
-            HttpMethod.DELETE,
-            HttpMethod.PATCH,
-            HttpMethod.HEAD,
-            HttpMethod.OPTIONS,
+        HttpMethod.GET,
+        HttpMethod.POST,
+        HttpMethod.PUT,
+        HttpMethod.DELETE,
+        HttpMethod.PATCH,
+        HttpMethod.HEAD,
+        HttpMethod.OPTIONS,
     };
 
     @Override
@@ -157,35 +155,19 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         menus.forEach(menu -> addParent(menu, parents));
         menus.addAll(parents);
         return menus.stream()
-                // 只查找启用的项目
-                .filter(this::isEnabled)
-                // 如果root是空，不做过滤
-                // 如果root不是空，则查找root的子孙代
-                .filter(menu -> Objects.isNull(root) || (!Objects.equals(menu.getId(), root) && this.isOffspringOf(menu, root))) // 只需要是
-                .map(menuConverter::toDto)
-                .collect(Collectors.toSet());
+            // 只查找启用的项目
+            .filter(this::isEnabled)
+            // 如果root是空，不做过滤
+            // 如果root不是空，则查找root的子孙代
+            .filter(menu -> Objects.isNull(root) || (!Objects.equals(menu.getId(), root) && this.isOffspringOf(menu, root))) // 只需要是
+            .map(menuConverter::toDto)
+            .collect(Collectors.toSet());
 
     }
 
     @Override
     public List<String> listGroups() {
         return roleRepository.listGroups();
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityAttributes"}, key = "'all_resource'")
-    public Role saveAuthority(ResourceAuthorityDto authorityDto) {
-        Long roleId = authorityDto.getRoleId();
-        if (roleRepository.existsById(roleId)) {
-            Role role = roleRepository.getOne(roleId);
-            Map<AuthResource, ResourceOperation> resultOperations = Maps
-                    .transformKeys(authorityDto.getResourceAuthorities(), resourceRepository::getOne);
-            role.setResourceOperations(resultOperations);
-            return roleRepository.save(role);
-        } else {
-            throw new DataNotExistException("指定角色不存在");
-        }
     }
 
 
@@ -236,66 +218,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         }
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    @Cacheable(cacheNames = "AuthorityAttributes", key = "'all_resource'", sync = true)
-    public Collection<ResourceAuthorityAttribute> listAll() {
-        List<Role> roles = roleRepository.findAll();
-        // 一个资源的权限配置
-        final Map<UriResource, ResourceAuthorityAttribute> resourceAuthorityMap = new HashMap<>();
-
-        roles.forEach(role -> role.getResourceOperations().forEach((resource, operation) -> {
-            for (HttpMethod method : methods) {
-                addAuthority(resourceAuthorityMap, resource, method, operation, role.getFullName());
-            }
-        }));
-        return Collections.unmodifiableCollection(resourceAuthorityMap.values());
-    }
-
-    private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map, AuthResource resource,
-                              HttpMethod method, ResourceOperation operation, String authority) {
-        UriResource ur = UriResource.of(method.toString(), resource.getMatcher(), resource.getMatchType(),
-                resource.getScope());
-        Boolean access = null;
-        switch (method) {
-            case POST:
-                access = operation.getPostAble();
-                break;
-            case PUT:
-                access = operation.getPutAble();
-                break;
-            case GET:
-                access = operation.getGetAble();
-                break;
-            case DELETE:
-                access = operation.getDeleteAble();
-                break;
-            case PATCH:
-                access = operation.getPatchAble();
-                break;
-            case HEAD:
-                access = operation.getHeadAble();
-                break;
-            case OPTIONS:
-                access = operation.getOptionsAble();
-                break;
-            default:
-                break;
-        }
-
-        ResourceAuthorityAttribute raa = map.get(ur);
-        if (Objects.isNull(raa)) {
-            raa = new ResourceAuthorityAttribute(ur);
-            map.put(ur, raa);
-        }
-        if (Boolean.TRUE.equals(access)) {
-            raa.addAccessAuthority(authority);
-        }
-        if (Boolean.FALSE.equals(access)) {
-            raa.addDenyAuthority(authority);
-        }
-    }
-
     @Override
     public boolean existsByFullname(String authority) {
         String[] groupName = authority.split("\\_", 2);
@@ -310,8 +232,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         if (!Objects.isNull(exclude)) {
             query.and(qRole.id.ne(exclude));
         }
-
-
         return roleRepository.exists(query);
     }
 
