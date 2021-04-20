@@ -5,8 +5,8 @@ import com.dm.region.converter.RegionConverter;
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.Region;
 import com.dm.region.service.RegionService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,14 +24,13 @@ import java.util.Optional;
  * @author Administrator
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("regions")
 public class RegionController {
 
-    @Autowired
-    private RegionService regionService;
+    private final RegionService regionService;
 
-    @Autowired
-    private RegionConverter regionConverter;
+    private final RegionConverter regionConverter;
 
     @GetMapping
     public List<RegionDto> findAll(@RequestParam(value = "parent", required = false) String parent,

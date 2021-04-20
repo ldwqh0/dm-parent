@@ -37,7 +37,7 @@ public interface UserService extends UserDetailsService {
 
     boolean checkPassword(long id, String password);
 
-    User repassword(long id, String password);
+    User resetPassword(long id, String password);
 
     Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable);
 

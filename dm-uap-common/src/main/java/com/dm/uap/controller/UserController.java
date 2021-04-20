@@ -98,7 +98,7 @@ public class UserController {
         if (!StringUtils.equals(password, rePassword)) {
             throw new DataValidateException("两次密码输入不一致");
         }
-        return userConverter.toDto(userService.repassword(id, password));
+        return userConverter.toDto(userService.resetPassword(id, password));
     }
 
 

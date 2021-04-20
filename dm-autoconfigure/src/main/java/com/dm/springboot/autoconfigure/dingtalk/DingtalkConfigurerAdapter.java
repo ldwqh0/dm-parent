@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import com.dm.dingtalk.api.callback.Event;
 
-public class DingtalkConfigurerAdpater {
+public class DingtalkConfigurerAdapter {
 
     private List<String> callbackTag;
 
@@ -23,22 +23,22 @@ public class DingtalkConfigurerAdpater {
         return consumers;
     }
 
-    public DingtalkConfigurerAdpater setCallbackTag(List<String> callBackTag) {
+    public DingtalkConfigurerAdapter setCallbackTag(List<String> callBackTag) {
         this.callbackTag = callBackTag;
         return this;
     }
 
-    public DingtalkConfigurerAdpater setToken(String token) {
+    public DingtalkConfigurerAdapter setToken(String token) {
         this.token = token;
         return this;
     }
 
-    public DingtalkConfigurerAdpater setAeskey(String aeskey) {
+    public DingtalkConfigurerAdapter setAeskey(String aeskey) {
         this.aeskey = aeskey;
         return this;
     }
 
-    public DingtalkConfigurerAdpater setUrl(String url) {
+    public DingtalkConfigurerAdapter setUrl(String url) {
         this.url = url;
         return this;
     }

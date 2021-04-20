@@ -92,8 +92,8 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
             .map(properties -> {
                 try (Connection cnn = DataSourceProviderHolder.getConnection(properties)) {
                     return ConnectionUtils.listTables(cnn);
-                } catch (Exception throwables) {
-                    throw new RuntimeException(throwables);
+                } catch (Exception throwable) {
+                    throw new RuntimeException(throwable);
                 }
             }).orElseThrow(DataNotExistException::new);
     }

@@ -271,6 +271,83 @@
     </resources>
     <pluginManagement>
       <plugins>
+
+        <plugin>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <version>${kotlin.version}</version>
+          <configuration>
+            <args>
+              <arg>-Xjsr305=strict</arg>
+            </args>
+            <jvmTarget>${java.version}</jvmTarget>
+            <compilerPlugins>
+              <plugin>spring</plugin>
+              <!--                        <plugin>jpa</plugin>-->
+            </compilerPlugins>
+          </configuration>
+          <executions>
+            <execution>
+              <id>compile</id>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                  <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+            <execution>
+              <id>test-compile</id>
+              <goals>
+                <goal>test-compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                  <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+
+            <execution>
+              <id>kapt</id>
+              <!--这一行非常重要-->
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>kapt</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>src/main/kotlin</sourceDir>
+                </sourceDirs>
+                <annotationProcessorPaths>
+                  <annotationProcessorPath>
+                    <groupId>com.querydsl</groupId>
+                    <artifactId>querydsl-apt</artifactId>
+                    <version>${querydsl.version}</version>
+                    <classifier>jpa</classifier>
+                  </annotationProcessorPath>
+                </annotationProcessorPaths>
+              </configuration>
+            </execution>
+          </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-allopen</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-noarg</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
         <!-- maven编译依赖 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -372,75 +449,6 @@
           </executions>
         </plugin>
         <!-- Apply more sensible defaults for user projects -->
-        <!--kotlin编译插件-->
-        <plugin>
-          <groupId>org.jetbrains.kotlin</groupId>
-          <artifactId>kotlin-maven-plugin</artifactId>
-          <version>${kotlin.version}</version>
-          <configuration>
-            <jvmTarget>${java.version}</jvmTarget>
-            <javaParameters>true</javaParameters>
-            <args>
-              <arg>-Xjsr305=strict</arg>
-            </args>
-            <!--编译插件由项目指定-->
-            <!--            <compilerPlugins>-->
-            <!--              <plugin>spring</plugin>-->
-            <!--              <plugin>jpa</plugin>-->
-            <!--            </compilerPlugins>-->
-          </configuration>
-          <executions>
-            <!--以下两个execution配置使之支持java和kotlin混合编译-->
-            <execution>
-              <id>compile</id>
-              <phase>compile</phase>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-              <configuration>
-                <sourceDirs>
-                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                  <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                </sourceDirs>
-              </configuration>
-            </execution>
-            <execution>
-              <id>test-compile</id>
-              <phase>test-compile</phase>
-              <goals>
-                <goal>test-compile</goal>
-              </goals>
-              <configuration>
-                <sourceDirs>
-                  <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-                  <sourceDir>${project.basedir}/src/test/java</sourceDir>
-                </sourceDirs>
-              </configuration>
-            </execution>
-            <!--配置kotlin的querydsl插件依赖-->
-            <execution>
-              <id>kapt</id>
-              <!--这一行非常重要-->
-              <phase>generate-sources</phase>
-              <goals>
-                <goal>kapt</goal>
-              </goals>
-              <configuration>
-                <sourceDirs>
-                  <sourceDir>src/main/kotlin</sourceDir>
-                </sourceDirs>
-                <annotationProcessorPaths>
-                  <annotationProcessorPath>
-                    <groupId>com.querydsl</groupId>
-                    <artifactId>querydsl-apt</artifactId>
-                    <version>${querydsl.version}</version>
-                    <classifier>jpa</classifier>
-                  </annotationProcessorPath>
-                </annotationProcessorPaths>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>

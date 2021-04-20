@@ -5,16 +5,15 @@ import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.RoleDto;
-import com.dm.auth.entity.*;
+import com.dm.auth.entity.Menu;
+import com.dm.auth.entity.QRole;
+import com.dm.auth.entity.Role;
 import com.dm.auth.entity.Role.Status;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.RoleService;
-import com.dm.collections.Maps;
 import com.dm.common.exception.DataNotExistException;
-import com.dm.security.authentication.ResourceAuthorityAttribute;
-import com.dm.security.authentication.UriResource;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -201,7 +200,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     /**
-     * 判断给定菜单menu是不是指定菜单parentid的儿孙代
+     * 判断给定菜单menu是不是指定菜单parentId的儿孙代
      *
      * @param menu 要判定的菜单,不能为空
      * @param root 要判断是否为parentId的子菜单

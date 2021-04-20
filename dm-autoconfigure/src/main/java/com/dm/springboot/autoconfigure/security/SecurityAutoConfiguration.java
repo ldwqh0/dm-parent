@@ -121,9 +121,9 @@ public class SecurityAutoConfiguration {
             ud.setGrantedAuthority(authorities);
             http.anonymous().authorities(authorities).principal(ud);
             http.formLogin().successHandler(new LoginSuccessHandler(om)).failureHandler(new LoginFailureHandler(om));
-            MediaTypeRequestMatcher mtrm = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
-            mtrm.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
-            http.exceptionHandling().defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), mtrm);
+            MediaTypeRequestMatcher mediaTypeRequestMatcher = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
+            mediaTypeRequestMatcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
+            http.exceptionHandling().defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), mediaTypeRequestMatcher);
         }
     }
 

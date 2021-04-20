@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
-    public User repassword(long id, String password) {
+    public User resetPassword(long id, String password) {
         User user = userRepository.getOne(id);
         user.setPassword(passwordEncoder.encode(password));
         return user;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * scop
+ * scope
  */
 @RequestMapping({"scopes", "p/scopes"})
 @RestController

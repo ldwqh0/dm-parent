@@ -30,11 +30,11 @@ public class AccessTokenResponse extends TaobaoResponse {
      */
     private ZonedDateTime expireDate;
 
-    public void setExpiresIn(Long expirseIn) {
-        this.expiresIn = expirseIn;
-        if (Objects.nonNull(expirseIn)) {
+    public void setExpiresIn(Long expiresIn) {
+        this.expiresIn = expiresIn;
+        if (Objects.nonNull(expiresIn)) {
             // 这里修正一下token过期时间
-            setExpireDate(ZonedDateTime.now().plusSeconds(expirseIn - 60));
+            setExpireDate(ZonedDateTime.now().plusSeconds(expiresIn - 60));
         }
     }
 

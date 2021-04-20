@@ -67,7 +67,7 @@ public class CurrentUserController {
         if (userService.checkPassword(userId, data.getOldPassword())) {
             throw new DataValidateException("原始密码校验错误");
         }
-        return userConverter.toDto(userService.repassword(userId, data.getPassword()));
+        return userConverter.toDto(userService.resetPassword(userId, data.getPassword()));
     }
 
     private void validRePassword(String password, String rePassword) {

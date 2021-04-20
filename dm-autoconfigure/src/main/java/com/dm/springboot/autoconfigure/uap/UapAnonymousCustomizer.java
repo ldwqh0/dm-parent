@@ -26,9 +26,7 @@ public class UapAnonymousCustomizer implements Customizer<AnonymousConfigurer<Ht
 
     @Autowired
     public void setUapAutoConfiguration(UapAutoConfiguration uac) {
-        /**
-         * 这个没有什么用，仅仅表示本类需要 {@link UapAutoConfiguration}加载并执行完成之后才能执行
-         */
+       // 这个没有什么用，仅仅表示本类需要 {@link UapAutoConfiguration}加载并执行完成之后才能执行
     }
 
     @Override

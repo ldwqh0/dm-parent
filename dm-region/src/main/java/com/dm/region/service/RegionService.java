@@ -43,8 +43,8 @@ public interface RegionService {
     /**
      * 获取指定节点的所有子代
      *
-     * @param parentCode
-     * @return
+     * @param code 要查询的父代
+     * @return 所有子代
      */
     List<Region> findAllChildren(String code);
 
