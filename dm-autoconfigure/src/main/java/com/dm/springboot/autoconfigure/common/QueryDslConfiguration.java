@@ -2,6 +2,7 @@ package com.dm.springboot.autoconfigure.common;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +23,10 @@ public class QueryDslConfiguration {
      * @see JPAQueryFactory
      * @see EntityManager
      */
-    @ConditionalOnMissingBean(JPAQueryFactory.class)
     @Bean
     @Lazy
+    @ConditionalOnBean(EntityManager.class)
+    @ConditionalOnMissingBean(JPAQueryFactory.class)
     public JPAQueryFactory queryFactory(@Autowired EntityManager em) {
         return new JPAQueryFactory(em);
     }
