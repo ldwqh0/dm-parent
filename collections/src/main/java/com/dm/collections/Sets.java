@@ -20,6 +20,10 @@ public final class Sets {
         return new HashSet<>(Arrays.asList(e));
     }
 
+    public static <E> HashSet<E> hashSet(Collection<E> collection) {
+        return new HashSet<>(collection);
+    }
+
     public static <E> HashSet<E> hasSet(Iterable<E>... iterables) {
         HashSet<E> result = new HashSet<>();
         for (Iterable<E> iterable : iterables) {

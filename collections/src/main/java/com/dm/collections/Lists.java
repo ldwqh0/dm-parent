@@ -21,21 +21,26 @@ public final class Lists {
         return new ArrayList<>();
     }
 
+    public static <E> ArrayList<E> arrayList(Collection<E> collection) {
+        return new ArrayList<>(collection);
+    }
+
     /**
      * 使用一系列元素创建一个新的 {@link ArrayList}
      *
-     * @param e   一系列的元素
-     * @param <E> 集合元素类型
+     * @param elements 一系列的元素
+     * @param <E>      集合元素类型
      * @return 一个包含指定元素的ArrayList
      */
     @SafeVarargs
-    public static <E> ArrayList<E> arrayList(E... e) {
-        if (e == null) {
-            return arrayList();
-        } else {
-            return new ArrayList<>(Arrays.asList(e));
+    public static <E> ArrayList<E> arrayList(E... elements) {
+        ArrayList<E> result = new ArrayList<>();
+        if (Objects.nonNull(elements)) {
+            Collections.addAll(result, elements);
         }
+        return result;
     }
+
 
     /**
      * 通过指定的collection构建新的{@link ArrayList}<br>
