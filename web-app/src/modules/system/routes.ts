@@ -19,6 +19,10 @@ export default [{
     name: 'departments',
     path: 'departments',
     component: (): Promise<EsModuleComponent> => import('./views/Departments.vue')
+  }, {
+    name: 'clients',
+    path: 'clients',
+    component: (): Promise<EsModuleComponent> => import('./views/Clients.vue')
   }/*, {
     name: 'users',
     path: 'users',

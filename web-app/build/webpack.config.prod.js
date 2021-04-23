@@ -26,12 +26,21 @@ module.exports = env => {
       }]
     },
     optimization: {
+      splitChunks: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            type:'css/mini-extract',
+            chunks: 'all',
+            enforce: true,
+          }
+        }
+      },
       minimizer: ['...', new CssMinimizerPlugin()],
     },
     plugins: [
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        chunkFilename: 'static/styles/[id].[contenthash:7].css',
         filename: 'static/styles/[id].[contenthash:7].css'
       }),
       new CompressionPlugin({
@@ -42,7 +51,6 @@ module.exports = env => {
     output: {
       path: path.resolve(__dirname, `..${env.CONTEXT_PATH}`),
       publicPath: env.CONTEXT_PATH,
-      chunkFilename: 'static/js/[id].[contenthash:7].js',
       filename: 'static/js/[id].[contenthash:7].js'
     }
   })

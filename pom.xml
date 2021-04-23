@@ -283,7 +283,7 @@
             <jvmTarget>${java.version}</jvmTarget>
             <compilerPlugins>
               <plugin>spring</plugin>
-              <!--                        <plugin>jpa</plugin>-->
+              <plugin>jpa</plugin>
             </compilerPlugins>
           </configuration>
           <executions>

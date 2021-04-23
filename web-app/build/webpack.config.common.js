@@ -26,22 +26,16 @@ module.exports = env => {
         loader: 'vue-loader'
       }, {
         test: /\.(woff|ttf)$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            esModule: false,
-            outputPath: 'static/fonts'
-          }
-        }]
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/fonts/[id].[contenthash:7][ext]'
+        }
       }, {
         test: /\.(png|jpe?g|gif)$/i,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            esModule: false,
-            outputPath: 'static/images'
-          }
-        }]
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/fonts/[id].[contenthash:7][ext]'
+        }
       }]
     },
     resolve: {
@@ -56,8 +50,7 @@ module.exports = env => {
       }),
       new VueLoaderPlugin(),
       new ESLintWebpackPlugin({
-        extensions: ['ts', 'js', 'vue'],
-        // formatter: 'eslint-formatter-friendly'
+        extensions: ['ts', 'js', 'vue']
       }),
       new CopyWebpackPlugin({
         patterns: [{
