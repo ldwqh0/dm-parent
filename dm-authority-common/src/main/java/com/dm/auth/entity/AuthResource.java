@@ -18,16 +18,13 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "dm_resource_", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_dm_resource_name_", columnNames = {"name_"}),
-    @UniqueConstraint(name = "UK_dm_resource_matcher_", columnNames = {"matcher_"})
-})
+@Table(name = "dm_resource_")
 public class AuthResource extends AbstractEntity {
 
     /**
      * 资源名称
      */
-    @Column(name = "name_", length = 100, unique = true, nullable = false)
+    @Column(name = "name_", length = 100,  nullable = false)
     private String name;
 
     @ElementCollection
@@ -40,7 +37,7 @@ public class AuthResource extends AbstractEntity {
     /**
      * 资源匹配路径
      */
-    @Column(name = "matcher_", length = 400, unique = true, nullable = false)
+    @Column(name = "matcher_", length = 400, nullable = false)
     private String matcher;
 
     /**

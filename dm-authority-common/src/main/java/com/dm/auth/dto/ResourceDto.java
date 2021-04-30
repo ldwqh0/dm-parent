@@ -67,5 +67,4 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
      * 是否必须授权访问
      */
     private boolean authenticated;
-
 }

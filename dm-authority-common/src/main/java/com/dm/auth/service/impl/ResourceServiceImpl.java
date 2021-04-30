@@ -76,20 +76,20 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AuthResource> search(String keyword, Pageable pageable) {
+    public Page<ResourceDto> search(String keyword, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (StringUtils.isNotBlank(keyword)) {
             query.or(qResource.name.containsIgnoreCase(keyword))
                 .or(qResource.description.containsIgnoreCase(keyword))
                 .or(qResource.matcher.containsIgnoreCase(keyword));
         }
-        return resourceRepository.findAll(query, pageable);
+        return resourceRepository.findAll(query, pageable).map(resourceConverter::toListDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<AuthResource> findById(long id) {
-        return resourceRepository.findById(id);
+    public Optional<ResourceDto> findById(long id) {
+        return resourceRepository.findById(id).map(resourceConverter::toDto);
     }
 
     @Override

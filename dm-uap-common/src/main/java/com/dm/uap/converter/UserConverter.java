@@ -31,6 +31,7 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
         dto.setGrantedAuthority(user.getRoles());
+        dto.setMobile(user.getMobile());
         return dto;
     }
 

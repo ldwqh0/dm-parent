@@ -86,7 +86,7 @@ public class ResourceController {
      */
     @GetMapping("{id}")
     public ResourceDto get(@PathVariable("id") Long id) {
-        return resourceService.findById(id).map(resourceConverter::toDto)
+        return resourceService.findById(id)
             .orElseThrow(DataNotExistException::new);
     }
 
@@ -101,7 +101,7 @@ public class ResourceController {
     public Page<ResourceDto> search(
         @PageableDefault Pageable pageable,
         @RequestParam(value = "keyword", required = false) String keyword) {
-        return resourceService.search(keyword, pageable).map(resourceConverter::toDto);
+        return resourceService.search(keyword, pageable);
     }
 
     /**

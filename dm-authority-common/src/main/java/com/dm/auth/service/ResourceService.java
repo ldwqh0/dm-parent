@@ -18,9 +18,9 @@ public interface ResourceService {
 
     ResourceDto update(long id, ResourceDto _resource);
 
-    Page<AuthResource> search(String keyword, Pageable pageable);
+    Page<ResourceDto> search(String keyword, Pageable pageable);
 
-    Optional<AuthResource> findById(long id);
+    Optional<ResourceDto> findById(long id);
 
 //    List<AuthResource> listAll();
 

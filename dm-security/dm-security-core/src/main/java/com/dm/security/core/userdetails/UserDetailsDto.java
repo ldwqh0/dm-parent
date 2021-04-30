@@ -31,6 +31,8 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
     private Collection<? extends GrantedAuthority> grantedAuthority;
     private String fullname;
 
+    private String mobile;
+
     private String regionCode;
 
     public void setRegionCode(String regionCode) {
@@ -66,6 +68,14 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     @Override

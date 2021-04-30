@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,23 +49,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = {"users"}, sync = true, key = "#username.toLowerCase()")
+    @Caching(cacheable = {
+        @Cacheable(cacheNames = {"users"}, sync = true, key = "#username.toLowerCase()"),
+//        @Cacheable(cacheNames = {"users"}, sync = true, key = "'M@_'+#result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public UserDetailsDto loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional.ofNullable(username)
-                .filter(StringUtils::isNotEmpty)
-                .flatMap(userRepository::findOneByUsernameIgnoreCase)
-                .map(userConverter::toUserDetailsDto)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+            .filter(StringUtils::isNotEmpty)
+            .flatMap(userRepository::findOneByUsernameIgnoreCase)
+            .map(userConverter::toUserDetailsDto)
+            .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Caching(cacheable = {
+//        @Cacheable(cacheNames = {"users"}, sync = true, key = "#username.toLowerCase()"),
+        @Cacheable(cacheNames = {"users"}, sync = true, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
         return Optional.ofNullable(mobile)
-                .filter(StringUtils::isNotEmpty)
-                .flatMap(userRepository::findByMobileIgnoreCase)
-                .map(userConverter::toUserDetailsDto)
-                .orElseThrow(() -> new UsernameNotFoundException(mobile));
+            .filter(StringUtils::isNotEmpty)
+            .flatMap(userRepository::findByMobileIgnoreCase)
+            .map(userConverter::toUserDetailsDto)
+            .orElseThrow(() -> new UsernameNotFoundException(mobile));
     }
 
     @Override
@@ -74,6 +82,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public User save(UserDto userDto) {
         checkUsernameExists(userDto.getId(), userDto.getUsername());
         User user = new User();
@@ -119,7 +131,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public User delete(long id) {
         Optional<User> user = userRepository.findById(id);
         user.ifPresent(a -> userRepository.deleteById(id));
@@ -128,7 +143,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public User update(long id, UserDto userDto) {
         checkUsernameExists(id, userDto.getUsername());
         User user = userRepository.getOne(id);
@@ -141,7 +159,7 @@ public class UserServiceImpl implements UserService {
     public Page<User> search(String key, Pageable pageable) {
         if (StringUtils.isNotBlank(key)) {
             BooleanExpression expression = qUser.username.containsIgnoreCase(key)
-                    .or(qUser.fullname.containsIgnoreCase(key));
+                .or(qUser.fullname.containsIgnoreCase(key));
             return userRepository.findAll(expression, pageable);
         } else {
             return userRepository.findAll(pageable);
@@ -156,7 +174,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public User resetPassword(long id, String password) {
         User user = userRepository.getOne(id);
         user.setPassword(passwordEncoder.encode(password));
@@ -178,7 +199,7 @@ public class UserServiceImpl implements UserService {
         }
         if (StringUtils.isNotBlank(key)) {
             query.and(qUser.username.containsIgnoreCase(key)
-                    .or(qUser.fullname.containsIgnoreCase(key)));
+                .or(qUser.fullname.containsIgnoreCase(key)));
         }
         return userRepository.findAll(query, pageable);
     }
@@ -228,6 +249,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public User patch(long id, UserDto user) {
         User originUser = userRepository.getOne(id);
         if (Objects.nonNull(user.getEnabled())) {

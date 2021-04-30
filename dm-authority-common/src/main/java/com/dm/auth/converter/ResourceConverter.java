@@ -15,17 +15,22 @@ public class ResourceConverter implements Converter<AuthResource, ResourceDto> {
 
     private final RoleConverter roleConverter;
 
-    private ResourceDto toDtoActual(AuthResource model) {
+    public ResourceDto toListDto(AuthResource model) {
         ResourceDto dto = new ResourceDto();
         dto.setId(model.getId());
         dto.setName(model.getName());
         dto.setMatcher(model.getMatcher());
         dto.setDescription(model.getDescription());
         dto.setMatchType(model.getMatchType());
-        dto.setScope(model.getScope());
-        dto.setMethods(model.getMethods());
         dto.setDenyAll(model.isDenyAll());
         dto.setAuthenticated(model.isAuthenticated());
+        dto.setMethods(Sets.hashSet(model.getMethods()));
+        return dto;
+    }
+
+    private ResourceDto toDtoActual(AuthResource model) {
+        ResourceDto dto = toListDto(model);
+        dto.setScope(Sets.hashSet(model.getScope()));
         dto.setAccessAuthorities(Sets.transform(model.getAccessAuthorities(), roleConverter::toDto));
         dto.setDenyAuthorities(Sets.transform(model.getDenyAuthorities(), roleConverter::toDto));
         return dto;
