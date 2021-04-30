@@ -37,7 +37,11 @@ export interface ResourceDto extends Serializable {
   name?: string;
   matcher?: string;
   description?: string;
+  authenticated?: boolean,
+  denyAuthorities?: RoleDto[],
+  accessAuthorities?: RoleDto[],
   scope?: string[];
+  denyAll?: boolean,
   matchType?: MatchType;
 }
 

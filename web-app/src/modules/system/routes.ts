@@ -12,6 +12,11 @@ export default [{
     path: 'resources',
     component: (): Promise<EsModuleComponent> => import('./views/Resources.vue')
   }, {
+    name: 'resource',
+    path: 'resources/:id',
+    props: true,
+    component: (): Promise<EsModuleComponent> => import('./views/Resource.vue')
+  }, {
     name: 'roles',
     path: 'roles',
     component: (): Promise<EsModuleComponent> => import('./views/Roles.vue')
@@ -23,6 +28,11 @@ export default [{
     name: 'clients',
     path: 'clients',
     component: (): Promise<EsModuleComponent> => import('./views/Clients.vue')
+  }, {
+    name: 'client',
+    path: 'clients/:id',
+    props: true,
+    component: (): Promise<EsModuleComponent> => import('./views/Client.vue')
   }/*, {
     name: 'users',
     path: 'users',

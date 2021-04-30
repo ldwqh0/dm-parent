@@ -41,7 +41,6 @@
             编辑
           </el-button>
           <el-button type="text" size="small" @click="setmenu(row)">设置菜单权限</el-button>
-          <el-button type="text" size="small" @click="setResource(row)">设置资源权限</el-button>
           <el-button v-if="row.id>3"
                      type="text"
                      size="small"
@@ -70,18 +69,6 @@
       <div slot="footer">
         <el-button @click="menuAuthorityDialogVisible=false">取消</el-button>
         <el-button type="primary" :loading="submitting" @click="saveMenuAuthority">确定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog v-if="resourceAuthorityDialogVisible"
-               :title="`${current.group}_${current.name}的资源权限`"
-               :close-on-click-modal="false"
-               :visible.sync="resourceAuthorityDialogVisible">
-      <resource-authority ref="resourceAuthority"
-                          :role-id="current.id" />
-      <div slot="footer">
-        <el-button @click="resourceAuthorityDialogVisible=false">取消</el-button>
-        <el-button type="primary" :loading="submitting" @click="saveResourceAuthority">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -114,7 +101,6 @@
     submitting = false
     editVisible = false
     menuAuthorityDialogVisible = false
-    resourceAuthorityDialogVisible = false
 
     current: RoleDto = {}
 
@@ -155,21 +141,9 @@
         }).finally(() => (this.submitting = false))
     }
 
-    saveResourceAuthority (): void {
-      this.submitting = true;
-      (this.$refs.resourceAuthority as any).submit()
-        .then(() => (this.resourceAuthorityDialogVisible = false))
-        .finally(() => (this.submitting = false))
-    }
-
     // 设置菜单权限
     setmenu (params: RoleDto): void {
       this.menuAuthorityDialogVisible = true
-      this.current = params
-    }
-
-    setResource (params: RoleDto): void {
-      this.resourceAuthorityDialogVisible = true
       this.current = params
     }
   }
