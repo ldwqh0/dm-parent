@@ -23,7 +23,7 @@
     <commons-collections4.version>4.4</commons-collections4.version>
     <querydsl.version>4.4.0</querydsl.version>
     <lombok.version>1.18.16</lombok.version>
-    <dm.version>2.0.0-SNAPSHOT</dm.version>
+    <dm.version>2.0.0</dm.version>
   </properties>
   <modules>
     <!-- 集合工具类 -->
