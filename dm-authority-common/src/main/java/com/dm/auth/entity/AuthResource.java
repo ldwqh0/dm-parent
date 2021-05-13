@@ -24,7 +24,7 @@ public class AuthResource extends AbstractEntity {
     /**
      * 资源名称
      */
-    @Column(name = "name_", length = 100,  nullable = false)
+    @Column(name = "name_", length = 100, nullable = false)
     private String name;
 
     @ElementCollection
@@ -57,7 +57,12 @@ public class AuthResource extends AbstractEntity {
     }, indexes = {
         @Index(name = "IDX_dm_resource_scope_resource_", columnList = "resource_")
     })
-    private Set<String> scope;
+    private Set<String> scope = new HashSet<>();
+
+    public void setScope(Set<String> scope) {
+        this.scope.clear();
+        this.scope.addAll(scope);
+    }
 
     /**
      * 资源描述

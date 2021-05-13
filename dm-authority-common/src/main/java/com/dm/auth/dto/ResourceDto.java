@@ -39,7 +39,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     /**
      * 资源Scope
      */
-    private Set<String> scope;
+    private Set<String> scope = new HashSet<>();
 
     /**
      * 资源匹配方式
