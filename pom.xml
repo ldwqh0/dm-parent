@@ -23,7 +23,6 @@
     <commons-collections4.version>4.4</commons-collections4.version>
     <querydsl.version>4.4.0</querydsl.version>
     <lombok.version>1.18.16</lombok.version>
-    <dm.version>2.0.0</dm.version>
   </properties>
   <modules>
     <!-- 集合工具类 -->
@@ -145,107 +144,107 @@
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>collections</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-authority-common</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-region</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-common</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-uap-common</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-file-core</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-dingding-api</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-uap-dingtalk</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-autoconfigure</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-core</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-mp</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-web</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-oauth2-core</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-oauth2-client</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-oauth2-resource</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-oauth2-resource-server-spring-boot-starter</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-oauth2-client-spring-boot-starter</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-security-spring-boot-starter</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-file-spring-boot-starter</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-multi-datasource</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-multi-datasource-jpa-support</artifactId>
-        <version>${dm.version}</version>
+        <version>${project.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
