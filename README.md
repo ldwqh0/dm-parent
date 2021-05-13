@@ -8,6 +8,10 @@
 
 ## 升级日志
 
+2.1.0
+* 升级spring boot至2.4.5
+* 升级spring cloud至2020.0.2
+
 2.0.0
 
 * 升级spring boot至2.4.2版本
