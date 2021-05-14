@@ -1,0 +1,203 @@
+@charset "utf-8";
+body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, form, fieldset, table, td, img, div, dl, dt, dd, input {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Microsoft YaHei";
+    position: relative;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 0.16rem;
+    overflow: hidden;
+}
+
+img {
+    border: none;
+}
+
+li {
+    list-style: none;
+}
+
+input, select, textarea {
+    outline: none;
+    border: none;
+    background: none;
+}
+
+textarea {
+    resize: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.mains {
+    height: 100%;
+    width: 100%;
+    background-size: 100% 100%;
+    box-sizing: border-box;
+    background: url("../images/login-bg.png") center no-repeat;
+    position: relative;
+}
+
+.h-box {
+    height: 20vh;
+    text-align: center;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+    justify-items: center;
+    flex-direction: column;
+
+}
+
+.h-box > div {
+    width: 100%;
+}
+
+.h-box-c {
+    height: 60vh;
+}
+
+.mains-header-max {
+    font-size: 0.36rem;
+}
+
+.mains-header-min {
+    font-size: 0.16rem
+}
+
+.mains-footer {
+    font-size: .12rem;
+    line-height: .26rem;
+}
+
+.h-box-c .login-cards {
+    width: 11rem;
+    box-shadow: 0px 10px 40px 0px rgba(42, 40, 219, 0.5);
+    border-radius: .2rem;
+    margin: 0 auto;
+    display: flex;
+    height: 100%;
+}
+
+.login-cards .lg-cards-l {
+    width: 6rem;
+    height: 100%;
+    box-sizing: border-box;
+    background: url("../images/login-card.png") center no-repeat;
+    background-size: 100% 100%;
+}
+
+.lg-cards-r {
+    width: 5rem;
+    height: 100%;
+    background-color: #FFFFFF;
+    border-top-right-radius: .2rem;
+    border-bottom-right-radius: .2rem;
+}
+
+.lg-cards-box {
+    width: 60%;
+    margin-top: 16%;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 68%;
+    overflow: hidden;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.lg-title {
+    height: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    color: #409EFF;
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    margin-bottom: 0.1rem;
+}
+
+.lg-title p:first-of-type {
+    font-size: 0.3rem;
+}
+
+.lg-title p:last-of-type {
+    font-size: 0.16rem;
+}
+
+.lg-form li {
+    display: flex;
+    align-items: flex-end;
+    height: 0.9rem;
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: .08rem;
+    position: relative;
+}
+
+.lg-form img {
+    width: .2rem;
+    height: .24rem;
+}
+
+.lg-form input {
+    width: 100%;
+    margin-left: 10px;
+    font-size: .16rem;
+    padding-left: 5px;
+    height: .24rem;
+    line-height: .24rem;
+    color: #666666;
+}
+
+.lg-form input::-webkit-input-placeholder {
+    color: #999999;
+}
+
+.lg-cards-box .lg-btn {
+    background-color: #409EFF;
+    height: .6rem;
+    line-height: .6rem;
+    box-shadow: 0px 2px 48px 0px rgba(51, 51, 51, 0.06);
+    border-radius: .3rem;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.lg-btn input {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    font-size: .24rem;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.lg-form li .show-warn {
+    position: absolute;
+    width: 100%;
+    height: 0.4rem;
+    bottom: -0.35rem;
+    left: 0;
+    line-height: 0.4rem;
+    font-size: 0.12rem;
+    color: red;
+}
