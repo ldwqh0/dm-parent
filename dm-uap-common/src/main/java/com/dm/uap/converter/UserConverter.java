@@ -18,23 +18,6 @@ public class UserConverter implements Converter<User, UserDto> {
 
     private final DepartmentConverter departmentConverter;
 
-    public <T extends User> UserDetailsDto toUserDetailsDto(T user) {
-        UserDetailsDto dto = new UserDetailsDto();
-        dto.setPassword(user.getPassword());
-        dto.setAccountExpired(user.isAccountExpired());
-        dto.setCredentialsExpired(user.isCredentialsExpired());
-        dto.setEnabled(user.isEnabled());
-        dto.setId(user.getId());
-        dto.setLocked(user.isLocked());
-        dto.setUsername(user.getUsername());
-        dto.setFullname(user.getFullname());
-        dto.setScenicName(user.getScenicName());
-        dto.setRegionCode(user.getRegionCode());
-        dto.setGrantedAuthority(user.getRoles());
-        dto.setMobile(user.getMobile());
-        return dto;
-    }
-
     private UserDto toDtoActual(User user) {
         UserDto dto = toSimpleDto(user);
         dto.setDescription(user.getDescription());

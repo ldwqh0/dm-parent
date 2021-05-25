@@ -133,9 +133,6 @@ public final class Maps {
     public final static class HashMapBuilder<K, V> {
         private final HashMap<K, V> map = new HashMap<>();
 
-        public HashMapBuilder() {
-        }
-
         public HashMapBuilder(K key, V value) {
             this.map.put(key, value);
         }

@@ -84,23 +84,13 @@
 
     scopes: string[] = []
 
-    grantTypes: { name: string, value: string }[] = [
-      {
-        name: '隐式模式',
-        value: 'implicit'
-      }, {
-        name: '授权码模式',
-        value: 'authorization_code'
-      }, {
-        name: '令牌更新',
-        value: 'refresh_token'
-      }, {
-        name: '客户端模式',
-        value: 'client_credentials'
-      }, {
-        name: '密码模式',
-        value: 'password'
-      }]
+    grantTypes: { name: string, value: string }[] = [{
+      name: '授权码模式',
+      value: 'authorization_code'
+    }, {
+      name: '客户端模式',
+      value: 'client_credentials'
+    }]
 
     model: ClientDto = {}
 
@@ -117,10 +107,8 @@
       }]
     }
 
-    uriValidator (rule: never, value: string[], callback: (error?: string | string[] | Error | void) => void) {
+    uriValidator (rule: never, value: string[], callback: (error?: string | string[] | Error | void) => void): void {
       value.forEach(value1 => console.log(value1))
-
-      debugger
       callback()
     }
 

@@ -10,8 +10,8 @@ import com.dm.uap.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.xyyh.authorization.core.ApprovalResult
-import org.xyyh.authorization.core.ApprovalResultStore
+import org.xyyh.oidc.core.ApprovalResult
+import org.xyyh.oidc.core.ApprovalResultStore
 import java.util.*
 import javax.persistence.EntityManager
 

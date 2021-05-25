@@ -3,8 +3,8 @@ package com.dm.server.authorization.converter
 import com.dm.collections.CollectionUtils
 import com.dm.server.authorization.dto.ClientDto
 import com.dm.server.authorization.entity.Client
-import org.xyyh.authorization.client.BaseClientDetails
-import org.xyyh.authorization.client.ClientDetails
+import org.xyyh.oidc.client.BaseClientDetails
+import org.xyyh.oidc.client.ClientDetails
 
 object ClientConverter {
     fun copyProperties(client: Client, dto: ClientDto): Client {
@@ -58,7 +58,11 @@ object ClientConverter {
             model.authorizedGrantTypes,
             model.accessTokenValiditySeconds,
             model.refreshTokenValiditySeconds,
-            model.requirePkce
+            model.requirePkce,
+            false,
+            false,
+            false,
+            true
         )
         // bcd.setAccessTokenValiditySeconds(model.getAccessTokenValiditySeconds());
         // TODO bcd.setAdditionalInformation(model.getAdditionalInformation());

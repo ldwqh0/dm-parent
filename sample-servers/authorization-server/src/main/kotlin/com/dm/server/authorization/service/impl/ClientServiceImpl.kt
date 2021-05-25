@@ -17,12 +17,11 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.xyyh.authorization.client.ClientDetails
-import org.xyyh.authorization.client.ClientDetailsService
-import org.xyyh.authorization.exception.NoSuchClientException
+import org.xyyh.oidc.client.ClientDetails
+import org.xyyh.oidc.client.ClientDetailsService
+import org.xyyh.oidc.exception.NoSuchClientException
 
 @Service
-
 class ClientServiceImpl(
     private val clientRepository: ClientRepository
 ) : ClientService, ClientDetailsService {

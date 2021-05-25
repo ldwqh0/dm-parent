@@ -14,7 +14,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <guava.version>29.0-jre</guava.version>
     <spring.cloud.version>2020.0.2</spring.cloud.version>
-    <springboot.version>2.4.5</springboot.version>
+    <springboot.version>2.4.6</springboot.version>
     <springfox.version>2.9.2</springfox.version>
     <hibernate.version>5.4.31.Final</hibernate.version>
     <commons-lang3.version>3.11</commons-lang3.version>
@@ -67,6 +67,7 @@
     <module>dm-workflow/dm-workflow-api</module>
     <module>dm-workflow/dm-workflow-jpa-impl</module>
     <module>sample-servers/authorization-server</module>
+    <module>sample-servers/client-server</module>
   </modules>
   <packaging>pom</packaging>
   <dependencyManagement>

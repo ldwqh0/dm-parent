@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.data.auditing.DateTimeProvider
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.xyyh.authorization.configuration.annotation.EnableAuthorizationServer
+import org.xyyh.oidc.configuration.annotation.EnableAuthorizationServer
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -23,8 +23,8 @@ import java.util.*
 @EnableJpaRepositories
 @EntityScan
 @EnableJpaAuditing(dateTimeProviderRef = "zonedDateTimeProvider")
-@EnableCaching
-class AuthorizationApplication{
+//@EnableCaching
+class AuthorizationApplication {
     @Bean(name = ["zonedDateTimeProvider"])
     fun zonedDateTimeProvider(): DateTimeProvider {
         return DateTimeProvider { Optional.of(ZonedDateTime.now()) }

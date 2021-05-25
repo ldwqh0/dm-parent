@@ -1,0 +1,20 @@
+server:
+  port: 8080
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          oauth2:
+            client-id: app
+            client-secret: 123456
+            scope:
+              - openid
+              - profile
+#            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+        provider:
+          oauth2:
+            issuer-uri: http://127.0.0.1:8887/oauth2
+
+
+

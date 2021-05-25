@@ -4,16 +4,16 @@ import com.dm.security.core.userdetails.UserDetailsDto
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionClaimNames.SUBJECT
 import org.springframework.stereotype.Component
-import org.xyyh.authorization.core.OAuth2Authentication
-import org.xyyh.authorization.core.OAuth2ServerAccessToken
-import org.xyyh.authorization.endpoint.converter.DefaultAccessTokenConverter
+import org.xyyh.oidc.core.OidcAuthentication
+import org.xyyh.oidc.core.OAuth2ServerAccessToken
+import org.xyyh.oidc.endpoint.converter.DefaultAccessTokenConverter
 
 
 @Component
 class DmAccessTokenConverter : DefaultAccessTokenConverter() {
     override fun toAccessTokenIntrospectionResponse(
         token: OAuth2ServerAccessToken?,
-        authentication: OAuth2Authentication
+        authentication: OidcAuthentication
     ): Map<String, Any> {
         val details = authentication.principal
         val response = super.toAccessTokenIntrospectionResponse(token, authentication)

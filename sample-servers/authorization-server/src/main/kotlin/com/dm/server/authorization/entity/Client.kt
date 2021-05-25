@@ -15,7 +15,7 @@ import javax.persistence.*
     uniqueConstraints = [UniqueConstraint(name = "UK_dm_client_name_", columnNames = ["name_"])]
 )
 @EntityListeners(AuditingEntityListener::class)
-class Client(
+data class Client(
     @Id
     @Column(name = "id_", length = 36)
     private var id: String = UUID.randomUUID().toString(),

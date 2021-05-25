@@ -4,13 +4,10 @@ import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
 
     /**
      * 判断系统中是否存在用户
@@ -40,8 +37,6 @@ public interface UserService extends UserDetailsService {
     User resetPassword(long id, String password);
 
     Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable);
-
-    UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException;
 
     Optional<User> findByMobile(String mobile);
 

@@ -2,15 +2,15 @@ package com.dm.server.authorization.config
 
 import com.dm.server.authorization.oauth2.ServerOpaqueTokenIntrospector
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher
-import org.xyyh.authorization.core.OAuth2ResourceServerTokenService
+import org.xyyh.oidc.core.OAuth2ResourceServerTokenService
 
 /**
  * Copyright (C) 2019 江苏云智网络科技股份有限公司版权所有
@@ -19,9 +19,9 @@ import org.xyyh.authorization.core.OAuth2ResourceServerTokenService
  *
  * @author 李东
  */
-@Configuration
+@EnableWebSecurity
 class SecurityConfiguration(
-    private val tokenService: OAuth2ResourceServerTokenService
+    private val tokenService: OAuth2ResourceServerTokenService,
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
@@ -33,9 +33,7 @@ class SecurityConfiguration(
             .loginProcessingUrl("/oauth2/login").permitAll()
             .and().httpBasic().disable()
         // 配置登出成功页面
-        // 配置登出成功页面
         http.logout().logoutUrl("/oauth2/logout").logoutSuccessUrl("/")
-        // 针对rest请求，返回401
         // 针对rest请求，返回401
         val mediaTypeRequestMatcher = MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN)
         mediaTypeRequestMatcher.setIgnoredMediaTypes(setOf(MediaType.ALL))
@@ -43,10 +41,8 @@ class SecurityConfiguration(
             .defaultAuthenticationEntryPointFor(BearerTokenAuthenticationEntryPoint(), mediaTypeRequestMatcher)
         // 这里不处理匿名用户的问题
         // 正常情况下，所有带token的请求都会认为是resource请求，会返回401状态码
-        // 这里不处理匿名用户的问题
-        // 正常情况下，所有带token的请求都会认为是resource请求，会返回401状态码
+//        http.oauth2ResourceServer().opaqueToken().authenticationManager()
         http.oauth2ResourceServer().opaqueToken().introspector(opaqueTokenIntrospector())
-
     }
 
     @Bean
