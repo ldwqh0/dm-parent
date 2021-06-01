@@ -95,10 +95,11 @@ public class UserController {
         if (id == 2) {
             throw new DataValidateException("不能修改系统内置匿名用户");
         }
-        if (!StringUtils.equals(password, rePassword)) {
+        if (StringUtils.equals(password, rePassword)) {
+            return userConverter.toDto(userService.resetPassword(id, password));
+        } else {
             throw new DataValidateException("两次密码输入不一致");
         }
-        return userConverter.toDto(userService.resetPassword(id, password));
     }
 
 

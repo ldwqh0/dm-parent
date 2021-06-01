@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 class ScopeController(
     val clientService: ClientService
 ) {
-
     @GetMapping
     fun findScopes(
         @RequestParam(value = "keyword", required = false, defaultValue = "") keyword: String,

@@ -52,7 +52,10 @@ class ClientController(
      */
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun update(@PathVariable("id") appId: String, @RequestBody client: ClientDto): ClientDto {
+    fun update(
+        @PathVariable("id") appId: String,
+        @RequestBody client: ClientDto
+    ): ClientDto {
         return clientService.update(appId, client)
     }
 

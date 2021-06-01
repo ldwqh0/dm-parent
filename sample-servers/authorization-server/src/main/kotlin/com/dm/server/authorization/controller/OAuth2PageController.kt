@@ -1,9 +1,10 @@
 package com.dm.server.authorization.controller
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestAttribute
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.SessionAttributes
 import org.springframework.web.servlet.ModelAndView
 
 
@@ -49,17 +50,9 @@ class OAuth2PageController {
 
     /**
      * 首页直接跳转
-     *
-     * @return
      */
     @GetMapping("/", "/oauth2/")
     fun index(): String {
         return "redirect:/oauth2/index.html"
-    }
-
-    @GetMapping("/oauth2/users/current")
-    @ResponseBody
-    fun getCurrentUser(@AuthenticationPrincipal currentUser: UserDetails): UserDetails {
-        return currentUser
     }
 }

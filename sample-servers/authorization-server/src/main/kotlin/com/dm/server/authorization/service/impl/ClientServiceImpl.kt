@@ -1,6 +1,5 @@
 package com.dm.server.authorization.service.impl
 
-//import com.dm.server.authorization.entity.QClient
 import com.dm.common.exception.DataNotExistException
 import com.dm.common.exception.DataValidateException
 import com.dm.server.authorization.converter.ClientConverter

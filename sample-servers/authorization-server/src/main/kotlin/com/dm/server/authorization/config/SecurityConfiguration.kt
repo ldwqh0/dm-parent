@@ -1,6 +1,5 @@
 package com.dm.server.authorization.config
 
-import com.dm.server.authorization.oauth2.ServerOpaqueTokenIntrospector
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
@@ -10,7 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher
-import org.xyyh.oidc.core.OAuth2ResourceServerTokenService
+import org.xyyh.oidc.core.OAuth2AuthorizationServerTokenService
+import org.xyyh.oidc.server.security.ServerOpaqueTokenAuthenticationManager
 
 /**
  * Copyright (C) 2019 江苏云智网络科技股份有限公司版权所有
@@ -21,7 +21,7 @@ import org.xyyh.oidc.core.OAuth2ResourceServerTokenService
  */
 @EnableWebSecurity
 class SecurityConfiguration(
-    private val tokenService: OAuth2ResourceServerTokenService,
+    private val tokenService: OAuth2AuthorizationServerTokenService,
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
@@ -41,13 +41,8 @@ class SecurityConfiguration(
             .defaultAuthenticationEntryPointFor(BearerTokenAuthenticationEntryPoint(), mediaTypeRequestMatcher)
         // 这里不处理匿名用户的问题
         // 正常情况下，所有带token的请求都会认为是resource请求，会返回401状态码
-//        http.oauth2ResourceServer().opaqueToken().authenticationManager()
-        http.oauth2ResourceServer().opaqueToken().introspector(opaqueTokenIntrospector())
-    }
-
-    @Bean
-    fun opaqueTokenIntrospector(): ServerOpaqueTokenIntrospector {
-        return ServerOpaqueTokenIntrospector(tokenService)
+        http.oauth2ResourceServer().opaqueToken()
+            .authenticationManager(ServerOpaqueTokenAuthenticationManager(tokenService));
     }
 
     @Bean

@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
-
 interface UserApprovalResultRepository : JpaRepository<UserApprovalResult, UserApprovalResult.Pk> {
     @Query("select uar from UserApprovalResult uar where lower(uar.user.username)=lower(:username) and lower(uar.client.id)=lower(:clientId)")
     fun findById(

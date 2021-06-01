@@ -6,8 +6,6 @@ import com.dm.security.web.authentication.LoginFailureHandler;
 import com.dm.security.web.authentication.LoginSuccessHandler;
 import com.dm.security.web.controller.CurrentAuthorityController;
 import com.dm.security.web.controller.CurrentUserReactiveController;
-import com.dm.uap.repository.UserRepository;
-import com.dm.uap.service.impl.DefaultUserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.*;
@@ -20,7 +18,6 @@ import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -37,18 +34,9 @@ import java.util.List;
 @Configuration
 public class SecurityAutoConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean(UserDetailsService.class)
-    @ConditionalOnClass(DefaultUserDetailsService.class)
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new DefaultUserDetailsService(userRepository);
-    }
-
-
     @Configuration
     @ConditionalOnClass(name = {"javax.servlet.Servlet", "com.dm.security.core.userdetails.UserDetailsDto"})
     static class CurrentUserConfiguration {
-
         @Bean
         public CurrentAuthorityController currentAuthorityController() {
             return new CurrentAuthorityController();
