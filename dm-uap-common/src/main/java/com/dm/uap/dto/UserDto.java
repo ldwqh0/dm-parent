@@ -2,7 +2,9 @@ package com.dm.uap.dto;
 
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
+import com.dm.uap.entity.Address;
 import com.dm.uap.entity.Role;
+import com.dm.uap.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -52,6 +54,18 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     @Size(max = 50, groups = {Default.class})
     private String no;
 
+    private String givenName;
+
+    private String familyName;
+
+    private String middleName;
+
+    private String profile;
+
+    private String website;
+
+    private User.Gender gender;
+
     /**
      * 用户名
      */
@@ -86,12 +100,16 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     @Size(max = 100, groups = {Default.class})
     private String email;
 
+    private boolean emailVerified = false;
+
     /**
      * 用户手机号
      */
     @Mobile(groups = {Default.class})
     @Size(max = 20, groups = {Default.class})
     private String mobile;
+
+    private boolean phoneNumberVerified = false;
 
     /**
      * 用户描述信息
@@ -133,5 +151,12 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
      * 用户头像
      */
     private String profilePhoto;
+
+    private String zoneinfo;
+
+    private String local;
+
+    private Address address;
+
 }
 

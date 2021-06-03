@@ -73,9 +73,6 @@ public class User extends AbstractEntity {
     @Column(name = "enabled_", nullable = false)
     private boolean enabled = true;
 
-    @Column(name = "locked_", nullable = false)
-    private boolean locked = false;
-
     @Column(name = "fullname_", length = 200)
     private String fullname;
 
@@ -93,9 +90,6 @@ public class User extends AbstractEntity {
 
     @Column(name = "description_", length = 2000)
     private String description;
-
-    @Column(name = "order_")
-    private Long order;
 
     @Column(name = "zoneinfo_", length = 100)
     private String zoneinfo;

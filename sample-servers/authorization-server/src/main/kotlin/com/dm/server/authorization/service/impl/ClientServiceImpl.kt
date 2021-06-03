@@ -41,6 +41,7 @@ class ClientServiceImpl(
         return clientRepository.count() > 0
     }
 
+    @Transactional
     @CacheEvict(cacheNames = ["clients"])
     override fun delete(clientId: String) {
         clientRepository.deleteById(clientId)

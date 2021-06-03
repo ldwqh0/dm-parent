@@ -174,7 +174,7 @@ public class UserController {
     public ValidationResult usernameValidation(
         @RequestParam(value = "exclude", required = false) Long id,
         @RequestParam("username") String username) {
-        if (userService.userExistsByUsername(id, username)) {
+        if (userService.userExistsByUsername(username, id)) {
             return ValidationResult.failure("用户名已存在");
         } else {
             return ValidationResult.success();
@@ -210,7 +210,7 @@ public class UserController {
     public ValidationResult emailValidation(
         @RequestParam(value = "exclude", required = false) Long id,
         @RequestParam("email") String email) {
-        if (userService.userExistsByEmail(id, email)) {
+        if (userService.userExistsByEmail(email, id)) {
             return ValidationResult.failure("邮箱已被注册");
         } else {
             return ValidationResult.success();

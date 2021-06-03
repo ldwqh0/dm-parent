@@ -2,7 +2,6 @@ package com.dm.uap.converter;
 
 import com.dm.collections.Maps;
 import com.dm.common.converter.Converter;
-import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
@@ -21,9 +20,6 @@ public class UserConverter implements Converter<User, UserDto> {
     private UserDto toDtoActual(User user) {
         UserDto dto = toSimpleDto(user);
         dto.setDescription(user.getDescription());
-        dto.setScenicName(user.getScenicName());
-        dto.setRegionCode(user.getRegionCode());
-
         Map<Department, String> _posts = user.getPosts();
         if (Maps.isNotEmpty(_posts)) {
             List<UserPostDto> posts = new ArrayList<>();
@@ -63,11 +59,21 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setFullname(model.getFullname());
         dto.setUsername(model.getUsername());
         dto.setMobile(model.getMobile());
+        dto.setPhoneNumberVerified(model.isPhoneNumberVerified());
         dto.setEmail(model.getEmail());
+        dto.setEmailVerified(model.isEmailVerified());
         dto.setEnabled(model.isEnabled());
-        dto.setBirthDate(model.getBirthDate());
         dto.setProfilePhoto(model.getProfilePhoto());
         dto.setNo(model.getNo());
+        dto.setDescription(model.getDescription());
+        dto.setScenicName(model.getScenicName());
+        dto.setRegionCode(model.getRegionCode());
+        dto.setBirthDate(model.getBirthDate());
+        dto.setAddress(model.getAddress());
+        dto.setGivenName(model.getGivenName());
+        dto.setFamilyName(model.getFamilyName());
+        dto.setMiddleName(model.getMiddleName());
+        // TODO 待处理
         return dto;
     }
 }

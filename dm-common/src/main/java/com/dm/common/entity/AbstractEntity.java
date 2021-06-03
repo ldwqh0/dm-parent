@@ -15,8 +15,8 @@ public abstract class AbstractEntity implements Persistable<Long> {
     @Column(name = "id_", updatable = false)
     private Long id;
 
-    @Column(name = "version_", nullable = false)
     @Version
+    @Column(name = "version_", nullable = false)
     private Long version = 0L;
 
     @Override
@@ -66,7 +66,7 @@ public abstract class AbstractEntity implements Persistable<Long> {
      * 3.用户A提交数据<br>
      * 4.用户B提交数据<br>
      * 当用户A提交数据后，如果用户B尝试提交数据，用户B实际上修改的数据是用户A修改之前的版本，而不是数据最新的版本，因为它没有感知到用户A对数据的提交<br>
-     * hibernate的默认乐观锁实现仅仅在线程并发时才会生效。而我们需要的业务可能线程并没有并发，仅仅是人的并行编辑的动作，因此需要手动的对version进行检查<br>
+     * hibernate的默认乐观锁实现仅仅在事务并发时才会生效。而我们需要的业务可能线程并没有并发，仅仅是人的并行编辑的动作，因此需要手动的对version进行检查<br>
      * 这个检查不是必须的，由各个实体根据自身的业务需求而定
      *
      * @param version 待检查的传入的版本号

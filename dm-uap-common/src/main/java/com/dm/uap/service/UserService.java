@@ -45,20 +45,20 @@ public interface UserService {
      * 规则:用户等于username,但id不等于指定id的用户如果存在,则表示存在同名用户<br>
      * 用户新增用户或者修改用户名时的预检测
      *
-     * @param exclude
      * @param username
+     * @param exclude
      */
-    boolean userExistsByUsername(Long exclude, String username);
+    boolean userExistsByUsername(String username, Long exclude);
 
     /**
      * 检测是否存在同名用户<br>
      * 规则:用户等于email,但id不等于指定id的用户如果存在,则表示存在同名用户<br>
      * 用户新增用户或者修改用户名时的预检测
      *
-     * @param id
      * @param email
+     * @param id
      */
-    boolean userExistsByEmail(Long id, String email);
+    boolean userExistsByEmail(String email, Long id);
 
     /**
      * 检测是否存在同名用户<br>

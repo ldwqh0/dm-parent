@@ -20,12 +20,12 @@ import org.springframework.web.servlet.ModelAndView
 class OAuth2PageController {
     @GetMapping("/oauth2/login.html", "/oauth2/login.html")
     fun login(): String {
-        return "oauth/login.html"
+        return "oauth2/login.html"
     }
 
     @GetMapping("/oauth2/logout")
     fun logout(): String {
-        return "oauth/logout.html"
+        return "oauth2/logout.html"
     }
 
     /**
@@ -39,7 +39,7 @@ class OAuth2PageController {
         @RequestParam(value = "client_id", required = false) client: String?,
         @RequestParam(value = "redirect_uri", required = false) redirect: String?
     ): ModelAndView {
-        val mv = ModelAndView("oauth/error.html")
+        val mv = ModelAndView("oauth2/error.html")
         //        if (error instanceof RedirectMismatchException) {
 //            message = "请求的redirect_uri: [" + redirect + "] 与该应用(" + client + ")配置的redirect_uri不匹配";
 //        } else {

@@ -13,6 +13,7 @@ import com.dm.uap.entity.User;
 import com.dm.uap.repository.DepartmentRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
+import com.dm.util.Assert;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
@@ -54,9 +55,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    @Caching(cacheable = {
-        @Cacheable(cacheNames = {"users"}, sync = true, key = "#username.toLowerCase()"),
-    })
+    @Cacheable(cacheNames = "users", sync = true, key = "#username.toLowerCase()")
     public UserDetailsDto loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional.ofNullable(username)
             .filter(StringUtils::isNotEmpty)
@@ -66,9 +65,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    @Caching(cacheable = {
-        @Cacheable(cacheNames = {"users"}, sync = true, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
-    })
+    @Cacheable(cacheNames = "users", sync = true, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
         return Optional.ofNullable(mobile)
             .filter(StringUtils::isNotEmpty)
@@ -85,41 +82,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
     public User save(UserDto userDto) {
-        checkUsernameExists(userDto.getId(), userDto.getUsername());
-        User user = new User();
-        userConverter.copyProperties(user, userDto);
+        validationUser(userDto, null);
         String password = userDto.getPassword();
-        if (StringUtils.isNotBlank(password)) {
-            user.setPassword(passwordEncoder.encode(password));
-        } else {
-            user.setPassword(null);
-        }
+        // 密码不能为空
+        Assert.notEmpty(password).orElseThrow(() -> new DataValidateException("用户密码不能为空"));
+        User user = userConverter.copyProperties(new User(), userDto);
+        user.setPassword(passwordEncoder.encode(password));
         addPostsAndRoles(user, userDto);
         user = userRepository.save(user);
-        user.setOrder(user.getId());
         return user;
-    }
-
-    /**
-     * 判断某个用户名是否被占用，检测用户ID!=指定ID
-     *
-     * @param id       用户ID
-     * @param username 用户名称
-     */
-    private void checkUsernameExists(Long id, String username) {
-        BooleanBuilder builder = new BooleanBuilder();
-        if (Objects.nonNull(id)) {
-            builder.and(qUser.id.ne(id));
-        }
-
-        if (StringUtils.isNotBlank(username)) {
-            builder.and(qUser.username.eq(username));
-        } else {
-            throw new RuntimeException("The username can not be empty");
-        }
-        if (userRepository.exists(builder)) {
-            throw new DataValidateException("用户名已被占用");
-        }
     }
 
     @Override
@@ -135,7 +106,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     })
     public User delete(long id) {
         Optional<User> user = userRepository.findById(id);
-        user.ifPresent(a -> userRepository.deleteById(id));
+        user.ifPresent(userRepository::delete);
         return user.orElseThrow(DataNotExistException::new);
     }
 
@@ -146,9 +117,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
     public User update(long id, UserDto userDto) {
-        checkUsernameExists(id, userDto.getUsername());
-        User user = userRepository.getOne(id);
-        userConverter.copyProperties(user, userDto);
+        validationUser(userDto, id);
+        User user = userConverter.copyProperties(userRepository.getOne(id), userDto);
         addPostsAndRoles(user, userDto);
         return user;
     }
@@ -216,7 +186,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean userExistsByUsername(Long exclude, String username) {
+    public boolean userExistsByUsername(String username, Long exclude) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.username.equalsIgnoreCase(username));
         if (Objects.nonNull(exclude)) {
@@ -226,7 +196,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean userExistsByEmail(Long exclude, String email) {
+    public boolean userExistsByEmail(String email, Long exclude) {
         BooleanBuilder query = new BooleanBuilder();
         query.and(qUser.email.equalsIgnoreCase(email));
         if (Objects.nonNull(exclude)) {
@@ -288,7 +258,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         dto.setCredentialsExpired(user.isCredentialsExpired());
         dto.setEnabled(user.isEnabled());
         dto.setId(user.getId());
-        dto.setLocked(user.isLocked());
         dto.setUsername(user.getUsername());
         dto.setFullname(user.getFullname());
         dto.setScenicName(user.getScenicName());
@@ -296,5 +265,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         dto.setGrantedAuthority(user.getRoles());
         dto.setMobile(user.getMobile());
         return dto;
+    }
+
+    private void validationUser(UserDto user, Long exclude) {
+        String mobile = user.getMobile();
+        String email = user.getEmail();
+        Assert.from(user.getUsername(), v -> !userExistsByUsername(v, exclude)).orElseThrow(() -> new DataValidateException("用户名已经存在"));
+        if (StringUtils.isNotBlank(mobile)) {
+            Assert.from(mobile, v -> !userExistsByUsername(v, exclude)).orElseThrow(() -> new DataValidateException("手机号已经被占用"));
+        }
+        if (StringUtils.isNotBlank(email)) {
+            Assert.from(email, v -> !userExistsByEmail(v, exclude)).orElseThrow(() -> new DataValidateException("邮箱已经被占用"));
+        }
     }
 }

@@ -61,7 +61,7 @@ public class UapAutoConfiguration implements InitializingBean {
             userService.save(user);
         }
         // 建立默认匿名账号
-        if (!userService.userExistsByUsername(null, "ANONYMOUS")) {
+        if (!userService.userExistsByUsername("ANONYMOUS", null)) {
             UserDto anonymous = new UserDto();
             anonymous.setUsername("ANONYMOUS");
             anonymous.setPassword("ANONYMOUS");

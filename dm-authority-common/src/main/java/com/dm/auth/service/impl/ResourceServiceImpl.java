@@ -70,7 +70,6 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
     public ResourceDto update(long id, ResourceDto dto) {
         AuthResource resource = resourceRepository.getOne(id);
         copyProperties(resource, dto);
-//        dto.getAccessAuthorities()
         return resourceConverter.toDto(resource);
     }
 

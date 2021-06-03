@@ -66,8 +66,8 @@
     <module>dm-activity/dm-activity-jpa-impl</module>
     <module>dm-workflow/dm-workflow-api</module>
     <module>dm-workflow/dm-workflow-jpa-impl</module>
-    <module>sample-servers/authorization-server</module>
-    <module>sample-servers/client-server</module>
+<!--    <module>sample-servers/authorization-server</module>-->
+<!--    <module>sample-servers/client-server</module>-->
   </modules>
   <packaging>pom</packaging>
   <dependencyManagement>

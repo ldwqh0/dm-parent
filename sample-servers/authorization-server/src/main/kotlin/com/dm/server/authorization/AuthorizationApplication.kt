@@ -23,7 +23,7 @@ import java.util.*
 @EnableJpaRepositories
 @EntityScan
 @EnableJpaAuditing(dateTimeProviderRef = "zonedDateTimeProvider")
-//@EnableCaching
+@EnableCaching
 class AuthorizationApplication {
     @Bean(name = ["zonedDateTimeProvider"])
     fun zonedDateTimeProvider(): DateTimeProvider {

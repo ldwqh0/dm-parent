@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>系统登录</title>
+    <link rel="stylesheet" type="text/css" href="static/styles/login.css">
+</head>
+<body>
+<form class="el-form login-form" action="login" method="post" onsubmit="return checkForm()">
+    <h1>用户登录</h1>
+    <h2>USER LOGIN</h2>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <div class="el-input el-input--prefix">
+        <span class="el-input__prefix">
+            <img title="login" src="static/images/login-name.png">
+        </span>
+        <input id="user" type="text" name="username" placeholder="请输入用户名" autocomplete="username">
+    </div>
+    <div class="el-input el-input--prefix">
+        <span class="el-input__prefix">
+            <img title="password" src="static/images/login-pas.png">
+        </span>
+        <input id="psd" name="password" placeholder="请输入密码" type="password" autocomplete="current-password">
+        <div class="error" id="show-name">
+            <span th:if="${param.error!=null && (session['SPRING_SECURITY_LAST_EXCEPTION'] != null)}"
+                  th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></span>
+        </div>
+    </div>
+
+    <div class="el-button">
+        <input type="submit" value="登录">
+    </div>
+</form>
+</body>
+<script>
+  function checkForm () {
+    var user = document.getElementById('user').value
+    var psd = document.getElementById('psd').value
+    if (user === '') {
+      return false
+    }
+    if (psd === '') {
+      return false
+    }
+  }
+</script>
+</html>
