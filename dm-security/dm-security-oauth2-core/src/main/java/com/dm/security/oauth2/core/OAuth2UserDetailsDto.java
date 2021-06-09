@@ -22,7 +22,7 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
     @Override
     @JsonIgnore
     public String getName() {
-        String name = super.getName();
+        String name = super.getUsername();
         return Objects.isNull(name) ? clientId : name;
     }
 
@@ -42,7 +42,6 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
         } else {
             this.attributes.put(key, value);
         }
-
     }
 
     public Set<String> getScopes() {
@@ -79,7 +78,6 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
             return false;
         OAuth2UserDetailsDto other = (OAuth2UserDetailsDto) obj;
         return Objects.equals(attributes, other.attributes) && Objects.equals(clientId, other.clientId)
-                && Objects.equals(scopes, other.scopes);
+            && Objects.equals(scopes, other.scopes);
     }
-
 }

@@ -62,7 +62,7 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
                     }
                 });
             }
-            user.setId(Long.valueOf((String) response.getSubject()));
+            user.setId(toLong(response.getSubject()));
             user.setEnabled(true);
             user.setClientId(response.getClientId());
             user.setGrantedAuthority(authorities);
@@ -72,6 +72,16 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
         } else {
             logger.trace("Did not validate token since it is inactive");
             throw new BadOpaqueTokenException("Provided token isn't active");
+        }
+    }
+
+    private Long toLong(Object v) {
+        if (Objects.isNull(v)) {
+            return null;
+        } else if (v instanceof Number) {
+            return ((Number) v).longValue();
+        } else {
+            return Long.valueOf(String.valueOf(v));
         }
     }
 

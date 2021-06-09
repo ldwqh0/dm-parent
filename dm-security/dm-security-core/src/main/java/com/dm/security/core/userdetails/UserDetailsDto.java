@@ -8,15 +8,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 @JsonInclude(Include.NON_ABSENT)
-public class UserDetailsDto implements UserDetails, OAuth2User {
+public class UserDetailsDto implements UserDetails {
     private static final long serialVersionUID = -4337846050031244208L;
 
     private Long id;
@@ -32,6 +30,8 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
     private String fullname;
 
     private String mobile;
+
+    private String email;
 
     private String regionCode;
 
@@ -153,6 +153,14 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
         return regionCode;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -174,17 +182,4 @@ public class UserDetailsDto implements UserDetails, OAuth2User {
             return other.id == null;
         } else return id.equals(other.id);
     }
-
-    @Override
-    @JsonIgnore
-    public Map<String, Object> getAttributes() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    @JsonIgnore
-    public String getName() {
-        return username;
-    }
-
 }

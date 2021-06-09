@@ -3,6 +3,7 @@ package com.dm.collections;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -21,6 +22,38 @@ public final class Maps {
 
     public static <K, V> HashMap<K, V> hashMap() {
         return new HashMap<>();
+    }
+
+    public static <K> String getStringOrDefault(Map<K, Object> map, K key, String defaultValue) {
+        Object value = map.getOrDefault(key, defaultValue);
+        if (Objects.isNull(value)) {
+            return null;
+        } else if (value instanceof String) {
+            return (String) value;
+        } else {
+            return String.valueOf(value);
+        }
+    }
+
+    public static <K> String getString(Map<K, Object> map, K key) {
+        return getStringOrDefault(map, key, null);
+    }
+
+    public static <K> Long getLong(Map<K, ? super Object> map, K key) {
+        return getLongOrDefault(map, key, null);
+    }
+
+    public static <K> Long getLongOrDefault(Map<K, ? super Object> map, K key, Long defaultValue) {
+        Object value = map.getOrDefault(key, defaultValue);
+        if (Objects.isNull(value)) {
+            return null;
+        } else if (value instanceof Long) {
+            return (Long) value;
+        } else if (value instanceof String) {
+            return Long.valueOf((String) value);
+        } else {
+            return Long.valueOf(String.valueOf(value));
+        }
     }
 
     @SafeVarargs
