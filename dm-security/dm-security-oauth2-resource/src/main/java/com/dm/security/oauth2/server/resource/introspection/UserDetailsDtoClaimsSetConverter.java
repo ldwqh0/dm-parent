@@ -62,7 +62,7 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
                     }
                 });
             }
-            user.setId(toLong(response.getSubject()));
+            user.setId(Long.valueOf((String) response.getSubject()));
             user.setEnabled(true);
             user.setClientId(response.getClientId());
             user.setGrantedAuthority(authorities);

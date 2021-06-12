@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -156,7 +154,7 @@ public class UserController {
         @RequestParam(value = "role", required = false) Long role,
         @RequestParam(value = "roleGroup", required = false) String roleGroup,
         @RequestParam(value = "keyword", required = false) String keyword,
-        @PageableDefault(sort = {"order"}, direction = Direction.ASC) Pageable pageable) {
+        Pageable pageable) {
         Page<User> result = userService.search(department, role, roleGroup, keyword, pageable);
         return result.map(userConverter::toDto);
     }
