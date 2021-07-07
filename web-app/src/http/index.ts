@@ -26,4 +26,6 @@ const plugin: PluginObject<PluginOptions> = {
 
 export default http
 
+export { default as tableHttp } from './tableHttp'
+
 export { plugin, store, httpOptions }

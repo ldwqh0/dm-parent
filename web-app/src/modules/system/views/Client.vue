@@ -3,39 +3,51 @@
            label-width="100px"
            :model="model"
            :rules="rules">
-    <el-form-item label="clientId">{{ model.id }}</el-form-item>
-    <el-form-item label="应用名称" prop="name">
-      <el-input v-model.trim="model.name" />
-    </el-form-item>
     <el-row>
-      <el-col :span="8">
+      <el-col :span="12">
+        <el-form-item label="应用名称：" prop="name">
+          <el-input v-model.trim="model.name" />
+        </el-form-item>
+      </el-col>
+      <el-col v-if="model.id" :span="12">
+        <el-form-item label="clientId：">{{ model.id }}</el-form-item>
+      </el-col>
+    </el-row>
+    <el-row v-if="model.id===null||model.id===undefined">
+      <el-col :span="12">
+        <el-form-item label="客户端密钥：">
+          {{ model.secret }}
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="12">
         <el-form-item label="应用类型" prop="type">
-          <el-select v-model="model.type">
-            <el-option value="CLIENT" label="客户端" />
-            <el-option value="RESOURCE" label="资源服务器" />
+          <el-select v-model="model.type" style="width: 100%;">
+            <el-option value="CLIENT_PUBLIC" label="公共客户端" />
+            <el-option value="CLIENT_CONFIDENTIAL" label="机密客户端" />
+            <el-option value="CLIENT_RESOURCE" label="资源服务器" />
           </el-select>
         </el-form-item>
       </el-col>
-      <el-col :span="8">
-        <el-form-item prop="requirePkce" label="需要pkce">
-          <el-checkbox v-model="model.requirePkce" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item prop="autoApprove" label="允许自动授权">
-          <el-checkbox v-model="model.autoApprove" />
+      <el-col :span="12">
+        <el-form-item prop="autoApprove" label="">
+          <el-checkbox v-model="model.autoApprove" label="允许自动授权" title="是否会跳转到用户授权页面" />
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="12">
-        <el-form-item prop="accessTokenValiditySeconds" label="ACCESS_TOKEN 有效期" label-width="200px">
+        <el-form-item prop="accessTokenValiditySeconds" label="ACCESS_TOKEN 有效期：" label-width="200px">
           <el-input-number v-model="model.accessTokenValiditySeconds" />
+          毫秒
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item prop="refreshTokenValiditySeconds" label="REFRESH_TOKEN 有效期" label-width="200px">
+        <el-form-item prop="refreshTokenValiditySeconds" label="REFRESH_TOKEN 有效期：" label-width="200px">
           <el-input-number v-model="model.refreshTokenValiditySeconds" />
+          毫秒
         </el-form-item>
       </el-col>
     </el-row>
@@ -44,6 +56,7 @@
         <el-option v-for="type in grantTypes"
                    :key="type.value"
                    :value="type.value"
+                   title="adb"
                    :label="type.name" />
       </el-select>
     </el-form-item>
@@ -58,11 +71,14 @@
       </el-select>
     </el-form-item>
     <el-form-item prop="registeredRedirectUris" label="回调地址">
-      <el-input v-model="registeredRedirectUris" type="textarea" autosize />
+      <el-input v-model="registeredRedirectUris"
+                type="textarea"
+                autosize
+                show-word-limit />
     </el-form-item>
     <el-form-item label-width="0" style="text-align: center">
       <el-button type="primary" @click="save">确定</el-button>
-      <el-button type="danger">取消</el-button>
+      <el-button type="danger" @click="$router.back()">取消</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -122,12 +138,20 @@
 
     save (): Promise<unknown> {
       return (this.$refs.form as any).validate()
-        .then(() => http.put(`${urls.client}/${this.id}`, this.model))
+        .then(() => {
+          if (this.id === 'new') {
+            return http.post(`${urls.client}`, this.model)
+          } else {
+            return http.put(`${urls.client}/${this.id}`, this.model)
+          }
+        })
         .then(() => this.$router.back())
     }
 
     created (): void {
-      http.get(`${urls.client}/${this.id}`).then(({ data }) => (this.model = data))
+      if (this.id !== 'new') {
+        http.get(`${urls.client}/${this.id}`).then(({ data }) => (this.model = data))
+      }
       http.get(`${urls.uScopes}`).then(({ data: { content } }) => (this.scopes = content))
     }
   }

@@ -102,29 +102,29 @@ public class AuthResource extends AbstractEntity {
         this.denyAuthorities.addAll(denyAuthorities);
     }
 
-    /**
-     * 指示是否拒绝所有的访问
-     */
-    @Column(name = "deny_all_")
-    private boolean denyAll = true;
+//    /**
+//     * 指示是否拒绝所有的访问
+//     */
+//    @Column(name = "deny_all_")
+//    private boolean denyAll = true;
+//
+//    public void setDenyAll(boolean denyAll) {
+//        this.denyAll = denyAll;
+//        if (denyAll) {
+//            this.authenticated = false;
+//        }
+//    }
 
-    public void setDenyAll(boolean denyAll) {
-        this.denyAll = denyAll;
-        if (denyAll) {
-            this.authenticated = false;
-        }
-    }
-
-    /**
-     * 是否必须授权访问
-     */
-    @Column(name = "authenticated_")
-    private boolean authenticated;
-
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
-        if (authenticated) {
-            this.denyAll = false;
-        }
-    }
+//    /**
+//     * 是否必须授权访问
+//     */
+//    @Column(name = "authenticated_")
+//    private boolean authenticated;
+//
+//    public void setAuthenticated(boolean authenticated) {
+//        this.authenticated = authenticated;
+//        if (authenticated) {
+//            this.denyAll = false;
+//        }
+//    }
 }

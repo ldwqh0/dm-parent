@@ -4,17 +4,18 @@ import router from '@/router'
 import store from '@/store'
 import ElementUi from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import http, { plugin as httpPlugin } from '@/http'
+import { plugin as httpPlugin, tableHttp } from '@/http'
 import EleDataTables from 'element-datatables'
 import { plugin as commonPlugin } from '@/common'
 
-import { system, security } from './modules'
+import { security, system } from './modules'
 
 Vue.use(ElementUi)
-Vue.use(EleDataTables, { httpInstance: http })
+Vue.use(EleDataTables, { httpInstance: tableHttp })
 
 const rootConfig = {
-  router, store
+  router,
+  store
 }
 Vue.use(commonPlugin)
 Vue.use(httpPlugin, rootConfig)

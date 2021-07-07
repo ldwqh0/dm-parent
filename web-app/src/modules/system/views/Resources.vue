@@ -5,7 +5,7 @@
         <el-col :span="12">
           <el-form-item>
             <el-input
-              v-model="searchObj.search"
+              v-model="searchObj.keyword"
               placeholder="请输入关键字" />
           </el-form-item>
         </el-col>
@@ -25,21 +25,10 @@
                      stripe>
       <el-table-column label="资源名称" prop="name" />
       <el-table-column label="匹配路径" prop="matcher" />
+      <el-table-column label="匹配模式" prop="matchType" />
       <el-table-column label="请求类型" prop="methods" />
-      <el-table-column label="认证即可访问">
-        <template #default="{row}">
-          <span v-if="row.authenticated">是</span>
-          <span v-else>否</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="禁止访问">
-        <template #default="{row}">
-          <span v-if="row.denyAll">是</span>
-          <span v-else>否</span>
-        </template>
-      </el-table-column>
       <el-table-column label="资源描述" prop="description" />
-      <el-table-column label="操作" min-width="100">
+      <el-table-column label="操作" width="100px" fixed="right">
         <template #default="{row}">
           <el-button type="text" size="small" @click="$router.push({name:'resource',params:{id:row.id}})">编辑</el-button>
           <!--<el-button type="text" size="small" @click="setmenu(scope.row)">设置菜单权限</el-button>-->

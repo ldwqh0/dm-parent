@@ -3,52 +3,35 @@
            :rules="rules"
            :model="department"
            label-width="100px">
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="部门名称：" prop="fullname">
-          <el-input v-model="department.fullname" />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="部门简称：" prop="shortname">
-          <el-input v-model="department.shortname" />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="节点类型：" prop="type">
-          <el-select v-model="department.type" placeholder="请选择">
-            <el-option label="机构" value="ORGANS" />
-            <el-option label="部门" value="DEPARTMENT" />
-            <el-option label="分组" value="GROUP" />
-          </el-select>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="上级单位：" prop="parent">
-          <el-cascader
-            v-model="parent"
-            clearable
-            :options="departmentTree"
-            expand-trigger="hover"
-            :props="cascadeProps"
-            change-on-select />
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <el-form-item label="部门名称：" prop="fullname">
+      <el-input v-model="department.fullname" />
+    </el-form-item>
 
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="描述信息：" prop="description">
-          <el-input v-model="department.description" type="textarea" />
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <el-form-item label="部门简称：" prop="shortname">
+      <el-input v-model="department.shortname" />
+    </el-form-item>
+
+    <el-form-item label="节点类型：" prop="type">
+      <el-select v-model="department.type" placeholder="请选择" style="width: 100%;">
+        <el-option label="机构" value="ORGANS" />
+        <el-option label="部门" value="DEPARTMENT" />
+        <el-option label="分组" value="GROUP" />
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="上级单位：" prop="parent">
+      <el-cascader v-model="parent"
+                   style="width: 100%;"
+                   clearable
+                   :options="departmentTree"
+                   expand-trigger="hover"
+                   :props="cascadeProps"
+                   change-on-select />
+    </el-form-item>
+
+    <el-form-item label="描述信息：" prop="description">
+      <el-input v-model="department.description" type="textarea" />
+    </el-form-item>
   </el-form>
 </template>
 <script lang="ts">

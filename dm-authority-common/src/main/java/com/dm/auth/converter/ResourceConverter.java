@@ -22,8 +22,6 @@ public class ResourceConverter implements Converter<AuthResource, ResourceDto> {
         dto.setMatcher(model.getMatcher());
         dto.setDescription(model.getDescription());
         dto.setMatchType(model.getMatchType());
-        dto.setDenyAll(model.isDenyAll());
-        dto.setAuthenticated(model.isAuthenticated());
         dto.setMethods(Sets.hashSet(model.getMethods()));
         return dto;
     }
@@ -43,9 +41,7 @@ public class ResourceConverter implements Converter<AuthResource, ResourceDto> {
         model.setName(dto.getName());
         model.setMatchType(dto.getMatchType());
         model.setScope(dto.getScope());
-        model.setDenyAll(dto.isDenyAll());
         model.setMethods(dto.getMethods());
-        model.setAuthenticated(dto.isAuthenticated());
         return model;
     }
 

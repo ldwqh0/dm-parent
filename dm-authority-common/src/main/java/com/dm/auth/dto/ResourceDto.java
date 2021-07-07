@@ -58,13 +58,4 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
      */
     private Set<RoleDto> denyAuthorities = new HashSet<>();
 
-    /**
-     * 指示是否拒绝所有的访问
-     */
-    private boolean denyAll = true;
-
-    /**
-     * 是否必须授权访问
-     */
-    private boolean authenticated;
 }

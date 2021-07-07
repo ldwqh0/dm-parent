@@ -74,15 +74,6 @@ public class ServerHttpRequestReactiveAuthorizationManager
                 .filter(StringUtils::isNotEmpty)
                 .collect(Collectors.toSet());
             for (ResourceAuthorityAttribute attribute : list) {
-                // 如果针对某个资源的的配置是拒绝访问，立即拒绝
-                if (attribute.isDenyAll()) {
-                    return Mono.just(new AuthorizationDecision(false));
-                }
-                // 如果针对某个资源的访问是登录即可访问，判断用户是否登录，
-                // 如果显示的配置了登录即可访问，当用户没有登录时，不予处理，根据后面的规则进行处理。
-                if (attribute.isAuthenticated() && !isAnonymous(authentication)) {
-                    checkResult = checkResult.concatWith(additionalValidate(attribute, authentication, context));
-                }
                 // 拒绝的列表
                 Set<String> denyAuthorities = attribute.getDenyAuthorities();
                 // 允许的列表

@@ -16,15 +16,11 @@
       </el-tree>
     </el-aside>
     <el-main style="padding: 0;">
-      <el-form inline
-               :model="search"
-               class="clear-float">
+      <el-form inline :model="search" class="clear-float">
         <el-row>
           <el-col :span="12">
             <el-form-item class="pull-left">
-              <el-input
-                v-model="search.search"
-                placeholder="请输入关键字" />
+              <el-input v-model="search.keyword" clearable placeholder="请输入关键字" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -119,7 +115,7 @@
 
     search: {
       parentId?: number,
-      search?: string
+      keyword?: string
     } = {}
 
     /**
@@ -149,7 +145,10 @@
       this.menuDialogVisible = true
     }
 
-    move ({ id, position }: { id: number, position: string }): Promise<any> {
+    move ({
+      id,
+      position
+    }: { id: number, position: string }): Promise<any> {
       return http.put(`${URLS.menus}/${id}/order`, { position })
         .then(this.reloadAll)
         .then(() => this.$message({

@@ -71,6 +71,7 @@ public class AuthAutoConfiguration {
         Set<MenuDto> menus_ = menus.stream().map(m -> {
             MenuDto md = new MenuDto();
             md.setId(m.getId());
+            md.setOrder(1L);
             return md;
         }).collect(Collectors.toSet());
 
@@ -94,6 +95,7 @@ public class AuthAutoConfiguration {
 
     private void initRole() {
         // 增加默认管理员角色
+        // id=1
         if (!roleService.existsByFullname("内置分组_ROLE_ADMIN")) {
             RoleDto role = new RoleDto();
             role.setName("ROLE_ADMIN");
@@ -103,16 +105,18 @@ public class AuthAutoConfiguration {
             Role admin = roleService.save(role);
             initAuthority(admin);
         }
-        // 增加默认普通用户角色
-        if (!roleService.existsByFullname("内置分组_ROLE_USER")) {
+        // 增加系统内置已登录用户角色，所有已登录用户均有该角色
+        // id=2
+        if (!roleService.existsByFullname("内置分组_ROLE_AUTHENTICATED")) {
             RoleDto role = new RoleDto();
-            role.setName("ROLE_USER");
+            role.setName("ROLE_AUTHENTICATED");
             role.setGroup("内置分组");
+            role.setDescription("系统内置认证通过角色，所有已经登录的用户均为该角色");
             role.setState(Status.ENABLED);
-            role.setDescription("系统内置普通用户角色");
             roleService.save(role);
         }
         // 增加默认匿名用户角色
+        // id=3
         if (!roleService.existsByFullname("内置分组_ROLE_ANONYMOUS")) {
             RoleDto role = new RoleDto();
             role.setName("ROLE_ANONYMOUS");
@@ -121,5 +125,6 @@ public class AuthAutoConfiguration {
             role.setState(Status.ENABLED);
             roleService.save(role);
         }
+
     }
 }

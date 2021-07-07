@@ -34,24 +34,11 @@ public class ResourceAuthorityAttribute implements Serializable {
      */
     private final Set<String> denyAuthorities;
 
-    /**
-     * 指示是否拒绝所有的访问
-     */
-    private boolean denyAll = true;
-
-    /**
-     * 是否必须授权访问
-     */
-    private boolean authenticated;
 
     public ResourceAuthorityAttribute(
         UriResource resource,
-        boolean denyAll,
-        boolean authenticated,
         Set<String> accessAuthorities,
         Set<String> denyAuthorities) {
-        this.denyAll = denyAll;
-        this.authenticated = authenticated;
         this.resource = resource;
         this.accessAuthorities = accessAuthorities;
         this.denyAuthorities = denyAuthorities;
@@ -98,7 +85,6 @@ public class ResourceAuthorityAttribute implements Serializable {
      */
     public void addAccessAuthority(String authority) {
         this.accessAuthorities.add(authority);
-        this.denyAll = false;
     }
 
     /**
@@ -111,32 +97,4 @@ public class ResourceAuthorityAttribute implements Serializable {
         this.accessAuthorities.remove(authority);
     }
 
-    /**
-     * 是否授权用户即可访问，配置为false表示可以匿名访问
-     *
-     * @return
-     */
-    public boolean isAuthenticated() {
-        return this.authenticated;
-    }
-
-
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
-        if (authenticated) {
-            this.denyAll = false;
-        }
-    }
-
-    public void setDenyAll(boolean denyAll) {
-        this.denyAll = denyAll;
-        if (denyAll) {
-            this.authenticated = false;
-        }
-    }
-
-
-    public boolean isDenyAll() {
-        return denyAll;
-    }
 }

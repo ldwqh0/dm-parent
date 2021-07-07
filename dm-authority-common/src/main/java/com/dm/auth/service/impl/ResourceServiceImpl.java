@@ -79,7 +79,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         BooleanBuilder query = new BooleanBuilder();
         if (StringUtils.isNotBlank(keyword)) {
             query.or(qResource.name.containsIgnoreCase(keyword))
-                .or(qResource.description.containsIgnoreCase(keyword))
+                    .or(qResource.description.containsIgnoreCase(keyword))
                 .or(qResource.matcher.containsIgnoreCase(keyword));
         }
         return resourceRepository.findAll(query, pageable).map(resourceConverter::toListDto);
@@ -146,8 +146,6 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
                 .map(ResourceAuthorityAttribute::new);
         }
         return attributes.peek(attribute -> {
-            attribute.setDenyAll(resource.isDenyAll());
-            attribute.setAuthenticated(resource.isAuthenticated());
             resource.getAccessAuthorities()
                 .stream().map(Role::getFullName)
                 .forEach(attribute::addAccessAuthority);

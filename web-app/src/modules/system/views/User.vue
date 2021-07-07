@@ -3,18 +3,31 @@
            label-width="100px"
            :rules="rules"
            :model="user">
-    <el-form-item label="用户名：" prop="username">
-      <el-input v-model="user.username" :maxlength="50" />
-    </el-form-item>
-    <el-form-item v-if="id==='0'" label="密码：" prop="password">
-      <el-input v-model="user.password" type="password" :maxlength="50" />
-    </el-form-item>
-    <el-form-item v-if="id==='0'" label="确认密码：" prop="repassword">
-      <el-input v-model="user.repassword" type="password" :maxlength="50" />
-    </el-form-item>
-    <el-form-item label="姓名：" prop="fullname">
-      <el-input v-model="user.fullname" :maxlength="20" />
-    </el-form-item>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="用户名：" prop="username">
+          <el-input v-model="user.username" :maxlength="50" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="姓名：" prop="fullname">
+          <el-input v-model="user.fullname" :maxlength="20" />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row v-if="id==='0'">
+      <el-col :span="12">
+        <el-form-item label="密码：" prop="password">
+          <el-input v-model="user.password" type="password" :maxlength="50" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="确认密码：" prop="repassword">
+          <el-input v-model="user.repassword" type="password" :maxlength="50" />
+        </el-form-item>
+      </el-col>
+    </el-row>
+
     <el-form-item label="用户角色：" prop="roles">
       <el-select v-model="user.roles"
                  value-key="id"
@@ -32,11 +45,11 @@
       <el-input v-model="user.mobile" :maxlength="20" />
     </el-form-item>
 
-    <el-row>
-      <el-col>
-        <div style="width: 100px;text-align: right;padding-right: 12px;box-sizing: border-box;">用户职务：</div>
-      </el-col>
-    </el-row>
+    <!--    <el-row>-->
+    <!--      <el-col>-->
+    <!--        <div style="width: 100px;text-align: right;padding-right: 12px;box-sizing: border-box;">用户职务：</div>-->
+    <!--      </el-col>-->
+    <!--    </el-row>-->
     <el-row v-for="(post,index) in user.posts" :key="index">
       <el-col :span="14">
         <el-form-item :label="`职务 ${index+1}`"
@@ -68,13 +81,18 @@
       <el-col :span="3">
         <!--        <el-form-item>-->
         <!--这里做一个减号图标-->
-        <el-button v-if="user.posts.length>1" @click="removePost(index)">移除</el-button>
+        <el-button v-if="user.posts.length>1"
+                   style="float: right"
+                   icon="el-icon-minus"
+                   circle
+                   type="danger"
+                   @click="removePost(index)" />
         <!--        </el-form-item>-->
       </el-col>
     </el-row>
 
     <el-form-item>
-      <el-button type="success" @click="addPost">添加职务</el-button>
+      <el-button type="success" size="medium" @click="addPost">添加职务</el-button>
     </el-form-item>
 
     <el-form-item label="简介：" prop="profile">

@@ -1,6 +1,6 @@
 <template>
   <el-main class="departments">
-    <el-aside>
+    <el-aside width="250px">
       <el-tree ref="tree"
                class="tree"
                :expand-on-click-node="false"
@@ -21,56 +21,83 @@
       </el-tree>
     </el-aside>
     <el-main style="padding: 0">
-      <el-tabs class="tabs">
+      <el-tabs class="tabs" @tab-click="searchObj.keyword=''">
         <el-tab-pane label="下级部门">
-          <el-row>
-            <el-col>
-              <el-button type="primary" @click="editDepartment({})">添加子节点</el-button>
-            </el-col>
-          </el-row>
+          <el-form inline :model="searchObj">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item prop="keyword">
+                  <el-input v-model="searchObj.keyword" placeholder="请输入查询关键字" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item style="float: right;">
+                  <el-button type="primary" @click="editDepartment({})">添加子节点</el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
           <ele-data-tables v-if="departmentQuery.parentId"
                            ref="table"
                            :ajax="departmentUrl"
                            :server-params="departmentQuery"
                            pagination-layout="total, sizes, prev, pager, next, jumper">
-            <el-table-column prop="fullname">
+            <el-table-column label="部门名称">
               <template #default="{row}">
                 <a href="javascript:void(0)" @click="selectNode(row)">{{ row.fullname }}</a>
               </template>
             </el-table-column>
+            <el-table-column label="成员数" prop="userCount" />
             <el-table-column label="类型">
-              <template #default="{row}">
-                <span v-if="row.type==='ORGANS'">组织机构</span>
-                <span v-if="row.type==='DEPARTMENT'">部门</span>
-                <span v-if="row.type==='GROUP'">分组</span>
-              </template>
+              <template #default="{row}">{{ row.type | toDepartment }}</template>
             </el-table-column>
-            <el-table-column prop="id" label="操作" width="100">
+            <el-table-column prop="id"
+                             label="操作"
+                             width="50px"
+                             fixed="right">
               <!--            <span slot-scope="scope">-->
               <!--              <el-button type="text" @click="toggleState(scope.row)">{{-->
               <!--                scope.row.state === 'ENABLED' ? '禁用' : '启用'-->
               <!--              }}</el-button>-->
               <template #default="{row}">
                 <el-button type="text" @click="editDepartment(row)">编辑</el-button>
-                <!--              <el-button type="text" @click="up(scope.row.id)">上移</el-button>-->
-                <!--              <el-button type="text" @click="down(scope.row.id)">下移</el-button>-->
+                <!--                <el-button type="text" @click="up(row.id)">上移</el-button>-->
+                <!--                <el-button type="text" @click="down(row.id)">下移</el-button>-->
               </template>
               <!--            </span>-->
             </el-table-column>
           </ele-data-tables>
         </el-tab-pane>
         <el-tab-pane label="部门人员">
-          <el-row>
-            <el-col>
-              <el-button type="primary" @click="editUser({})">新用户</el-button>
-            </el-col>
-          </el-row>
+          <el-form inline :model="searchObj">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item prop="keyword">
+                  <el-input v-model="searchObj.keyword" placeholder="请输入查询关键字" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item style="float:right;">
+                  <el-button type="primary" @click="editUser({})">新用户</el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
           <ele-data-tables v-if="userQuery.department"
                            ref="userTable"
                            :ajax="userUrl"
                            :server-params="userQuery">
             <el-table-column prop="username" label="用户名" />
-            <el-table-column>
+            <el-table-column prop="fullname" label="用户全名" />
+            <el-table-column prop="mobile" label="联系电话" />
+            <el-table-column label="用户角色">
+              <template #default="{row}">
+                <div v-for="(item,index) in row.roles" :key="index">
+                  {{ item.authority }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" fixed="right" width="50px">
               <template #default="{row}">
                 <el-button type="text" @click="editUser(row)">编辑</el-button>
               </template>
@@ -112,8 +139,22 @@
   import Department from './Department.vue'
   import User from './User.vue'
 
+  const departmentTypes = {
+    DEPARTMENT: '部门',
+    ORGANS: '机构',
+    GROUP: '分组'
+  }
+
   @Component({
-    components: { User, Department }
+    components: {
+      User,
+      Department
+    },
+    filters: {
+      toDepartment (v: string): string {
+        return departmentTypes[v]
+      }
+    }
   })
   export default class Departments extends Vue {
     current: DepartmentDto = {}
@@ -125,10 +166,14 @@
     // 指示是否在提交
     submitting = false
 
+    searchObj = {
+      keyword: ''
+    }
+
     get defaultExpands (): number[] {
       // 默认选择中当前项目
       // 只在第一次是生效
-      if (this.current.id) {
+      if (this.current?.id) {
         return [this.current.id]
       } else {
         return []
@@ -137,13 +182,15 @@
 
     get departmentQuery (): { [key: string]: any } {
       return {
-        parentId: this.current.id
+        ...this.searchObj,
+        parentId: this.current?.id
       }
     }
 
     get userQuery (): { [key: string]: any } {
       return {
-        department: this.current.id
+        ...this.searchObj,
+        department: this.current?.id
       }
     }
 
@@ -174,7 +221,12 @@
     }
 
     loadChildren (parentId: number): Promise<DepartmentDto[]> {
-      return http.get<Page<DepartmentDto>>(`${urls.department}`, { params: { parentId, size: 10000 } })
+      return http.get<Page<DepartmentDto>>(`${urls.department}`, {
+        params: {
+          parentId,
+          size: 10000
+        }
+      })
         .then(({ data: { content } }) => (content ?? []))
     }
 

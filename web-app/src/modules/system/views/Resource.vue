@@ -4,29 +4,40 @@
            :model="data"
            :rules="rules"
            label-width="120px">
-    <el-form-item label="资源名称" prop="name">
-      <el-input v-model="data.name" />
-    </el-form-item>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="资源名称" prop="name">
+          <el-input v-model="data.name" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="资源路径" prop="matcher">
+          <el-input v-model="data.matcher" />
+        </el-form-item>
+      </el-col>
+    </el-row>
 
-    <el-form-item label="资源路径" prop="matcher">
-      <el-input v-model="data.matcher" />
-    </el-form-item>
-    <el-form-item label="请求类型" prop="methods">
-      <el-select v-model="data.methods" multiple style="width: 100%;">
-        <el-option value="GET" />
-        <el-option value="POST" />
-        <el-option value="PUT" />
-        <el-option value="PATCH" />
-        <el-option value="DELETE" />
-      </el-select>
-    </el-form-item>
-
-    <el-form-item label="资源匹配模式" prop="matchType">
-      <el-select v-model="data.matchType" placeholder="请选择" style="width: 100%;">
-        <el-option value="REGEXP" label="正则表达式" />
-        <el-option value="ANT_PATH" label="路径匹配" />
-      </el-select>
-    </el-form-item>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="请求类型" prop="methods">
+          <el-select v-model="data.methods" multiple style="width: 100%;">
+            <el-option value="GET" />
+            <el-option value="POST" />
+            <el-option value="PUT" />
+            <el-option value="PATCH" />
+            <el-option value="DELETE" />
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="资源匹配模式" prop="matchType">
+          <el-select v-model="data.matchType" placeholder="请选择" style="width: 100%;">
+            <el-option value="REGEXP" label="正则表达式" />
+            <el-option value="ANT_PATH" label="路径匹配" />
+          </el-select>
+        </el-form-item>
+      </el-col>
+    </el-row>
 
     <el-form-item label="资源所属范围" prop="scope">
       <el-select v-model="data.scope"
@@ -41,19 +52,6 @@
                    :value="scope" />
       </el-select>
     </el-form-item>
-
-    <el-row>
-      <el-col :span="6">
-        <el-form-item>
-          <el-checkbox v-model="data.authenticated" label="认证即可访问" @change="authenticatedChange" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="6">
-        <el-form-item>
-          <el-checkbox v-model="data.denyAll" label="禁止访问" @change="denyAllChange" />
-        </el-form-item>
-      </el-col>
-    </el-row>
 
     <el-form-item label="允许访问">
       <el-select v-model="data.accessAuthorities"
@@ -127,6 +125,11 @@
           required: true,
           message: '资源名称不能为空',
           trigger: 'blur'
+        }],
+        matchType: [{
+          required: true,
+          message: '资源匹配模式不能为空',
+          trigger: 'blur'
         }]
       }
     }
@@ -139,12 +142,12 @@
       http.get(URLS.scope).then(({ data }) => (this.scopes = data))
     }
 
-    submit (): Promise<any> {
+    submit (): Promise<unknown> {
       return (this.$refs.form as any).validate().then(() => {
         return this.id === 0
           ? http.post(URLS.resource, this.data)
           : http.put(`${URLS.resource}/${this.id}`, this.data)
-      })
+      }).then(() => this.$router.back())
     }
 
     authenticatedChange (v: boolean): void {

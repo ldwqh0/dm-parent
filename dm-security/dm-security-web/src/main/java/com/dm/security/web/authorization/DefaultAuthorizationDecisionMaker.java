@@ -6,7 +6,6 @@ import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
 import com.dm.security.authentication.UriResource.MatchType;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -54,11 +53,6 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
                 && CollectionUtils.isNotEmpty(attribute.getDenyAuthorities())
                 && CollectionUtils.containsAny(currentAuthorities, attribute.getDenyAuthorities())) {
                 return false;
-            }
-
-            // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
-            if (attribute.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-                grantCount++;
             }
 
             // 匿名用户的可访问权限包含在显示的权限配置中

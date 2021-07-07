@@ -31,22 +31,24 @@
           <span v-if="scope.row.state==='DISABLED'">禁用</span>
         </template>
       </el-table-column>
-      <el-table-column label="角色描述" prop="describe" />
-      <el-table-column label="操作" min-width="150">
+      <el-table-column label="角色描述" prop="description" />
+      <el-table-column label="操作" width="200" fixed="right">
         <template #default="{row}">
-          <el-button v-if="row.id>3"
-                     type="text"
-                     size="small"
-                     @click="edit(row)">
-            编辑
-          </el-button>
-          <el-button type="text" size="small" @click="setmenu(row)">设置菜单权限</el-button>
-          <el-button v-if="row.id>3"
-                     type="text"
-                     size="small"
-                     @click="del(row)">
-            删除
-          </el-button>
+          <div>
+            <el-button v-if="row.id>3"
+                       type="text"
+                       size="small"
+                       @click="edit(row)">
+              编辑
+            </el-button>
+            <el-button type="text" size="small" @click="setmenu(row)">设置菜单权限</el-button>
+            <el-button v-if="row.id>3"
+                       type="text"
+                       size="small"
+                       @click="del(row)">
+              删除
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </ele-data-tables>
