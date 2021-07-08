@@ -1,6 +1,6 @@
 import VueRouter, { Route } from 'vue-router'
 import Vue from 'vue'
-import { EsModuleComponent } from 'vue/types/options'
+import { ImportedComponent } from 'vue/types/options'
 
 Vue.use(VueRouter)
 
@@ -17,12 +17,16 @@ const router = new VueRouter({
   routes: [{
     path: '/errors/:code',
     name: 'error',
-    props: ({ params, query }: Route) => ({ ...params, ...query }),
-    component: (): Promise<EsModuleComponent> => import('../pages/ErrorPage.vue')
+    props: ({
+      params,
+      query
+    }: Route) => ({ ...params, ...query }),
+    component: (): Promise<ImportedComponent> => import('../pages/ErrorPage.vue')
   }, {
     path: '*',
-    props: () => ({ code: '404' }),
-    component: (): Promise<EsModuleComponent> => import('../pages/ErrorPage.vue')
+    redirect: {
+      name: 'departments'
+    }
   }]
 })
 

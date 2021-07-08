@@ -82,9 +82,9 @@
       <el-input v-model="data.description" type="textarea" />
     </el-form-item>
 
-    <el-form-item>
+    <el-form-item label-width="0" style="text-align: center">
+      <el-button @click="$router.back()">取消</el-button>
       <el-button type="primary" @click="submit">确定</el-button>
-      <el-button type="danger">取消</el-button>
     </el-form-item>
   </el-form>
 </template>

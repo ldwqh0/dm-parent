@@ -1,14 +1,16 @@
-const { merge } = require('webpack-merge')
-const path = require('path')
-const common = require('./webpack.config.common')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CompressionPlugin = require('compression-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+import path, { resolve } from 'path'
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import CompressionPlugin from 'compression-webpack-plugin'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import { fileURLToPath } from 'url'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 
-module.exports = env => {
-  return merge(common(env), {
-    mode: 'production',
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+export default function (envParams, { mode = 'production' }) {
+  return {
+    mode,
     module: {
       rules: [{
         test: /\.css$/,
@@ -30,7 +32,7 @@ module.exports = env => {
         cacheGroups: {
           styles: {
             name: 'styles',
-            type:'css/mini-extract',
+            type: 'css/mini-extract',
             chunks: 'all',
             enforce: true,
           }
@@ -39,6 +41,12 @@ module.exports = env => {
       minimizer: ['...', new CssMinimizerPlugin()],
     },
     plugins: [
+      new CopyWebpackPlugin({
+        patterns: [{
+          from: resolve(__dirname, '../', 'public', 'static'),
+          to: resolve(__dirname, '../', 'dist', 'static')
+        }]
+      }),
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
         filename: 'static/styles/[id].[contenthash:7].css'
@@ -49,9 +57,9 @@ module.exports = env => {
     ],
     target: ['web', 'es5'],
     output: {
-      path: path.resolve(__dirname, `..${env.CONTEXT_PATH}`),
-      publicPath: env.CONTEXT_PATH,
+      path: path.resolve(__dirname, '..', 'dist'),
+      publicPath: envParams.CONTEXT_PATH,
       filename: 'static/js/[id].[contenthash:7].js'
     }
-  })
+  }
 }

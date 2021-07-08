@@ -1,6 +1,6 @@
 <template>
-  <el-main class="departments">
-    <el-aside width="250px">
+  <el-container class="departments">
+    <el-aside width="250px" style="border-right: solid 1px #efefef;box-sizing: content-box">
       <el-tree ref="tree"
                class="tree"
                :expand-on-click-node="false"
@@ -20,7 +20,7 @@
         </template>
       </el-tree>
     </el-aside>
-    <el-main style="padding: 0">
+    <el-main style="padding: 0 0 0 10px">
       <el-tabs class="tabs" @tab-click="searchObj.keyword=''">
         <el-tab-pane label="下级部门">
           <el-form inline :model="searchObj">
@@ -109,23 +109,29 @@
     <el-dialog v-if="departmentEditVisible"
                :visible.sync="departmentEditVisible"
                :close-on-click-modal="false">
-      <department :id="currentEdit.id" ref="departmentForm" :parent-id="current.id" />
+      <department :id="currentEdit.id"
+                  ref="departmentForm"
+                  v-loading="loading"
+                  :parent-id="current.id" />
       <template #footer>
-        <el-button type="primary" :loading="submitting" @click="saveDepartment">确定</el-button>
-        <el-button type="danger" @click="departmentEditVisible=false">取消</el-button>
+        <el-button @click="departmentEditVisible=false">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="saveDepartment">确定</el-button>
       </template>
     </el-dialog>
 
     <el-dialog v-if="userEditVisible"
                :visible.sync="userEditVisible"
                :close-on-click-modal="false">
-      <user :id="currentEdit.id" ref="user" :department-id="current.id" />
+      <user :id="currentEdit.id"
+            ref="user"
+            v-loading="loading"
+            :department-id="current.id" />
       <template #footer>
-        <el-button type="primary" :loading="submitting" @click="saveUser">确定</el-button>
-        <el-button type="danger" @click="userEditVisible=false">取消</el-button>
+        <el-button @click="userEditVisible=false">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="saveUser">确定</el-button>
       </template>
     </el-dialog>
-  </el-main>
+  </el-container>
 </template>
 
 <script lang="ts">
@@ -138,12 +144,15 @@
   import isNil from 'lodash/isNil'
   import Department from './Department.vue'
   import User from './User.vue'
+  import { namespace } from 'vuex-class'
 
   const departmentTypes = {
     DEPARTMENT: '部门',
     ORGANS: '机构',
     GROUP: '分组'
-  }
+  } as { [key: string]: string }
+
+  const httpModel = namespace('http')
 
   @Component({
     components: {
@@ -163,8 +172,9 @@
     currentEdit: DepartmentDto | UserDto = {}
 
     userEditVisible = false
-    // 指示是否在提交
-    submitting = false
+
+    @httpModel.Getter('loading')
+    loading!: boolean
 
     searchObj = {
       keyword: ''
@@ -246,7 +256,6 @@
     }
 
     saveDepartment (): Promise<unknown> {
-      this.submitting = true
       return (this.$refs.departmentForm as any).submit().then(({ data }: { data: DepartmentDto }) => {
         this.departmentEditVisible = false;
         // 保存之后需要刷新当前页面
@@ -259,8 +268,6 @@
         if (this.current.id !== data.parent?.id) {
           this.updateTreeNode(data.parent?.id)
         }
-      }).finally(() => {
-        this.submitting = false
       })
     }
 
@@ -270,12 +277,9 @@
     }
 
     saveUser (): Promise<unknown> {
-      this.submitting = true
       return (this.$refs.user as any).submit().then(() => {
         this.userEditVisible = false;
         (this.$refs.userTable as any).reloadData()
-      }).finally(() => {
-        this.submitting = false
       })
     }
 
@@ -288,6 +292,8 @@
 
 <style lang="less" scoped>
   .departments {
+    height: 100%;
+
     .tree {
       width: 250px;
     }

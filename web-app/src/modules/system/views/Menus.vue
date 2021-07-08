@@ -66,7 +66,7 @@
                :visible.sync="menuDialogVisible"
                :close-on-click-modal="false"
                :close-on-press-escape="false">
-      <e-menu :id="currentMenu.id" ref="menu" />
+      <e-menu :id="currentMenu.id" ref="menu" v-loading="loading" />
       <template #footer>
         <el-button @click="menuDialogVisible=false">取消</el-button>
         <el-button type="primary" :loading="loading" @click="saveMenu">确定</el-button>
@@ -78,13 +78,14 @@
 <script lang="ts">
   import Vue from 'vue'
   import { Component } from 'vue-property-decorator'
-  import { Getter, namespace } from 'vuex-class'
+  import { namespace } from 'vuex-class'
   import Menu from './Menu.vue'
   import http from '@/http'
   import URLS from '../URLS'
   import { MenuDto, MenuTreeItem } from '@/types/service'
   import { TreeProps } from 'element-ui/types/tree'
 
+  const httpModel = namespace('http')
   const menuModule = namespace('system/menu')
   @Component({
     components: {
@@ -102,7 +103,7 @@
       isLeaf: 'isLeaf'
     }
 
-    @Getter('loading')
+    @httpModel.Getter('loading')
     loading!: boolean
 
     ajax = URLS.menus

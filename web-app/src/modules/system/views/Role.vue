@@ -9,6 +9,7 @@
     </el-form-item>
     <el-form-item label="角色组：" prop="group">
       <el-select v-model="role.group"
+                 style="width: 100%"
                  placeholder="请选择角色所属组,也可以直接输入新增一个角色组"
                  allow-create
                  filterable>

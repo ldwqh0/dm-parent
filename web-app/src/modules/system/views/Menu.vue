@@ -72,18 +72,15 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item prop="openInNewWindow">
+        <el-form-item prop="openInNewWindow" label-width="0px">
           <el-checkbox v-model="menu.openInNewWindow">在新窗口中打开链接</el-checkbox>
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="描述信息" prop="description">
-          <el-input v-model="menu.description" type="textarea" />
-        </el-form-item>
-      </el-col>
-    </el-row>
+
+    <el-form-item label="描述信息" prop="description">
+      <el-input v-model="menu.description" type="textarea" />
+    </el-form-item>
   </el-form>
 </template>
 
@@ -172,7 +169,7 @@
 
     submit (): Promise<any> {
       return (this.$refs.menuform as any).validate()
-          .then(() => this.id === 0 ? this.save(this.menu) : this.update((this.id as number), this.menu))
+        .then(() => this.id === 0 ? this.save(this.menu) : this.update((this.id as number), this.menu))
     }
 
     created (): void {

@@ -77,8 +77,8 @@
                 show-word-limit />
     </el-form-item>
     <el-form-item label-width="0" style="text-align: center">
+      <el-button @click="$router.back()">取消</el-button>
       <el-button type="primary" @click="save">确定</el-button>
-      <el-button type="danger" @click="$router.back()">取消</el-button>
     </el-form-item>
   </el-form>
 </template>

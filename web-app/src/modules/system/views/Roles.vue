@@ -54,10 +54,10 @@
     </ele-data-tables>
 
     <el-dialog v-if="editVisible" :visible.sync="editVisible" title="角色编辑">
-      <role :id="current.id" ref="role" />
+      <role :id="current.id" ref="role" v-loading="loading" />
       <template #footer>
-        <el-button type="primary" :loading="submitting" @click="saveRole">确定</el-button>
-        <el-button type="danger" @click="editVisible=false">取消</el-button>
+        <el-button @click="editVisible=false">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="saveRole">确定</el-button>
       </template>
     </el-dialog>
 
@@ -67,10 +67,11 @@
                :close-on-click-modal="false"
                :visible.sync="menuAuthorityDialogVisible">
       <menu-authority ref="menuAuthority"
+                      v-loading="loading"
                       :role-id="current.id" />
       <div slot="footer">
         <el-button @click="menuAuthorityDialogVisible=false">取消</el-button>
-        <el-button type="primary" :loading="submitting" @click="saveMenuAuthority">确定</el-button>
+        <el-button type="primary" :loading="loading" @click="saveMenuAuthority">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -85,6 +86,9 @@
   import http from '@/http'
   import MenuAuthority from './MenuAuthority.vue'
   import ResourceAuthority from './ResourceAuthority.vue'
+  import { namespace } from 'vuex-class'
+
+  const httpModel = namespace('http')
 
   // 角色模块的vuex
   @Component({
@@ -100,7 +104,9 @@
       keyword: null
     }
 
-    submitting = false
+    @httpModel.Getter('loading')
+    loading!: boolean
+
     editVisible = false
     menuAuthorityDialogVisible = false
 
@@ -126,21 +132,15 @@
     }
 
     saveRole (): void {
-      this.submitting = true;
       (this.$refs.role as any).submit().then(() => {
         this.editVisible = false;
         (this.$refs.table as any).reloadData()
-      }).finally(() => {
-        this.submitting = false
       })
     }
 
     saveMenuAuthority (): void {
-      this.submitting = true;
       (this.$refs.menuAuthority as any).submit()
-        .then(() => {
-          this.menuAuthorityDialogVisible = false
-        }).finally(() => (this.submitting = false))
+        .then(() => (this.menuAuthorityDialogVisible = false))
     }
 
     // 设置菜单权限

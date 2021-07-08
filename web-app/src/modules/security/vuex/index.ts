@@ -4,6 +4,7 @@ import { RootState } from '@/store'
 import { MenuDto, MenuTreeItem, UserDto } from '@/types/service'
 import urls from '../urls'
 import isEmpty from 'lodash/isEmpty'
+import defaultMenus from './defaultMenus'
 
 interface SecurityState {
   menus: MenuTreeItem[],
@@ -13,7 +14,7 @@ interface SecurityState {
 const module: Module<SecurityState, RootState> = {
   namespaced: true,
   state: {
-    menus: [],
+    menus: defaultMenus,
     user: {}
   },
   mutations: {
@@ -41,8 +42,9 @@ const module: Module<SecurityState, RootState> = {
           result.push(menu)
         }
       })
-      const root = result.find(({ name }) => name === '管理部门端')
-      return root ? (root.children ?? []) : []
+      return result
+      // const root = result.find(({ name }) => name === '管理部门端')
+      // return root ? (root.children ?? []) : []
     },
     menuMap ({ menus }: { menus: MenuDto[] }): { [x: string]: MenuDto } {
       return menus.reduce(
@@ -61,7 +63,10 @@ const module: Module<SecurityState, RootState> = {
     }
   },
   actions: {
-    loadMenus ({ commit, state }: ActionContext<SecurityState, RootState>): Promise<MenuDto[]> {
+    loadMenus ({
+      commit,
+      state
+    }: ActionContext<SecurityState, RootState>): Promise<MenuDto[]> {
       if (isEmpty(state.menus)) {
         return http.get(urls.currentMenu)
           .then(({ data }) => {
@@ -74,7 +79,10 @@ const module: Module<SecurityState, RootState> = {
         return Promise.resolve(state.menus)
       }
     },
-    loadUserInfo ({ commit, state }: ActionContext<SecurityState, RootState>): Promise<UserDto> {
+    loadUserInfo ({
+      commit,
+      state
+    }: ActionContext<SecurityState, RootState>): Promise<UserDto> {
       if (isEmpty(state.user)) {
         return http.get(urls.currentUser).then(({ data }) => {
           commit('user', data)
