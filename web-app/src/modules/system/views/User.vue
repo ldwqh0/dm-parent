@@ -37,7 +37,10 @@
           <el-option v-for="role in group.roles"
                      :key="role.id"
                      :label="role.name"
-                     :value="role" />
+                     :value="role">
+            <span :title="role.description">{{ role.name }}</span>
+            <!--            <span>{{ role.id }}</span>-->
+          </el-option>
         </el-option-group>
       </el-select>
     </el-form-item>
@@ -207,31 +210,28 @@
     }
 
     get roleGroups (): { name: string, roles: RoleDto[] }[] {
-      const results: { name: string, roles: RoleDto[] }[] = []
-      this.roles.reduce((acc, cur) => {
-        const group = cur.group ?? 'unknown'
-        const groupRoles = acc.get(group)
-        if (isNil(groupRoles)) {
-          acc.set(group, [cur])
-        } else {
+      return Array.from(this.roles
+        // 给用户添加分组时，不能把用户添加在这两个分组中
+        .filter(({ fullname = '' }) => !['内置分组_ROLE_ANONYMOUS', '内置分组_ROLE_AUTHENTICATED'].includes(fullname))
+        .reduce((acc, cur) => {
+          const group = cur.group ?? 'unknown'
+          const groupRoles = acc.get(group) ?? []
           groupRoles.push(cur)
-        }
-        return acc
-      }, new Map<string, RoleDto[]>())
-        .forEach((value, key) => {
-          results.push({
-            name: key,
-            roles: value
-          })
-        })
-      return results
+          acc.set(group, groupRoles)
+          return acc
+        }, new Map<string, RoleDto[]>()))
+        .map(([key, value]) => ({
+          name: key,
+          roles: value
+        }))
     }
 
     created (): void {
+      // 获取所有角色列表
       http.get(`${urls.role}`).then(({ data }) => (this.roles = data))
-      http.get(`${urls.department}`, { params: { scope: 'all' } }).then(({ data }) => {
-        this.allDepartments = data
-      })
+      // 获取所有部门列表
+      http.get(`${urls.department}`, { params: { scope: 'all' } })
+        .then(({ data }) => (this.allDepartments = data))
       if (Number.parseInt(this.id) > 0) {
         http.get(`${urls.user}/${this.id}`).then(({ data }) => (this.$set(this, 'user', data)))
       } else {
@@ -247,14 +247,12 @@
       this.user.posts?.splice(index, 1)
     }
 
-    submit (): Promise<any> {
-      return (this.$refs.form as any).validate().then(() => {
-        if (Number.parseInt(this.id) > 0) {
-          return http.put(`${urls.user}/${this.id}`, this.user)
-        } else {
-          return http.post(`${urls.user}`, this.user)
-        }
-      })
+    submit (): Promise<unknown> {
+      return (this.$refs.form as any).validate().then(() =>
+        (Number.parseInt(this.id) > 0)
+          ? http.put(`${urls.user}/${this.id}`, this.user)
+          : http.post(`${urls.user}`, this.user)
+      )
     }
   }
 </script>

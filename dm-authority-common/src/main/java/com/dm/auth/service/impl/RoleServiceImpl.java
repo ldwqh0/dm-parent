@@ -111,7 +111,10 @@ public class RoleServiceImpl implements RoleService {
             query.and(qRole.group.eq(group));
         }
         if (StringUtils.isNotBlank(key)) {
-            query.and(qRole.name.containsIgnoreCase(key).or(qRole.description.containsIgnoreCase(key)));
+            query.and(qRole.name.containsIgnoreCase(key)
+                .or(qRole.description.containsIgnoreCase(key))
+                .or(qRole.group.containsIgnoreCase(key))
+            );
             return roleRepository.findAll(query, pageable);
         }
         return roleRepository.findAll(query, pageable);
