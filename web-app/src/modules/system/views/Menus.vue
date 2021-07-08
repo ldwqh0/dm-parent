@@ -1,6 +1,6 @@
 <template>
   <el-container class="menus">
-    <el-aside>
+    <el-aside width="250px" style="border-right: solid 1px #efefef;box-sizing: content-box">
       <el-tree
         :expand-on-click-node="false"
         :default-expanded-keys="['']"
@@ -15,7 +15,7 @@
         </template>
       </el-tree>
     </el-aside>
-    <el-main style="padding: 0;">
+    <el-main style="padding: 0 0 0 10px">
       <el-form inline :model="search" class="clear-float">
         <el-row>
           <el-col :span="12">

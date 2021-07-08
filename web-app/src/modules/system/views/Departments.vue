@@ -294,10 +294,6 @@
   .departments {
     height: 100%;
 
-    .tree {
-      width: 250px;
-    }
-
     .tabs {
       flex: 1 auto;
     }
