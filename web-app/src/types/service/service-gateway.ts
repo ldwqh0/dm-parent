@@ -20,6 +20,8 @@ export interface MenuDto extends Serializable, IdentifiableDto<number> {
   type?: MenuType;
   parent?: MenuDto;
   openInNewWindow?: boolean;
+  hasChildren?: boolean;
+  isLeaf?: boolean;
 }
 
 export interface OrderDto extends Serializable {

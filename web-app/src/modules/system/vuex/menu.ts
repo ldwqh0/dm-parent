@@ -67,10 +67,11 @@ const menuModule: Module<MenuState, RootState> = {
   },
   actions: {
     loadAll ({ commit }: ActionContext<MenuState, RootState>): Promise<any> {
-      return http.get(URLS.menus).then(({ data: menus }) => {
-        commit('menus', menus)
-        return menus
-      })
+      return http.get(URLS.menus, { params: { scope: 'all' } })
+        .then(({ data: menus }) => {
+          commit('menus', menus)
+          return menus
+        })
     }
   }
 }

@@ -2,6 +2,7 @@ package com.dm.auth.dto;
 
 import com.dm.auth.entity.Menu.MenuType;
 import com.dm.common.dto.IdentifiableDto;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -64,6 +65,12 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
      */
     private Boolean openInNewWindow = Boolean.FALSE;
 
+    private long childrenCount = 0;
+
+    @JsonGetter
+    public boolean hasChildren() {
+        return childrenCount > 0;
+    }
 
     public Optional<MenuDto> getParent() {
         return Optional.ofNullable(parent);

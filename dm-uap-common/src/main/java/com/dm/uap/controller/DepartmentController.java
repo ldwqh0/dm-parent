@@ -91,11 +91,10 @@ public class DepartmentController {
     /**
      * 获取所有的部门信息
      *
-     * @param pageable 分页参数
      * @return 部门信息的列表
      */
     @GetMapping(params = "scope=all")
-    public List<DepartmentDto> listAll(@PageableDefault(size = 10000, sort = "order", direction = Sort.Direction.ASC) Pageable pageable) {
+    public List<DepartmentDto> listAll() {
         return departmentService.findAll();
     }
 

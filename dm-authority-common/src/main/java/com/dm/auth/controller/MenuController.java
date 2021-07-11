@@ -118,28 +118,28 @@ public class MenuController {
      */
     @ApiOperation("根据关键字查询菜单")
     @GetMapping(params = {"page"})
-    public Page<MenuDto> list(
-            @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable,
-            @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "parentId", required = false) Long parentId) {
-        return menuService.search(parentId, keyword, pageable);
+    public Page<MenuDto> list(@RequestParam(value = "keyword", defaultValue = "", required = false) String keyword,
+                              @RequestParam(value = "enabled", defaultValue = "", required = false) Boolean enabled,
+                              @RequestParam(value = "parentId", defaultValue = "", required = false) Long parentId,
+                              @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable) {
+        return menuService.search(parentId, enabled, keyword, pageable);
     }
 
 
     /**
-     * 获取菜单树
+     * 获取某个菜单的子菜单树
      *
-     * @param sort     排序方式,默认安装order排序，暂不支持改变，也不要传入
+     * @param sort     排序方式,默认按照order排序，暂不支持改变，也不要传入
      * @param parentId 要获取的节点的id,如果不传入，则获取所有可以用菜单
      * @param enabled  是否仅仅获取可以用的菜单项，为否或者为空表示获取所有菜单项
      * @return 所有的菜单的列表
      */
     @ApiOperation("获取可用菜单树")
-    @GetMapping
+    @GetMapping(params = {"scope=all"})
     public List<MenuDto> list(
-            @RequestParam(value = "parentId", required = false) Long parentId,
-            @RequestParam(value = "enabled", required = false) Boolean enabled,
-            @SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
+        @RequestParam(value = "parentId", required = false) Long parentId,
+        @RequestParam(value = "enabled", required = false) Boolean enabled,
+        @SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
         return menuService.listOffspring(parentId, enabled, sort);
     }
 
@@ -161,6 +161,13 @@ public class MenuController {
         }
         return menuConverter.toDto(menu);
     }
+
+
+    @GetMapping("{menuId}/parents")
+    public List<MenuDto> findParentsByMenuId(@PathVariable("menuId") Long menuId) {
+        return menuService.findParentsByMenuId(menuId);
+    }
+
 
     /**
      * 对菜单名字进行校验

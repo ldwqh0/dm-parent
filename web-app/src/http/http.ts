@@ -42,11 +42,6 @@ http.interceptors.response.use(response => {
 
 http.interceptors.response.use(data => data, (error): Promise<unknown> => {
   if (error.response?.status === 401) {
-    // const redirect = window.location.href
-    // cancelAll().then(() => router.replace({
-    //   name: 'login',
-    //   query: { redirect }
-    // }))
     // 如果检测到401时，
     window.location.reload()
   }

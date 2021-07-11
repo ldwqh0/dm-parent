@@ -128,12 +128,15 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<MenuDto> search(Long parentId, String key, Pageable pageable) {
+    public Page<MenuDto> search(Long parentId, Boolean enabled, String key, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         if (Objects.isNull(parentId)) {
             builder.and(qMenu.parent.isNull());
         } else {
             builder.and(qMenu.parent.id.eq(parentId));
+        }
+        if (!Objects.isNull(enabled)) {
+            builder.and(qMenu.enabled.eq(enabled));
         }
         if (StringUtils.isNotBlank(key)) {
             builder.and(qMenu.name.containsIgnoreCase(key)
@@ -141,7 +144,12 @@ public class MenuServiceImpl implements MenuService {
                 .or(qMenu.url.containsIgnoreCase(key))
                 .or(qMenu.description.containsIgnoreCase(key)));
         }
-        return menuRepository.findAll(builder, pageable).map(menuConverter::toDto);
+        return menuRepository.findAll(builder, pageable)
+            .map(menu -> {
+                MenuDto dto = menuConverter.toDto(menu);
+                dto.setChildrenCount(menuRepository.childrenCount(menu));
+                return dto;
+            });
     }
 
     @Override
@@ -280,6 +288,23 @@ public class MenuServiceImpl implements MenuService {
             query.and(qMenu.id.notIn(exclude));
         }
         return menuRepository.exists(query);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MenuDto> findParentsByMenuId(Long menuId) {
+        if (Objects.isNull(menuId)) {
+            return Collections.emptyList();
+        } else {
+            ArrayList<MenuDto> parents = new ArrayList<>();
+            Menu menu = menuRepository.getOne(menuId);
+            Menu parent = menu.getParent();
+            while (!Objects.isNull(parent)) {
+                parents.add(menuConverter.toDto(parent));
+                parent = parent.getParent();
+            }
+            return parents;
+        }
     }
 
     /**

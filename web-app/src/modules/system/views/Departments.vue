@@ -234,10 +234,10 @@
       return http.get<Page<DepartmentDto>>(`${urls.department}`, {
         params: {
           parentId,
+          page: 0,
           size: 10000
         }
-      })
-        .then(({ data: { content } }) => (content ?? []))
+      }).then(({ data: { content } }) => (content ?? []))
     }
 
     updateTreeNode (id?: number): Promise<unknown> {
@@ -261,11 +261,11 @@
         // 保存之后需要刷新当前页面
         (this.$refs.table as any).reloadData()
         // 保存刷新当前部门的树
-        if (!isNil(this.current.id)) {
+        if (!isNil(this.current?.id)) {
           this.updateTreeNode(this.current.id)
         }
         // 如果当前树不等于修改后的部门树,说明将部门修改到了其他节点，还要刷新相应的节点
-        if (this.current.id !== data.parent?.id) {
+        if (this.current?.id !== data.parent?.id) {
           this.updateTreeNode(data.parent?.id)
         }
       })
@@ -299,5 +299,13 @@
     }
 
     display: flex;
+  }
+</style>
+<style lang="less">
+  .departments {
+    .el-tree-node.is-current > .el-tree-node__content {
+      background: #386be1 !important;
+      color: white;
+    }
   }
 </style>

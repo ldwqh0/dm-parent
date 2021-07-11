@@ -28,7 +28,7 @@ public interface MenuService {
 
     void delete(long id);
 
-    Page<MenuDto> search(Long parentId, String key, Pageable pageable);
+    Page<MenuDto> search(Long parentId, Boolean enabled, String key, Pageable pageable);
 
     MenuDto patch(long id, MenuDto menu);
 
@@ -52,4 +52,5 @@ public interface MenuService {
 
     boolean existsByName(String name, Long exclude);
 
+    List<MenuDto> findParentsByMenuId(Long menuId);
 }

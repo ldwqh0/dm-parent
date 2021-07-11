@@ -38,9 +38,10 @@
             v-model="parentId"
             clearable
             expand-trigger="hover"
-            :options="tree"
+            :options="menuParents"
             :props="treeProp"
-            change-on-select />
+            change-on-select
+            @visible-change="resetParents" />
         </el-form-item>
       </el-col>
       <el-col :span="12">
@@ -87,14 +88,16 @@
 <script lang="ts">
   import Vue from 'vue'
   import { Component, Prop } from 'vue-property-decorator'
-  import { namespace } from 'vuex-class'
-  import http from '@/http'
+  import http, { simpleHttp } from '@/http'
   import URLS from '../URLS'
   import icons from './icons'
   import { Rules } from 'async-validator'
-  import { MenuDto, MenuType } from '@/types/service'
+  import { MenuDto, MenuTreeItem, MenuType, Page } from '@/types/service'
+  import { CascaderNode, CascaderProps } from 'element-ui/types/cascader-panel'
+  import { AxiosResponse } from 'axios'
+  import isEmpty from 'lodash/isEmpty'
+  import cloneDeep from 'lodash/cloneDeep'
 
-  const menuModule = namespace('system/menu')
   @Component
   export default class Menu extends Vue {
     @Prop({
@@ -103,19 +106,45 @@
     })
     id!: number
 
-    @menuModule.Getter('tree')
-    tree!: any
+    menuParents?: MenuTreeItem[] | null = null
 
-    @menuModule.Action('loadAll')
-    loadTree!: () => Promise<any>
+    loadedMenus: { [key: string]: MenuDto } = {}
+
+    // 将某些初始化值保持在这里，在某些情况下可以还原
+    initValue: {
+      menu?: MenuDto,
+      parents?: MenuTreeItem[]
+    } = {}
 
     icons = icons
 
-    treeProp = {
+    treeProp: CascaderProps<MenuDto, any> = {
       children: 'children',
       label: 'title',
       value: 'id',
-      emitPath: false
+      emitPath: false,
+      lazy: true,
+      leaf: 'isLeaf',
+      lazyLoad: async (node: CascaderNode<MenuDto, any>, resolve: (v: any) => void) => {
+        const hasChildren = node.data?.hasChildren ?? true
+        if (hasChildren) {
+          const { data: { content } } = await simpleHttp.get<Page<MenuDto>>(URLS.menus, {
+            params: {
+              page: 0,
+              size: 2000,
+              enabled: true,
+              parentId: node.data?.id ?? ''
+            }
+          })
+          content?.forEach(item => {
+            this.loadedMenus[`${item.id}`] = item
+            item.isLeaf = !item.hasChildren
+          })
+          resolve(content)
+        } else {
+          resolve([])
+        }
+      }
     }
 
     menu: MenuDto = {
@@ -151,31 +180,85 @@
           required: true,
           message: '菜单标题不能为空',
           trigger: 'blur'
+        }],
+        parent: [{
+          validator: (rule, value, callback) => {
+            let parent: MenuDto = this.loadedMenus[`${value.id}`]
+            while (!isEmpty(parent)) {
+              if (this.menu.id === parent.id) {
+                callback(new Error('不能将一个菜单的父菜单设置为它自己或它的子菜单'))
+                return
+              }
+              parent = this.loadedMenus[`${parent.parent?.id}`]
+            }
+            callback()
+          }
         }]
       }
     }
 
-    save (menu: MenuDto): Promise<any> {
-      return http.post(URLS.menus, menu)
+    save (menu: MenuDto): Promise<AxiosResponse<MenuDto>> {
+      return http.post<MenuDto>(URLS.menus, menu)
     }
 
-    update (id: number, menu: MenuDto): Promise<any> {
-      return http.put(`${URLS.menus}/${id}`, menu)
+    update (id: number, menu: MenuDto): Promise<AxiosResponse<MenuDto>> {
+      return http.put<MenuDto>(`${URLS.menus}/${id}`, menu)
     }
 
-    loadMenu (id: number = this.id): Promise<any> {
-      return http.get(`${URLS.menus}/${id}`).then(({ data }) => (this.menu = data))
-    }
-
-    submit (): Promise<any> {
+    submit (): Promise<AxiosResponse<MenuDto>> {
       return (this.$refs.menuform as any).validate()
         .then(() => this.id === 0 ? this.save(this.menu) : this.update((this.id as number), this.menu))
     }
 
+    /**
+     * 在懒加载的机制下，需要一种模式来实现element-cascade的回显,这个方法在element展开的时候
+     * @param event
+     */
+    resetParents (event: boolean): void {
+      // 如果是下拉选展开，则清空下拉选列表，除非延迟加载逻辑
+      if (event) {
+        this.menuParents = undefined
+      } else {
+        /**
+         * 如果是收起，需要判断是否对现有值进行了更改，如果没有发生变化，可能需要的下拉选都没有被加载出来，
+         * 这个时候，最好的逻辑就是把原来的值拿出来
+         */
+        if (this.initValue.menu?.parent?.id === this.menu?.parent?.id) {
+          this.menuParents = this.initValue.parents
+        }
+      }
+    }
+
     created (): void {
-      this.loadTree()
+      // 构建父级菜单的菜单树
+      function buildParents (parents: MenuTreeItem[]): MenuTreeItem[] | undefined {
+        if (isEmpty(parents)) {
+          return undefined
+        } else {
+          const all = parents.reverse()
+          all.forEach((v, index, all) => {
+            if (index < all.length - 1) {
+              v.children = [all[index + 1]]
+            }
+          })
+          return [all[0]]
+        }
+      }
+
       if (this.id !== 0) {
-        this.loadMenu()
+        http.get(`${URLS.menus}/${this.id}`)
+          .then(({ data }) => {
+            this.menu = data
+            this.loadedMenus[`${data.id}`] = data
+            this.initValue.menu = cloneDeep(data)
+            // 如果菜单的父级菜单不为空，加载父级菜单的列表
+            if (!isEmpty(this.menu.parent)) {
+              http.get(`${URLS.menus}/${this.id}/parents`)
+                .then(({ data }) => {
+                  this.initValue.parents = this.menuParents = buildParents(data)
+                })
+            }
+          })
       }
     }
   }
