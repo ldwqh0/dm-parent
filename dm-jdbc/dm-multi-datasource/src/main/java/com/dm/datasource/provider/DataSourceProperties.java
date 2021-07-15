@@ -47,7 +47,19 @@ public final class DataSourceProperties implements Serializable {
         PostgreSQL,
         Progress,
         Sybase,
-        Teradata
+        Teradata,
+        /**
+         * 达梦数据库
+         */
+        DM,
+        /**
+         * 人大金仓数据库
+         */
+        Kingbase,
+        /**
+         * 南大通用数据库
+         */
+        GBase
     }
 
     public DataSourceProperties(DbTypes dbType, String host, Integer port, String username, String password, String database, Map<String, String> additionalProperties) {
