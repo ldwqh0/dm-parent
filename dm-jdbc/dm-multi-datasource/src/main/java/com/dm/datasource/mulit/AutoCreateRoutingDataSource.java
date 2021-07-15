@@ -1,8 +1,10 @@
 package com.dm.datasource.mulit;
 
 import com.dm.datasource.DataSourceBuilder;
+import com.dm.datasource.HikariDataSourceBuilder;
 import com.dm.datasource.provider.DataSourceProperties;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import javax.sql.DataSource;
@@ -19,8 +21,9 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
 
     private final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
 
-    private DataSourceBuilder dataSourceBuilder;
+    private DataSourceBuilder dataSourceBuilder = new HikariDataSourceBuilder();
 
+    @Autowired(required = false)
     public void setDataSourceBuilder(DataSourceBuilder dataSourceBuilder) {
         this.dataSourceBuilder = dataSourceBuilder;
     }
