@@ -1,11 +1,10 @@
 <template>
   <div class="login-page">
-    <el-form
-      v-if="false"
-      :model="user"
-      label-width="100px"
-      style="width: 400px"
-      class="login-form">
+    <el-for v-if="false"
+            :model="user"
+            label-width="100px"
+            style="width: 400px"
+            class="login-form">
       <el-form-item label="用户名">
         <el-input v-model="user.username" type="text" />
       </el-form-item>
@@ -17,11 +16,12 @@
       </el-form-item>
       <el-row>
         <el-col>
-          <a class="float-right"
-             href="/dcm/gw/oauth2/authorization/iam?prefix">使用华为认证平台登录</a>
+          <a class="float-right" href="/dcm/gw/oauth2/authorization/iam?prefix">
+            使用华为认证平台登录
+          </a>
         </el-col>
       </el-row>
-    </el-form>
+    </el-for>
   </div>
 </template>
 
@@ -60,21 +60,24 @@
     }
 
     doLogin (): void {
-      http.post('/oauth2/token', qs.stringify(this.user), {
-        auth: {
-          username: 'app',
-          password: '123456'
-        }
-      }).then(({ data }) => {
-        const token = JSON.stringify(data)
-        sessionStorage.setItem('token', token)
-      }).then(() => {
-        if (this.redirect) {
-          window.location.href = this.redirect
-        } else {
-          this.$router.replace('/')
-        }
-      })
+      http
+        .post('/oauth2/token', qs.stringify(this.user), {
+          auth: {
+            username: 'app',
+            password: '123456'
+          }
+        })
+        .then(({ data }) => {
+          const token = JSON.stringify(data)
+          sessionStorage.setItem('token', token)
+        })
+        .then(() => {
+          if (this.redirect) {
+            window.location.href = this.redirect
+          } else {
+            this.$router.replace('/')
+          }
+        })
     }
 
     created (): void {
