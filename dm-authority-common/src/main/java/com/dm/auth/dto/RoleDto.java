@@ -22,6 +22,15 @@ import java.io.Serializable;
 public class RoleDto implements IdentifiableDto<Long>, Serializable {
     private static final long serialVersionUID = 4725729366179649819L;
 
+    public RoleDto() {
+    }
+
+    public RoleDto(String name, String group, String description) {
+        this.name = name;
+        this.group = group;
+        this.description = description;
+    }
+
     public interface ReferenceBy {
     }
 

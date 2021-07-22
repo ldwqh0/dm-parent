@@ -1,6 +1,7 @@
 package com.dm.uap.converter;
 
 import com.dm.collections.Maps;
+import com.dm.collections.Sets;
 import com.dm.common.converter.Converter;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
@@ -17,6 +18,8 @@ public class UserConverter implements Converter<User, UserDto> {
 
     private final DepartmentConverter departmentConverter;
 
+    private final RoleConverter roleConverter;
+
     private UserDto toDtoActual(User user) {
         UserDto dto = toSimpleDto(user);
         dto.setDescription(user.getDescription());
@@ -26,7 +29,7 @@ public class UserConverter implements Converter<User, UserDto> {
             _posts.forEach((key, value) -> posts.add(new UserPostDto(departmentConverter.toDto(key), value)));
             dto.setPosts(posts);
         }
-        dto.setRoles(user.getRoles());
+        dto.setRoles(Sets.transform(user.getRoles(), roleConverter::toDto));
         return dto;
     }
 

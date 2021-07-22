@@ -49,4 +49,16 @@ public class Address implements Serializable {
     @Column(name = "country_", length = 20)
     private String country;
 
+    /**
+     * 经度
+     */
+    @Column(name = "longitude_")
+    private Double longitude;
+
+    /**
+     * 纬度
+     */
+    @Column(name = "latitude_")
+    private Double latitude;
+
 }

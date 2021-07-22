@@ -1,16 +1,23 @@
 package com.dm.uap.service.impl;
 
+import com.dm.collections.ArrayUtils;
 import com.dm.collections.CollectionUtils;
+import com.dm.collections.Maps;
+import com.dm.collections.Sets;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;
+import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.converter.UserConverter;
+import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
+import com.dm.uap.entity.UserRole;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.DepartmentRepository;
+import com.dm.uap.repository.UserRoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
 import com.dm.util.Assert;
@@ -44,7 +51,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final DepartmentRepository departmentRepository;
 
-    private final DepartmentRepository dpr;
+    private final UserRoleRepository userRoleRepository;
+
+    private final RoleConverter roleConverter;
 
     private final QUser qUser = QUser.user;
 
@@ -82,7 +91,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
     public User save(UserDto userDto) {
-        validationUser(userDto, null);
+        validationUser(userDto);
         String password = userDto.getPassword();
         // 密码不能为空
         Assert.notEmpty(password).orElseThrow(() -> new DataValidateException("用户密码不能为空"));
@@ -104,10 +113,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
-    public User delete(long id) {
+    public void delete(long id) {
         Optional<User> user = userRepository.findById(id);
         user.ifPresent(userRepository::delete);
-        return user.orElseThrow(DataNotExistException::new);
+        user.orElseThrow(DataNotExistException::new);
     }
 
     @Override
@@ -121,17 +130,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userConverter.copyProperties(userRepository.getOne(id), userDto);
         addPostsAndRoles(user, userDto);
         return user;
-    }
-
-    @Override
-    public Page<User> search(String key, Pageable pageable) {
-        if (StringUtils.isNotBlank(key)) {
-            BooleanExpression expression = qUser.username.containsIgnoreCase(key)
-                .or(qUser.fullname.containsIgnoreCase(key));
-            return userRepository.findAll(expression, pageable);
-        } else {
-            return userRepository.findAll(pageable);
-        }
     }
 
     @Override
@@ -156,7 +154,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (Objects.nonNull(department)) {
-            Department dep = dpr.getOne(department);
+            Department dep = departmentRepository.getOne(department);
             query.and(qUser.posts.containsKey(dep));
         }
         if (Objects.nonNull(role)) {
@@ -176,43 +174,62 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private void addPostsAndRoles(User model, UserDto dto) {
         List<UserPostDto> posts = dto.getPosts();
         if (CollectionUtils.isNotEmpty(posts)) {
-            Map<Department, String> posts_ = new HashMap<>();
-            posts.forEach(entry -> posts_.put(departmentRepository.getOne(entry.getDepartment().getId()), entry.getPost()));
+            Map<Department, String> posts_ = Maps.map(posts, it -> departmentRepository.getByDto(it.getDepartment()), UserPostDto::getPost);
             model.setPosts(posts_);
         } else {
             model.setPosts(Collections.emptyMap());
         }
-        model.setRoles(dto.getRoles());
+        model.setRoles(Sets.transform(dto.getRoles(), this::toModel));
+    }
+
+    /**
+     * 根据dto获取role实体，如果role不存在，新增一个
+     *
+     * @param dto 要转换为model的role dto
+     */
+    private UserRole toModel(RoleDto dto) {
+        Long id = dto.getId();
+        UserRole role = roleConverter.copyProperties(userRoleRepository.existsById(id) ? userRoleRepository.getOne(id) : new UserRole(), dto);
+        return userRoleRepository.save(role);
+    }
+
+    /**
+     * 检测一个用户名是否已经存在
+     *
+     * @param username 要检测的用户名
+     * @param excludes 要排除的user id
+     */
+    @Override
+    public boolean userExistsByUsername(String username, Long... excludes) {
+        BooleanExpression expression = qUser.username.equalsIgnoreCase(username);
+        if (ArrayUtils.isNotEmpty(excludes)) {
+            expression = expression.and(qUser.id.notIn(excludes));
+        }
+        return userRepository.exists(expression);
+    }
+
+    /**
+     * 检测指定的email是否已经存在，并且
+     *
+     * @param email    要检测的email
+     * @param excludes 要排除的用户
+     */
+    @Override
+    public boolean userExistsByEmail(String email, Long... excludes) {
+        BooleanExpression expression = qUser.email.equalsIgnoreCase(email);
+        if (ArrayUtils.isNotEmpty(excludes)) {
+            expression = expression.and(qUser.id.notIn(excludes));
+        }
+        return userRepository.exists(expression);
     }
 
     @Override
-    public boolean userExistsByUsername(String username, Long exclude) {
-        BooleanBuilder query = new BooleanBuilder();
-        query.and(qUser.username.equalsIgnoreCase(username));
-        if (Objects.nonNull(exclude)) {
-            query.and(qUser.id.ne(exclude));
+    public boolean userExistsByMobile(String mobile, Long... excludes) {
+        BooleanExpression expression = qUser.mobile.equalsIgnoreCase(mobile);
+        if (ArrayUtils.isNotEmpty(excludes)) {
+            expression = expression.and(qUser.id.notIn(excludes));
         }
-        return userRepository.exists(query);
-    }
-
-    @Override
-    public boolean userExistsByEmail(String email, Long exclude) {
-        BooleanBuilder query = new BooleanBuilder();
-        query.and(qUser.email.equalsIgnoreCase(email));
-        if (Objects.nonNull(exclude)) {
-            query.and(qUser.id.ne(exclude));
-        }
-        return userRepository.exists(query);
-    }
-
-    @Override
-    public boolean userExistsByMobile(Long exclude, String mobile) {
-        BooleanBuilder query = new BooleanBuilder();
-        query.and(qUser.mobile.equalsIgnoreCase(mobile));
-        if (Objects.nonNull(exclude)) {
-            query.and(qUser.id.ne(exclude));
-        }
-        return userRepository.exists(query);
+        return userRepository.exists(expression);
     }
 
     @Override
@@ -245,12 +262,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userConverter.toDto(userRepository.save(originUser));
     }
 
-    @Override
-    public Optional<User> findByMobile(String mobile) {
-        return userRepository.findByMobileIgnoreCase(mobile);
-    }
-
-
     private <T extends User> UserDetailsDto toUserDetailsDto(T user) {
         UserDetailsDto dto = new UserDetailsDto();
         dto.setPassword(user.getPassword());
@@ -262,12 +273,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         dto.setFullname(user.getFullname());
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
-        dto.setGrantedAuthority(user.getRoles());
+        dto.setGrantedAuthority(Sets.transform(user.getRoles(), roleConverter::toDto));
         dto.setMobile(user.getMobile());
         return dto;
     }
 
-    private void validationUser(UserDto user, Long exclude) {
+    private void validationUser(UserDto user, Long... exclude) {
         String mobile = user.getMobile();
         String email = user.getEmail();
         Assert.from(user.getUsername(), v -> !userExistsByUsername(v, exclude)).orElseThrow(() -> new DataValidateException("用户名已经存在"));

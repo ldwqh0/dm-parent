@@ -190,7 +190,7 @@ public class UserController {
     public ValidationResult mobileValidation(
         @RequestParam(value = "exclude", required = false) Long exclude,
         @RequestParam("mobile") String mobile) {
-        if (userService.userExistsByMobile(exclude, mobile)) {
+        if (userService.userExistsByMobile(mobile, exclude)) {
             return ValidationResult.failure("手机号已被注册");
         } else {
             return ValidationResult.success();

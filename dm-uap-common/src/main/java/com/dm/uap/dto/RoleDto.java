@@ -1,34 +1,29 @@
-package com.dm.uap.entity;
+package com.dm.uap.dto;
 
+import com.dm.common.dto.IdentifiableDto;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Transient;
 import java.io.Serializable;
 
 @Data
-@Embeddable
-public class Role implements GrantedAuthority, Serializable {
-    private static final long serialVersionUID = -3154023961155631437L;
+public class RoleDto implements Serializable, GrantedAuthority, IdentifiableDto<Long> {
 
+    private static final long serialVersionUID = -2204000372762540931L;
     /**
      * 角色id
      */
-    @Column(name = "role_id_")
-    private long id;
+    private Long id;
 
     /**
      * 角色组
      */
-    @Column(name = "group_", length = 100)
     private String group;
 
     /**
      * 角色名称
      */
-    @Column(name = "name_", length = 100)
     private String name;
 
     /**
@@ -38,7 +33,7 @@ public class Role implements GrantedAuthority, Serializable {
      * @ignore 这个属性不给前端提供
      */
     @Override
-    @Transient
+    @JsonGetter
     public String getAuthority() {
         return group + "_" + name;
     }

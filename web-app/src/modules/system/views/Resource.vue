@@ -61,6 +61,7 @@
                  multiple>
         <el-option v-for="role in roles"
                    :key="role.id"
+                   :title="role.description"
                    :value="role"
                    :label="role.fullname" />
       </el-select>
@@ -73,6 +74,7 @@
                  multiple>
         <el-option v-for="role in roles"
                    :key="role.id"
+                   :title="role.description"
                    :value="role"
                    :label="role.fullname" />
       </el-select>

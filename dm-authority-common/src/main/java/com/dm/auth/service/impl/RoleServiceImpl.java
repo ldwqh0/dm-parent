@@ -164,7 +164,6 @@ public class RoleServiceImpl implements RoleService {
             .filter(menu -> Objects.isNull(root) || (!Objects.equals(menu.getId(), root) && this.isOffspringOf(menu, root))) // 只需要是
             .map(menuConverter::toDto)
             .collect(Collectors.toSet());
-
     }
 
     @Override

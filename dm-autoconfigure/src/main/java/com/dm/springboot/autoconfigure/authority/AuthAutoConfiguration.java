@@ -5,7 +5,6 @@ import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.dto.RoleDto;
 import com.dm.auth.entity.Role;
-import com.dm.auth.entity.Role.Status;
 import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
@@ -101,8 +100,8 @@ public class AuthAutoConfiguration {
             role.setName("ROLE_ADMIN");
             role.setGroup("内置分组");
             role.setDescription("系统内置管理员角色");
-            role.setState(Status.ENABLED);
             Role admin = roleService.save(role);
+//            new UserRole();
             initAuthority(admin);
         }
         // 增加系统内置已登录用户角色，所有已登录用户均有该角色
@@ -112,7 +111,6 @@ public class AuthAutoConfiguration {
             role.setName("ROLE_AUTHENTICATED");
             role.setGroup("内置分组");
             role.setDescription("系统内置认证通过角色，所有已经登录的用户均为该角色");
-            role.setState(Status.ENABLED);
             roleService.save(role);
         }
         // 增加默认匿名用户角色
@@ -122,7 +120,6 @@ public class AuthAutoConfiguration {
             role.setName("ROLE_ANONYMOUS");
             role.setGroup("内置分组");
             role.setDescription("系统内置匿名角色");
-            role.setState(Status.ENABLED);
             roleService.save(role);
         }
 

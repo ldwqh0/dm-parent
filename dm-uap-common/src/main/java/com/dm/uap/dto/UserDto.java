@@ -3,7 +3,6 @@ package com.dm.uap.dto;
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
 import com.dm.uap.entity.Address;
-import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,6 +17,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @JsonInclude(value = Include.NON_ABSENT)
@@ -122,7 +122,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
      */
     @Valid
     @NotEmpty(groups = {New.class, Update.class})
-    private List<Role> roles;
+    private Set<RoleDto> roles;
 
     /**
      * 景区名称

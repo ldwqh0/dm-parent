@@ -10,8 +10,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -100,13 +102,24 @@ public class User extends AbstractEntity {
     @Embedded
     private Address address;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "dm_user_role_", joinColumns = {
+    /**
+     * 用户的角色信息，在UAP系统中，仅仅保存用户的角色信息。<br>
+     * 在用户系统中,不对角色信息进行单独维护，仅仅作为用户的附加信息而存在。
+     */
+    @ManyToMany
+    @JoinTable(name = "dm_user_role_", joinColumns = {
         @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_role_user_"))
+    }, inverseJoinColumns = {
+        @JoinColumn(name = "role_id_", foreignKey = @ForeignKey(name = "FK_dm_user_role_role_"))
     }, uniqueConstraints = {
         @UniqueConstraint(name = "UK_dm_user_role_user_role_", columnNames = {"user_id_", "role_id_"})
     })
-    private List<Role> roles;
+    private Set<UserRole> roles = new HashSet<>();
+
+    public void setRoles(Set<UserRole> roles) {
+        this.roles.clear();
+        this.roles.addAll(roles);
+    }
 
     /**
      * 用户的职务信息
@@ -122,7 +135,12 @@ public class User extends AbstractEntity {
     })
     @MapKeyJoinColumn(name = "department_id_", foreignKey = @ForeignKey(name = "FK_dm_user_post_department_id_"))
     @Column(name = "post_", length = 50)
-    private Map<Department, String> posts;
+    private Map<Department, String> posts = new HashMap<>();
+
+    public void setPosts(Map<Department, String> posts) {
+        this.posts.clear();
+        this.posts.putAll(posts);
+    }
 
     /**
      * 用户的排序
@@ -136,7 +154,12 @@ public class User extends AbstractEntity {
     })
     @MapKeyJoinColumn(name = "department_id_", foreignKey = @ForeignKey(name = "FK_dm_user_order_department_id_"))
     @Column(name = "order_")
-    private Map<Department, Long> orders;
+    private Map<Department, Long> orders = new HashMap<>();
+
+    public void setOrders(Map<Department, Long> orders) {
+        this.orders.clear();
+        this.orders.putAll(orders);
+    }
 
     @Column(name = "region_code_", length = 20)
     private String regionCode;
@@ -148,7 +171,12 @@ public class User extends AbstractEntity {
         })
     @MapKeyColumn(name = "key")
     @Column(name = "value")
-    private Map<String, String> attributes;
+    private Map<String, String> attributes = new HashMap<>();
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes.clear();
+        this.attributes.putAll(attributes);
+    }
 
     @Column(name = "birth_date_")
     private LocalDate birthDate;
@@ -162,7 +190,6 @@ public class User extends AbstractEntity {
     @LastModifiedDate
     @Column(name = "last_modified_time_")
     private ZonedDateTime lastModifiedTime;
-
 
     public enum Gender {
         /**
