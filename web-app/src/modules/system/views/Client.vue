@@ -13,21 +13,20 @@
         <el-form-item label="clientId：">{{ model.id }}</el-form-item>
       </el-col>
     </el-row>
-    <el-row v-if="model.id===null||model.id===undefined">
-      <el-col :span="12">
-        <el-form-item label="客户端密钥：">
-          {{ model.secret }}
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <!--    <el-row v-if="model.id===null||model.id===undefined">-->
+    <!--      <el-col :span="12">-->
+    <!--        <el-form-item label="客户端密钥：">-->
+    <!--          {{ model.secret }}-->
+    <!--        </el-form-item>-->
+    <!--      </el-col>-->
+    <!--    </el-row>-->
 
     <el-row>
       <el-col :span="12">
-        <el-form-item label="应用类型" prop="type">
+        <el-form-item label="客户端类型" prop="type">
           <el-select v-model="model.type" style="width: 100%;">
             <el-option value="CLIENT_PUBLIC" label="公共客户端" />
             <el-option value="CLIENT_CONFIDENTIAL" label="机密客户端" />
-            <el-option value="CLIENT_RESOURCE" label="资源服务器" />
           </el-select>
         </el-form-item>
       </el-col>
@@ -123,7 +122,8 @@
       }]
     }
 
-    uriValidator (rule: never, value: string[], callback: (error?: string | string[] | Error | void) => void): void {
+    uriValidator (rule: Rules, value: string[], callback: (error?: string | string[] | Error | void) => void): void {
+      // TODO 这里需要处理
       value.forEach(value1 => console.log(value1))
       callback()
     }

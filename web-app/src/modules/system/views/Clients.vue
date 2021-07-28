@@ -9,6 +9,16 @@
         </el-col>
         <el-col :span="12">
           <el-form-item style="float: right">
+            `
+            <el-dropdown @command="newClient">
+              <el-button type="primary">
+                新连接<i class="el-icon-arrow-down el-icon--right" />
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="resource-server">资源服务器</el-dropdown-item>
+                <el-dropdown-item command="client">客户端程序</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <el-button type="primary" @click="$router.push({name:'client',params:{id:'new'}})">新应用</el-button>
           </el-form-item>
         </el-col>
@@ -44,7 +54,7 @@
       </el-table-column>
       <el-table-column label="操作" width="100px" fixed="right">
         <template #default="{row}">
-          <el-button type="text" @click="$router.push({name:'client',params:{id:row.id}})">编辑</el-button>
+          <el-button type="text" @click="edit(row)">编辑</el-button>
           <el-button type="text" style="color: red" @click="del(row)">删除</el-button>
         </template>
       </el-table-column>
@@ -76,6 +86,29 @@
 
     serverParams = {
       keyword: ''
+    }
+
+    created () {
+
+    }
+
+    newClient (event: string): void {
+      switch (event) {
+        case 'resource-server':
+          this.$router.push({
+            name: 'rClient',
+            params: { id: 'new' }
+          })
+          break
+        case 'client':
+          this.$router.push({
+            name: 'client',
+            params: { id: 'new' }
+          })
+          break
+        default:
+          console.log('do nothing')
+      }
     }
 
     del ({ id }: ClientDto): Promise<unknown> {
@@ -122,6 +155,14 @@
             })
           }
         })
+    }
+
+    edit ({
+      type,
+      id
+    }: ClientDto) {
+      debugger
+      console.log(client)
     }
   }
 </script>

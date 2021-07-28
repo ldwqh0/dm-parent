@@ -29,6 +29,11 @@ export default [{
     path: 'clients',
     component: (): Promise<ImportedComponent> => import('./views/Clients.vue')
   }, {
+    name: 'rClient',
+    path: 'rClients/:id',
+    props: true,
+    component: (): Promise<ImportedComponent> => import('./views/ClientResource.vue')
+  }, {
     name: 'client',
     path: 'clients/:id',
     props: true,

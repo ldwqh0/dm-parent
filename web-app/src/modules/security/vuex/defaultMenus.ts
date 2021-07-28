@@ -18,6 +18,6 @@ export default [{
   url: '/system/resources'
 }, {
   id: 5,
-  title: '应用管理',
+  title: '连接程序',
   url: '/system/clients'
 }] as MenuDto[]
