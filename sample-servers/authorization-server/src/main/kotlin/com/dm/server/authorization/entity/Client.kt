@@ -12,7 +12,7 @@ import javax.persistence.*
 @Entity
 @Table(
     name = "dm_client_",
-    uniqueConstraints = [UniqueConstraint(name = "UK_dm_client_name_", columnNames = ["name_"])]
+    uniqueConstraints = [UniqueConstraint(name = "uk_dm_client_name_", columnNames = ["name_"])]
 )
 @EntityListeners(AuditingEntityListener::class)
 data class Client(
@@ -74,7 +74,7 @@ data class Client(
     @JoinTable(
         name = "dm_client_additional_information_",
         uniqueConstraints = [UniqueConstraint(
-            name = "UK_dm_client_additional_information_client_id_key_value_",
+            name = "uk_dm_client_additional_information_client_id_key_value_",
             columnNames = ["client_id_", "key_", "value_"]
         )],
         joinColumns = [JoinColumn(

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @Table(name = "dm_department_", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_dm_department_parent_id_full_name_", columnNames = {"parent_id_", "full_name_"})
+    @UniqueConstraint(name = "uk_dm_department_parent_id_full_name_", columnNames = {"parent_id_", "full_name_"})
 })
 public class Department extends AbstractEntity {
 

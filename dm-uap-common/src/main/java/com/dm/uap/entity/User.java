@@ -21,10 +21,10 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "dm_user_", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_dm_user_username_", columnNames = {"username_"}),
-    @UniqueConstraint(name = "UK_dm_user_email_", columnNames = {"email_"}),
-    @UniqueConstraint(name = "UK_dm_user_mobile_", columnNames = {"mobile_"}),
-    @UniqueConstraint(name = "UK_dm_user_no_", columnNames = "no_")
+    @UniqueConstraint(name = "uk_dm_user_username_", columnNames = {"username_"}),
+    @UniqueConstraint(name = "uk_dm_user_email_", columnNames = {"email_"}),
+    @UniqueConstraint(name = "uk_dm_user_mobile_", columnNames = {"mobile_"}),
+    @UniqueConstraint(name = "uk_dm_user_no_", columnNames = "no_")
 })
 public class User extends AbstractEntity {
 
@@ -112,7 +112,7 @@ public class User extends AbstractEntity {
     }, inverseJoinColumns = {
         @JoinColumn(name = "role_id_", foreignKey = @ForeignKey(name = "FK_dm_user_role_role_"))
     }, uniqueConstraints = {
-        @UniqueConstraint(name = "UK_dm_user_role_user_role_", columnNames = {"user_id_", "role_id_"})
+        @UniqueConstraint(name = "uk_dm_user_role_user_role_", columnNames = {"user_id_", "role_id_"})
     })
     private Set<UserRole> roles = new HashSet<>();
 
@@ -128,7 +128,7 @@ public class User extends AbstractEntity {
     @JoinTable(name = "dm_user_post_", joinColumns = {
         @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_post_user_id_"))
     }, uniqueConstraints = {
-        @UniqueConstraint(name = "UK_user_id_department_id_post_", columnNames = {"user_id_", "department_id_", "post_"})
+        @UniqueConstraint(name = "uk_user_id_department_id_post_", columnNames = {"user_id_", "department_id_", "post_"})
     }, indexes = {
         @Index(name = "IDX_dm_user_post_user_id_", columnList = "user_id_"),
         @Index(name = "IDX_dm_user_post_department_id_", columnList = "department_id_")

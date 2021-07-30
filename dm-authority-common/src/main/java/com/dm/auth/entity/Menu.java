@@ -13,8 +13,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "dm_menu_", indexes = {
-    @Index(columnList = "parent_", name = "IDX_dm_menu_parent_")}, uniqueConstraints = {
-    @UniqueConstraint(name = "UK_dm_menu_parent_name_", columnNames = {"name_", "parent_"})
+    @Index(columnList = "parent_", name = "idx_dm_menu_parent_")}, uniqueConstraints = {
+    @UniqueConstraint(name = "uk_dm_menu_parent_name_", columnNames = {"name_", "parent_"})
 })
 public class Menu extends AbstractEntity {
 
