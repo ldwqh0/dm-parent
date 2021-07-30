@@ -6,21 +6,13 @@
     <el-row>
       <el-col :span="12">
         <el-form-item label="应用名称：" prop="name">
-          <el-input v-model.trim="model.name" />
+          <el-input v-model.trim="model.name" :maxlength="50" />
         </el-form-item>
       </el-col>
       <el-col v-if="model.id" :span="12">
         <el-form-item label="clientId：">{{ model.id }}</el-form-item>
       </el-col>
     </el-row>
-    <!--    <el-row v-if="model.id===null||model.id===undefined">-->
-    <!--      <el-col :span="12">-->
-    <!--        <el-form-item label="客户端密钥：">-->
-    <!--          {{ model.secret }}-->
-    <!--        </el-form-item>-->
-    <!--      </el-col>-->
-    <!--    </el-row>-->
-
     <el-row>
       <el-col :span="12">
         <el-form-item label="客户端类型" prop="type">
@@ -31,22 +23,23 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item prop="autoApprove" label="">
+        <el-form-item>
           <el-checkbox v-model="model.autoApprove" label="允许自动授权" title="是否会跳转到用户授权页面" />
+          <el-checkbox v-model="model.enabled" label="启用" title="启用连接" />
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="12">
         <el-form-item prop="accessTokenValiditySeconds" label="ACCESS_TOKEN 有效期：" label-width="200px">
-          <el-input-number v-model="model.accessTokenValiditySeconds" />
-          毫秒
+          <el-input-number v-model.number="model.accessTokenValiditySeconds" />
+          秒
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item prop="refreshTokenValiditySeconds" label="REFRESH_TOKEN 有效期：" label-width="200px">
-          <el-input-number v-model="model.refreshTokenValiditySeconds" />
-          毫秒
+          <el-input-number v-model.number="model.refreshTokenValiditySeconds" />
+          秒
         </el-form-item>
       </el-col>
     </el-row>
@@ -88,6 +81,8 @@
   import urls from '../URLS'
   import { ClientDto } from '@/types/service'
   import { Rules } from 'async-validator'
+  import isEmpty from 'lodash/isEmpty'
+  import cloneDeep from 'lodash/cloneDeep'
 
   @Component
   export default class Client extends Vue {
@@ -99,7 +94,7 @@
 
     scopes: string[] = []
 
-    grantTypes: { name: string, value: string }[] = [{
+    grantTypes = [{
       name: '授权码模式',
       value: 'authorization_code'
     }, {
@@ -107,24 +102,55 @@
       value: 'client_credentials'
     }]
 
-    model: ClientDto = {}
+    model: ClientDto = {
+      accessTokenValiditySeconds: 60/* 1分钟 */ * 60/* 1小时 */ * 24/* 一天 */ * 30/* 30天 */,
+      refreshTokenValiditySeconds: 7200 * 2
+    }
 
     rules: Rules = {
       name: [{
         required: true,
         message: '名称不能为空'
+      }, {
+        max: 50,
+        message: '名称最长不能超过50个字符'
       }],
       registeredRedirectUris: [{
         required: true,
         message: '授权回调地址不能为空'
       }, {
         validator: this.uriValidator
+      }],
+      accessTokenValiditySeconds: [{
+        required: true,
+        message: 'Access Token有效期不能为空'
+      }, {
+        type: 'number',
+        max: 10000000,
+        message: 'Access Token最大值不能超过10000000'
+      }],
+      refreshTokenValiditySeconds: [{
+        required: true,
+        message: 'Refresh Token不能为空'
+      }, {
+        type: 'number',
+        max: 20000000,
+        message: 'Refresh Token最大值不能超过20000000'
+      }],
+      description: [{
+        max: 4000,
+        message: '应用描述信息不能超过4000个字符'
       }]
     }
 
     uriValidator (rule: Rules, value: string[], callback: (error?: string | string[] | Error | void) => void): void {
-      // TODO 这里需要处理
-      value.forEach(value1 => console.log(value1))
+      const urls = value.map(it => it.trim()).filter(it => !isEmpty(it))
+      for (const url of urls) {
+        if (url.length > 500) {
+          callback(new Error('单个回调URL的长度不能超过500'))
+          return
+        }
+      }
       callback()
     }
 
@@ -133,16 +159,18 @@
     }
 
     set registeredRedirectUris (value: string) {
-      this.model.registeredRedirectUris = value.split('\n')
+      this.$set(this.model, 'registeredRedirectUris', value.split('\n'))
     }
 
     save (): Promise<unknown> {
+      const data = cloneDeep(this.model)
+      data.registeredRedirectUris = this.model.registeredRedirectUris?.map(it => it.trim()).filter(it => !isEmpty(it))
       return (this.$refs.form as any).validate()
         .then(() => {
           if (this.id === 'new') {
-            return http.post(`${urls.client}`, this.model)
+            return http.post(`${urls.client}`, data)
           } else {
-            return http.put(`${urls.client}/${this.id}`, this.model)
+            return http.put(`${urls.client}/${this.id}`, data)
           }
         })
         .then(() => this.$router.back())

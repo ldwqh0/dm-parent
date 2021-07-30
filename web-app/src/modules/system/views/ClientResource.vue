@@ -28,8 +28,8 @@
   import http from '@/http'
   import { Component, Prop, Vue } from 'vue-property-decorator'
   import urls from '../URLS'
-  import { ClientDto } from '@/types/service'
-  import { Rules } from 'async-validator'
+  import { ClientDto, ClientType } from '@/types/service'
+  import { CallbackFunction, Rules } from 'async-validator'
 
   /**
    * 资源服务器编辑页面
@@ -42,13 +42,21 @@
     })
     id!: string
 
-    model: ClientDto = {}
+    model: ClientDto = {
+      type: ClientType.CLIENT_RESOURCE
+    }
 
     rules: Rules = {
       name: [{
         required: true,
         message: '名称不能为空'
+      }, {
+        validator: this.validateExists
       }]
+    }
+
+    validateExists (rules: Rules, value: string, callback: CallbackFunction): void {
+      callback()
     }
 
     save (): Promise<unknown> {

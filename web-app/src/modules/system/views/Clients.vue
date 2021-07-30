@@ -9,7 +9,6 @@
         </el-col>
         <el-col :span="12">
           <el-form-item style="float: right">
-            `
             <el-dropdown @command="newClient">
               <el-button type="primary">
                 新连接<i class="el-icon-arrow-down el-icon--right" />
@@ -19,7 +18,6 @@
                 <el-dropdown-item command="client">客户端程序</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-button type="primary" @click="$router.push({name:'client',params:{id:'new'}})">新应用</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -32,8 +30,6 @@
           {{ row.type | toClientType }}
         </template>
       </el-table-column>
-      <!--      <el-table-column prop="accessTokenValiditySeconds" label="accessToken过期时间" />-->
-      <!--      <el-table-column prop="refreshTokenValiditySeconds" label="refreshToken过期时间" />-->
       <el-table-column label="状态">
         <template #default="{row}">
           <el-button v-if="row.enabled"
@@ -52,6 +48,11 @@
           </el-button>
         </template>
       </el-table-column>
+      <el-table-column label="应用密钥">
+        <template #default="{row}">
+          <el-button v-if="row.type==='CLIENT_CONFIDENTIAL'" type="text" @click="showSecret(row)">查看密钥</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="100px" fixed="right">
         <template #default="{row}">
           <el-button type="text" @click="edit(row)">编辑</el-button>
@@ -67,6 +68,7 @@
   import urls from '../URLS'
   import { ClientDto, ClientType } from '@/types/service'
   import http from '@/http'
+  import PasswordViewer from './PasswordViewer.vue'
 
   const ClientTypes = {
     [ClientType.CLIENT_CONFIDENTIAL]: '机密客户端',
@@ -75,6 +77,7 @@
   }
 
   @Component({
+    components: { PasswordViewer },
     filters: {
       toClientType (v: ClientType): string {
         return ClientTypes[v]
@@ -86,10 +89,6 @@
 
     serverParams = {
       keyword: ''
-    }
-
-    created () {
-
     }
 
     newClient (event: string): void {
@@ -109,6 +108,19 @@
         default:
           console.log('do nothing')
       }
+    }
+
+    showSecret (client: ClientDto): void {
+      const h = this.$createElement
+      this.$msgbox({
+        title: '应用密钥',
+        message: h(PasswordViewer, {
+          props: {
+            value: client.secret
+          }
+        }),
+        confirmButtonText: '确定'
+      })
     }
 
     del ({ id }: ClientDto): Promise<unknown> {
@@ -160,9 +172,18 @@
     edit ({
       type,
       id
-    }: ClientDto) {
-      debugger
-      console.log(client)
+    }: ClientDto): void {
+      if (type === ClientType.CLIENT_RESOURCE) {
+        this.$router.push({
+          name: 'rClient',
+          params: { id }
+        })
+      } else {
+        this.$router.push({
+          name: 'client',
+          params: { id }
+        })
+      }
     }
   }
 </script>
