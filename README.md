@@ -8,6 +8,14 @@
 
 ## 升级日志
 
+2.2.0
+
+* 升级spring boot至2.5.3
+* 升级springfox至3.0.0
+* 升级hibernate至5.5.5
+* 升级commons-lang3.version至3.12.0
+* 升级querydsl至5.0.0
+
 2.1.1
 
 * 升级spring boot至2.4.9
