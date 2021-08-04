@@ -29,8 +29,7 @@ public class MultiDataSourceJpaSupportAutoConfiguration {
     }
 
     @Bean
-    public DmDataSourceService dmDataSourceService(DmDataSourceRepository dmDataSourceRepository
-    ) {
+    public DmDataSourceService dmDataSourceService(DmDataSourceRepository dmDataSourceRepository) {
         return new DmDataSourceServiceImpl(
             dmDataSourceConverter(),
             dmDataSourceRepository
