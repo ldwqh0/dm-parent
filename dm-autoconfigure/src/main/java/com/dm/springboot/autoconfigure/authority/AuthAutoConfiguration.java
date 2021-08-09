@@ -56,6 +56,13 @@ public class AuthAutoConfiguration {
             resource.setMatcher("/**");
             resource.setDescription("默认资源类型");
             resourceService.save(resource);
+
+            ResourceDto r2 = new ResourceDto();
+            r2.setName("用户可见菜单");
+            r2.setMatchType(MatchType.ANT_PATH);
+            r2.setMatcher("/p/menuAuthorities/current**/**");
+            r2.setDescription("当前用户可见菜单");
+            resourceService.save(r2);
         }
     }
 

@@ -44,10 +44,26 @@
         </el-option-group>
       </el-select>
     </el-form-item>
-    <el-form-item label="联系电话：" prop="mobile">
-      <el-input v-model="user.mobile" :maxlength="20" />
-    </el-form-item>
 
+    <el-row>
+      <el-col>
+        <el-form-item label="账号状态：">
+          <el-checkbox v-model="user.enabled">启用</el-checkbox>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="联系电话：" prop="mobile">
+          <el-input v-model="user.mobile" :maxlength="20" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="邮箱地址：" prop="email">
+          <el-input v-model="user.email" :maxlength="20" />
+        </el-form-item>
+      </el-col>
+    </el-row>
     <!--    <el-row>-->
     <!--      <el-col>-->
     <!--        <div style="width: 100px;text-align: right;padding-right: 12px;box-sizing: border-box;">用户职务：</div>-->
@@ -144,7 +160,10 @@
       expandTrigger: 'hover'
     }
 
-    user: UserDto = {}
+    user: UserDto = {
+      enabled: true
+    }
+
     roles: RoleDto[] = []
 
     rules: Rules = {
