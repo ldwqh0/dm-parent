@@ -23,6 +23,10 @@
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.dm</groupId>
+      <artifactId>compiler-shim</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

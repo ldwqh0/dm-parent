@@ -26,6 +26,7 @@
     <dm.version>2.2.0-SNAPSHOT</dm.version>
   </properties>
   <modules>
+    <module>compiler-shim</module>
     <!-- 集合工具类 -->
     <module>collections</module>
     <!-- 平台公共模块 -->
@@ -180,6 +181,12 @@
         <groupId>com.dm</groupId>
         <artifactId>dm-uap-dingtalk</artifactId>
         <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>compiler-shim</artifactId>
+        <version>${dm.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
