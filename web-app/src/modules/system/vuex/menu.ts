@@ -2,7 +2,7 @@ import { ActionContext, Module } from 'vuex'
 import http from '@/http'
 import URLS from '../URLS'
 import { RootState } from '@/store'
-import { MenuDto, MenuTreeItem } from '@/types/Service'
+import { MenuDto, MenuTreeItem } from '@/types/service'
 
 interface MenuState {
   menus: MenuDto[]
@@ -21,14 +21,23 @@ const menuModule: Module<MenuState, RootState> = {
   getters: {
     tree ({ menus: originMenus }: MenuState): MenuTreeItem[] {
       const children: MenuTreeItem[] = []
-      const menus: MenuTreeItem[] = originMenus.map(({ id, title, parent, type, url, openInNewWindow }: MenuDto) => {
+      const menus: MenuTreeItem[] = originMenus.map(({
+        id,
+        title,
+        parent,
+        type,
+        url,
+        openInNewWindow,
+        icon
+      }: MenuDto) => {
         // 将menu转换为menuTreeItem
         const result: MenuTreeItem = {
           openInNewWindow,
           type,
           url,
           id,
-          title
+          title,
+          icon
         }
         if (parent !== undefined && parent !== null) {
           result.parent = {
@@ -52,15 +61,17 @@ const menuModule: Module<MenuState, RootState> = {
           children.push(menu)
         }
       })
+
       return children
     }
   },
   actions: {
     loadAll ({ commit }: ActionContext<MenuState, RootState>): Promise<any> {
-      return http.get(URLS.menus).then(({ data: menus }) => {
-        commit('menus', menus)
-        return menus
-      })
+      return http.get(URLS.menus, { params: { scope: 'all' } })
+        .then(({ data: menus }) => {
+          commit('menus', menus)
+          return menus
+        })
     }
   }
 }

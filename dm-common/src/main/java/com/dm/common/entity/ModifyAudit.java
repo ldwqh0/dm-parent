@@ -7,9 +7,8 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 @Getter
-public class ModifyAudit implements Audit {
+public class ModifyAudit  implements Audit<Long, String> {
 
-    private static final long serialVersionUID = 5546618897219690297L;
 
     @Column(name = "last_modified_user_id_")
     private Long userid;
@@ -25,7 +24,7 @@ public class ModifyAudit implements Audit {
         this.username = lastModifiedUserName;
     }
 
-    public ModifyAudit(Audit audit) {
+    public ModifyAudit(Audit<Long, String> audit) {
         this(audit.getUserid(), audit.getUsername());
     }
 

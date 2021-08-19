@@ -43,7 +43,7 @@ public class VerificationCodeController {
     /**
      * 生成验证码，将验证码数据以Base64格式输出
      *
-     * @return
+     * @return 生成的验证码
      */
     @GetMapping(produces = {
         TEXT_PLAIN_VALUE,
@@ -82,14 +82,6 @@ public class VerificationCodeController {
 
     private BufferedImage generateImage(String code) {
         return producer.createImage(code);
-//		BufferedImage img = new BufferedImage(140, 40, BufferedImage.TYPE_INT_RGB);
-//		Font font = new Font("Fixedsys", Font.BOLD, 30);
-//		Graphics gd = img.getGraphics();
-//		gd.setColor(Color.RED);
-//		gd.setFont(font);
-//		gd.drawString(code, 10, 30);
-//		gd.dispose();
-//		return img;
     }
 
     @GetMapping("validation")

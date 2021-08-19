@@ -1,9 +1,8 @@
 package com.dm.jdbc;
 
-
 public class ColumnMeta {
     private String tableCat;  //1
-    private String tableSchem;//2
+    private String tableSchema;//2
     private String tableName;//3
     private String columnName;//4
     private int dataType;//5
@@ -26,13 +25,13 @@ public class ColumnMeta {
     private String scopeTable;//21
     private short sourceDataType;//22
     private String isAutoincrement;//23
-    private String isGeneratedcolumn;//24
+    private String isGeneratedColumn;//24
 
     public ColumnMeta() {
     }
 
     public ColumnMeta(String tableCat,
-                      String tableSchem,
+                      String tableSchema,
                       String tableName,
                       String columnName,
                       int dataType,
@@ -53,9 +52,9 @@ public class ColumnMeta {
                       String scopeTable,
                       short sourceDataType,
                       String isAutoincrement,
-                      String isGeneratedcolumn) {
+                      String isGeneratedColumn) {
         this.tableCat = tableCat;
-        this.tableSchem = tableSchem;
+        this.tableSchema = tableSchema;
         this.tableName = tableName;
         this.columnName = columnName;
         this.dataType = dataType;
@@ -76,15 +75,15 @@ public class ColumnMeta {
         this.scopeTable = scopeTable;
         this.sourceDataType = sourceDataType;
         this.isAutoincrement = isAutoincrement;
-        this.isGeneratedcolumn = isGeneratedcolumn;
+        this.isGeneratedColumn = isGeneratedColumn;
     }
 
     public String getTableCat() {
         return tableCat;
     }
 
-    public String getTableSchem() {
-        return tableSchem;
+    public String getTableSchema() {
+        return tableSchema;
     }
 
     public String getTableName() {
@@ -167,16 +166,16 @@ public class ColumnMeta {
         return isAutoincrement;
     }
 
-    public String getIsGeneratedcolumn() {
-        return isGeneratedcolumn;
+    public String getIsGeneratedColumn() {
+        return isGeneratedColumn;
     }
 
     public void setTableCat(String tableCat) {
         this.tableCat = tableCat;
     }
 
-    public void setTableSchem(String tableSchem) {
-        this.tableSchem = tableSchem;
+    public void setTableSchema(String tableSchema) {
+        this.tableSchema = tableSchema;
     }
 
     public void setTableName(String tableName) {
@@ -259,7 +258,7 @@ public class ColumnMeta {
         this.isAutoincrement = isAutoincrement;
     }
 
-    public void setIsGeneratedcolumn(String isGeneratedcolumn) {
-        this.isGeneratedcolumn = isGeneratedcolumn;
+    public void setIsGeneratedColumn(String isGeneratedColumn) {
+        this.isGeneratedColumn = isGeneratedColumn;
     }
 }

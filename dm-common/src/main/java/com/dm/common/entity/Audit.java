@@ -9,25 +9,35 @@ import java.io.Serializable;
  *
  * @author LiDong
  */
-public interface Audit extends Serializable {
+public interface Audit<ID extends Serializable, NAME extends Serializable> {
 
-    Long getUserid();
+    /**
+     * 用户ID
+     *
+     * @return ID
+     */
+    ID getUserid();
 
-    String getUsername();
+    /**
+     * 用户名
+     *
+     * @return 用户名
+     */
+    NAME getUsername();
 
-    static Audit of(Long userid, String username) {
-        return new SimpleAuditImpl(userid, username);
+    static <ID extends Serializable, NAME extends Serializable> Audit<ID, NAME> of(ID userid, NAME username) {
+        return new SimpleAuditImpl<>(userid, username);
     }
 
-    static Audit of(Audit audit) {
-        return new SimpleAuditImpl(audit.getUserid(), audit.getUsername());
+    static <ID extends Serializable, NAME extends Serializable> Audit<ID, NAME> of(Audit<ID, NAME> audit) {
+        return new SimpleAuditImpl<>(audit.getUserid(), audit.getUsername());
     }
 
 }
 
 @Data
-class SimpleAuditImpl implements Audit, Serializable {
-    private final Long userid;
-    private final String username;
+class SimpleAuditImpl<ID extends Serializable, NAME extends Serializable> implements Audit<ID, NAME>, Serializable {
+    private final ID userid;
+    private final NAME username;
     private static final long serialVersionUID = 7129258376953572142L;
 }

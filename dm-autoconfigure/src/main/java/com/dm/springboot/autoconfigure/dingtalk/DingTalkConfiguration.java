@@ -87,26 +87,26 @@ public class DingTalkConfiguration {
     @ConditionalOnMissingBean(DingTalkService.class)
     @ConditionalOnBean(DingtalkAccessTokenService.class)
     public DingTalkService dingTalkService(@Autowired DingtalkAccessTokenService accessTokenService) {
-        DefaultDingTalkServiceImpl ddsi = new DefaultDingTalkServiceImpl();
-        ddsi.setDingtalkAccessTokenService(accessTokenService);
-        return ddsi;
+        DefaultDingTalkServiceImpl defaultDingTalkService = new DefaultDingTalkServiceImpl();
+        defaultDingTalkService.setDingtalkAccessTokenService(accessTokenService);
+        return defaultDingTalkService;
     }
 
     @Bean
-    @ConditionalOnMissingBean(DingtalkConfigurerAdpater.class)
+    @ConditionalOnMissingBean(DingtalkConfigurerAdapter.class)
     @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
-    public DingtalkConfigurerAdpater adpater() {
-        return new DingtalkConfigurerAdpater();
+    public DingtalkConfigurerAdapter adapter() {
+        return new DingtalkConfigurerAdapter();
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
     public CallbackController callbackController(@Autowired ObjectMapper om) {
         CallbackController c = new CallbackController();
-        DingtalkConfigurerAdpater adpater = adpater();
-        c.setCallbackProperties(mergeProperties(callback, adpater));
+        DingtalkConfigurerAdapter adapter = adapter();
+        c.setCallbackProperties(mergeProperties(callback));
         c.setObjectMapper(om);
-        c.setHandlers(adpater.getConsumers());
+        c.setHandlers(adapter.getConsumers());
         // 设置消息加密解密的key
         if (StringUtils.isNotEmpty(corpId)) {
             c.setEnvkey(corpId);
@@ -116,7 +116,7 @@ public class DingTalkConfiguration {
         return c;
     }
 
-    private CallbackProperties mergeProperties(CallbackProperties properties, DingtalkConfigurerAdpater adpater) {
+    private CallbackProperties mergeProperties(CallbackProperties properties) {
         return properties;
     }
 

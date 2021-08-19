@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import qs from 'qs'
-import router from '../router'
 import pluginOption from './pluginOptions'
 
 const http = axios.create()
@@ -43,11 +42,8 @@ http.interceptors.response.use(response => {
 
 http.interceptors.response.use(data => data, (error): Promise<unknown> => {
   if (error.response?.status === 401) {
-    const redirect = window.location.href
-    cancelAll().then(() => router.replace({
-      name: 'login',
-      query: { redirect }
-    }))
+    // 如果检测到401时，
+    window.location.reload()
   }
   commitError(error?.response?.data?.message ?? '服务器发生未知错误')
   return Promise.reject(error)

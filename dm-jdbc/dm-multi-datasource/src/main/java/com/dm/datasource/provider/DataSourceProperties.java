@@ -33,7 +33,33 @@ public final class DataSourceProperties implements Serializable {
 
     public enum DbTypes {
         MySQL8,
-        SQLSERVER
+        SQLSERVER,
+        DB2,
+        Derby,
+        H2,
+        HANA,
+        HSQL,
+        Informix,
+        Ingres,
+        Interbase,
+        MariaDB,
+        Oracle,
+        PostgreSQL,
+        Progress,
+        Sybase,
+        Teradata,
+        /**
+         * 达梦数据库
+         */
+        DM,
+        /**
+         * 人大金仓数据库
+         */
+        Kingbase,
+        /**
+         * 南大通用数据库
+         */
+        GBase
     }
 
     public DataSourceProperties(DbTypes dbType, String host, Integer port, String username, String password, String database, Map<String, String> additionalProperties) {

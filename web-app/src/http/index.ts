@@ -2,6 +2,7 @@ import http from './http'
 import _Vue, { PluginObject } from 'vue'
 import store from './vuex'
 import httpOptions, { PluginOptions } from './pluginOptions'
+import tableHttp from './tableHttp'
 
 export interface ErrorState {
   count: number,
@@ -26,4 +27,4 @@ const plugin: PluginObject<PluginOptions> = {
 
 export default http
 
-export { plugin, store, httpOptions }
+export { plugin, store, httpOptions, tableHttp, tableHttp as simpleHttp }

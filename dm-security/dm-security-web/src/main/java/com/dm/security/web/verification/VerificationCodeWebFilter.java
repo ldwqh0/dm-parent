@@ -36,7 +36,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
     /**
      * 指定哪些请求需要进行验证码过滤
      */
-    private final List<ServerWebExchangeMatcher> requestMathcers = new LinkedList<>();
+    private final List<ServerWebExchangeMatcher> requestMatchers = new LinkedList<>();
 
     private VerificationCodeStorage storage = null;
 
@@ -57,7 +57,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
     }
 
     public void requestMatcher(ServerWebExchangeMatcher requestMatcher) {
-        this.requestMathcers.add(requestMatcher);
+        this.requestMatchers.add(requestMatcher);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
     }
 
     private Mono<Boolean> requiresValidation(ServerWebExchange exchange) {
-        return Flux.fromIterable(requestMathcers)
+        return Flux.fromIterable(requestMatchers)
             .flatMap(i -> i.matches(exchange))
             .any(MatchResult::isMatch);
     }
@@ -120,7 +120,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
             result.put("message", "验证码输入错误");
             result.put("status", HttpStatus.FORBIDDEN.value());
             result.put("timestamp", ZonedDateTime.now());
-            byte[] bf = null;
+            byte[] bf;
             try {
                 // TODO 这里不对
                 bf = om.writeValueAsBytes(result);

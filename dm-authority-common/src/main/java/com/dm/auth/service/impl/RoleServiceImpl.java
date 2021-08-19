@@ -1,21 +1,19 @@
 package com.dm.auth.service.impl;
 
+import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
-import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.dto.RoleDto;
-import com.dm.auth.entity.*;
+import com.dm.auth.entity.Menu;
+import com.dm.auth.entity.QRole;
+import com.dm.auth.entity.Role;
 import com.dm.auth.entity.Role.Status;
 import com.dm.auth.repository.MenuRepository;
 import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.RoleService;
-import com.dm.collections.Maps;
 import com.dm.common.exception.DataNotExistException;
-import com.dm.security.authentication.ResourceAuthorityAttribute;
-import com.dm.security.authentication.ResourceAuthorityService;
-import com.dm.security.authentication.UriResource;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -27,12 +25,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
+public class RoleServiceImpl implements RoleService {
 
     private final RoleConverter roleConverter;
 
@@ -42,6 +41,8 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     private final ResourceRepository resourceRepository;
 
+    private final MenuConverter menuConverter;
+
     private final QRole qRole = QRole.role;
 
     // 进行请求限定的请求类型
@@ -50,7 +51,9 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         HttpMethod.POST,
         HttpMethod.PUT,
         HttpMethod.DELETE,
-        HttpMethod.PATCH
+        HttpMethod.PATCH,
+        HttpMethod.HEAD,
+        HttpMethod.OPTIONS,
     };
 
     @Override
@@ -66,6 +69,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
+    @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public Role save(RoleDto roleDto) {
         return roleRepository.save(roleConverter.copyProperties(new Role(), roleDto));
     }
@@ -83,6 +87,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
+    @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public Role update(long id, RoleDto roleDto) {
         return roleRepository.save(roleConverter.copyProperties(roleRepository.getOne(id), roleDto));
     }
@@ -94,6 +99,7 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
+    @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public void delete(long id) {
         roleRepository.deleteById(id);
     }
@@ -105,7 +111,10 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
             query.and(qRole.group.eq(group));
         }
         if (StringUtils.isNotBlank(key)) {
-            query.and(qRole.name.containsIgnoreCase(key).or(qRole.description.containsIgnoreCase(key)));
+            query.and(qRole.name.containsIgnoreCase(key)
+                .or(qRole.description.containsIgnoreCase(key))
+                .or(qRole.group.containsIgnoreCase(key))
+            );
             return roleRepository.findAll(query, pageable);
         }
         return roleRepository.findAll(query, pageable);
@@ -130,7 +139,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         } else {
             throw new DataNotExistException("指定角色不存在");
         }
-
     }
 
     /**
@@ -140,19 +148,22 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
      * @return 角色的授权菜单列表
      */
     @Override
-    @Cacheable(cacheNames = "AuthorityMenus", sync = true)
+    @Cacheable(cacheNames = "AuthorityMenus", sync = true, key = "#p0+'_p_'+#p1")
     @Transactional(readOnly = true)
-    public Set<Menu> findAuthorityMenus(String authority) {
+    public Set<MenuDto> findAuthorityMenus(String authority, final Long root) {
         Set<Menu> parents = new HashSet<>();
-        Set<Menu> menus = findByFullname(authority).map(Role::getMenus)
-            .orElseGet(Collections::emptySet);
+        Set<Menu> menus = findByFullname(authority).map(Role::getMenus).orElseGet(Collections::emptySet);
         // 递归添加所有父级菜单
-        for (Menu menu : menus) {
-            addParent(menu, parents);
-        }
+        menus.forEach(menu -> addParent(menu, parents));
         menus.addAll(parents);
-        menus.removeIf(this::isDisabled);
-        return menus;
+        return menus.stream()
+            // 只查找启用的项目
+            .filter(this::isEnabled)
+            // 如果root是空，不做过滤
+            // 如果root不是空，则查找root的子孙代
+            .filter(menu -> Objects.isNull(root) || (!Objects.equals(menu.getId(), root) && this.isOffspringOf(menu, root))) // 只需要是
+            .map(menuConverter::toDto)
+            .collect(Collectors.toSet());
     }
 
     @Override
@@ -160,31 +171,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         return roleRepository.listGroups();
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityAttributes"}, key = "'all_resource'")
-    public Role saveAuthority(ResourceAuthorityDto authorityDto) {
-        Long roleId = authorityDto.getRoleId();
-        if (roleRepository.existsById(roleId)) {
-            Role role = roleRepository.getOne(roleId);
-            Map<AuthResource, ResourceOperation> resultOperations = Maps
-                .transformKeys(authorityDto.getResourceAuthorities(), resourceRepository::getOne);
-            role.setResourceOperations(resultOperations);
-            return roleRepository.save(role);
-        } else {
-            throw new DataNotExistException("指定角色不存在");
-        }
-    }
-
-//    @Override
-//    @CacheEvict(cacheNames = { "AuthorityAttributes" }, key = "'all_resource'")
-//    @Transactional(rollbackFor = Throwable.class)
-//    public void deleteResourceAuthoritiesByRoleName(String rolename) {
-//        findByFullname(rolename).ifPresent(role -> {
-//            role.setResourceOperations(null);
-//            roleRepository.save(role);
-//        });
-//    }
 
     @Override
     public Optional<Role> findById(Long id) {
@@ -205,10 +191,6 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
         }
     }
 
-    private boolean isDisabled(Menu menu) {
-        return !isEnabled(menu);
-    }
-
     /**
      * 判断某个菜单是否被禁用，判断的标准是依次判断父级菜单是否被禁用，如果某个菜单的父级菜单被禁用，那么该菜单的子菜单也是被禁用的
      *
@@ -216,75 +198,42 @@ public class RoleServiceImpl implements RoleService, ResourceAuthorityService {
      * @return 返回是否会被禁用
      */
     private boolean isEnabled(Menu menu) {
-        if (menu == null) {
+        return menu == null || (menu.isEnabled() && isEnabled(menu.getParent()));
+    }
+
+    /**
+     * 判断给定菜单menu是不是指定菜单parentId的儿孙代
+     *
+     * @param menu 要判定的菜单,不能为空
+     * @param root 要判断是否为parentId的子菜单
+     * @return 判定结果
+     */
+    private boolean isOffspringOf(@Nonnull Menu menu, Long root) {
+        Menu parent = menu.getParent();
+        if (Objects.isNull(parent)) {
+            return Objects.isNull(root);
+        } else if (Objects.equals(parent.getId(), root)) {
             return true;
         } else {
-            if (menu.isEnabled()) {
-                return isEnabled(menu.getParent());
-            } else {
-                return false;
-            }
-        }
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    @Cacheable(cacheNames = "AuthorityAttributes", key = "'all_resource'", sync = true)
-    public Collection<ResourceAuthorityAttribute> listAll() {
-        List<Role> roles = roleRepository.findAll();
-        // 一个资源的权限配置
-        final Map<UriResource, ResourceAuthorityAttribute> resourceAuthorityMap = new HashMap<>();
-
-        roles.forEach(role -> role.getResourceOperations().forEach((resource, operation) -> {
-            for (HttpMethod method : methods) {
-                addAuthority(resourceAuthorityMap, resource, method, operation, role.getFullName());
-            }
-        }));
-        return Collections.unmodifiableCollection(resourceAuthorityMap.values());
-    }
-
-    private void addAuthority(Map<UriResource, ResourceAuthorityAttribute> map, AuthResource resource,
-                              HttpMethod method, ResourceOperation operation, String authority) {
-        UriResource ur = UriResource.of(method.toString(), resource.getMatcher(), resource.getMatchType(),
-            resource.getScope());
-        Boolean access = null;
-        switch (method) {
-            case POST:
-                access = operation.getSaveable();
-                break;
-            case PUT:
-                access = operation.getUpdateable();
-                break;
-            case GET:
-                access = operation.getReadable();
-                break;
-            case DELETE:
-                access = operation.getDeleteable();
-                break;
-            case PATCH:
-                access = operation.getPatchable();
-                break;
-            default:
-                break;
-        }
-
-        ResourceAuthorityAttribute raa = map.get(ur);
-        if (Objects.isNull(raa)) {
-            raa = new ResourceAuthorityAttribute(ur);
-            map.put(ur, raa);
-        }
-        if (Boolean.TRUE.equals(access)) {
-            raa.addAccessAuthority(authority);
-        }
-        if (Boolean.FALSE.equals(access)) {
-            raa.addDenyAuthority(authority);
+            return isOffspringOf(parent, root);
         }
     }
 
     @Override
     public boolean existsByFullname(String authority) {
-        String groupName[] = authority.split("\\_", 2);
+        String[] groupName = authority.split("\\_", 2);
         return roleRepository.existsByGroupAndName(groupName[0], groupName[1]);
+    }
+
+    @Override
+    public boolean existsByFullname(String name, String group, Long exclude) {
+        BooleanBuilder query = new BooleanBuilder();
+        query.and(qRole.name.eq(name)).and(qRole.group.eq(group))
+        ;
+        if (!Objects.isNull(exclude)) {
+            query.and(qRole.id.ne(exclude));
+        }
+        return roleRepository.exists(query);
     }
 
 }

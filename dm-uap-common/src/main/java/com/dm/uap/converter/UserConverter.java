@@ -1,8 +1,8 @@
 package com.dm.uap.converter;
 
 import com.dm.collections.Maps;
+import com.dm.collections.Sets;
 import com.dm.common.converter.Converter;
-import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
@@ -18,41 +18,18 @@ public class UserConverter implements Converter<User, UserDto> {
 
     private final DepartmentConverter departmentConverter;
 
-    public <T extends User> UserDetailsDto toUserDetailsDto(T user) {
-        UserDetailsDto dto = new UserDetailsDto();
-        dto.setPassword(user.getPassword());
-        dto.setAccountExpired(user.isAccountExpired());
-        dto.setCredentialsExpired(user.isCredentialsExpired());
-        dto.setEnabled(user.isEnabled());
-        dto.setId(user.getId());
-        dto.setLocked(user.isLocked());
-        dto.setUsername(user.getUsername());
-        dto.setFullname(user.getFullname());
-        dto.setScenicName(user.getScenicName());
-        dto.setRegionCode(user.getRegionCode());
-        dto.setGrantedAuthority(user.getRoles());
-        return dto;
-
-    }
+    private final UserRoleConverter userRoleConverter;
 
     private UserDto toDtoActual(User user) {
-        UserDto dto = new UserDto();
-        dto.setEnabled(user.isEnabled());
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setFullname(user.getFullname());
-        dto.setMobile(user.getMobile());
-        dto.setEmail(user.getEmail());
+        UserDto dto = toSimpleDto(user);
         dto.setDescription(user.getDescription());
-        dto.setScenicName(user.getScenicName());
-        dto.setRegionCode(user.getRegionCode());
         Map<Department, String> _posts = user.getPosts();
         if (Maps.isNotEmpty(_posts)) {
             List<UserPostDto> posts = new ArrayList<>();
             _posts.forEach((key, value) -> posts.add(new UserPostDto(departmentConverter.toDto(key), value)));
             dto.setPosts(posts);
         }
-        dto.setRoles(user.getRoles());
+        dto.setRoles(Sets.transform(user.getRoles(), userRoleConverter::toDto));
         return dto;
     }
 
@@ -62,11 +39,14 @@ public class UserConverter implements Converter<User, UserDto> {
             user.setEnabled(userDto.getEnabled());
             user.setUsername(userDto.getUsername());
             user.setFullname(userDto.getFullname());
+            user.setProfilePhoto(userDto.getProfilePhoto());
             user.setMobile(userDto.getMobile());
             user.setDescription(userDto.getDescription());
             user.setEmail(userDto.getEmail());
             user.setScenicName(userDto.getScenicName());
             user.setRegionCode(userDto.getRegionCode());
+            user.setBirthDate(userDto.getBirthDate());
+            user.setNo(userDto.getNo());
         }
         return user;
     }
@@ -76,5 +56,27 @@ public class UserConverter implements Converter<User, UserDto> {
         return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
     }
 
-
+    public UserDto toSimpleDto(User model) {
+        UserDto dto = new UserDto();
+        dto.setId(model.getId());
+        dto.setFullname(model.getFullname());
+        dto.setUsername(model.getUsername());
+        dto.setMobile(model.getMobile());
+        dto.setPhoneNumberVerified(model.isPhoneNumberVerified());
+        dto.setEmail(model.getEmail());
+        dto.setEmailVerified(model.isEmailVerified());
+        dto.setEnabled(model.isEnabled());
+        dto.setProfilePhoto(model.getProfilePhoto());
+        dto.setNo(model.getNo());
+        dto.setDescription(model.getDescription());
+        dto.setScenicName(model.getScenicName());
+        dto.setRegionCode(model.getRegionCode());
+        dto.setBirthDate(model.getBirthDate());
+        dto.setAddress(model.getAddress());
+        dto.setGivenName(model.getGivenName());
+        dto.setFamilyName(model.getFamilyName());
+        dto.setMiddleName(model.getMiddleName());
+        // TODO 待处理
+        return dto;
+    }
 }

@@ -154,8 +154,6 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
     /**
      * 校验响应是否正确
-     *
-     * @param response
      */
     private void checkResponse(TaobaoResponse response) {
         if (Objects.isNull(response)) {

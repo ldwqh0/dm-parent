@@ -35,7 +35,6 @@ public final class ConnectionUtils {
     }
 
     public static Connection createConnection(String url, String driverClass, String username, String password) throws ClassNotFoundException, SQLException {
-        Class.forName(driverClass);
         return DriverManager.getConnection(url, username, password);
     }
 }

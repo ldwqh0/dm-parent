@@ -1,27 +1,37 @@
 package com.dm.uap.service.impl;
 
+import com.dm.collections.ArrayUtils;
 import com.dm.collections.CollectionUtils;
+import com.dm.collections.Maps;
+import com.dm.collections.Sets;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;
+import com.dm.uap.converter.UserRoleConverter;
 import com.dm.uap.converter.UserConverter;
+import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
+import com.dm.uap.entity.UserRole;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.DepartmentRepository;
+import com.dm.uap.repository.UserRoleRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.UserService;
+import com.dm.util.Assert;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +41,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -41,32 +51,11 @@ public class UserServiceImpl implements UserService {
 
     private final DepartmentRepository departmentRepository;
 
-    private final DepartmentRepository dpr;
+    private final UserRoleRepository userRoleRepository;
+
+    private final UserRoleConverter userRoleConverter;
 
     private final QUser qUser = QUser.user;
-
-
-
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable(cacheNames = {"users"}, sync = true, key = "#username.toLowerCase()")
-    public UserDetailsDto loadUserByUsername(String username) {
-        return Optional.ofNullable(username)
-            .filter(StringUtils::isNotEmpty)
-            .flatMap(userRepository::findOneByUsernameIgnoreCase)
-            .map(userConverter::toUserDetailsDto)
-            .orElseThrow(() -> new UsernameNotFoundException(username));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
-        return Optional.ofNullable(mobile)
-            .filter(StringUtils::isNotEmpty)
-            .flatMap(userRepository::findByMobileIgnoreCase)
-            .map(userConverter::toUserDetailsDto)
-            .orElseThrow(() -> new UsernameNotFoundException(mobile));
-    }
 
     @Override
     public boolean exist() {
@@ -74,79 +63,73 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "users", sync = true, key = "#username.toLowerCase()")
+    public UserDetailsDto loadUserByUsername(String username) throws UsernameNotFoundException {
+        return Optional.ofNullable(username)
+            .filter(StringUtils::isNotEmpty)
+            .flatMap(userRepository::findOneByUsernameIgnoreCase)
+            .map(this::toUserDetailsDto)
+            .orElseThrow(() -> new UsernameNotFoundException(username));
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "users", sync = true, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
+        return Optional.ofNullable(mobile)
+            .filter(StringUtils::isNotEmpty)
+            .flatMap(userRepository::findByMobileIgnoreCase)
+            .map(this::toUserDetailsDto)
+            .orElseThrow(() -> new UsernameNotFoundException(mobile));
+    }
+
+
+    @Override
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public User save(UserDto userDto) {
-        checkUsernameExists(userDto.getId(), userDto.getUsername());
-        User user = new User();
-        userConverter.copyProperties(user, userDto);
+        validationUser(userDto);
         String password = userDto.getPassword();
-        if (StringUtils.isNotBlank(password)) {
-            user.setPassword(passwordEncoder.encode(password));
-        } else {
-            user.setPassword(null);
-        }
+        // 密码不能为空
+        Assert.notEmpty(password).orElseThrow(() -> new DataValidateException("用户密码不能为空"));
+        User user = userConverter.copyProperties(new User(), userDto);
+        user.setPassword(passwordEncoder.encode(password));
         addPostsAndRoles(user, userDto);
         user = userRepository.save(user);
-        user.setOrder(user.getId());
         return user;
     }
 
-    /**
-     * 判断某个用户名是否被占用，检测用户ID!=指定ID
-     *
-     * @param id       用户ID
-     * @param username 用户名称
-     */
-    private void checkUsernameExists(Long id, String username) {
-        BooleanBuilder builder = new BooleanBuilder();
-        if (Objects.nonNull(id)) {
-            builder.and(qUser.id.ne(id));
-        }
-
-        if (StringUtils.isNotBlank(username)) {
-            builder.and(qUser.username.eq(username));
-        } else {
-            throw new RuntimeException("The username can not be empty");
-        }
-        if (userRepository.exists(builder)) {
-            throw new DataValidateException("用户名已被占用");
-        }
-    }
-
     @Override
-    public Optional<User> get(long id) {
-        return userRepository.findById(id);
+    public Optional<UserDto> findById(long id) {
+        return userRepository.findById(id).map(userConverter::toDto);
     }
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
-    public User delete(long id) {
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
+    public void delete(long id) {
         Optional<User> user = userRepository.findById(id);
-        user.ifPresent(a -> userRepository.deleteById(id));
-        return user.orElseThrow(DataNotExistException::new);
+        user.ifPresent(userRepository::delete);
+        user.orElseThrow(DataNotExistException::new);
     }
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public User update(long id, UserDto userDto) {
-        checkUsernameExists(id, userDto.getUsername());
-        User user = userRepository.getOne(id);
-        userConverter.copyProperties(user, userDto);
+        validationUser(userDto, id);
+        User user = userConverter.copyProperties(userRepository.getOne(id), userDto);
         addPostsAndRoles(user, userDto);
         return user;
-    }
-
-    @Override
-    public Page<User> search(String key, Pageable pageable) {
-        if (StringUtils.isNotBlank(key)) {
-            BooleanExpression expression = qUser.username.containsIgnoreCase(key)
-                .or(qUser.fullname.containsIgnoreCase(key));
-            return userRepository.findAll(expression, pageable);
-        } else {
-            return userRepository.findAll(pageable);
-        }
     }
 
     @Override
@@ -157,8 +140,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()")
-    public User repassword(long id, String password) {
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
+    public User resetPassword(long id, String password) {
         User user = userRepository.getOne(id);
         user.setPassword(passwordEncoder.encode(password));
         return user;
@@ -168,7 +154,7 @@ public class UserServiceImpl implements UserService {
     public Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (Objects.nonNull(department)) {
-            Department dep = dpr.getOne(department);
+            Department dep = departmentRepository.getOne(department);
             query.and(qUser.posts.containsKey(dep));
         }
         if (Objects.nonNull(role)) {
@@ -188,47 +174,70 @@ public class UserServiceImpl implements UserService {
     private void addPostsAndRoles(User model, UserDto dto) {
         List<UserPostDto> posts = dto.getPosts();
         if (CollectionUtils.isNotEmpty(posts)) {
-            Map<Department, String> posts_ = new HashMap<>();
-            posts.forEach(entry -> posts_.put(departmentRepository.getOne(entry.getDepartment().getId()), entry.getPost()));
+            Map<Department, String> posts_ = Maps.map(posts, it -> departmentRepository.getByDto(it.getDepartment()), UserPostDto::getPost);
             model.setPosts(posts_);
         } else {
             model.setPosts(Collections.emptyMap());
         }
-        model.setRoles(dto.getRoles());
+        model.setRoles(Sets.transform(dto.getRoles(), this::toModel));
+    }
+
+    /**
+     * 根据dto获取role实体，如果role不存在，新增一个
+     *
+     * @param dto 要转换为model的role dto
+     */
+    private UserRole toModel(RoleDto dto) {
+        Long id = dto.getId();
+        UserRole role = userRoleConverter.copyProperties(userRoleRepository.existsById(id) ? userRoleRepository.getById(id) : new UserRole(), dto);
+        return userRoleRepository.save(role);
+    }
+
+    /**
+     * 检测一个用户名是否已经存在
+     *
+     * @param username 要检测的用户名
+     * @param excludes 要排除的user id
+     */
+    @Override
+    public boolean userExistsByUsername(String username, Long... excludes) {
+        BooleanExpression expression = qUser.username.equalsIgnoreCase(username);
+        if (ArrayUtils.isNotEmpty(excludes)) {
+            expression = expression.and(qUser.id.notIn(excludes));
+        }
+        return userRepository.exists(expression);
+    }
+
+    /**
+     * 检测指定的email是否已经存在，并且
+     *
+     * @param email    要检测的email
+     * @param excludes 要排除的用户
+     */
+    @Override
+    public boolean userExistsByEmail(String email, Long... excludes) {
+        BooleanExpression expression = qUser.email.equalsIgnoreCase(email);
+        if (ArrayUtils.isNotEmpty(excludes)) {
+            expression = expression.and(qUser.id.notIn(excludes));
+        }
+        return userRepository.exists(expression);
     }
 
     @Override
-    public boolean userExistsByUsername(Long id, String username) {
-        BooleanBuilder query = new BooleanBuilder();
-        query.and(qUser.username.equalsIgnoreCase(username));
-        if (Objects.nonNull(id)) {
-            query.and(qUser.id.ne(id));
+    public boolean userExistsByMobile(String mobile, Long... excludes) {
+        BooleanExpression expression = qUser.mobile.equalsIgnoreCase(mobile);
+        if (ArrayUtils.isNotEmpty(excludes)) {
+            expression = expression.and(qUser.id.notIn(excludes));
         }
-        return userRepository.exists(query);
-    }
-
-    @Override
-    public boolean userExistsByEmail(Long id, String email) {
-        BooleanBuilder query = new BooleanBuilder();
-        query.and(qUser.email.equalsIgnoreCase(email));
-        if (Objects.nonNull(id)) {
-            query.and(qUser.id.ne(id));
-        }
-        return userRepository.exists(query);
-    }
-
-    @Override
-    public boolean userExistsByMobile(Long id, String mobile) {
-        BooleanBuilder query = new BooleanBuilder();
-        query.and(qUser.mobile.equalsIgnoreCase(mobile));
-        if (Objects.nonNull(id)) {
-            query.and(qUser.id.ne(id));
-        }
-        return userRepository.exists(query);
+        return userRepository.exists(expression);
     }
 
     @Override
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
+        @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
+    })
     public User patch(long id, UserDto user) {
         User originUser = userRepository.getOne(id);
         if (Objects.nonNull(user.getEnabled())) {
@@ -238,8 +247,46 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByMobile(String mobile) {
-        return userRepository.findByMobileIgnoreCase(mobile);
+    @Transactional(rollbackFor = Exception.class)
+    public UserDto saveOwnerInfo(Long userId, UserDto user) {
+        User originUser = userRepository.getOne(userId);
+        originUser.setBirthDate(user.getBirthDate());
+        originUser.setDescription(user.getDescription());
+        originUser.setEmail(user.getEmail());
+        originUser.setFullname(user.getFullname());
+        originUser.setMobile(user.getMobile());
+        originUser.setNo(user.getNo());
+        originUser.setRegionCode(user.getRegionCode());
+        originUser.setScenicName(user.getScenicName());
+        originUser.setUsername(user.getUsername());
+        return userConverter.toDto(userRepository.save(originUser));
     }
 
+    private <T extends User> UserDetailsDto toUserDetailsDto(T user) {
+        UserDetailsDto dto = new UserDetailsDto();
+        dto.setPassword(user.getPassword());
+        dto.setAccountExpired(user.isAccountExpired());
+        dto.setCredentialsExpired(user.isCredentialsExpired());
+        dto.setEnabled(user.isEnabled());
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setFullname(user.getFullname());
+        dto.setScenicName(user.getScenicName());
+        dto.setRegionCode(user.getRegionCode());
+        dto.setGrantedAuthority(Sets.transform(user.getRoles(), userRoleConverter::toDto));
+        dto.setMobile(user.getMobile());
+        return dto;
+    }
+
+    private void validationUser(UserDto user, Long... exclude) {
+        String mobile = user.getMobile();
+        String email = user.getEmail();
+        Assert.from(user.getUsername(), v -> !userExistsByUsername(v, exclude)).orElseThrow(() -> new DataValidateException("用户名已经存在"));
+        if (StringUtils.isNotBlank(mobile)) {
+            Assert.from(mobile, v -> !userExistsByUsername(v, exclude)).orElseThrow(() -> new DataValidateException("手机号已经被占用"));
+        }
+        if (StringUtils.isNotBlank(email)) {
+            Assert.from(email, v -> !userExistsByEmail(v, exclude)).orElseThrow(() -> new DataValidateException("邮箱已经被占用"));
+        }
+    }
 }

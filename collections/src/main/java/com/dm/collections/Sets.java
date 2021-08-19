@@ -11,52 +11,53 @@ public final class Sets {
     private Sets() {
     }
 
+    public static <E> HashSet<E> hashSet() {
+        return new HashSet<>();
+    }
+
     @SuppressWarnings("unchecked")
     public static <E> HashSet<E> hashSet(E... e) {
         return new HashSet<>(Arrays.asList(e));
     }
 
-    public static <E> HashSet<E> hasSet(Iterable<E> iterable) {
+    public static <E> HashSet<E> hashSet(Collection<E> collection) {
+        return new HashSet<>(collection);
+    }
+
+    public static <E> HashSet<E> hasSet(Iterable<E>... iterables) {
         HashSet<E> result = new HashSet<>();
-        if (Iterables.isNotEmpty(iterable)) {
+        for (Iterable<E> iterable : iterables) {
             iterable.forEach(result::add);
         }
         return result;
     }
 
-    public static <E> HashSet<E> hashSet(Collection<E> collection) {
-        if (CollectionUtils.isEmpty(collection)) {
-            return new HashSet<>();
-        } else {
-            return new HashSet<>(collection);
-        }
-    }
-
-    public static <I, O> Set<O> transform(Set<I> fromeSet, Function<? super I, ? extends O> converter) {
-        if (fromeSet == null) {
-            return null;
-        } else if (fromeSet.isEmpty()) {
-            return Collections.emptySet();
-        } else {
-            return fromeSet.stream().map(converter).collect(Collectors.toSet());
-        }
-    }
-
-    @SafeVarargs
-    public static <T> Set<T> merge(Set<T> origin, T... e) {
-        HashSet<T> result = hashSet(origin);
-        if (e != null) {
-            result.addAll(Arrays.asList(e));
+    public static <E> HashSet<E> hashSet(Collection<E>... collections) {
+        HashSet<E> result = new HashSet<>();
+        for (Collection<E> collection : collections) {
+            result.addAll(collection);
         }
         return result;
     }
 
-    public static <T> Set<T> merge(Collection<T> origin, Collection<T> elements) {
-        HashSet<T> hashSet = hashSet(origin);
-        if (CollectionUtils.isNotEmpty(elements)) {
-            hashSet.addAll(elements);
+    @SafeVarargs
+    public static <T> Set<T> hashSet(Collection<T> origin, T... e) {
+        HashSet<T> result = new HashSet<>(origin);
+        if (Objects.nonNull(e)) {
+            Collections.addAll(result, e);
         }
-        return hashSet;
+        return result;
     }
+
+    public static <I, O> Set<O> transform(Set<I> fromSet, Function<? super I, ? extends O> converter) {
+        if (fromSet == null) {
+            return null;
+        } else if (fromSet.isEmpty()) {
+            return Collections.emptySet();
+        } else {
+            return fromSet.stream().map(converter).collect(Collectors.toSet());
+        }
+    }
+
 
 }

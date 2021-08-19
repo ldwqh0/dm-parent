@@ -42,7 +42,7 @@ public class VerificationReactiveController {
         APPLICATION_JSON_VALUE
     })
     public Mono<VerificationCode> generate() {
-        return Mono.<VerificationCode>defer(() -> {
+        return Mono.defer(() -> {
             VerificationCode code = validateCodeGenerator.generate(6);
             BufferedImage img = generateImage(code.getCode());
             try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {

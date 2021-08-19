@@ -38,6 +38,8 @@ declare module 'async-validator' {
     [field: string]: RuleItem | RuleItem[];
   }
 
+  export type CallbackFunction = (error?: string | string[] | Error | void) => void
+
   export interface RuleItem {
     type?: RuleType; // default type is 'string'
     required?: boolean;
@@ -56,14 +58,14 @@ declare module 'async-validator' {
     asyncValidator?: (
       rule: Rules,
       value: any,
-      callback: (error: string | string[] | Error | void) => void,
+      callback: CallbackFunction,
       source: ValidateSource,
       options: ValidateOption,
     ) => void | Promise<void>;
     validator?: (
       rule: Rules,
       value: any,
-      callback: (error?: string | string[] | Error | void) => void,
+      callback: CallbackFunction,
       source: ValidateSource,
       options: ValidateOption,
     ) => void;

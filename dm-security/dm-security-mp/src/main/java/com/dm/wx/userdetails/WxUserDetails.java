@@ -1,43 +1,27 @@
 package com.dm.wx.userdetails;
 
-import java.util.Collection;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
 
 public class WxUserDetails implements UserDetails {
 
     private static final long serialVersionUID = 874394269828106471L;
-    private Collection<? extends GrantedAuthority> authorities;
-    private String username;
-    private String openId;
-    /**
-     * 密码仅仅作为测试使用的
-     */
-    private String password;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    public WxUserDetails(String openId, Collection<? extends GrantedAuthority> authorities) {
-        this.openId = openId;
-        this.username = openId;
+    private final WxMpUser userinfo;
+
+    public WxUserDetails(WxMpUser userinfo, Collection<? extends GrantedAuthority> authorities) {
+        this.userinfo = userinfo;
         this.authorities = authorities;
     }
 
-    /**
-     * 这个方法仅仅作为测试用
-     * 
-     * @param openId
-     * @param password
-     * @param authorities
-     */
-    @Deprecated
-    public WxUserDetails(String openId, String password, String... authorities) {
-        this.openId = openId;
-        this.password = password;
-        this.username = openId;
-        this.authorities = AuthorityUtils.createAuthorityList(authorities);
+    public WxMpUser getUserinfo() {
+        return userinfo;
     }
 
     @Override
@@ -46,18 +30,18 @@ public class WxUserDetails implements UserDetails {
     }
 
     public String getOpenId() {
-        return openId;
+        return this.userinfo.getOpenId();
     }
 
     @Override
     @JsonIgnore
     public String getPassword() {
-        return password;
+        return "N/A";
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return this.userinfo.getOpenId();
     }
 
     @Override

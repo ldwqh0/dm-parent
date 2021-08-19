@@ -4,15 +4,12 @@ import com.dm.security.core.userdetails.GrantedAuthorityDto;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.security.web.authentication.LoginFailureHandler;
 import com.dm.security.web.authentication.LoginSuccessHandler;
-import com.dm.security.web.controller.CurrentUserController;
+import com.dm.security.web.controller.CurrentAuthorityController;
 import com.dm.security.web.controller.CurrentUserReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
+import org.springframework.boot.autoconfigure.condition.*;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -24,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -40,9 +38,10 @@ public class SecurityAutoConfiguration {
     @ConditionalOnClass(name = {"javax.servlet.Servlet", "com.dm.security.core.userdetails.UserDetailsDto"})
     static class CurrentUserConfiguration {
         @Bean
-        public CurrentUserController currentUserController() {
-            return new CurrentUserController();
+        public CurrentAuthorityController currentAuthorityController() {
+            return new CurrentAuthorityController();
         }
+
     }
 
     @ConditionalOnClass(name = {
@@ -56,6 +55,25 @@ public class SecurityAutoConfiguration {
             return new CurrentUserReactiveController();
         }
     }
+
+    @Configuration
+    @ConditionalOnClass(name = {"com.dm.security.oauth2.server.resource.introspection.UserInfoOpaqueTokenIntrospector"})
+    @ConditionalOnProperty(name = "spring.security.oauth2.resourceserver.opaquetoken.introspection-uri")
+    static class DmOAuth2ResourceServerAutoConfiguration {
+        @Bean
+        @ConditionalOnMissingBean(OpaqueTokenIntrospector.class)
+        public OpaqueTokenIntrospector tokenIntrospector(OAuth2ResourceServerProperties properties) {
+            String clientId = properties.getOpaquetoken().getClientId();
+            String clientSecret = properties.getOpaquetoken().getClientSecret();
+            String introspectionUri = properties.getOpaquetoken().getIntrospectionUri();
+            return new com.dm.security.oauth2.server.resource.introspection.UserInfoOpaqueTokenIntrospector(
+                introspectionUri,
+                clientId,
+                clientSecret
+            );
+        }
+    }
+
 
     @Configuration
     @ConditionalOnClass({ReactiveAuthenticationManager.class})
@@ -75,8 +93,6 @@ public class SecurityAutoConfiguration {
 
         /**
          * 从oauth2服务器获取用户信息的实现
-         *
-         * @return
          */
         @ConditionalOnClass(name = {
             "org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService",
@@ -87,7 +103,6 @@ public class SecurityAutoConfiguration {
         public ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> reactiveOAuth2UserService() {
             return new com.dm.security.oauth2.client.userinfo.DmReactiveOAuth2UserService();
         }
-
     }
 
     @ConditionalOnClass({Servlet.class, WebSecurityConfigurerAdapter.class})
@@ -95,7 +110,7 @@ public class SecurityAutoConfiguration {
     @RequiredArgsConstructor
     static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-        private final ObjectMapper om;
+        private final ObjectMapper objectMapper;
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -106,10 +121,10 @@ public class SecurityAutoConfiguration {
                 .singletonList(new GrantedAuthorityDto("内置分组_ROLE_ANONYMOUS"));
             ud.setGrantedAuthority(authorities);
             http.anonymous().authorities(authorities).principal(ud);
-            http.formLogin().successHandler(new LoginSuccessHandler(om)).failureHandler(new LoginFailureHandler(om));
-            MediaTypeRequestMatcher mtrm = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
-            mtrm.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
-            http.exceptionHandling().defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), mtrm);
+            http.formLogin().successHandler(new LoginSuccessHandler(objectMapper)).failureHandler(new LoginFailureHandler(objectMapper));
+            MediaTypeRequestMatcher mediaTypeRequestMatcher = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
+            mediaTypeRequestMatcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
+            http.exceptionHandling().defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), mediaTypeRequestMatcher);
         }
     }
 

@@ -9,8 +9,8 @@ public interface DetermineCurrentLookupKeyStrategy {
 
     /**
      * 选择一个
-     * 
-     * @return
+     *
+     * @return 一个 {@link DataSourceProperties}
      */
     DataSourceProperties determineCurrentLookupKey();
 

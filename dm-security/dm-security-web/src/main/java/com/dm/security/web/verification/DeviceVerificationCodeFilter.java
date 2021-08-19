@@ -28,9 +28,7 @@ import java.util.Map;
  */
 public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
-    private String requestKey = "DeviceVerificationCode.key";
-
-    private final List<RequestMatcher> requestMathcers = new ArrayList<>();
+    private final List<RequestMatcher> requestMatchers = new ArrayList<>();
 
     private String verifyIdParameterName = "verifyId";
 
@@ -43,7 +41,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
     private final ObjectMapper om = new ObjectMapper();
 
     public void requestMatcher(RequestMatcher requestMatcher) {
-        this.requestMathcers.add(requestMatcher);
+        this.requestMatchers.add(requestMatcher);
     }
 
     public void setVerifyCodeKeyParameterName(String verifyCodeKeyParameterName) {
@@ -76,6 +74,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
                 StringUtils.isNotBlank(verifyCode) &&
                 validate(verifyId, key, verifyCode)) {
                 storage.remove(verifyId);
+                String requestKey = "DeviceVerificationCode.key";
                 request.setAttribute(requestKey, key);
                 chain.doFilter(req, res);
             } else {
@@ -96,8 +95,8 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
     }
 
     private boolean requiresValidation(HttpServletRequest request) {
-        if (CollectionUtils.isNotEmpty(requestMathcers)) {
-            for (RequestMatcher matcher : requestMathcers) {
+        if (CollectionUtils.isNotEmpty(requestMatchers)) {
+            for (RequestMatcher matcher : requestMatchers) {
                 if (matcher.matches(request)) {
                     return true;
                 }

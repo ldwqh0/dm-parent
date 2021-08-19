@@ -3,52 +3,37 @@
            :rules="rules"
            :model="department"
            label-width="100px">
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="部门名称：" prop="fullname">
-          <el-input v-model="department.fullname" />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="部门简称：" prop="shortname">
-          <el-input v-model="department.shortname" />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="部门类型：" prop="type">
-          <el-select v-model="department.type" placeholder="请选择">
-            <el-option label="机构" value="ORGANS" />
-            <el-option label="部门" value="DEPARTMENT" />
-            <el-option label="分组" value="GROUP" />
-          </el-select>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="上级单位：" prop="parent">
-          <el-cascader
-            v-model="parent"
-            clearable
-            :options="departmentTree"
-            expand-trigger="hover"
-            :props="cascadeProps"
-            change-on-select />
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <el-form-item label="部门名称：" prop="fullname">
+      <el-input v-model="department.fullname" maxlength="100" />
+    </el-form-item>
 
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="描述信息：" prop="description">
-          <el-input v-model="department.description" type="textarea" />
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <el-form-item label="部门简称：" prop="shortname">
+      <el-input v-model="department.shortname" maxlength="100" />
+    </el-form-item>
+
+    <el-form-item label="节点类型：" prop="type">
+      <el-select v-model="department.type" placeholder="请选择" style="width: 100%;">
+        <el-option label="机构" value="ORGANS" />
+        <el-option label="部门" value="DEPARTMENT" />
+        <el-option label="分组" value="GROUP" />
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="上级单位：" prop="parent">
+      <el-cascader v-model="parent"
+                   style="width: 100%;"
+                   clearable
+                   :options="departmentTree"
+
+                   :props="cascadeProps" />
+    </el-form-item>
+
+    <el-form-item label="描述信息：" prop="description">
+      <el-input v-model="department.description"
+                type="textarea"
+                show-word-limit
+                maxlength="1000" />
+    </el-form-item>
   </el-form>
 </template>
 <script lang="ts">
@@ -56,10 +41,11 @@
   import { Component, Prop } from 'vue-property-decorator'
   import { DepartmentDto, DepartmentTreeItem, Types } from '@/types/service'
   import { CascaderProps } from 'element-ui/types/cascader-panel'
-  import http from '@/http'
-  import urls from '../urls'
+  import http, { simpleHttp } from '@/http'
+  import urls from '../URLS'
   import { listToTree } from '@/utils'
   import isNil from 'lodash/isNil'
+  import { Rules } from 'async-validator'
 
   @Component
   export default class Department extends Vue {
@@ -91,20 +77,65 @@
       children: 'children',
       label: 'fullname',
       value: 'id',
-      emitPath: false
+      expandTrigger: 'hover',
+      emitPath: false,
+      checkStrictly: true
     }
 
-    rules = {
+    rules: Rules = {
+      type: [{
+        required: true,
+        message: '节点类型不能为空'
+      }],
       fullname: [{
         required: true,
         message: '部门全称不能为空',
         trigger: 'blur'
+      }, {
+        type: 'string',
+        max: 100,
+        message: '不能超过100个字符'
+      }, {
+        trigger: 'blur',
+        validator: this.validateFullname
       }],
       shortname: [{
         required: true,
         message: '部门简称不能为空',
         trigger: 'blur'
+      }, {
+        type: 'string',
+        max: 100,
+        message: '不能超过100个字符'
+      }],
+      description: [{
+        type: 'string',
+        max: 1000,
+        message: '不能超过1000个字符'
       }]
+    }
+
+    validateFullname (rules: unknown, value: string, callback: (error?: Error) => void): Promise<unknown> {
+      return simpleHttp.get(`${urls.department}/validation`, {
+        params: {
+          fullname: value,
+          parentId: this.department.parent?.id,
+          exclude: this.id
+        }
+      }).then(({
+        data: {
+          result,
+          message
+        }
+      }) => {
+        if (result === 'success') {
+          callback()
+        } else {
+          callback(new Error(message))
+        }
+      }).catch(e => {
+        callback(new Error(e))
+      })
     }
 
     get parent (): number | null {

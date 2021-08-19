@@ -32,13 +32,16 @@ public class FileListener {
     /**
      * 当从数据库删除文件时，一并从存储中删除文件
      *
-     * @param file
+     * @param file 要删除的文件
      */
     @PostRemove
     public void postDelete(FileInfo file) {
         if (this.storageService != null && this.fileConfig.isDeleteFromStorage()) {
-            log.debug("从存储中删除文件，文件存储名称是{}", file.getPath());
-            storageService.delete(file.getPath());
+            if (storageService.delete(file.getPath())) {
+                log.info("从存储中删除文件，文件存储名称是{}", file.getPath());
+            } else {
+                log.info("从存储中删除文件时失败，文件存储名称是{}", file.getPath());
+            }
         }
     }
 }

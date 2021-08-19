@@ -1,21 +1,23 @@
 package com.dm.security.authentication;
 
+import org.springframework.http.HttpMethod;
+
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * 标识个Uri资源，用来标识一个唯一的URI资源
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public interface UriResource extends Serializable {
 
     /**
      * 资源匹配模式
-     * 
-     * @author ldwqh0@outlook.com
      *
+     * @author ldwqh0@outlook.com
      */
     enum MatchType {
         /**
@@ -28,16 +30,36 @@ public interface UriResource extends Serializable {
         REGEXP,
     }
 
-    String getMethod();
+    Optional<HttpMethod> getMethod();
 
-    String getPath();
+    String getUri();
 
     MatchType getMatchType();
 
     Set<String> getScopes();
 
-    static UriResource of(String method, String path, MatchType matchType, Set<String> scopes) {
+    static UriResource of(HttpMethod method, String path, MatchType matchType, Set<String> scopes) {
         return new UriResourceImpl(method, path, matchType, scopes);
+    }
+
+    static UriResource of(String path, MatchType matchType, Set<String> scopes) {
+        return new UriResourceImpl(null, path, matchType, scopes);
+    }
+
+    static UriResource of(String path) {
+        return new UriResourceImpl(null, path, MatchType.ANT_PATH, Collections.emptySet());
+    }
+
+    static UriResource of(String path, MatchType matchType) {
+        return new UriResourceImpl(null, path, matchType, Collections.emptySet());
+    }
+
+    static UriResource of(HttpMethod method) {
+        return new UriResourceImpl(method, "/**", MatchType.ANT_PATH, Collections.emptySet());
+    }
+
+    static UriResource of(HttpMethod method, Set<String> scopes) {
+        return new UriResourceImpl(method, "/**", MatchType.ANT_PATH, scopes);
     }
 
 }
@@ -45,32 +67,31 @@ public interface UriResource extends Serializable {
 class UriResourceImpl implements UriResource {
 
     private static final long serialVersionUID = 9029779605843604190L;
-
-    private String method;
-    private String path;
+    private String uri = "/**";
     private MatchType type;
+    private HttpMethod method;
     private Set<String> scopes;
 
     public UriResourceImpl() {
         super();
     }
 
-    public UriResourceImpl(String method, String path, MatchType type, Set<String> scopes) {
+    public UriResourceImpl(HttpMethod method, String path, MatchType type, Set<String> scopes) {
         super();
         this.method = method;
-        this.path = path;
+        this.uri = path;
         this.type = type;
         this.scopes = scopes;
     }
 
     @Override
-    public String getMethod() {
-        return method;
+    public Optional<HttpMethod> getMethod() {
+        return Optional.ofNullable(method);
     }
 
     @Override
-    public String getPath() {
-        return path;
+    public String getUri() {
+        return uri;
     }
 
     @Override
@@ -83,42 +104,5 @@ class UriResourceImpl implements UriResource {
         return type;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((method == null) ? 0 : method.hashCode());
-        result = prime * result + ((path == null) ? 0 : path.hashCode());
-        result = prime * result + ((scopes == null) ? 0 : scopes.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        UriResourceImpl other = (UriResourceImpl) obj;
-        if (method == null) {
-            if (other.method != null)
-                return false;
-        } else if (!method.equals(other.method))
-            return false;
-        if (path == null) {
-            if (other.path != null)
-                return false;
-        } else if (!path.equals(other.path))
-            return false;
-        if (scopes == null) {
-            if (other.scopes != null)
-                return false;
-        } else if (!scopes.equals(other.scopes))
-            return false;
-        return type == other.type;
-    }
 
 }

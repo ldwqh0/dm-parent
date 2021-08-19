@@ -1,6 +1,20 @@
 package com.dm.dingtalk.api.callback;
 
-import java.io.UnsupportedEncodingException;
+import com.dm.collections.Maps;
+import com.dm.dingtalk.api.crypto.DingAes;
+import com.dm.dingtalk.api.service.DingTalkService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -10,31 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.Consumer;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.dm.collections.Maps;
-import com.dm.dingtalk.api.crypto.DingAes;
-import com.dm.dingtalk.api.service.DingTalkService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("dingTalk/callback")
@@ -51,11 +40,11 @@ public class CallbackController {
 
     /**
      * 对于ISV开发来说，$key填写对应的suiteKey。<br>
-     * 
+     *
      * 对于定制服务商开发来说，$key填写对应的customKey。<br>
-     * 
+     *
      * 对于企业内部开发来说，$key填写企业的Corpid。<br>
-     * 
+     *
      * 参考 <a href="https://ding-doc.dingtalk.com/doc#/faquestions/ltr370">钉钉开发文档</a>
      */
     private String envkey;
@@ -114,7 +103,7 @@ public class CallbackController {
 
     /**
      * 注册钉钉回调地址
-     * 
+     *
      * @return
      */
     @PostMapping("{corpid}")
@@ -124,7 +113,7 @@ public class CallbackController {
 
     /**
      * 取消回调注册
-     * 
+     *
      * @return
      */
     @DeleteMapping("{corpid}")
@@ -134,7 +123,7 @@ public class CallbackController {
 
     /**
      * 获取指定应用的回调错误信息
-     * 
+     *
      * @param corpid
      * @return
      */
@@ -150,7 +139,7 @@ public class CallbackController {
 
     /**
      * 构建一个表示处理成功的响应
-     * 
+     *
      * @return
      * @throws InvalidKeyException
      * @throws NoSuchAlgorithmException
@@ -172,7 +161,7 @@ public class CallbackController {
 
     /**
      * 构建指定长度的随机字符串
-     * 
+     *
      * @param count 要构建的字符串的长度
      * @return
      */
@@ -189,7 +178,7 @@ public class CallbackController {
 
     /**
      * 验证消息签名的正确性
-     * 
+     *
      * @param signature
      * @param token
      * @param time
@@ -219,7 +208,7 @@ public class CallbackController {
 
     /**
      * 对消息进行签名
-     * 
+     *
      * @param token
      * @param time
      * @param noce

@@ -20,6 +20,8 @@ export interface MenuDto extends Serializable, IdentifiableDto<number> {
   type?: MenuType;
   parent?: MenuDto;
   openInNewWindow?: boolean;
+  hasChildren?: boolean;
+  isLeaf?: boolean;
 }
 
 export interface OrderDto extends Serializable {
@@ -37,7 +39,11 @@ export interface ResourceDto extends Serializable {
   name?: string;
   matcher?: string;
   description?: string;
+  authenticated?: boolean,
+  denyAuthorities?: RoleDto[],
+  accessAuthorities?: RoleDto[],
   scope?: string[];
+  denyAll?: boolean,
   matchType?: MatchType;
 }
 

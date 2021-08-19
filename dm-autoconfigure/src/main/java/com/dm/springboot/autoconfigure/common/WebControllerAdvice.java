@@ -2,11 +2,10 @@ package com.dm.springboot.autoconfigure.common;
 
 import com.dm.springboot.web.servlet.error.MessageDetailErrorAttributes;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.SearchStrategy;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.DispatcherServlet;
 
-import javax.servlet.Servlet;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
@@ -28,11 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@ControllerAdvice
 @Configuration
 @AutoConfigureBefore({ErrorMvcAutoConfiguration.class})
-@ConditionalOnClass(value = {Servlet.class, DispatcherServlet.class})
-@ControllerAdvice
-@EnableConfigurationProperties
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class WebControllerAdvice {
     /**
      * 重新定义ErrorAttributes,使之可以包含详情
@@ -42,7 +38,6 @@ public class WebControllerAdvice {
     public MessageDetailErrorAttributes errorAttributes() {
         return new MessageDetailErrorAttributes();
     }
-
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody

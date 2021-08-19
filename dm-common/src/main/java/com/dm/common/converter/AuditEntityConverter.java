@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
  * @param <M>   模型类
  * @param <DTO> DTO类对象
  */
-public interface AuditEntityConverter<M extends Auditable<Audit, ? extends Serializable, ZonedDateTime>, DTO extends AuditableDto>
+public interface AuditEntityConverter<M extends Auditable<Audit<Long,String>, ? extends Serializable, ZonedDateTime>, DTO extends AuditableDto>
     extends Converter<M, DTO> {
 
     @Override
@@ -31,10 +31,10 @@ public interface AuditEntityConverter<M extends Auditable<Audit, ? extends Seria
      * @return 包含审计的dto对象
      */
     default DTO addAuditInfo(@NotNull DTO dto, M model) {
-        dto.setCreateBy(model.getCreatedBy().orElse(null));
-        dto.setLastModifiedBy(model.getLastModifiedBy().orElse(null));
-        dto.setCreatedDate(model.getCreatedDate().orElse(null));
-        dto.setLastModifiedDate(model.getLastModifiedDate().orElse(null));
+        model.getCreatedBy().ifPresent(dto::setCreateBy);
+        model.getLastModifiedBy().ifPresent(dto::setLastModifiedBy);
+        model.getCreatedDate().ifPresent(dto::setCreatedTime);
+        model.getLastModifiedDate().ifPresent(dto::setLastModifiedTime);
         return dto;
     }
 

@@ -41,7 +41,7 @@
   import { Component, Watch } from 'vue-property-decorator'
   import { namespace } from 'vuex-class'
   import MenuItem from './MenuItem.vue'
-  import { MenuDto } from '@/types/service'
+  import { MenuDto, UserDto } from '@/types/service'
   import { ErrorState } from '@/http'
   import urls from './urls'
   import axios from 'axios'
@@ -100,11 +100,9 @@
         if ((new Date().getTime() - this.lastOperationTime) < ONE_MINUTE) {
           axios.create().get(`${urls.session}`)
         } else if ((new Date().getTime() - this.lastOperationTime) > ONE_MINUTE * 12) {
-          this.$alert('<p>检测到你长时间未操作系统，会话已经过期，需要重新登录</p>', '会话超时',
-            {
-              dangerouslyUseHTMLString: true
-            }
-          ).finally(() => this.logout())
+          this.$alert('<p>检测到你长时间未操作系统，会话已经过期，需要重新登录</p>', '会话超时', {
+            dangerouslyUseHTMLString: true
+          }).finally(() => this.logout())
           // 登录超时后，清除定时器
           window.clearInterval(this.interval)
         }
@@ -192,7 +190,7 @@
     }
 
     .content-wrapper {
-      padding: 0;
+      //padding: 0;
     }
 
     .template-aside {

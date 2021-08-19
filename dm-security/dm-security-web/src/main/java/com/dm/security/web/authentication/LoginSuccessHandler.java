@@ -1,28 +1,28 @@
 package com.dm.security.web.authentication;
 
-import java.io.IOException;
-import java.util.Objects;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.dm.security.web.RequestUtils.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Objects;
+
+import static com.dm.security.web.RequestUtils.isJsonRequest;
 
 public class LoginSuccessHandler implements AuthenticationSuccessHandler, InitializingBean {
 
-    @Autowired(required = false)
     private ObjectMapper objectMapper;
 
     public LoginSuccessHandler() {
         this(new ObjectMapper());
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     public LoginSuccessHandler(ObjectMapper objectMapper) {

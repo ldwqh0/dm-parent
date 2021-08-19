@@ -3,7 +3,10 @@ package com.dm.collections;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public final class Maps {
     private Maps() {
@@ -19,6 +22,38 @@ public final class Maps {
 
     public static <K, V> HashMap<K, V> hashMap() {
         return new HashMap<>();
+    }
+
+    public static <K> String getStringOrDefault(Map<K, Object> map, K key, String defaultValue) {
+        Object value = map.getOrDefault(key, defaultValue);
+        if (Objects.isNull(value)) {
+            return null;
+        } else if (value instanceof String) {
+            return (String) value;
+        } else {
+            return String.valueOf(value);
+        }
+    }
+
+    public static <K> String getString(Map<K, Object> map, K key) {
+        return getStringOrDefault(map, key, null);
+    }
+
+    public static <K> Long getLong(Map<K, ? super Object> map, K key) {
+        return getLongOrDefault(map, key, null);
+    }
+
+    public static <K> Long getLongOrDefault(Map<K, ? super Object> map, K key, Long defaultValue) {
+        Object value = map.getOrDefault(key, defaultValue);
+        if (Objects.isNull(value)) {
+            return null;
+        } else if (value instanceof Long) {
+            return (Long) value;
+        } else if (value instanceof String) {
+            return Long.valueOf((String) value);
+        } else {
+            return Long.valueOf(String.valueOf(value));
+        }
     }
 
     @SafeVarargs
@@ -39,35 +74,68 @@ public final class Maps {
      * @param <K>       键的类型
      * @param <V>       值的类型
      * @param iterable  值迭代器
-     * @param converter 值提取器
-     * @return
+     * @param keyMapper 键提取器
+     * @return 一个hashmap
      */
-    public static <K, V> HashMap<K, V> hashMap(Function<V, K> converter, Iterable<V> iterable) {
+    public static <K, V> HashMap<K, V> hashMap(Iterable<V> iterable, Function<V, K> keyMapper) {
         HashMap<K, V> result = new HashMap<>();
         if (Iterables.isNotEmpty(iterable)) {
-            iterable.forEach(item -> result.put(converter.apply(item), item));
+            iterable.forEach(item -> result.put(keyMapper.apply(item), item));
         }
         return result;
     }
 
     /**
-     * 通过一系列的键，生成map
+     * 将一组可迭代的值转换为一个hashMap
      *
-     * @param <K>
-     * @param <V>
-     * @param iterable  一系列的键
-     * @param converter 通过键获取值的方法
-     * @return
+     * @param iterable    可迭代的值
+     * @param keyMapper   获取key的方法
+     * @param valueMapper 获取value的方法
+     * @param <T>         值类型
+     * @param <K>         Map键类型
+     * @param <V>         Map值类型
+     * @return 一个hashmap
      */
-    public static <K, V> HashMap<K, V> hashMap(Iterable<K> iterable, Function<? super K, V> converter) {
+    public static <T, K, V> Map<K, V> hashMap(Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
         HashMap<K, V> result = new HashMap<>();
         if (Iterables.isNotEmpty(iterable)) {
-            iterable.forEach(item -> result.put(item, converter.apply(item)));
+            iterable.forEach(item -> result.put(keyMapper.apply(item), valueMapper.apply(item)));
         }
         return result;
     }
 
-    public static <K, V1, V2> Map<K, V2> transfromValues(Map<K, V1> input, Function<? super V1, V2> valueConverter) {
+
+    /**
+     * 将一组可迭代的值转换为map,不同于hashMap方法,它使用Stream api,并且返回的类型不是hashmap
+     *
+     * @param iterable    可迭代的值
+     * @param keyMapper   键转换器
+     * @param valueMapper 值转换器
+     * @param <T>         可迭代的值类型
+     * @param <K>         结果数据的键类型
+     * @param <V>         结果数据的值类型
+     * @return 一个不可变更的map
+     */
+    public static <T, K, V> Map<K, V> map(Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+        return StreamSupport.stream(iterable.spliterator(), true)
+            .collect(Collectors.toMap(keyMapper, valueMapper));
+    }
+
+    /**
+     * 将一组可迭代的值转为为特定键的map对象,不同于hashmap,它使用Stream api,并且返回的类型不是hashmap
+     *
+     * @param iterable  可迭代的值
+     * @param keyMapper 键转换器
+     * @param <K>       结果数据的键类型
+     * @param <V>       值类型
+     * @return 一个不可变更的map
+     */
+    public static <K, V> Map<K, V> map(Iterable<V> iterable, Function<V, K> keyMapper) {
+        return StreamSupport.stream(iterable.spliterator(), true)
+            .collect(Collectors.toMap(keyMapper, Function.identity()));
+    }
+
+    public static <K, V1, V2> Map<K, V2> transformValues(Map<K, V1> input, Function<? super V1, V2> valueConverter) {
         if (input == null) {
             return null;
         }
@@ -79,8 +147,7 @@ public final class Maps {
         return result;
     }
 
-    public static <K1, K2, V> Map<K2, V> transformKeys(Map<K1, V> input,
-                                                       Function<? super K1, K2> converter) {
+    public static <K1, K2, V> Map<K2, V> transformKeys(Map<K1, V> input, Function<? super K1, K2> converter) {
         if (input == null) {
             return null;
         }
@@ -98,9 +165,6 @@ public final class Maps {
 
     public final static class HashMapBuilder<K, V> {
         private final HashMap<K, V> map = new HashMap<>();
-
-        public HashMapBuilder() {
-        }
 
         public HashMapBuilder(K key, V value) {
             this.map.put(key, value);

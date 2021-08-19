@@ -1,0 +1,8 @@
+{
+  "allInOne": true,
+  "isStrict": false,
+  "outPath": "target/classes/static/doc",
+  "apiObjectReplacements": [
+  ],
+  "ignoreRequestParams": []
+}

@@ -31,28 +31,48 @@
           <span v-if="scope.row.state==='DISABLED'">禁用</span>
         </template>
       </el-table-column>
-      <el-table-column label="角色描述" prop="describe" />
-      <el-table-column label="操作" min-width="150">
+      <el-table-column label="角色描述" prop="description" />
+      <el-table-column label="操作" width="200" fixed="right">
         <template #default="{row}">
-          <el-button type="text" size="small" @click="edit(row)">编辑</el-button>
-          <el-button type="text" size="small" @click="setmenu(row)">设置菜单权限</el-button>
-          <el-button type="text" size="small" @click="setResource(row)">设置资源权限</el-button>
-          <el-button v-if="row.id>>3"
-                     type="text"
-                     size="small"
-                     @click="del(row)">
-            删除{{ row.id }}
-          </el-button>
+          <div>
+            <el-button v-if="row.id>3"
+                       type="text"
+                       size="small"
+                       @click="edit(row)">
+              编辑
+            </el-button>
+            <el-button type="text" size="small" @click="setmenu(row)">设置菜单权限</el-button>
+            <el-button v-if="row.id>3"
+                       type="text"
+                       size="small"
+                       @click="del(row)">
+              删除
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </ele-data-tables>
 
     <el-dialog v-if="editVisible" :visible.sync="editVisible" title="角色编辑">
-      <role :id="current.id" ref="role" />
+      <role :id="current.id" ref="role" v-loading="loading" />
       <template #footer>
-        <el-button type="primary" :loading="submitting" @click="saveRole">确定</el-button>
-        <el-button type="danger" @click="editVisible=false">取消</el-button>
+        <el-button @click="editVisible=false">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="saveRole">确定</el-button>
       </template>
+    </el-dialog>
+
+    <!--菜单权限-->
+    <el-dialog v-if="menuAuthorityDialogVisible"
+               :title="`${current.group}_${current.name}的菜单权限`"
+               :close-on-click-modal="false"
+               :visible.sync="menuAuthorityDialogVisible">
+      <menu-authority ref="menuAuthority"
+                      v-loading="loading"
+                      :role-id="current.id" />
+      <div slot="footer">
+        <el-button @click="menuAuthorityDialogVisible=false">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="saveMenuAuthority">确定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -64,10 +84,19 @@
   import urls from '../URLS'
   import Role from './Role.vue'
   import http from '@/http'
+  import MenuAuthority from './MenuAuthority.vue'
+  import ResourceAuthority from './ResourceAuthority.vue'
+  import { namespace } from 'vuex-class'
+
+  const httpModel = namespace('http')
 
   // 角色模块的vuex
   @Component({
-    components: { Role }
+    components: {
+      Role,
+      MenuAuthority,
+      ResourceAuthority
+    }
   })
   export default class Roles extends Vue {
     url = urls.role
@@ -75,8 +104,11 @@
       keyword: null
     }
 
-    submitting = false
+    @httpModel.Getter('loading')
+    loading!: boolean
+
     editVisible = false
+    menuAuthorityDialogVisible = false
 
     current: RoleDto = {}
 
@@ -100,22 +132,21 @@
     }
 
     saveRole (): void {
-      this.submitting = true;
       (this.$refs.role as any).submit().then(() => {
         this.editVisible = false;
         (this.$refs.table as any).reloadData()
-      }).finally(() => {
-        this.submitting = false
       })
     }
 
-    // 设置菜单权限
-    setmenu (params) {
-      this.$router.push({ name: 'menuAuthority', params })
+    saveMenuAuthority (): void {
+      (this.$refs.menuAuthority as any).submit()
+        .then(() => (this.menuAuthorityDialogVisible = false))
     }
 
-    setResource (params) {
-      this.$router.push({ name: 'resourceAuthority', params })
+    // 设置菜单权限
+    setmenu (params: RoleDto): void {
+      this.menuAuthorityDialogVisible = true
+      this.current = params
     }
   }
 </script>

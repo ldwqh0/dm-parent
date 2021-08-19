@@ -1,9 +1,8 @@
 package com.dm.springboot.autoconfigure.uap;
 
-import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapBeanConfiguration;
 import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapJCacheConfiguration;
+import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
-import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ import java.util.Objects;
 @EnableJpaRepositories({"com.dm.uap"})
 @ComponentScan({"com.dm.uap"})
 @EnableConfigurationProperties({DefaultUserProperties.class})
-@Import({UapJCacheConfiguration.class, UapBeanConfiguration.class})
+@Import({UapJCacheConfiguration.class, UapAutoConfiguration.UapBeanConfiguration.class})
 @RequiredArgsConstructor
 public class UapAutoConfiguration implements InitializingBean {
 
@@ -53,25 +52,25 @@ public class UapAutoConfiguration implements InitializingBean {
             user.setFullname(fullname);
             user.setPassword(password);
             user.setEnabled(true);
-            Role role = new Role();
+            RoleDto role = new RoleDto();
             role.setId(1L);
             role.setGroup("内置分组");
             role.setName("ROLE_ADMIN");
-            user.setRoles(Collections.singletonList(role));
+            user.setRoles(Collections.singleton(role));
             userService.save(user);
         }
         // 建立默认匿名账号
-        if (!userService.userExistsByUsername(null, "ANONYMOUS")) {
+        if (!userService.userExistsByUsername("ANONYMOUS")) {
             UserDto anonymous = new UserDto();
             anonymous.setUsername("ANONYMOUS");
             anonymous.setPassword("ANONYMOUS");
             anonymous.setEnabled(true);
             anonymous.setFullname("匿名用户");
-            Role role = new Role();
-            role.setId(2L);
+            RoleDto role = new RoleDto();
+            role.setId(3L);
             role.setGroup("内置分组");
             role.setName("ROLE_ANONYMOUS");
-            anonymous.setRoles(Collections.singletonList(role));
+            anonymous.setRoles(Collections.singleton(role));
             userService.save(anonymous);
         }
     }
@@ -100,7 +99,7 @@ public class UapAutoConfiguration implements InitializingBean {
         public void setCacheManager(CacheManager cacheManager) {
             MutableConfiguration<String, Object> configuration = new MutableConfiguration<String, Object>()
                 .setTypes(String.class, Object.class).setStoreByValue(false)
-                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES));
             // 创建默认的用户cache
             Cache<String, Object> userCache = cacheManager.getCache("users");
             if (Objects.isNull(userCache)) {

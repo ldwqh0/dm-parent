@@ -34,7 +34,7 @@ public class OrganizationInternalAppAccessTokenService implements DingtalkAccess
 
     /**
      * 使用必要参数构建一个 {@link OrganizationInternalAppAccessTokenService}
-     * 
+     *
      * @param appkey    应用ID
      * @param appsecret 应用密钥
      * @param corpid    企业编号
@@ -47,9 +47,9 @@ public class OrganizationInternalAppAccessTokenService implements DingtalkAccess
 
     @Override
     public String getAccessToken(String corpid) {
-        if (!validateAccessToken(this.existToken)) {
+        if (validateAccessToken(this.existToken)) {
             synchronized (tokenLock) {
-                if (!validateAccessToken(existToken)) {
+                if (validateAccessToken(existToken)) {
                     existToken = getAccessTokenFromServer();
                 }
             }
@@ -59,7 +59,7 @@ public class OrganizationInternalAppAccessTokenService implements DingtalkAccess
 
     /**
      * 从服务器获取AccessToken
-     * 
+     *
      * @return
      */
     private AccessTokenResponse getAccessTokenFromServer() {
@@ -71,16 +71,16 @@ public class OrganizationInternalAppAccessTokenService implements DingtalkAccess
 
     /**
      * 校验token是否过期
-     * 
+     *
      * @param token
      * @return
      */
     private boolean validateAccessToken(AccessTokenResponse token) {
         if (Objects.isNull(token)) {
-            return false;
+            return true;
         }
         ZonedDateTime now = ZonedDateTime.now();
-        return !now.isAfter(token.getExpireDate());
+        return now.isAfter(token.getExpireDate());
     }
 
     @Override

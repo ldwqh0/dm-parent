@@ -28,37 +28,37 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuditingAutoConfiguration {
 
-    private final AuditingHandler handler;
+	private final AuditingHandler handler;
 
-    /**
-     * 修改AuditingHandler的DateTimeProvider使用，ZonedDateTime获取当前时间<br>
-     * 这个正确的修改方式应该是 在 @EnableJpaAuditing(dateTimeProviderRef =
-     * "zonedDateTimeProvider") 指定<br>
-     * <p>
-     * 参考 {@link EnableJpaAuditing}
-     */
-    @PostConstruct
-    @Deprecated
-    public void configAuditingHandler() {
-        handler.setDateTimeProvider(() -> Optional.of(ZonedDateTime.now()));
-    }
+	/**
+	 * 修改AuditingHandler的DateTimeProvider使用，ZonedDateTime获取当前时间<br>
+	 * 这个正确的修改方式应该是 在 @EnableJpaAuditing(dateTimeProviderRef =
+	 * "zonedDateTimeProvider") 指定<br>
+	 * <p>
+	 * 参考 {@link EnableJpaAuditing}
+	 */
+	@PostConstruct
+	@Deprecated
+	public void configAuditingHandler() {
+		handler.setDateTimeProvider(() -> Optional.of(ZonedDateTime.now()));
+	}
 
-    @Configuration
-    @ConditionalOnClass({AuditorAware.class, UserDetailsDto.class})
-    @ConditionalOnMissingBean(AuditorAware.class)
-    public static class SimpleAuditorAware implements AuditorAware<Audit> {
-        @Override
-        public Optional<Audit> getCurrentAuditor() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null) {
-                Object principal = authentication.getPrincipal();
-                if (principal instanceof UserDetailsDto) {
-                    UserDetailsDto ud = (UserDetailsDto) principal;
-                    String name = StringUtils.isBlank(ud.getFullname()) ? ud.getUsername() : ud.getFullname();
-                    return Optional.of(Audit.of(ud.getId(), name));
-                }
-            }
-            return Optional.empty();
-        }
-    }
+	@Configuration
+	@ConditionalOnClass({ AuditorAware.class, UserDetailsDto.class })
+	@ConditionalOnMissingBean(AuditorAware.class)
+	public static class SimpleAuditorAware implements AuditorAware<Audit<?, ?>> {
+		@Override
+		public Optional<Audit<?, ?>> getCurrentAuditor() {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication != null) {
+				Object principal = authentication.getPrincipal();
+				if (principal instanceof UserDetailsDto) {
+					UserDetailsDto ud = (UserDetailsDto) principal;
+					String name = StringUtils.isBlank(ud.getFullname()) ? ud.getUsername() : ud.getFullname();
+					return Optional.of(Audit.of(ud.getId(), name));
+				}
+			}
+			return Optional.empty();
+		}
+	}
 }

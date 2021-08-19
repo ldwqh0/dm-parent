@@ -14,47 +14,35 @@ public interface FileInfoService {
     /**
      * 获取一个文件信息
      *
-     * @param id
-     * @return
+     * @param id 文件id
+     * @return 获取到的文件信息
      */
     Optional<FileInfo> findById(UUID id);
 
     /**
      * 保存文件，并返回文件信息
      *
-     * @param fileInfo
-     * @return
-     * @throws Exception
+     * @param fileInfo 文件的数据库信息
+     * @return 保存后的文件信息
+     * @throws Exception 保存失败时抛出异常
      */
     FileInfo save(MultipartFile file, FileInfoDto fileInfo) throws Exception;
 
     /**
      * 删除指定的文件
      *
-     * @param id
-     * @return
-     * @throws Exception
+     * @param id 要删除的文件的id
+     * @throws Exception 删除失败时抛出异常
      */
     void delete(UUID id) throws Exception;
 
     /**
-     * 保存文件
-     *
-     * @param inputStream
-     *
-     * @param fileInfo
-     * @return
-     * @throws Exception
-     */
-//    public FileInfo save(InputStream inputStream, FileInfoDto fileInfo) throws Exception;
-
-    /**
      * 保存分块文件
      *
-     * @param src
-     * @param fileInfo
-     * @return
-     * @throws IOException
+     * @param src      要保存的文件的分块
+     * @param fileInfo 文件信息
+     * @return 保存之后的文件信息
+     * @throws IOException 保存失败时抛出异常
      */
     FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException;
 

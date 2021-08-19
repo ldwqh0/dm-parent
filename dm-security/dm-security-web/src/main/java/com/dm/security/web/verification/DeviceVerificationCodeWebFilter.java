@@ -33,7 +33,7 @@ import java.util.*;
  */
 public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingBean {
 
-    private final List<ServerWebExchangeMatcher> requestMathcers = new ArrayList<>();
+    private final List<ServerWebExchangeMatcher> requestMatchers = new ArrayList<>();
 
     private String verifyIdParameterName = "verifyId";
 
@@ -50,8 +50,8 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
         this.om = om;
     }
 
-    public void requestMathcer(ServerWebExchangeMatcher matcher) {
-        this.requestMathcers.add(matcher);
+    public void requestMatcher(ServerWebExchangeMatcher matcher) {
+        this.requestMatchers.add(matcher);
     }
 
     @Autowired
@@ -114,10 +114,10 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
     /**
      * 验证参数
      *
-     * @param id
-     * @param key
-     * @param code
-     * @return
+     * @param id   校验验证码
+     * @param key  要验证的key
+     * @param code 眼验证的code
+     * @return 验证成功返回true, 验证失败返回false
      */
     private boolean validate(String id, String key, String code) {
         if (StringUtils.isNotBlank(id) && StringUtils.isNotBlank(key) && StringUtils.isNotBlank(code)) {
@@ -139,11 +139,11 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
     /**
      * 判断该请求是否需要验证
      *
-     * @param exchange
-     * @return
+     * @param exchange 要验证的请求
+     * @return 验证结果
      */
     private Mono<Boolean> requiresValidation(ServerWebExchange exchange) {
-        return Flux.fromIterable(requestMathcers)
+        return Flux.fromIterable(requestMatchers)
             .flatMap(i -> i.matches(exchange))
             .any(MatchResult::isMatch);
     }
@@ -151,9 +151,9 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
     /**
      * 从请求中解析参数
      *
-     * @param exchange
-     * @param parameter
-     * @return
+     * @param exchange  a {@link ServerWebExchange}
+     * @param parameter 要解析的参数名称
+     * @return 解析出的参数
      */
     private String parseParameter(ServerWebExchange exchange, String parameter) {
         MultiValueMap<String, String> a = exchange.getRequest().getQueryParams();

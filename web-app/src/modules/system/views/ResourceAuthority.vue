@@ -1,38 +1,44 @@
 <template>
   <el-form ref="form"
+           inline
            class="resource-authority"
-           size="mini"
            label-width="120px"
            :model="data">
-    <el-row>
-      <el-col :span="24">
-        <ele-datatable :data="data.authorities">
-          <el-table-column label="资源名称" prop="name" />
-          <el-table-column label="资源路径" prop="matcher" />
+    <ele-data-tables :data="data.authorities">
+      <el-table-column label="资源名称" prop="name" />
+      <el-table-column label="资源路径" prop="matcher" />
 
-          <el-table-column label="可读取">
-            <template #default="scope">
-              <three-check-box v-model="scope.row.readable" />
-            </template>
-          </el-table-column>
-          <el-table-column label="可新增">
-            <template #default="scope">
-              <three-check-box v-model="scope.row.saveable" />
-            </template>
-          </el-table-column>
-          <el-table-column label="可修改">
-            <template #default="scope">
-              <three-check-box v-model="scope.row.updateable" />
-            </template>
-          </el-table-column>
-          <el-table-column label="可删除">
-            <template #default="scope">
-              <three-check-box v-model="scope.row.deleteable" />
-            </template>
-          </el-table-column>
-        </ele-datatable>
-      </el-col>
-    </el-row>
+      <el-table-column label="GET">
+        <template #default="scope">
+          <three-check-box v-model="scope.row.getAble" />
+        </template>
+      </el-table-column>
+      <el-table-column label="POST">
+        <template #default="scope">
+          <three-check-box v-model="scope.row.postAble" />
+        </template>
+      </el-table-column>
+      <el-table-column label="PUT">
+        <template #default="scope">
+          <three-check-box v-model="scope.row.putAble" />
+        </template>
+      </el-table-column>
+      <el-table-column label="DELETE">
+        <template #default="scope">
+          <three-check-box v-model="scope.row.deleteAble" />
+        </template>
+      </el-table-column>
+      <el-table-column type="expand" label="其它">
+        <template #default="scope">
+          <el-form-item label="PATCH" label-width="auto">
+            <three-check-box v-model="scope.row.patchAble" />
+          </el-form-item>
+          <el-form-item label="OPTIONS" label-width="auto">
+            <three-check-box v-model="scope.row.optionsAble" />
+          </el-form-item>
+        </template>
+      </el-table-column>
+    </ele-data-tables>
   </el-form>
 </template>
 
@@ -55,9 +61,6 @@
     @Prop({ required: true })
     roleId!: string | number
 
-    @Prop({ required: true })
-    roleName!: string
-
     data = { authorities: [] }
 
     submit (): Promise<unknown> {
@@ -68,7 +71,7 @@
         }, {})
       return http.post(URLS.resourceAuthorities, {
         roleId: this.roleId,
-        roleName: this.roleName,
+        roleName: (this as any).roleName,
         resourceAuthorities
       })
     }
@@ -79,11 +82,11 @@
     }
 
     created (): void {
-      Promise.all([http.get(`${URLS.resource}`), http.get(`${URLS.resourceAuthorities}/${this.roleName}`)])
+      Promise.all([http.get(`${URLS.resource}`), http.get(`${URLS.resourceAuthorities}/${this.roleId}`)])
         .then(([{ data: resources }, { data: { resourceAuthorities = {} } }]) => resources.map((resource: any) => ({
-            ...resource,
-            ...resourceAuthorities[resource.id]
-          }))
+          ...resource,
+          ...resourceAuthorities[resource.id]
+        }))
         ).then(result => (this.data.authorities = result))
     }
   }

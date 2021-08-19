@@ -3,18 +3,31 @@
            label-width="100px"
            :rules="rules"
            :model="user">
-    <el-form-item label="用户名：" prop="username">
-      <el-input v-model="user.username" :maxlength="50" />
-    </el-form-item>
-    <el-form-item v-if="id==='0'" label="密码：" prop="password">
-      <el-input v-model="user.password" type="password" :maxlength="50" />
-    </el-form-item>
-    <el-form-item v-if="id==='0'" label="确认密码：" prop="repassword">
-      <el-input v-model="user.repassword" type="password" :maxlength="50" />
-    </el-form-item>
-    <el-form-item label="姓名：" prop="fullname">
-      <el-input v-model="user.fullname" :maxlength="20" />
-    </el-form-item>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="用户名：" prop="username">
+          <el-input v-model="user.username" :maxlength="50" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="姓名：" prop="fullname">
+          <el-input v-model="user.fullname" :maxlength="20" />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row v-if="id==='0'">
+      <el-col :span="12">
+        <el-form-item label="密码：" prop="password">
+          <el-input v-model="user.password" type="password" :maxlength="50" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="确认密码：" prop="repassword">
+          <el-input v-model="user.repassword" type="password" :maxlength="50" />
+        </el-form-item>
+      </el-col>
+    </el-row>
+
     <el-form-item label="用户角色：" prop="roles">
       <el-select v-model="user.roles"
                  value-key="id"
@@ -24,19 +37,38 @@
           <el-option v-for="role in group.roles"
                      :key="role.id"
                      :label="role.name"
-                     :value="role" />
+                     :value="role">
+            <span :title="role.description">{{ role.name }}</span>
+            <!--            <span>{{ role.id }}</span>-->
+          </el-option>
         </el-option-group>
       </el-select>
-    </el-form-item>
-    <el-form-item label="联系电话：" prop="mobile">
-      <el-input v-model="user.mobile" :maxlength="20" />
     </el-form-item>
 
     <el-row>
       <el-col>
-        <div style="width: 100px;text-align: right;padding-right: 12px;box-sizing: border-box;">用户职务：</div>
+        <el-form-item label="账号状态：">
+          <el-checkbox v-model="user.enabled">启用</el-checkbox>
+        </el-form-item>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="联系电话：" prop="mobile">
+          <el-input v-model="user.mobile" :maxlength="20" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="邮箱地址：" prop="email">
+          <el-input v-model="user.email" :maxlength="20" />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <!--    <el-row>-->
+    <!--      <el-col>-->
+    <!--        <div style="width: 100px;text-align: right;padding-right: 12px;box-sizing: border-box;">用户职务：</div>-->
+    <!--      </el-col>-->
+    <!--    </el-row>-->
     <el-row v-for="(post,index) in user.posts" :key="index">
       <el-col :span="14">
         <el-form-item :label="`职务 ${index+1}`"
@@ -68,13 +100,18 @@
       <el-col :span="3">
         <!--        <el-form-item>-->
         <!--这里做一个减号图标-->
-        <el-button v-if="user.posts.length>1" @click="removePost(index)">移除</el-button>
+        <el-button v-if="user.posts.length>1"
+                   style="float: right"
+                   icon="el-icon-minus"
+                   circle
+                   type="danger"
+                   @click="removePost(index)" />
         <!--        </el-form-item>-->
       </el-col>
     </el-row>
 
     <el-form-item>
-      <el-button type="success" @click="addPost">添加职务</el-button>
+      <el-button type="success" size="medium" @click="addPost">添加职务</el-button>
     </el-form-item>
 
     <el-form-item label="简介：" prop="profile">
@@ -123,7 +160,10 @@
       expandTrigger: 'hover'
     }
 
-    user: UserDto = {}
+    user: UserDto = {
+      enabled: true
+    }
+
     roles: RoleDto[] = []
 
     rules: Rules = {
@@ -189,31 +229,28 @@
     }
 
     get roleGroups (): { name: string, roles: RoleDto[] }[] {
-      const results: { name: string, roles: RoleDto[] }[] = []
-      this.roles.reduce((acc, cur) => {
-        const group = cur.group ?? 'unknown'
-        const groupRoles = acc.get(group)
-        if (isNil(groupRoles)) {
-          acc.set(group, [cur])
-        } else {
+      return Array.from(this.roles
+        // 给用户添加分组时，不能把用户添加在这两个分组中
+        .filter(({ fullname = '' }) => !['内置分组_ROLE_ANONYMOUS', '内置分组_ROLE_AUTHENTICATED'].includes(fullname))
+        .reduce((acc, cur) => {
+          const group = cur.group ?? 'unknown'
+          const groupRoles = acc.get(group) ?? []
           groupRoles.push(cur)
-        }
-        return acc
-      }, new Map<string, RoleDto[]>())
-        .forEach((value, key) => {
-          results.push({
-            name: key,
-            roles: value
-          })
-        })
-      return results
+          acc.set(group, groupRoles)
+          return acc
+        }, new Map<string, RoleDto[]>()))
+        .map(([key, value]) => ({
+          name: key,
+          roles: value
+        }))
     }
 
     created (): void {
+      // 获取所有角色列表
       http.get(`${urls.role}`).then(({ data }) => (this.roles = data))
-      http.get(`${urls.department}`, { params: { scope: 'all' } }).then(({ data }) => {
-        this.allDepartments = data
-      })
+      // 获取所有部门列表
+      http.get(`${urls.department}`, { params: { scope: 'all' } })
+        .then(({ data }) => (this.allDepartments = data))
       if (Number.parseInt(this.id) > 0) {
         http.get(`${urls.user}/${this.id}`).then(({ data }) => (this.$set(this, 'user', data)))
       } else {
@@ -229,14 +266,12 @@
       this.user.posts?.splice(index, 1)
     }
 
-    submit (): Promise<any> {
-      return (this.$refs.form as any).validate().then(() => {
-        if (Number.parseInt(this.id) > 0) {
-          return http.put(`${urls.user}/${this.id}`, this.user)
-        } else {
-          return http.post(`${urls.user}`, this.user)
-        }
-      })
+    submit (): Promise<unknown> {
+      return (this.$refs.form as any).validate().then(() =>
+        (Number.parseInt(this.id) > 0)
+          ? http.put(`${urls.user}/${this.id}`, this.user)
+          : http.post(`${urls.user}`, this.user)
+      )
     }
   }
 </script>

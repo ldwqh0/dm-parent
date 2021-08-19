@@ -7,9 +7,8 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 @Getter
-public class CreateAudit implements Audit {
+public class CreateAudit implements Audit<Long, String> {
 
-    private static final long serialVersionUID = 379407708683930698L;
 
     /**
      * 创建人相关信息不能被修改
@@ -32,7 +31,7 @@ public class CreateAudit implements Audit {
     public CreateAudit() {
     }
 
-    public CreateAudit(Audit audit) {
+    public CreateAudit(Audit<Long, String> audit) {
         this(audit.getUserid(), audit.getUsername());
     }
 

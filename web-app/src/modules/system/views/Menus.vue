@@ -1,162 +1,180 @@
 <template>
-  <page-wrapper :header="['系统设置','菜单管理']">
-    <el-container class="menus">
-      <el-aside>
-        <el-tree
-          :expand-on-click-node="false"
-          :default-expanded-keys="['']"
-          node-key="id"
-          :props="treeProp"
-          :data="menuTree"
-          @current-change="nodeChange" />
-      </el-aside>
-      <el-main style="padding: 0;">
-        <el-form inline
-                 :model="search"
-                 class="clear-float">
-          <el-row>
-            <el-col :span="12">
-              <el-form-item class="pull-left">
-                <el-input
-                  v-model="search.search"
-                  placeholder="请输入关键字" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item class="float-right">
-                <el-button type="primary" @click="add">新增</el-button>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <ele-data-tables ref="table"
-                         :ajax="ajax"
-                         :server-params="search"
-                         pagination-layout="total, sizes, prev, pager, next, jumper">
-          <el-table-column prop="name" label="菜单名称" />
-          <el-table-column prop="title" label="菜单标题" />
-          <el-table-column label="菜单状态">
-            <template #default="{row}"><span>{{ row.enabled ? '启用' : '禁用' }}</span></template>
-          </el-table-column>
-          <el-table-column prop="id" label="操作" :min-width="120">
-            <template #default="{row:{enabled,id}}">
-              <el-button v-if="enabled"
-                         type="text"
-                         @click="patch({id,enabled:false})">
-                禁用
-              </el-button>
-              <el-button v-if="!enabled"
-                         type="text"
-                         @click="patch({id,enabled:true})">
-                启用
-              </el-button>
-              <el-button type="text" @click="edit({id})">编辑</el-button>
-              <el-button type="text" @click="move({id,position:'UP'})">上移</el-button>
-              <el-button type="text" @click="move({id,position:'DOWN'})">下移</el-button>
-              <el-button type="text" @click="del({id})">删除</el-button>
-            </template>
-          </el-table-column>
-        </ele-data-tables>
-      </el-main>
-      <el-dialog v-if="menuDialogVisible"
-                 :visible.sync="menuDialogVisible"
-                 :close-on-click-modal="false"
-                 :close-on-press-escape="false">
-        <e-menu :id="currentMenu.id" ref="menu" />
-        <template #footer>
-          <el-button @click="menuDialogVisible=false">取消</el-button>
-          <el-button type="primary" :loading="loading" @click="saveMenu">确定</el-button>
+  <el-container class="menus">
+    <el-aside width="250px" style="border-right: solid 1px #efefef;box-sizing: content-box">
+      <el-tree ref="tree"
+               :expand-on-click-node="false"
+               :default-expanded-keys="['']"
+               node-key="id"
+               :props="treeProp"
+               :load="loadNode"
+               lazy
+               @current-change="nodeChange">
+        <template #default="{node}">
+          <span>
+            <i :class="node.data.icon || 'el-icon-menu'" />&nbsp;{{ node.label }}
+          </span>
         </template>
-      </el-dialog>
-    </el-container>
-  </page-wrapper>
+      </el-tree>
+    </el-aside>
+    <el-main style="padding: 0 0 0 10px">
+      <el-form inline :model="search" class="clear-float">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item class="pull-left">
+              <el-input v-model="search.keyword" clearable placeholder="请输入关键字" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="float-right">
+              <el-button type="primary" @click="add">新增</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <ele-data-tables ref="table"
+                       :ajax="ajax"
+                       :server-params="serverParams"
+                       pagination-layout="total, sizes, prev, pager, next, jumper">
+        <el-table-column prop="name" label="菜单名称" />
+        <el-table-column prop="title" label="菜单标题" />
+        <el-table-column label="菜单状态">
+          <template #default="{row}">
+            <span v-if="row.enabled">启用</span>
+            <span v-else style="color: red">禁用</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="id" label="操作" :min-width="120">
+          <template #default="{row:{enabled,id}}">
+            <el-button v-if="enabled"
+                       type="text"
+                       @click="patch({id,enabled:false})">
+              禁用
+            </el-button>
+            <el-button v-if="!enabled"
+                       type="text"
+                       @click="patch({id,enabled:true})">
+              启用
+            </el-button>
+            <el-button type="text" @click="edit({id})">编辑</el-button>
+            <el-button type="text" @click="move({id,position:'UP'})">上移</el-button>
+            <el-button type="text" @click="move({id,position:'DOWN'})">下移</el-button>
+            <el-button type="text" @click="del({id})">删除</el-button>
+          </template>
+        </el-table-column>
+      </ele-data-tables>
+    </el-main>
+    <el-dialog v-if="currentEdit"
+               visible
+               :close-on-click-modal="false"
+               :close-on-press-escape="false"
+               @close="currentEdit=null">
+      <e-menu :id="currentEdit.id" ref="menu" v-loading="loading" />
+      <template #footer>
+        <el-button @click="currentEdit=null">取消</el-button>
+        <el-button type="primary" :loading="loading" @click="saveMenu">确定</el-button>
+      </template>
+    </el-dialog>
+  </el-container>
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
   import { Component } from 'vue-property-decorator'
-  import { Getter, namespace } from 'vuex-class'
-  import Menu from './Menu.vue'
-  import http from '@/http'
+  import { namespace } from 'vuex-class'
+  import http, { simpleHttp } from '@/http'
   import URLS from '../URLS'
-  import { MenuDto, MenuTreeItem } from '@/types/Service'
-  import { TreeProps } from 'element-ui/types/tree'
-  import { PageWrapper } from '@/components'
+  import { MenuDto, Page } from '@/types/service'
+  import { TreeNode } from 'element-ui/types/tree'
+  import isNil from 'lodash/isNil'
+  import { TreeProps } from '@/types/element'
+  import { AxiosResponse } from 'axios'
+  import Menu from './Menu.vue'
 
-  const menuModule = namespace('system/menu')
+  const httpModel = namespace('http')
   @Component({
     components: {
-      PageWrapper,
       EMenu: Menu
     }
   })
   export default class Menus extends Vue {
-    menuDialogVisible = false
-    currentMenu = {}
+    current: MenuDto | null = null
+    currentEdit: MenuDto | null = null
 
-    treeProp: TreeProps = { // 树形机构显示熟属性
+    treeProp: TreeProps<unknown, MenuDto> = { // 树形机构显示熟属性
       children: 'children',
       label: 'title',
       disabled: 'disabled',
-      isLeaf: 'isLeaf'
+      isLeaf: (menu: MenuDto) => !menu.hasChildren
     }
 
-    @Getter('loading')
+    @httpModel.Getter('loading')
     loading!: boolean
 
     ajax = URLS.menus
 
-    @menuModule.Getter('tree')
-    tree!: MenuTreeItem[]
-
-    @menuModule.Action('loadAll')
-    loadAll!: () => Promise<any>
-
     search: {
-      parentId?: number,
-      search?: string
+      keyword?: string
     } = {}
 
-    /**
-     * 获取菜单的树型结构
-     */
-    get menuTree (): MenuTreeItem [] {
-      return this.tree
-      // return [{
-      //   id: 0,
-      //   title: '根1',
-      //   url: '',
-      //   openInNewWindow: false,
-      //   children: this.tree,
-      //   type: MenuType.COMPONENT
-      // }]
+    get serverParams (): Record<string, unknown> {
+      return {
+        keyword: this.search.keyword,
+        parentId: this.current?.id
+      }
     }
 
     add (): void {
-      this.currentMenu = {}
-      this.menuDialogVisible = true
-    }
-
-    created (): void {
-      this.loadAll()
+      this.currentEdit = {}
     }
 
     edit (data: MenuDto): void {
-      this.currentMenu = data
-      this.menuDialogVisible = true
+      this.currentEdit = data
     }
 
-    move ({ id, position }: { id: number, position: string }): Promise<any> {
-      return http.put(`${URLS.menus}/${id}/order`, { position })
-        .then(this.reloadAll)
+    move ({
+      id,
+      position
+    }: { id: number, position: string }): Promise<unknown> {
+      return http.put<MenuDto>(`${URLS.menus}/${id}/order`, { position })
+        .then(({ data: { parent } }) => this.reloadTreeAndTable(parent))
         .then(() => this.$message({
           message: '修改成功！',
           type: 'success'
         }))
     }
 
+    /**
+     * 从网络获取一个树的子节点
+     * */
+    loadChildren (parentId: string | number): Promise<AxiosResponse<Page<MenuDto>>> {
+      return simpleHttp.get<Page<MenuDto>>(`${URLS.menus}`, {
+        params: {
+          parentId,
+          enabled: true,
+          page: 0,
+          size: 2000
+        }
+      })
+    }
+
+    /**
+     * 左侧树懒加载节点
+     */
+    loadNode ({ key }: TreeNode<number, MenuDto>, resolve: (r: MenuDto[]) => void): void {
+      if (isNil(key)) {
+        resolve([{
+          id: '' as any,
+          title: '根菜单'
+        }])
+      } else {
+        this.loadChildren(key).then(({ data: { content } }) => resolve(content ?? []))
+      }
+    }
+
     patch (menu: MenuDto): Promise<any> {
-      return http.patch(`${URLS.menus}/${menu.id}`, menu).then(this.reloadAll)
+      return http.patch<MenuDto>(`${URLS.menus}/${menu.id}`, menu)
+        .then(({ data: { parent } }) => this.reloadTreeAndTable(parent)
+        )
     }
 
     del (data: MenuDto): Promise<any> {
@@ -165,7 +183,7 @@
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => http.delete(`${URLS.menus}/${data.id}`))
-        .then(this.reloadAll)
+        .then(() => this.reloadTreeAndTable(this.current))
         .catch(e => {
           if (e === 'cancel') {
             this.$message.info('已取消删除')
@@ -173,25 +191,39 @@
         })
     }
 
-    nodeChange (data: MenuDto): void {
-      if (data.id === 0) {
-        this.$set(this.search, 'parentId', null)
-      } else {
-        this.$set(this.search, 'parentId', data.id)
-      }
+    nodeChange (current: MenuDto): void {
+      this.current = current
     }
 
     saveMenu (): Promise<any> {
-      return (this.$refs.menu as any).submit().then(this.reloadAll).then(() => {
-        this.menuDialogVisible = false
-      })
+      return (this.$refs.menu as any).submit()
+        .then(({ data: { parent } }: any) => {
+          this.reloadTreeAndTable(parent)
+          this.currentEdit = null
+        })
     }
 
-    reloadAll (): Promise<any> {
-      return Promise.all([this.loadAll(), (this.$refs.table as any).reloadData()])
+    /**
+     * 重新加载树和表格
+     * @param node
+     */
+    reloadTreeAndTable (node?: MenuDto | null): void {
+      const id = node?.id ?? '';
+      // 重新刷新表格
+      (this.$refs.table as any).reloadData()
+      this.loadChildren(id)
+        // 重新加载某个父节点的子节点
+        .then(({ data: { content } }) => (this.$refs.tree as any).updateKeyChildren(id, content ?? []))
     }
   }
 </script>
 
 <style lang="less">
+  // 自定义选中项目的样式
+  .menus {
+    .el-tree-node.is-current > .el-tree-node__content {
+      background: #386be1 !important;
+      color: white;
+    }
+  }
 </style>

@@ -1,12 +1,6 @@
 package com.dm.common.converter;
 
-import com.dm.collections.Iterables;
-import com.dm.collections.Lists;
-
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * 将一个Model对象转换为另外一个DTO对象的方法

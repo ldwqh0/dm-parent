@@ -24,7 +24,10 @@ module.exports = {
     'no-undef': 'off',
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    'vue/script-indent': ['error', 2, { baseIndent: 1 }],
+    'vue/script-indent': ['error', 2, {
+      baseIndent: 1,
+      switchCase: 1
+    }],
     'vue/max-attributes-per-line': [
       'error', {
         singleline: 3,
@@ -33,14 +36,17 @@ module.exports = {
           allowFirstLine: true
         }
       }],
+    // 如果html标记只有一个单独的元素，是否前后断行，这里关闭
+    // 参考 https://eslint.vuejs.org/rules/singleline-html-element-content-newline.html
     'vue/singleline-html-element-content-newline': 'off',
-    // 是否在html标记中添加空格
+    // 是否在html标记中括号前面，添加空格
     'vue/html-closing-bracket-spacing': [
       'error', {
         startTag: 'never',
         endTag: 'never',
         selfClosingTag: 'always'
       }],
+    // 是否在新的一样
     'vue/html-closing-bracket-newline': [
       'error', {
         singleline: 'never',

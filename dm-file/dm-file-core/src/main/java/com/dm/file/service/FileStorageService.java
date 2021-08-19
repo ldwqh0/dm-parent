@@ -39,40 +39,30 @@ public interface FileStorageService {
     /**
      * 根据文件名和前缀获取资源
      *
-     * @param filename
-     * @param parents
-     * @return
-     * @throws IOException
+     * @param filename 文件名
+     * @param parents  文件前缀
+     * @return 文件资源
+     * @throws IOException 获取失败时抛出异常
      */
-    Resource getResource(String filename, String... parents);
-
-//    /**
-//     * 获取指定文件名的Resource
-//     *
-//     * @param filename 要获取资源的文件名
-//     * @return
-//     */
-//    public Resource getResource(String filename);
+    Resource getResource(String filename, String... parents) throws IOException;
 
     /**
      * 根据传入的开始个结束位置返回Resource,用于文件的分块传输
      *
-     * @param filename
-     * @param start
-     * @param end
-     * @return
-     * @throws IOException
+     * @param filename 文件名
+     * @param start    文件开始位置
+     * @param end      文件结束位置
+     * @return 查找到的资源
+     * @throws IOException 抛出异常
      */
-    Resource getResource(String filename, Long start, Long end, String... parents);
+    Resource getResource(String filename, Long start, Long end, String... parents) throws IOException;
 
     /**
      * 将所有的文件块组合保存到一个文件
      *
-     * @param filename
-     * @param from
-     * @return true 保存成功<br>
-     * false 保存失败
-     * @throws IOException
+     * @param filename 要保存的文件名
+     * @param from     要保存的文件路径
+     * @return true 保存成功; false 保存失败
      */
     boolean save(Path[] from, String filename, String... parents);
 

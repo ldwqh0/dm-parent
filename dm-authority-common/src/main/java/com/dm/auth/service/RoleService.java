@@ -1,9 +1,8 @@
 package com.dm.auth.service;
 
 import com.dm.auth.dto.MenuAuthorityDto;
-import com.dm.auth.dto.ResourceAuthorityDto;
+import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.RoleDto;
-import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,12 +33,12 @@ public interface RoleService {
     /**
      * 判断是否存在指定名称的角色是否存在，需要排除掉指定的ID，用于前的段角色重名验证
      *
-     * @param id   需要排除的角色id
-     * @param name 要验证的角色名称
+     * @param id    需要排除的角色id
+     * @param name  要验证的角色名称
      * @param group 角色所在的角色组
      * @return 存在返回true, 不存在返回false
      */
-    boolean nameExist(Long id,String group, String name);
+    boolean nameExist(Long id, String group, String name);
 
     Role update(long id, RoleDto roleDto);
 
@@ -72,6 +71,8 @@ public interface RoleService {
      */
     boolean existsByFullname(String authority);
 
+    boolean existsByFullname(String name, String group, Long exclude);
+
 
     /**
      * 保存角色的菜单授权信息
@@ -83,20 +84,13 @@ public interface RoleService {
     Role saveAuthority(Long roleId, MenuAuthorityDto authorityDto);
 
     /**
-     * 保存角色的资源授权信息
-     *
-     * @param authorityDto 角色的资源授权信息
-     * @return 更新授权信息后的角色实体
-     */
-    Role saveAuthority(ResourceAuthorityDto authorityDto);
-
-    /**
      * 根据角色查询菜单项目
      *
      * @param authority 角色名称
+     * @param root      父级菜单，如果指定菜单根，则只返回该根下的菜单可以用菜单
      * @return 角色的授权菜单列表
      */
-    Set<Menu> findAuthorityMenus(String authority);
+    Set<MenuDto> findAuthorityMenus(String authority, Long root);
 
     /**
      * 查询所有的角色组

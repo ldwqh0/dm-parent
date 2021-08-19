@@ -6,11 +6,9 @@ import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
 import com.dm.security.authentication.UriResource.MatchType;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -57,15 +55,10 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
                 return false;
             }
 
-            // 如果资源允许任何被授权的用户访问,并且用户不是匿名用户，投票+1
-            if (attribute.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-                grantCount++;
-            }
-
             // 匿名用户的可访问权限包含在显示的权限配置中
             if (CollectionUtils.isNotEmpty(currentAuthorities)
-                && CollectionUtils.isNotEmpty(attribute.getAccessAuthority())
-                && CollectionUtils.containsAny(currentAuthorities, attribute.getAccessAuthority())) {
+                && CollectionUtils.isNotEmpty(attribute.getAccessAuthorities())
+                && CollectionUtils.containsAny(currentAuthorities, attribute.getAccessAuthorities())) {
                 if (validScope(attribute, authentication)) {
                     grantCount++;
                 }
@@ -78,11 +71,16 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
     private boolean matches(HttpServletRequest request, ResourceAuthorityAttribute attribute) {
         UriResource resource = attribute.getResource();
         MatchType matchType = resource.getMatchType();
+        final String uri = resource.getUri();
         if (MatchType.ANT_PATH.equals(matchType)) {
-            return new AntPathRequestMatcher(resource.getPath(), resource.getMethod(), true).matches(request);
+            return resource.getMethod()
+                .map(method -> new AntPathRequestMatcher(method.toString(), uri))
+                .orElseGet(() -> new AntPathRequestMatcher(uri))
+                .matches(request);
         }
         if (MatchType.REGEXP.equals(matchType)) {
-            return new RegexRequestMatcher(resource.getPath(), resource.getMethod(), true).matches(request);
+            throw new RuntimeException("正则表达式不完美");
+            // return new RegexRequestMatcher(resource.getUri(), resource.getMethod().toString(), true).matches(request);
         }
         return false;
     }
@@ -92,18 +90,20 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
      *
      * @param attribute      要验证的对象
      * @param authentication 当前对象
-     * @return
+     * @return 验证成功返回 true, 验证失败返回 false
      */
     private boolean validScope(ResourceAuthorityAttribute attribute, Authentication authentication) {
         // TODO 这里进行scope校验
-        // if (authentication instanceof OAuth2Authentication) {
-        // Set<String> resourceScope = attribute.getScope();
-        // Set<String> requestScopes = ((OAuth2Authentication)
-        // authentication).getOAuth2Request().getScope();
-        // if (CollectionUtils.isNotEmpty(resourceScope)) {
-        // return CollectionUtils.containsAny(requestScopes, resourceScope);
-        // }
-        // }
+        /*
+         if (authentication instanceof OAuth2Authentication) {
+         Set<String> resourceScope = attribute.getScope();
+         Set<String> requestScopes = ((OAuth2Authentication)
+         authentication).getOAuth2Request().getScope();
+         if (CollectionUtils.isNotEmpty(resourceScope)) {
+         return CollectionUtils.containsAny(requestScopes, resourceScope);
+         }
+         }
+         */
         return true;
     }
 

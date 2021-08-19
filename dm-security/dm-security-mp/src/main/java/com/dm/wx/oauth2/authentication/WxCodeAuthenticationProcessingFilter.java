@@ -1,20 +1,16 @@
 package com.dm.wx.oauth2.authentication;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.dm.wx.oauth2.provider.WxOAuth2CodeAuthentication;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import com.dm.wx.oauth2.provider.WxOAuth2CodeAuthentication;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * 
+ *
  * @author 根据微信
  *
  */
@@ -34,7 +30,7 @@ public class WxCodeAuthenticationProcessingFilter extends AbstractAuthentication
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException {
         String code = request.getParameter("code");
         return this.getAuthenticationManager().authenticate(new WxOAuth2CodeAuthentication(code));
     }

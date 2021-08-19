@@ -29,7 +29,7 @@ public class AuthJCacheConfiguration implements InitializingBean {
             MutableConfiguration<String, Object> configuration = new MutableConfiguration<String, Object>()
                 .setTypes(String.class, Object.class)
                 .setStoreByValue(false)
-                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.TEN_MINUTES));
             // 设置默认的AuthorityAttributes配置
             Cache<String, Object> cache = jCacheManager.getCache("AuthorityAttributes");
             Cache<String, Object> menuCache = jCacheManager.getCache("AuthorityMenus");

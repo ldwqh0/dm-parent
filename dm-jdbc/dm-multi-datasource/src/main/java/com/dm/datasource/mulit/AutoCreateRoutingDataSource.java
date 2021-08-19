@@ -1,9 +1,10 @@
 package com.dm.datasource.mulit;
 
+import com.dm.datasource.DataSourceBuilder;
+import com.dm.datasource.HikariDataSourceBuilder;
 import com.dm.datasource.provider.DataSourceProperties;
-import com.dm.datasource.provider.DataSourceProvider;
-import com.dm.datasource.provider.DataSourceProviderHolder;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import javax.sql.DataSource;
@@ -20,6 +21,13 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
 
     private final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
 
+    private DataSourceBuilder dataSourceBuilder = new HikariDataSourceBuilder();
+
+    @Autowired(required = false)
+    public void setDataSourceBuilder(DataSourceBuilder dataSourceBuilder) {
+        this.dataSourceBuilder = dataSourceBuilder;
+    }
+
     @Override
     protected DataSource determineTargetDataSource() {
         DataSourceProperties properties = determineCurrentLookupKey();
@@ -35,22 +43,6 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
             }
         }
         return Objects.isNull(resolved) ? defaultTargetDataSource : resolved;
-    }
-
-    private DataSource createDataSource(DataSourceProperties properties) {
-        DataSourceProvider provider = DataSourceProviderHolder.getProvider(properties.getDbType());
-        if (Objects.isNull(provider)) {
-            return null;
-        } else {
-            HikariDataSource dataSource = new HikariDataSource();
-            dataSource.setDriverClassName(provider.getDriverClassName());
-            dataSource.setJdbcUrl(provider.getUrl(properties));
-            dataSource.setUsername(properties.getUsername());
-            dataSource.setPassword(properties.getPassword());
-            dataSource.setMinimumIdle(0);
-            dataSource.setConnectionTestQuery("select 1");
-            return dataSource;
-        }
     }
 
     public void setDefaultTargetDataSource(DataSource defaultTargetDataSource) {
@@ -93,7 +85,7 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
             synchronized (key) {
                 exist = dataSources.get(key);
                 if (exist == null) {
-                    DataSource dataSource = createDataSource(properties);
+                    DataSource dataSource = dataSourceBuilder.buildDataSource(properties);
                     dataSources.put(key, dataSource);
                     return dataSource;
                 }

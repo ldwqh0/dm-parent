@@ -7,8 +7,10 @@ server:
 spring:
   cache:
     type: jcache
+    jcache:
+      config: classpath:config/ehcache.xml
   datasource:
-    url: 'jdbc:mysql://localhost/server_authorization?serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowPublicKeyRetrieval=true'
+    url: 'jdbc:mysql://localhost/authorization_server?serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowPublicKeyRetrieval=true'
     username: 'root'
     driver-class-name: 'com.mysql.cj.jdbc.Driver'
     password: 'Abc.123456'

@@ -24,10 +24,10 @@ import com.google.code.kaptcha.text.impl.DefaultWordRenderer;
  */
 public class Config {
     /** */
-    private Properties properties;
+    private final Properties properties;
 
     /** */
-    private ConfigHelper helper;
+    private final ConfigHelper helper;
 
     /** */
     public Config(Properties properties) {

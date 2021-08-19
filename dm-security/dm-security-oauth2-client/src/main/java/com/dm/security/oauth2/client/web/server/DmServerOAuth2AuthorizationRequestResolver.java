@@ -16,6 +16,7 @@
 
 package com.dm.security.oauth2.client.web.server;
 
+import com.dm.collections.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
@@ -33,7 +34,6 @@ import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
@@ -106,11 +106,6 @@ public class DmServerOAuth2AuthorizationRequestResolver
 
     private final StringKeyGenerator secureKeyGenerator = new Base64StringKeyGenerator(
         Base64.getUrlEncoder().withoutPadding(), 96);
-    private String defaultPrefix = "/";
-
-    public void setDefaultPrefix(String defaultPrefix) {
-        this.defaultPrefix = defaultPrefix;
-    }
 
     /**
      * Creates a new instance
@@ -144,6 +139,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
 
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange) {
+        ServerWebExchangeMatcher authorizationRequestMatcher = this.authorizationRequestMatcher;
         return this.authorizationRequestMatcher.matches(exchange)
             .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
             .map(ServerWebExchangeMatcher.MatchResult::getVariables)
@@ -155,6 +151,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange,
                                                     String clientRegistrationId) {
+        // 将参数中的redirect保存到会话中
         return this.findByRegistrationId(exchange, clientRegistrationId)
             .map(clientRegistration -> authorizationRequest(exchange, clientRegistration));
     }
@@ -227,6 +224,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
         uriVariables.put("registrationId", clientRegistration.getRegistrationId());
         List<String> xForwardedHost = request.getHeaders().get("x-forwarded-host");
         List<String> xForwardedProto = request.getHeaders().get("x-forwarded-proto");
+        List<String> xProxyPath = request.getHeaders().get("x-forwarded-proxy-prefix");
         if (Objects.nonNull(xForwardedHost) && xForwardedHost.size() > 0) {
             uriVariables.put("xForwardedHost", xForwardedHost.get(0));
         } else {
@@ -237,11 +235,10 @@ public class DmServerOAuth2AuthorizationRequestResolver
         } else {
             uriVariables.put("xForwardedProto", "");
         }
-        List<String> prefix = request.getQueryParams().get("prefix");
-        if (com.dm.collections.CollectionUtils.isNotEmpty(prefix)) {
-            uriVariables.put("prefix", org.apache.commons.lang3.StringUtils.join(prefix, PATH_DELIMITER));
+        if (Objects.nonNull(xProxyPath)) {
+            uriVariables.put("xForwardedProxyPrefix", xProxyPath.get(0));
         } else {
-            uriVariables.put("prefix", this.defaultPrefix);
+            uriVariables.put("xForwardedProxyPrefix", "");
         }
         UriComponents uriComponents = UriComponentsBuilder.fromUri(request.getURI())
             .replacePath(request.getPath().contextPath().value())
@@ -269,7 +266,6 @@ public class DmServerOAuth2AuthorizationRequestResolver
             action = "login";
         }
         uriVariables.put("action", action);
-
         return UriComponentsBuilder.fromUriString(clientRegistration.getRedirectUri())
             .buildAndExpand(uriVariables)
             .toUriString();
@@ -283,9 +279,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
      *                             stored for the authentication request
      * @param additionalParameters where the {@link OidcParameterNames#NONCE} hash
      *                             is added for the authentication request
-     * @see <a target="_blank" href=
-     * "https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">3.1.2.1.
-     * Authentication Request</a>
+     * @see <a target="_blank" href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">3.1.2.1 Authentication Request</a>
      * @since 5.2
      */
     private void addNonceParameters(Map<String, Object> attributes, Map<String, Object> additionalParameters) {
@@ -295,6 +289,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
             attributes.put(OidcParameterNames.NONCE, nonce);
             additionalParameters.put(OidcParameterNames.NONCE, nonceHash);
         } catch (NoSuchAlgorithmException e) {
+            // do nothing here
         }
     }
 
@@ -314,9 +309,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
      * @see <a target="_blank" href=
      * "https://tools.ietf.org/html/rfc7636#section-4.1">4.1. Client Creates a
      * Code Verifier</a>
-     * @see <a target="_blank" href=
-     * "https://tools.ietf.org/html/rfc7636#section-4.2">4.2. Client Creates
-     * the Code Challenge</a>
+     * @see <a target="_blank" href= "https://tools.ietf.org/html/rfc7636#section-4.2">4.2. Client Creates the Code Challenge</a>
      * @since 5.2
      */
     private void addPkceParameters(Map<String, Object> attributes, Map<String, Object> additionalParameters) {

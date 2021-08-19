@@ -6,18 +6,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 @JsonInclude(Include.NON_ABSENT)
-public class UserDetailsDto implements UserDetails, CredentialsContainer, OAuth2User {
+public class UserDetailsDto implements UserDetails {
     private static final long serialVersionUID = -4337846050031244208L;
 
     private Long id;
@@ -31,6 +28,10 @@ public class UserDetailsDto implements UserDetails, CredentialsContainer, OAuth2
     private boolean locked;
     private Collection<? extends GrantedAuthority> grantedAuthority;
     private String fullname;
+
+    private String mobile;
+
+    private String email;
 
     private String regionCode;
 
@@ -67,6 +68,14 @@ public class UserDetailsDto implements UserDetails, CredentialsContainer, OAuth2
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     @Override
@@ -144,6 +153,14 @@ public class UserDetailsDto implements UserDetails, CredentialsContainer, OAuth2
         return regionCode;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -162,27 +179,7 @@ public class UserDetailsDto implements UserDetails, CredentialsContainer, OAuth2
             return false;
         UserDetailsDto other = (UserDetailsDto) obj;
         if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public Map<String, Object> getAttributes() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    @JsonIgnore
-    public String getName() {
-        return username;
-    }
-
-    @Override
-    public void eraseCredentials() {
-        this.password = null;
+            return other.id == null;
+        } else return id.equals(other.id);
     }
 }

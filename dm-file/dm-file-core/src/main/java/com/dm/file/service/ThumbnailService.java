@@ -29,5 +29,5 @@ public interface ThumbnailService {
      * @return
      * @throws IOException
      */
-    Resource getResource(String filename, int level);
+    Resource getResource(String filename, int level) throws IOException;
 }

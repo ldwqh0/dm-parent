@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "dm_department_", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_dm_department_parent_id_full_name_", columnNames = {"parent_id_", "full_name_"})
+    @UniqueConstraint(name = "uk_dm_department_parent_id_full_name_", columnNames = {"parent_id_", "full_name_"})
 })
 public class Department extends AbstractEntity {
 
@@ -65,4 +66,21 @@ public class Department extends AbstractEntity {
 
     @Column(name = "order_")
     private Long order;
+
+    /**
+     * 部门的logo,可能是文件的ID,路径，或者文件的base64编码
+     */
+    @Column(name = "logo_")
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private String logo;
+
+
+    @ManyToOne
+    @JoinColumn(name = "department_director_")
+    private User director;
+
+    public Optional<User> getDirector(){
+        return Optional.ofNullable(director);
+    }
 }

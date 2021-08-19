@@ -4,27 +4,29 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dm</groupId>
   <artifactId>dm-parent</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>2.2.0-SNAPSHOT</version>
   <properties>
-    <java.version>11</java.version>
+    <java.version>1.8</java.version>
+    <kotlin.version>1.4.32</kotlin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <guava.version>29.0-jre</guava.version>
-    <spring.cloud.version>2020.0.1</spring.cloud.version>
-    <springboot.version>2.4.2</springboot.version>
-    <springfox.version>2.9.2</springfox.version>
-    <hibernate.version>5.4.27.Final</hibernate.version>
-    <commons-lang3.version>3.11</commons-lang3.version>
-    <commons-io.version>2.8.0</commons-io.version>
+    <spring.cloud.version>2020.0.3</spring.cloud.version>
+    <springboot.version>2.5.3</springboot.version>
+    <springfox.version>3.0.0</springfox.version>
+    <hibernate.version>5.5.5.Final</hibernate.version>
+    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <commons-io.version>2.11.0</commons-io.version>
     <resource.delimiter>@</resource.delimiter>
     <commons-collections4.version>4.4</commons-collections4.version>
-    <querydsl.version>4.4.0</querydsl.version>
-    <lombok.version>1.18.16</lombok.version>
-    <dm.version>2.0.0-SNAPSHOT</dm.version>
+    <querydsl.version>5.0.0</querydsl.version>
+    <lombok.version>1.18.20</lombok.version>
+    <dm.version>2.2.0-SNAPSHOT</dm.version>
   </properties>
   <modules>
+    <module>compiler-shim</module>
     <!-- 集合工具类 -->
     <module>collections</module>
     <!-- 平台公共模块 -->
@@ -59,7 +61,6 @@
     <module>dm-security/dm-security-web</module>
     <module>dm-security/dm-oauth2-client-spring-boot-starter</module>
     <module>dm-security/dm-oauth2-resource-server-spring-boot-starter</module>
-    <!-- <module>dm-gateway-server</module> -->
     <!--工作流相关-->
     <module>dm-activity/dm-activity-api</module>
     <module>dm-activity/dm-activity-jpa-impl</module>
@@ -183,6 +184,12 @@
       </dependency>
       <dependency>
         <groupId>com.dm</groupId>
+        <artifactId>compiler-shim</artifactId>
+        <version>${dm.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
         <artifactId>dm-autoconfigure</artifactId>
         <version>${dm.version}</version>
       </dependency>
@@ -270,10 +277,88 @@
     </resources>
     <pluginManagement>
       <plugins>
+
+        <plugin>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <version>${kotlin.version}</version>
+          <configuration>
+            <args>
+              <arg>-Xjsr305=strict</arg>
+            </args>
+            <jvmTarget>${java.version}</jvmTarget>
+            <compilerPlugins>
+              <plugin>spring</plugin>
+              <plugin>jpa</plugin>
+            </compilerPlugins>
+          </configuration>
+          <executions>
+            <execution>
+              <id>compile</id>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                  <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+            <execution>
+              <id>test-compile</id>
+              <goals>
+                <goal>test-compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                  <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+
+            <execution>
+              <id>kapt</id>
+              <!--这一行非常重要-->
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>kapt</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>src/main/kotlin</sourceDir>
+                </sourceDirs>
+                <annotationProcessorPaths>
+                  <annotationProcessorPath>
+                    <groupId>com.querydsl</groupId>
+                    <artifactId>querydsl-apt</artifactId>
+                    <version>${querydsl.version}</version>
+                    <classifier>jpa</classifier>
+                  </annotationProcessorPath>
+                </annotationProcessorPaths>
+              </configuration>
+            </execution>
+          </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-allopen</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-noarg</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
         <!-- maven编译依赖 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
           <configuration>
             <parameters>true</parameters>
             <annotationProcessorPaths>
@@ -284,6 +369,36 @@
               </annotationProcessorPath>
             </annotationProcessorPaths>
           </configuration>
+          <executions>
+            <!--以下配置由于java和kotlin混合编译需要-->
+            <!-- 替换会被 maven 特别处理的 default-compile -->
+            <execution>
+              <id>default-compile</id>
+              <phase>none</phase>
+            </execution>
+            <!-- 替换会被 maven 特别处理的 default-testCompile -->
+            <execution>
+              <id>default-testCompile</id>
+              <phase>none</phase>
+            </execution>
+            <execution>
+              <id>java-compile</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>java-test-compile</id>
+              <phase>test-compile</phase>
+              <goals>
+                <goal>testCompile</goal>
+              </goals>
+              <configuration>
+                <skip>${maven.test.skip}</skip>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
         <!-- apt query DSL依赖 -->
         <plugin>
@@ -297,8 +412,7 @@
               </goals>
               <configuration>
                 <outputDirectory>target/generated-sources/java</outputDirectory>
-                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor
-                </processor>
+                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
               </configuration>
             </execution>
           </executions>
@@ -342,31 +456,6 @@
         </plugin>
         <!-- Apply more sensible defaults for user projects -->
         <plugin>
-          <groupId>org.jetbrains.kotlin</groupId>
-          <artifactId>kotlin-maven-plugin</artifactId>
-          <version>${kotlin.version}</version>
-          <configuration>
-            <jvmTarget>${java.version}</jvmTarget>
-            <javaParameters>true</javaParameters>
-          </configuration>
-          <executions>
-            <execution>
-              <id>compile</id>
-              <phase>compile</phase>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>test-compile</id>
-              <phase>test-compile</phase>
-              <goals>
-                <goal>test-compile</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <executions>
@@ -381,6 +470,7 @@
             <classesDirectory>${project.build.outputDirectory}</classesDirectory>
           </configuration>
         </plugin>
+        <!--jar包构建插件-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -393,6 +483,7 @@
             </archive>
           </configuration>
         </plugin>
+        <!--war包构建插件-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
@@ -405,6 +496,7 @@
             </archive>
           </configuration>
         </plugin>
+        <!--资源构建插件-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
@@ -433,6 +525,7 @@
             </generateGitPropertiesFilename>
           </configuration>
         </plugin>
+        <!--spring boot 插件，用户构建spring-boot可执行jar文件-->
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
@@ -448,6 +541,12 @@
           <configuration>
             <mainClass>${start-class}</mainClass>
             <executable>true</executable>
+            <excludes>
+              <exclude>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+              </exclude>
+            </excludes>
           </configuration>
         </plugin>
         <plugin>
@@ -505,12 +604,12 @@
             </execution>
           </executions>
         </plugin>
-
+        <!---typescript 定义生成文件-->
         <plugin>
           <!-- https://mvnrepository.com/artifact/cz.habarta.typescript-generator/typescript-generator-maven-plugin -->
           <groupId>cz.habarta.typescript-generator</groupId>
           <artifactId>typescript-generator-maven-plugin</artifactId>
-          <version>2.28.785</version>
+          <version>2.32.889</version>
           <executions>
             <execution>
               <id>generate</id>
@@ -533,7 +632,6 @@
             </customTypeMappings>
           </configuration>
         </plugin>
-
       </plugins>
     </pluginManagement>
     <plugins>

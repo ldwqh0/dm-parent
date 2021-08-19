@@ -1,12 +1,9 @@
 package com.dm.auth.converter;
 
 import com.dm.auth.dto.MenuAuthorityDto;
-import com.dm.auth.dto.ResourceAuthorityDto;
 import com.dm.auth.dto.RoleDto;
-import com.dm.auth.entity.AuthResource;
 import com.dm.auth.entity.Role;
 import com.dm.collections.CollectionUtils;
-import com.dm.collections.Maps;
 import com.dm.collections.Sets;
 import com.dm.common.converter.Converter;
 import com.dm.security.core.userdetails.GrantedAuthorityDto;
@@ -73,14 +70,6 @@ public class RoleConverter implements Converter<Role, RoleDto> {
     @Override
     public RoleDto toDto(Role model) {
         return Optional.ofNullable(model).map(this::toDtoActual).orElse(null);
-    }
-
-
-    public ResourceAuthorityDto toResourceAuthorityDto(Role role) {
-        ResourceAuthorityDto dto = new ResourceAuthorityDto();
-        dto.setRoleName(role.getName());
-        dto.setResourceAuthorities(Maps.transformKeys(role.getResourceOperations(), AuthResource::getId));
-        return dto;
     }
 
     public MenuAuthorityDto toMenuAuthorityDto(Role role) {

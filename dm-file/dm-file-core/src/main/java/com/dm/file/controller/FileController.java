@@ -44,6 +44,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 文件
+ */
 @Slf4j
 @RequestMapping("files")
 @RestController
@@ -62,7 +65,12 @@ public class FileController {
 
     private final PackageFileService packageFileService;
 
-
+    /**
+     * 获取文件信息
+     *
+     * @param id 文件ID
+     * @return 文件信息
+     */
     @GetMapping(value = "{id}", produces = {
         MediaType.TEXT_PLAIN_VALUE,
         MediaType.APPLICATION_JSON_VALUE
@@ -71,7 +79,15 @@ public class FileController {
         return fileInfoConverter.toDto(fileService.findById(id).orElseThrow(DataNotExistException::new));
     }
 
+    /**
+     * 上传文件
+     *
+     * @param file 上传的文件
+     * @return 文件信息
+     * @throws Exception 上传时发生错误，抛出异常
+     */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("上传文件")
     public FileInfoDto upload(@RequestParam("file") MultipartFile file) throws Exception {
         String originalFilename = file.getOriginalFilename();
@@ -85,6 +101,14 @@ public class FileController {
         return fileInfoConverter.toDto(file_);
     }
 
+    /**
+     * 根据文件名，文件hash值获取文件信息 这个api不靠谱
+     *
+     * @param filename 文件名称
+     * @param sha256   sha256值
+     * @param md5      md5值
+     * @return 查找到的文件信息
+     */
     @GetMapping(params = {"filename", "sha256", "md5"})
     public FileInfoDto findByNameAndHash(@RequestParam("filename") String filename,
                                          @RequestParam("sha256") String sha256,
@@ -92,6 +116,16 @@ public class FileController {
         return fileService.findByNameAndHash(filename, sha256, md5).map(fileInfoConverter::toDto).orElse(null);
     }
 
+    /**
+     * 分块断点续传的逻辑暂时没有处理
+     *
+     * @param md5       md5值
+     * @param sha256    sha256值
+     * @param filename  文件名称
+     * @param chunkFile 文件的分块
+     * @return 上传之后的文件信息
+     * @ignore 这个接口暂时不做分析
+     */
     @PostMapping(params = {"filename", "sha256", "md5"})
     public FileInfoDto upload(@RequestParam("md5") String md5,
                               @RequestParam("sha256") String sha256,
@@ -223,12 +257,15 @@ public class FileController {
     }
 
     /**
-     * 文件zip打包下载
+     * 文件zip打包下载<br>
+     * 使用get请求直接打包下载文件，但由于URL长度的限制，使用这个api不能同时打包下载多个文件<br>
+     * 如果要下载多个文件，请使用下面的请求模型打包下载
      *
      * @param files     要下载的文件的id
      * @param userAgent 浏览器de user agent
      * @param filename  下载的默认保存文件名
      * @throws IOException IO错误
+     * @ignore 不为这个接口生成文档
      */
     @GetMapping(params = {"type=zip", "file"})
     public ResponseEntity<StreamingResponseBody> zip(@RequestParam("file") List<UUID> files,
@@ -277,11 +314,30 @@ public class FileController {
         }
     }
 
+    /**
+     * 新增一个zip打包下载请求<br>
+     * 可以大批量的打包下载文件，由于URL长度的限制，使用上面的API不能同时打包下载多个文件。<br>
+     * 因此建议使用以下步骤打包下载文件:<br>
+     * 一、使用该api预创建一个打包下载文件的请求<br>
+     * 二、使用下面的zip打包下载api下载打包后的文件
+     *
+     * @param request 要下载的文件的清单
+     * @return 一个打包下载请求
+     */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "zip", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     public PackageFileDto save(@RequestBody PackageFileDto request) {
         return packageFileService.save(request);
     }
 
+    /**
+     * zip打包下载
+     *
+     * @param id        通过上面的生成打包文件api生成的id
+     * @param userAgent 用户浏览器信息，浏览器自动提交，不需干预
+     * @return 下载响应体
+     * @download 这是一个文件下载接口
+     */
     @GetMapping("zip/{id}")
     public ResponseEntity<StreamingResponseBody> zip(@PathVariable("id") String id,
                                                      @RequestHeader(value = "user-agent", required = false) String userAgent) {
@@ -309,6 +365,18 @@ public class FileController {
     }
 
     // 使用produces指定可以接受的accept类型，当accept中包含如下信息时，返回图片
+
+    /**
+     * 文件的预览和下载
+     *
+     * @param id 要下载的文件的id
+     * @param download 只是这个请求是下载，而不是预览。下载会返回特殊的请求头
+     * @param range 文件范围
+     * @param userAgent 用户浏览器 agent 头
+     * @param request 下载请求
+     * @return 下载响应实体
+     * @download 这是一个文件下载请求
+     */
     @ApiOperation("预览/下载文件")
     @GetMapping(value = "{id}", produces = {
         MediaType.IMAGE_GIF_VALUE,
@@ -333,7 +401,14 @@ public class FileController {
             .map(fileItem -> fileItem.getLastModifiedDate()
                 .filter(lastModified -> checkNotModified(request, lastModified))
                 .map(lastModified -> this.<Resource>buildNotModified())
-                .orElseGet(() -> this.buildDownloadBody(fileItem, getRanges(range, fileItem), agentUse)))
+                .orElseGet(() -> {
+                    try {
+                        return this.buildDownloadBody(fileItem, getRanges(range, fileItem), agentUse);
+                    } catch (IOException e) {
+                        log.error("下载文件时发送错误", e);
+                        throw new RuntimeException(e);
+                    }
+                }))
             .orElseGet(this::buildNotFount);
     }
 
@@ -343,6 +418,7 @@ public class FileController {
      * @param id      文件的ID号
      * @param level   缩略图的级别
      * @param request 请求详情
+     * @download
      */
     @GetMapping(value = "thumbnails/{id}", produces = {
         MediaType.IMAGE_GIF_VALUE,
@@ -359,11 +435,18 @@ public class FileController {
             file -> file.getLastModifiedDate()
                 .filter(lastModify -> this.checkNotModified(request, lastModify))
                 .map(lastModify -> this.<Resource>buildNotModified())
-                .orElseGet(() -> this.buildThumbnailResponse(file, level)))
+                .orElseGet(() -> {
+                    try {
+                        return this.buildThumbnailResponse(file, level);
+                    } catch (IOException e) {
+                        log.error("构建缩略图时发生错误", e);
+                        throw new RuntimeException(e);
+                    }
+                }))
             .orElseGet(this::buildNotFount);
     }
 
-    private ResponseEntity<Resource> buildThumbnailResponse(FileInfo file, int level) {
+    private ResponseEntity<Resource> buildThumbnailResponse(FileInfo file, int level) throws IOException {
         BodyBuilder builder = ResponseEntity.ok()
             .contentType(MediaType.IMAGE_JPEG);
         file.getLastModifiedDate().ifPresent(lastModifiedDate -> {
@@ -392,7 +475,7 @@ public class FileController {
     }
 
     // 构建下载响应体
-    private ResponseEntity<Resource> buildDownloadBody(FileInfo file, List<Range> ranges, String userAgent) {
+    private ResponseEntity<Resource> buildDownloadBody(FileInfo file, List<Range> ranges, String userAgent) throws IOException {
         try {
             String filename = file.getFilename();
             long fileSize = file.getSize();
