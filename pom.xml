@@ -609,7 +609,7 @@
           <!-- https://mvnrepository.com/artifact/cz.habarta.typescript-generator/typescript-generator-maven-plugin -->
           <groupId>cz.habarta.typescript-generator</groupId>
           <artifactId>typescript-generator-maven-plugin</artifactId>
-          <version>2.28.785</version>
+          <version>2.32.889</version>
           <executions>
             <execution>
               <id>generate</id>

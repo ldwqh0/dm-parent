@@ -1,6 +1,6 @@
 package com.dm.uap.service.impl;
 
-import com.dm.uap.converter.RoleConverter;
+import com.dm.uap.converter.UserRoleConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.entity.UserRole;
 import com.dm.uap.repository.UserRoleRepository;
@@ -16,15 +16,15 @@ public class RoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository userRoleRepository;
 
-    private final RoleConverter roleConverter;
+    private final UserRoleConverter userRoleConverter;
 
     @Override
     @Transactional
     @CacheEvict(cacheNames = {"users"}, allEntries = true)
     public RoleDto update(Long id, RoleDto dto) {
-        UserRole role = roleConverter.copyProperties(userRoleRepository.getOne(id), dto);
+        UserRole role = userRoleConverter.copyProperties(userRoleRepository.getOne(id), dto);
         role = userRoleRepository.save(role);
-        return roleConverter.toDto(role);
+        return userRoleConverter.toDto(role);
     }
 
     @Override

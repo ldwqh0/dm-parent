@@ -67,7 +67,7 @@ public class UapAutoConfiguration implements InitializingBean {
             anonymous.setEnabled(true);
             anonymous.setFullname("匿名用户");
             RoleDto role = new RoleDto();
-            role.setId(2L);
+            role.setId(3L);
             role.setGroup("内置分组");
             role.setName("ROLE_ANONYMOUS");
             anonymous.setRoles(Collections.singleton(role));

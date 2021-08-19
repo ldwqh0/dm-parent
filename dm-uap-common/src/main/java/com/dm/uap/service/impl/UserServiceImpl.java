@@ -7,7 +7,7 @@ import com.dm.collections.Sets;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.core.userdetails.UserDetailsDto;
-import com.dm.uap.converter.RoleConverter;
+import com.dm.uap.converter.UserRoleConverter;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRoleRepository userRoleRepository;
 
-    private final RoleConverter roleConverter;
+    private final UserRoleConverter userRoleConverter;
 
     private final QUser qUser = QUser.user;
 
@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     private UserRole toModel(RoleDto dto) {
         Long id = dto.getId();
-        UserRole role = roleConverter.copyProperties(userRoleRepository.existsById(id) ? userRoleRepository.getOne(id) : new UserRole(), dto);
+        UserRole role = userRoleConverter.copyProperties(userRoleRepository.existsById(id) ? userRoleRepository.getById(id) : new UserRole(), dto);
         return userRoleRepository.save(role);
     }
 
@@ -273,7 +273,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         dto.setFullname(user.getFullname());
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
-        dto.setGrantedAuthority(Sets.transform(user.getRoles(), roleConverter::toDto));
+        dto.setGrantedAuthority(Sets.transform(user.getRoles(), userRoleConverter::toDto));
         dto.setMobile(user.getMobile());
         return dto;
     }

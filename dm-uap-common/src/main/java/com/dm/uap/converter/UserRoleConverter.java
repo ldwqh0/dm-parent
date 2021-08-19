@@ -6,12 +6,14 @@ import com.dm.uap.entity.UserRole;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
+
 @Component
-public class RoleConverter implements Converter<UserRole, RoleDto> {
+public class UserRoleConverter implements Converter<UserRole, RoleDto> {
 
     @Nullable
     @Override
-    public RoleDto toDto(@Nullable UserRole model) {
+    public RoleDto toDto(@Nonnull UserRole model) {
         RoleDto rd = new RoleDto();
         rd.setId(model.getId());
         rd.setName(model.getName());

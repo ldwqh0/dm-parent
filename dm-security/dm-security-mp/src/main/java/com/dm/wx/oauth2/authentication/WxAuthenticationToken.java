@@ -1,25 +1,26 @@
 package com.dm.wx.oauth2.authentication;
 
-import java.io.Serializable;
-import java.util.Collection;
-
+import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.io.Serializable;
+import java.util.Collection;
 
 public class WxAuthenticationToken extends AbstractAuthenticationToken implements Serializable {
 
     private final UserDetails userDetails;
 
-    private final String code;
+    private final WxOAuth2AccessToken accessToken;
 
     public WxAuthenticationToken(
-            final UserDetails userDetails,
-            final String code,
-            final Collection<? extends GrantedAuthority> authorities) {
+        final WxOAuth2AccessToken accessToken,
+        final UserDetails userDetails,
+        final Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
-        this.code = code;
         this.userDetails = userDetails;
+        this.accessToken = accessToken;
         setAuthenticated(true);
     }
 
@@ -27,12 +28,16 @@ public class WxAuthenticationToken extends AbstractAuthenticationToken implement
 
     @Override
     public Object getCredentials() {
-        return code;
+        return "N/A";
     }
 
     @Override
     public Object getPrincipal() {
         return userDetails;
+    }
+
+    public WxOAuth2AccessToken getAccessToken() {
+        return this.accessToken;
     }
 
 }

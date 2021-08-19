@@ -18,7 +18,7 @@ public class UserConverter implements Converter<User, UserDto> {
 
     private final DepartmentConverter departmentConverter;
 
-    private final RoleConverter roleConverter;
+    private final UserRoleConverter userRoleConverter;
 
     private UserDto toDtoActual(User user) {
         UserDto dto = toSimpleDto(user);
@@ -29,7 +29,7 @@ public class UserConverter implements Converter<User, UserDto> {
             _posts.forEach((key, value) -> posts.add(new UserPostDto(departmentConverter.toDto(key), value)));
             dto.setPosts(posts);
         }
-        dto.setRoles(Sets.transform(user.getRoles(), roleConverter::toDto));
+        dto.setRoles(Sets.transform(user.getRoles(), userRoleConverter::toDto));
         return dto;
     }
 

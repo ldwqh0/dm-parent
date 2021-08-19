@@ -41,12 +41,15 @@ public class AuthAutoConfiguration {
     @PostConstruct
     public void init() {
 
+        // TODO 这里的逻辑要根据新的逻辑重新修改
+
         // 初始化资源信息
         initResource();
 
         // 初始化角色信息
         initRole();
     }
+
 
     private void initResource() {
         if (!resourceService.exist()) {

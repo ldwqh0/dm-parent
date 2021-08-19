@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.Objects;
+
 /**
  * 异常处理类，代码源自{@link DefaultErrorAttributes}这里调整了一下异常信息的产生顺序<br>
  * 因为undertow和tomcat处理异常信息的逻辑不一致，导致前端显示的异常信息也不一致，<br>
@@ -15,11 +17,12 @@ public class MessageDetailErrorAttributes extends DefaultErrorAttributes {
 
     @Override
     protected String getMessage(WebRequest webRequest, Throwable error) {
-        String message = error.getMessage();
-        if (StringUtils.isBlank(message)) {
-            return super.getMessage(webRequest, error);
-        } else {
-            return message;
+        if (Objects.nonNull(error)) {
+            String message = error.getMessage();
+            if (StringUtils.isNotBlank(message)) {
+                return message;
+            }
         }
+        return super.getMessage(webRequest, error);
     }
 }
