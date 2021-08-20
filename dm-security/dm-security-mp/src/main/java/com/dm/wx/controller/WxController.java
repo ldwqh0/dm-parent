@@ -30,7 +30,7 @@ public class WxController {
     }
 
     /**
-     * 根据code获取当前用户的openid
+     * 根据code获取当前用户的openId
      *
      * @param code
      * @return

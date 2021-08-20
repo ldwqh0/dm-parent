@@ -29,7 +29,7 @@ public interface IdentifiableDtoRepository<T, ID extends Serializable> extends J
         if (ids == null) {
             return null;
         } else {
-            return ids.map(this::getOne);
+            return ids.map(this::getById);
         }
     }
 
@@ -50,7 +50,7 @@ public interface IdentifiableDtoRepository<T, ID extends Serializable> extends J
         if (Objects.isNull(element)) {
             return null;
         } else {
-            return getOne(element.getId());
+            return getById(element.getId());
         }
     }
 
@@ -58,7 +58,7 @@ public interface IdentifiableDtoRepository<T, ID extends Serializable> extends J
         if (CollectionUtils.isEmpty(elements)) {
             return Collections.emptyList();
         } else {
-            return elements.stream().map(IdentifiableDto::getId).map(this::getOne).collect(Collectors.toList());
+            return elements.stream().map(IdentifiableDto::getId).map(this::getById).collect(Collectors.toList());
         }
     }
 

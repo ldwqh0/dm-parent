@@ -65,7 +65,7 @@ public class DRoleServiceImpl implements DRoleService {
     @Transactional
     public void delete(String corpid, Long id) {
         if (dRoleRepository.existsById(corpid, id)) {
-            DRole drole = dRoleRepository.getOne(corpid, id);
+            DRole drole = dRoleRepository.getById(corpid, id);
             try {
                 deletePhysical(drole);
             } catch (Exception e) {
@@ -116,7 +116,7 @@ public class DRoleServiceImpl implements DRoleService {
         // 复制角色属性
         dRole = dRoleConverter.copyProperties(dRole, source);
         // 设置角色组
-        dRole.setGroup(dRoleGroupRepository.getOne(source.getCorpId(), source.getGroupId()));
+        dRole.setGroup(dRoleGroupRepository.getById(source.getCorpId(), source.getGroupId()));
         return dRoleRepository.save(dRole);
     }
 

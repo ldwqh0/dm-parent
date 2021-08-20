@@ -68,7 +68,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityAttributes"}, allEntries = true)
     public ResourceDto update(long id, ResourceDto dto) {
-        AuthResource resource = resourceRepository.getOne(id);
+        AuthResource resource = resourceRepository.getById(id);
         copyProperties(resource, dto);
         return resourceConverter.toDto(resource);
     }

@@ -77,7 +77,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional(rollbackFor = Throwable.class)
     public DepartmentDto update(Long id, DepartmentDto data) {
         preCheck(data);
-        Department department = departmentRepository.getOne(id);
+        Department department = departmentRepository.getById(id);
         departmentConverter.copyProperties(department, data);
         // 更新时先清空父级和负责人的原始
         department.setParent(null);

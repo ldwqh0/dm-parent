@@ -127,14 +127,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     })
     public User update(long id, UserDto userDto) {
         validationUser(userDto, id);
-        User user = userConverter.copyProperties(userRepository.getOne(id), userDto);
+        User user = userConverter.copyProperties(userRepository.getById(id), userDto);
         addPostsAndRoles(user, userDto);
         return user;
     }
 
     @Override
     public boolean checkPassword(long id, String password) {
-        User user = userRepository.getOne(id);
+        User user = userRepository.getById(id);
         return !passwordEncoder.matches(password, user.getPassword());
     }
 
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
     public User resetPassword(long id, String password) {
-        User user = userRepository.getOne(id);
+        User user = userRepository.getById(id);
         user.setPassword(passwordEncoder.encode(password));
         return user;
     }
@@ -154,7 +154,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (Objects.nonNull(department)) {
-            Department dep = departmentRepository.getOne(department);
+            Department dep = departmentRepository.getById(department);
             query.and(qUser.posts.containsKey(dep));
         }
         if (Objects.nonNull(role)) {
@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
     public User patch(long id, UserDto user) {
-        User originUser = userRepository.getOne(id);
+        User originUser = userRepository.getById(id);
         if (Objects.nonNull(user.getEnabled())) {
             originUser.setEnabled(user.getEnabled());
         }
@@ -249,7 +249,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserDto saveOwnerInfo(Long userId, UserDto user) {
-        User originUser = userRepository.getOne(userId);
+        User originUser = userRepository.getById(userId);
         originUser.setBirthDate(user.getBirthDate());
         originUser.setDescription(user.getDescription());
         originUser.setEmail(user.getEmail());

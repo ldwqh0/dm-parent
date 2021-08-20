@@ -21,8 +21,8 @@ public interface DRoleGroupRepository extends JpaRepository<DRoleGroup, CorpLong
         deleteById(new CorpLongId(corpId, id));
     }
 
-    default DRoleGroup getOne(String corpId, Long id) {
-        return getOne(new CorpLongId(corpId, id));
+    default DRoleGroup getById(String corpId, Long id) {
+        return getById(new CorpLongId(corpId, id));
     }
 
     default Optional<DRoleGroup> findById(String corpId, Long id) {

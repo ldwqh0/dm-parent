@@ -50,7 +50,7 @@ public class MenuServiceImpl implements MenuService {
         menuConverter.copyProperties(menu, menuDto);
         // 在保存新菜单时，继承父菜单的权限设置
         menuDto.getParent().map(MenuDto::getId)
-            .map(menuRepository::getOne)
+            .map(menuRepository::getById)
             .ifPresent(parent -> {
                 menu.setParent(parent);
                 // 添加权限信息
@@ -91,12 +91,12 @@ public class MenuServiceImpl implements MenuService {
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public MenuDto update(long id, MenuDto menuDto) {
         preCheck(menuDto);
-        Menu menu = menuRepository.getOne(id);
+        Menu menu = menuRepository.getById(id);
         menuConverter.copyProperties(menu, menuDto);
         menu.setParent(null);
         menuDto.getParent()
             .map(MenuDto::getId)
-            .map(menuRepository::getOne)
+            .map(menuRepository::getById)
             .ifPresent(menu::setParent);
         menuRepository.save(menu);
         return menuConverter.toDto(menu);
@@ -112,7 +112,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public void delete(long id) {
-        Menu menu = menuRepository.getOne(id);
+        Menu menu = menuRepository.getById(id);
         List<Role> roles = roleRepository.findByMenu(menu);
         // 删除菜单之前，先移除相关的权限配置信息
         if (CollectionUtils.isNotEmpty(roles)) {
@@ -156,7 +156,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public MenuDto patch(long id, MenuDto source) {
-        Menu menu = menuRepository.getOne(id);
+        Menu menu = menuRepository.getById(id);
         if (Objects.nonNull(source.getEnabled())) {
             menu.setEnabled(source.getEnabled());
         }
@@ -167,7 +167,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu moveUp(long id) {
-        Menu one = menuRepository.getOne(id);
+        Menu one = menuRepository.getById(id);
         Long order = one.getOrder();
         Menu parent = one.getParent();
         BooleanExpression exp;
@@ -193,7 +193,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu moveDown(long id) {
-        Menu one = menuRepository.getOne(id);
+        Menu one = menuRepository.getById(id);
         Long order = one.getOrder();
         BooleanExpression expression;
         Menu parent = one.getParent();
@@ -297,7 +297,7 @@ public class MenuServiceImpl implements MenuService {
             return Collections.emptyList();
         } else {
             ArrayList<MenuDto> parents = new ArrayList<>();
-            Menu menu = menuRepository.getOne(menuId);
+            Menu menu = menuRepository.getById(menuId);
             Menu parent = menu.getParent();
             while (!Objects.isNull(parent)) {
                 parents.add(menuConverter.toDto(parent));

@@ -29,8 +29,8 @@ public interface DRoleRepository extends JpaRepository<DRole, CorpLongId>, Query
     @Query("select dr.role.id from DRole dr where dr.corpId=:corpId and dr.deleted=:deleted")
     List<Long> findRoleIdByCorpIdAndDRoleDeleted(@Param("corpId") String corpId, @Param("deleted") Boolean deleted);
 
-    default DRole getOne(String corpId, Long id) {
-        return getOne(new CorpLongId(corpId, id));
+    default DRole getById(String corpId, Long id) {
+        return getById(new CorpLongId(corpId, id));
     }
 
 

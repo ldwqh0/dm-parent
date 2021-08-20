@@ -79,7 +79,7 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
         List<DRoleGroup> result = roleGroups.stream().map(originalGroup -> {
             Long groupId = originalGroup.getGroupId();
             final DRoleGroup dRoleGroup = dRoleGroupRepository.existsById(corpid, groupId)
-                    ? dRoleGroupRepository.getOne(corpid, groupId)
+                    ? dRoleGroupRepository.getById(corpid, groupId)
                     : new DRoleGroup(corpid, groupId);
             dRoleGroupConverter.copyProperties(dRoleGroup, originalGroup);
             List<OpenRole> fetchRoles = originalGroup.getRoles();
@@ -88,7 +88,7 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
                         .map(oRole -> {
                             Long roleid = oRole.getId();
                             DRole dRole = dRoleRepository.existsById(corpid, roleid)
-                                    ? dRoleRepository.getOne(corpid, roleid)
+                                    ? dRoleRepository.getById(corpid, roleid)
                                     : new DRole(corpid, roleid);
                             return dRoleConverter.copyProperties(dRole, oRole);
                         }).collect(Collectors.toSet());

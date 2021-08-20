@@ -52,7 +52,7 @@ class UserApprovalStoreServiceImpl(
         userRepository.findOneByUsernameIgnoreCase(userid).flatMap {
             approvalResultRepository.findById(
                 UserApprovalResult.Pk(
-                    it, clientRepository.getOne(clientId)
+                    it, clientRepository.getById(clientId)
                 )
             )
         }.ifPresent { entityManager.remove(it) }

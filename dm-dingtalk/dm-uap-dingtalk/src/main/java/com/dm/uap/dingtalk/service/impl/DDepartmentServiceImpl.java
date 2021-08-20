@@ -65,7 +65,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         List<DDepartment> dDepartments_ = departments.stream()
                 .map(_department -> {
                     DDepartment result = dDepartmentRepository.existsById(corpid, _department.getId())
-                            ? dDepartmentRepository.getOne(corpid, _department.getId())
+                            ? dDepartmentRepository.getById(corpid, _department.getId())
                             : dDepartmentRepository.save(new DDepartment(corpid, _department.getId()));
                     return dDepartmentConverter.copyProperties(result, _department);
                 })
@@ -88,7 +88,7 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         // 构建系统组织机构的层级关系
         dDepartments.forEach(dDep -> {
             if (Objects.nonNull(dDep.getParentid())) {
-                DDepartment dParent = dDepartmentRepository.getOne(dDep.getCorpId(), dDep.getParentid());
+                DDepartment dParent = dDepartmentRepository.getById(dDep.getCorpId(), dDep.getParentid());
                 dDep.getDepartment().setParent(dParent.getDepartment());
             }
         });

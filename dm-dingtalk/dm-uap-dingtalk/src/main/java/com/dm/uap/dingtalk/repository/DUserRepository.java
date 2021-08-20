@@ -43,8 +43,8 @@ public interface DUserRepository extends JpaRepository<DUser, DUserId>, Querydsl
     @Query("select du.user.id from DUser du where du.corpId=:corpId and du.deleted=:deleted")
     List<Long> findUserIdsByCorpIdAndDUserDeleted(@Param("corpId") String corpId, @Param("deleted") boolean deleted);
 
-    default DUser getOne(String corpid, String userid) {
-        return getOne(DUserId.of(corpid, userid));
+    default DUser getById(String corpid, String userid) {
+        return getById(DUserId.of(corpid, userid));
     }
 
     default Optional<DUser> findById(String corpid, String userid) {

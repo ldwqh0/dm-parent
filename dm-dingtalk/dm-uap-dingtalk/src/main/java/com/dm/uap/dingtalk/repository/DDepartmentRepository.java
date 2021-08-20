@@ -29,8 +29,8 @@ public interface DDepartmentRepository extends JpaRepository<DDepartment, CorpLo
     @Modifying
     int setDeletedByCorpidAndIdNotIn(@NotNull @Param("corpId") String corpId, @NotNull @Param("ids") Collection<Long> ids, @NotNull @Param("deleted") Boolean deleted);
 
-    default DDepartment getOne(@NotNull String corpId, @NotNull Long departmentId) {
-        return getOne(new CorpLongId(corpId, departmentId));
+    default DDepartment getById(@NotNull String corpId, @NotNull Long departmentId) {
+        return getById(new CorpLongId(corpId, departmentId));
     }
 
     default boolean existsById(@NotNull String corpId, @NotNull Long id) {

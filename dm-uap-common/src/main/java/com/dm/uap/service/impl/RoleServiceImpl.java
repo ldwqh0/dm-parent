@@ -22,7 +22,7 @@ public class RoleServiceImpl implements UserRoleService {
     @Transactional
     @CacheEvict(cacheNames = {"users"}, allEntries = true)
     public RoleDto update(Long id, RoleDto dto) {
-        UserRole role = userRoleConverter.copyProperties(userRoleRepository.getOne(id), dto);
+        UserRole role = userRoleConverter.copyProperties(userRoleRepository.getById(id), dto);
         role = userRoleRepository.save(role);
         return userRoleConverter.toDto(role);
     }

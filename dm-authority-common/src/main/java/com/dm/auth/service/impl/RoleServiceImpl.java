@@ -89,7 +89,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackFor = Throwable.class)
     @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public Role update(long id, RoleDto roleDto) {
-        return roleRepository.save(roleConverter.copyProperties(roleRepository.getOne(id), roleDto));
+        return roleRepository.save(roleConverter.copyProperties(roleRepository.getById(id), roleDto));
     }
 
     @Override
@@ -131,7 +131,7 @@ public class RoleServiceImpl implements RoleService {
     public Role saveAuthority(Long roleId, MenuAuthorityDto authorityDto) {
         Role authority;
         if (roleRepository.existsById(roleId)) {
-            authority = roleRepository.getOne(roleId);
+            authority = roleRepository.getById(roleId);
             Set<MenuDto> menus = authorityDto.getAuthorityMenus();
             Set<Menu> list = menus.stream().map(menuRepository::getByDto).collect(Collectors.toSet());
             authority.setMenus(list);

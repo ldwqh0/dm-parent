@@ -183,7 +183,7 @@ public class DUserServiceImpl implements DUserService {
     @Transactional
     public void delete(String corpid, String unionid) {
         if (dUserRepository.existsById(corpid, unionid)) {
-            DUser du = dUserRepository.getOne(corpid, unionid);
+            DUser du = dUserRepository.getById(corpid, unionid);
             try {
                 deletePhysical(du);
             } catch (Exception e) {
@@ -357,14 +357,14 @@ public class DUserServiceImpl implements DUserService {
         // 合并是否部门领导信息
         try {
             Set<DDepartment> departments = rsp.getDepartment().stream()
-                .map(departmentid -> dDepartmentRepository.getOne(corpid, departmentid))
+                .map(departmentid -> dDepartmentRepository.getById(corpid, departmentid))
                 .collect(Collectors.toSet());
             dUser.setDepartments(departments);
             Map<Long, Boolean> isLeaderMap = parseLeaderMap(rsp.getIsLeaderInDepts());
             if (Maps.isNotEmpty(isLeaderMap)) {
                 Map<DDepartment, Boolean> dLeaderMap = new HashMap<>();
                 for (Entry<Long, Boolean> entry : isLeaderMap.entrySet()) {
-                    dLeaderMap.put(dDepartmentRepository.getOne(corpid, entry.getKey()), entry.getValue());
+                    dLeaderMap.put(dDepartmentRepository.getById(corpid, entry.getKey()), entry.getValue());
                 }
                 dUser.setLeaderInDepts(dLeaderMap);
             }
@@ -377,7 +377,7 @@ public class DUserServiceImpl implements DUserService {
             if (Maps.isNotEmpty(orderMap)) {
                 Map<DDepartment, Long> dOrderMap = new HashMap<>();
                 for (Entry<Long, Long> orderEntry : orderMap.entrySet()) {
-                    dOrderMap.put(dDepartmentRepository.getOne(corpid, orderEntry.getKey()), orderEntry.getValue());
+                    dOrderMap.put(dDepartmentRepository.getById(corpid, orderEntry.getKey()), orderEntry.getValue());
                 }
                 dUser.setOrderInDepts(dOrderMap);
             }
@@ -391,7 +391,7 @@ public class DUserServiceImpl implements DUserService {
         if (CollectionUtils.isNotEmpty(roles)) {
             Set<DRole> dRoles = roles.stream()
                 .map(Roles::getId)
-                .map(roleid -> dRoleRepository.getOne(corpid, roleid))
+                .map(roleid -> dRoleRepository.getById(corpid, roleid))
                 .collect(Collectors.toSet());
             dUser.setRoles(dRoles);
         }
