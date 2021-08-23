@@ -6,19 +6,18 @@ import com.dm.collections.Maps;
 import com.dm.collections.Sets;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
-import com.dm.security.core.userdetails.UserDetailsDto;
-import com.dm.uap.converter.UserRoleConverter;
 import com.dm.uap.converter.UserConverter;
+import com.dm.uap.converter.UserRoleConverter;
 import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
-import com.dm.uap.entity.UserRole;
 import com.dm.uap.entity.User;
+import com.dm.uap.entity.UserRole;
 import com.dm.uap.repository.DepartmentRepository;
-import com.dm.uap.repository.UserRoleRepository;
 import com.dm.uap.repository.UserRepository;
+import com.dm.uap.repository.UserRoleRepository;
 import com.dm.uap.service.UserService;
 import com.dm.util.Assert;
 import com.querydsl.core.BooleanBuilder;
@@ -65,21 +64,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "users", sync = true, key = "#username.toLowerCase()")
-    public UserDetailsDto loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional.ofNullable(username)
             .filter(StringUtils::isNotEmpty)
             .flatMap(userRepository::findOneByUsernameIgnoreCase)
-            .map(this::toUserDetailsDto)
+            .map(userConverter::toUserDetails)
             .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "users", sync = true, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
-    public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
+    public org.springframework.security.core.userdetails.UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
         return Optional.ofNullable(mobile)
             .filter(StringUtils::isNotEmpty)
             .flatMap(userRepository::findByMobileIgnoreCase)
-            .map(this::toUserDetailsDto)
+            .map(userConverter::toUserDetails)
             .orElseThrow(() -> new UsernameNotFoundException(mobile));
     }
 
@@ -262,21 +261,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userConverter.toDto(userRepository.save(originUser));
     }
 
-    private <T extends User> UserDetailsDto toUserDetailsDto(T user) {
-        UserDetailsDto dto = new UserDetailsDto();
-        dto.setPassword(user.getPassword());
-        dto.setAccountExpired(user.isAccountExpired());
-        dto.setCredentialsExpired(user.isCredentialsExpired());
-        dto.setEnabled(user.isEnabled());
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setFullname(user.getFullname());
-        dto.setScenicName(user.getScenicName());
-        dto.setRegionCode(user.getRegionCode());
-        dto.setGrantedAuthority(Sets.transform(user.getRoles(), userRoleConverter::toDto));
-        dto.setMobile(user.getMobile());
-        return dto;
-    }
 
     private void validationUser(UserDto user, Long... exclude) {
         String mobile = user.getMobile();

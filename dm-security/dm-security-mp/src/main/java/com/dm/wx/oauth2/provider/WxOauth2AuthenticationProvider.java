@@ -6,7 +6,6 @@ import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.service.WxOAuth2Service;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.api.WxMpUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -46,15 +45,12 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
 
     private WxOAuth2Service wxOAuth2Service;
 
-    private WxMpUserService wxMpUserService;
-
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     private final UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
 
     public void setWxMpService(WxMpService wxMpService) {
         this.wxOAuth2Service = wxMpService.getOAuth2Service();
-        this.wxMpUserService = wxMpService.getUserService();
     }
 
     @Override

@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class WxUserDetailsDto implements WxUserDetails, UserDetails {
+public class SimpleWxUserDetails implements WxUserDetails, UserDetails {
 
     private static final long serialVersionUID = 874394269828106471L;
     private final Collection<? extends GrantedAuthority> authorities;
@@ -18,8 +18,7 @@ public class WxUserDetailsDto implements WxUserDetails, UserDetails {
 
     private final String unionId;
 
-
-    public WxUserDetailsDto(WxMpUser userinfo, Collection<? extends GrantedAuthority> authorities) {
+    public SimpleWxUserDetails(WxMpUser userinfo, Collection<? extends GrantedAuthority> authorities) {
         this.openId = userinfo.getOpenId();
         this.wxMpUser = userinfo;
         this.unionId = userinfo.getUnionId();

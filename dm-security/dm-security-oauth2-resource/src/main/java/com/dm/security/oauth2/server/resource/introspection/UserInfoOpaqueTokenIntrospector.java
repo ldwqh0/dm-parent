@@ -1,5 +1,6 @@
 package com.dm.security.oauth2.server.resource.introspection;
 
+import com.dm.security.core.userdetails.UserDetailsDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -19,7 +20,7 @@ import java.util.Map;
 /**
  * token内省，可以将内省结果转换为指定的{@link OAuth2AuthenticatedPrincipal}结构 ,但需要我们配置自己的转换器
  * <p>在资源服务器中使用</p>
- * <p>默认转换为{@link com.dm.security.oauth2.core.OAuth2UserDetailsDto} 它是{@link com.dm.security.core.userdetails.UserDetailsDto}的一个子类，方便于统一编程模型</p>
+ * <p>默认转换为{@link com.dm.security.oauth2.core.OAuth2UserDetailsDto} 它是{@link UserDetailsDto}的一个子类，方便于统一编程模型</p>
  */
 public class UserInfoOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
     private final String url;

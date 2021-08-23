@@ -3,11 +3,13 @@ package com.dm.uap.converter;
 import com.dm.collections.Maps;
 import com.dm.collections.Sets;
 import com.dm.common.converter.Converter;
+import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -77,6 +79,23 @@ public class UserConverter implements Converter<User, UserDto> {
         dto.setFamilyName(model.getFamilyName());
         dto.setMiddleName(model.getMiddleName());
         // TODO 待处理
+        return dto;
+    }
+
+
+    public  <T extends User> UserDetails toUserDetails(T user) {
+        UserDetailsDto dto = new UserDetailsDto();
+        dto.setPassword(user.getPassword());
+        dto.setAccountExpired(user.isAccountExpired());
+        dto.setCredentialsExpired(user.isCredentialsExpired());
+        dto.setEnabled(user.isEnabled());
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setFullname(user.getFullname());
+        dto.setScenicName(user.getScenicName());
+        dto.setRegionCode(user.getRegionCode());
+        dto.setGrantedAuthority(Sets.transform(user.getRoles(), userRoleConverter::toDto));
+        dto.setMobile(user.getMobile());
         return dto;
     }
 }
