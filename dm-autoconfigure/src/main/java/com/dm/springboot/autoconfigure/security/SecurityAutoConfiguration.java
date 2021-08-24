@@ -46,7 +46,7 @@ public class SecurityAutoConfiguration {
 
     @ConditionalOnClass(name = {
         "reactor.core.publisher.Mono",
-        "com.dm.security.core.userdetails.UserDetailsDto"})
+            "com.dm.security.core.userdetails.UserDetailsDto"})
     @ConditionalOnBean(type = {
         "org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter"})
     static class ReactiveCurrentUserConfiguration {

@@ -1,13 +1,12 @@
 package com.dm.region.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.dm.region.dto.RegionDto;
+import com.dm.region.entity.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.dm.region.dto.RegionDto;
-import com.dm.region.entity.Region;
+import java.util.List;
+import java.util.Optional;
 
 public interface RegionService {
 
@@ -51,4 +50,10 @@ public interface RegionService {
     Optional<Region> findByCode(String parent);
 
     Page<Region> find(String keyword, Pageable pageable);
+
+    List<Region> saveAll(List<Region> regions);
+
+    boolean exist();
+
+    Optional<Region> findNextSyncRegion();
 }

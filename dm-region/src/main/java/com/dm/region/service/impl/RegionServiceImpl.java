@@ -1,16 +1,5 @@
 package com.dm.region.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dm.region.converter.RegionConverter;
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.QRegion;
@@ -18,15 +7,24 @@ import com.dm.region.entity.Region;
 import com.dm.region.repository.RegionRepository;
 import com.dm.region.service.RegionService;
 import com.querydsl.core.BooleanBuilder;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class RegionServiceImpl implements RegionService {
 
-    @Autowired
-    private RegionRepository regionRepository;
+    private final RegionRepository regionRepository;
 
-    @Autowired
-    private RegionConverter regionConverter;
+    private final RegionConverter regionConverter;
 
     private final QRegion qRegion = QRegion.region;
 
@@ -78,5 +76,22 @@ public class RegionServiceImpl implements RegionService {
             query.and(qRegion.name.containsIgnoreCase(keyword).or(qRegion.code.containsIgnoreCase(keyword)));
         }
         return regionRepository.findAll(query, pageable);
+    }
+
+    @Override
+    @Transactional
+    public List<Region> saveAll(List<Region> regions) {
+
+        return regionRepository.saveAll(regions);
+    }
+
+    @Override
+    public boolean exist() {
+        return regionRepository.count() > 0;
+    }
+
+    @Override
+    public Optional<Region> findNextSyncRegion() {
+        return regionRepository.findByHrefNotNullAndSyncedIsFalse();
     }
 }

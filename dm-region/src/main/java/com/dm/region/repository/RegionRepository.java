@@ -1,11 +1,11 @@
 package com.dm.region.repository;
 
-import java.util.List;
-
+import com.dm.region.entity.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-import com.dm.region.entity.Region;
+import java.util.List;
+import java.util.Optional;
 
 public interface RegionRepository extends JpaRepository<Region, String>, QuerydslPredicateExecutor<Region> {
 
@@ -15,4 +15,5 @@ public interface RegionRepository extends JpaRepository<Region, String>, Queryds
 
     List<Region> findAllChildren(String code);
 
+    Optional<Region> findByHrefNotNullAndSyncedIsFalse();
 }

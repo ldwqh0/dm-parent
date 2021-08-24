@@ -1,17 +1,10 @@
 package com.dm.region.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -63,4 +56,13 @@ public class Region implements Serializable {
 
     @Column(name = "latitude_")
     private Double latitude;
+
+    @Column(name = "type_", length = 10)
+    private String type;
+
+    @Column(name = "url_")
+    private String href;
+
+    @Column(name = "synced_")
+    private boolean synced = false;
 }

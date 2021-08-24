@@ -27,6 +27,13 @@
       <groupId>com.dm</groupId>
       <artifactId>compiler-shim</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.14.2</version>
+    </dependency>
+
   </dependencies>
   <build>
     <plugins>
