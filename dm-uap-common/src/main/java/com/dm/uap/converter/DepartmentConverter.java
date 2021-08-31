@@ -1,27 +1,16 @@
 package com.dm.uap.converter;
 
-import com.dm.common.converter.Converter;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.entity.Department;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.Optional;
 
-@Component
-public class DepartmentConverter implements Converter<Department, DepartmentDto> {
+public final class DepartmentConverter {
 
-    private UserConverter userConverter;
-
-    @Autowired
-    @Lazy
-    public void setUserConverter(UserConverter userConverter) {
-        this.userConverter = userConverter;
+    private DepartmentConverter() {
     }
 
-    public DepartmentDto toSimpleWithoutParent(Department model) {
+    public static DepartmentDto toSimpleWithoutParent(Department model) {
         DepartmentDto result = new DepartmentDto();
         result.setId(model.getId());
         result.setFullname(model.getFullname());
@@ -29,30 +18,24 @@ public class DepartmentConverter implements Converter<Department, DepartmentDto>
         result.setDescription(model.getDescription());
         result.setType(model.getType());
         result.setLogo(model.getLogo());
-        model.getDirector().map(userConverter::toSimpleDto).ifPresent(result::setDirector);
+        model.getDirector().map(UserConverter::toSimpleDto).ifPresent(result::setDirector);
         return result;
     }
 
-    @Override
-    public Department copyProperties(Department model, DepartmentDto dto) {
-        model.setFullname(dto.getFullname());
-        model.setShortname(dto.getShortname());
-        model.setDescription(dto.getDescription());
-        model.setType(dto.getType());
-        model.setLogo(dto.getLogo());
-        return model;
-    }
-
-    @Override
-    public DepartmentDto toDto(Department model) {
+    /**
+     * 返回
+     *
+     * @param model
+     */
+    public static DepartmentDto toDto(Department model) {
         return Optional.ofNullable(model).map(m -> {
             DepartmentDto result = toSimpleWithoutParent(model);
-            Department parent = model.getParent();
-            if (Objects.nonNull(parent)) {
-                DepartmentDto parentDto = toSimpleWithoutParent(model.getParent());
-                parentDto.setHasChildren(true);
-                result.setParent(parentDto);
-            }
+            Optional.ofNullable(model.getParent())
+                .map(DepartmentConverter::toSimpleWithoutParent)
+                .ifPresent(parent -> {
+                    parent.setHasChildren(true);
+                    result.setParent(parent);
+                });
             return result;
         }).orElse(null);
     }

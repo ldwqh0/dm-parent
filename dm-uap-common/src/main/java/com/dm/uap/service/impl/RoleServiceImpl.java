@@ -1,30 +1,28 @@
 package com.dm.uap.service.impl;
 
-import com.dm.uap.converter.UserRoleConverter;
-import com.dm.uap.dto.RoleDto;
+import com.dm.security.core.userdetails.RoleDto;
+import com.dm.uap.converter.RoleConverter;
 import com.dm.uap.entity.UserRole;
 import com.dm.uap.repository.UserRoleRepository;
 import com.dm.uap.service.UserRoleService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("userRoleService")
-@RequiredArgsConstructor
 public class RoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository userRoleRepository;
 
-    private final UserRoleConverter userRoleConverter;
+    public RoleServiceImpl(UserRoleRepository userRoleRepository) {
+        this.userRoleRepository = userRoleRepository;
+    }
 
     @Override
     @Transactional
     @CacheEvict(cacheNames = {"users"}, allEntries = true)
     public RoleDto update(Long id, RoleDto dto) {
-        UserRole role = userRoleConverter.copyProperties(userRoleRepository.getById(id), dto);
-        role = userRoleRepository.save(role);
-        return userRoleConverter.toDto(role);
+        return RoleConverter.toDto(userRoleRepository.save(copyProperties(userRoleRepository.getById(id), dto)));
     }
 
     @Override
@@ -32,5 +30,13 @@ public class RoleServiceImpl implements UserRoleService {
     @CacheEvict(cacheNames = {"users"}, allEntries = true)
     public void delete(Long id) {
         userRoleRepository.deleteById(id);
+    }
+
+
+    private UserRole copyProperties(UserRole model, RoleDto dto) {
+        model.setId(dto.getId());
+        model.setName(dto.getName());
+        model.setGroup(dto.getGroup());
+        return model;
     }
 }

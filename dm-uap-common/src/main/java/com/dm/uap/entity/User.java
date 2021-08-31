@@ -1,8 +1,6 @@
 package com.dm.uap.entity;
 
 import com.dm.common.entity.AbstractEntity;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -10,13 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-@Getter
-@Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -169,8 +162,8 @@ public class User extends AbstractEntity {
         joinColumns = {
             @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_dm_user_attribute_user_id_"))
         })
-    @MapKeyColumn(name = "key")
-    @Column(name = "value")
+    @MapKeyColumn(name = "key_")
+    @Column(name = "value_")
     private Map<String, String> attributes = new HashMap<>();
 
     public void setAttributes(Map<String, String> attributes) {
@@ -200,5 +193,245 @@ public class User extends AbstractEntity {
          * 女性
          */
         female
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getNo() {
+        return no;
+    }
+
+    public void setNo(String no) {
+        this.no = no;
+    }
+
+    public String getGivenName() {
+        return givenName;
+    }
+
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isAccountExpired() {
+        return accountExpired;
+    }
+
+    public void setAccountExpired(boolean accountExpired) {
+        this.accountExpired = accountExpired;
+    }
+
+    public boolean isCredentialsExpired() {
+        return credentialsExpired;
+    }
+
+    public void setCredentialsExpired(boolean credentialsExpired) {
+        this.credentialsExpired = credentialsExpired;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public boolean isPhoneNumberVerified() {
+        return phoneNumberVerified;
+    }
+
+    public void setPhoneNumberVerified(boolean phoneNumberVerified) {
+        this.phoneNumberVerified = phoneNumberVerified;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getZoneinfo() {
+        return zoneinfo;
+    }
+
+    public void setZoneinfo(String zoneinfo) {
+        this.zoneinfo = zoneinfo;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
+
+    public Map<Department, String> getPosts() {
+        return posts;
+    }
+
+    public Map<Department, Long> getOrders() {
+        return orders;
+    }
+
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getScenicName() {
+        return scenicName;
+    }
+
+    public void setScenicName(String scenicName) {
+        this.scenicName = scenicName;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public ZonedDateTime getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    public void setLastModifiedTime(ZonedDateTime lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return accountExpired == user.accountExpired && credentialsExpired == user.credentialsExpired && enabled == user.enabled && emailVerified == user.emailVerified && phoneNumberVerified == user.phoneNumberVerified && Objects.equals(username, user.username) && Objects.equals(no, user.no) && Objects.equals(givenName, user.givenName) && Objects.equals(familyName, user.familyName) && Objects.equals(middleName, user.middleName) && Objects.equals(profile, user.profile) && Objects.equals(website, user.website) && gender == user.gender && Objects.equals(password, user.password) && Objects.equals(fullname, user.fullname) && Objects.equals(email, user.email) && Objects.equals(mobile, user.mobile) && Objects.equals(description, user.description) && Objects.equals(zoneinfo, user.zoneinfo) && Objects.equals(local, user.local) && Objects.equals(address, user.address) && Objects.equals(roles, user.roles) && Objects.equals(posts, user.posts) && Objects.equals(orders, user.orders) && Objects.equals(regionCode, user.regionCode) && Objects.equals(attributes, user.attributes) && Objects.equals(birthDate, user.birthDate) && Objects.equals(scenicName, user.scenicName) && Objects.equals(profilePhoto, user.profilePhoto) && Objects.equals(lastModifiedTime, user.lastModifiedTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), username, no, givenName, familyName, middleName, profile, website, gender, password, accountExpired, credentialsExpired, enabled, fullname, email, emailVerified, mobile, phoneNumberVerified, description, zoneinfo, local, address, roles, posts, orders, regionCode, attributes, birthDate, scenicName, profilePhoto, lastModifiedTime);
     }
 }

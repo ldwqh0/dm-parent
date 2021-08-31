@@ -1,7 +1,6 @@
 package com.dm.datasource.converter;
 
 import com.dm.collections.Maps;
-import com.dm.common.converter.Converter;
 import com.dm.datasource.dto.DmDataSourceDto;
 import com.dm.datasource.entity.DmDataSource;
 import com.dm.datasource.provider.DataSourceProperties;
@@ -9,10 +8,9 @@ import com.dm.datasource.provider.DataSourceProperties;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSourceDto> {
+public final class DmDataSourceConverter {
 
-    @Override
-    public DmDataSourceDto toDto(@Nonnull DmDataSource model) {
+    public static DmDataSourceDto toDto(@Nonnull DmDataSource model) {
         DmDataSourceDto dto = toSimpleDto(model);
         Map<String, String> additionalProperties = model.getProperties();
         if (Maps.isNotEmpty(additionalProperties)) {
@@ -21,21 +19,7 @@ public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSour
         return dto;
     }
 
-    @Override
-    public DmDataSource copyProperties(DmDataSource model, DmDataSourceDto source) {
-        model.setName(source.getName());
-        model.setDatabase(source.getDatabase());
-        model.setDbType(source.getDbType());
-        model.setHost(source.getHost());
-        model.setPassword(source.getPassword());
-        model.setPort(source.getPort());
-        model.setProperties(source.getProperties());
-        model.setRemark(source.getRemark());
-        model.setUsername(source.getUsername());
-        return model;
-    }
-
-    public DataSourceProperties toDataSourceProperties(DmDataSourceDto from) {
+    public static DataSourceProperties toDataSourceProperties(DmDataSourceDto from) {
         return new DataSourceProperties(
             from.getDbType(),
             from.getHost(),
@@ -47,7 +31,7 @@ public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSour
         );
     }
 
-    public DataSourceProperties toDataSourceProperties(DmDataSource model) {
+    public static DataSourceProperties toDataSourceProperties(DmDataSource model) {
         return new DataSourceProperties(
             model.getDbType(),
             model.getHost(),
@@ -59,7 +43,7 @@ public class DmDataSourceConverter implements Converter<DmDataSource, DmDataSour
         );
     }
 
-    public DmDataSourceDto toSimpleDto(DmDataSource model) {
+    public static DmDataSourceDto toSimpleDto(DmDataSource model) {
         DmDataSourceDto dto = new DmDataSourceDto();
         dto.setId(model.getId());
         dto.setName(model.getName());

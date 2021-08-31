@@ -1,14 +1,11 @@
 package com.dm.auth.entity;
 
 import com.dm.common.entity.AbstractEntity;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "dm_role_", uniqueConstraints = {@UniqueConstraint(name = "uk_dm_role_group_name_", columnNames = {"group_", "name_"})})
 public class Role extends AbstractEntity {
@@ -48,7 +45,83 @@ public class Role extends AbstractEntity {
     })
     private Set<Menu> menus;
 
+    public Role() {
+    }
+
+    public Role(String name, String group, Status state, String description, Set<Menu> menus) {
+        this.name = name;
+        this.group = group;
+        this.state = state;
+        this.description = description;
+        this.menus = menus;
+    }
+
     public String getFullName() {
         return group + "_" + name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public Status getState() {
+        return state;
+    }
+
+    public void setState(Status state) {
+        this.state = state;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(Set<Menu> menus) {
+        this.menus = menus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Role role = (Role) o;
+        return Objects.equals(name, role.name) && Objects.equals(group, role.group) && state == role.state && Objects.equals(description, role.description) && Objects.equals(menus, role.menus);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, group, state, description, menus);
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+            "name='" + name + '\'' +
+            ", group='" + group + '\'' +
+            ", state=" + state +
+            ", description='" + description + '\'' +
+            ", menus=" + menus +
+            '}';
     }
 }

@@ -1,7 +1,7 @@
 package com.dm.springboot.autoconfigure.uap;
 
+import com.dm.security.core.userdetails.RoleDto;
 import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapJCacheConfiguration;
-import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;

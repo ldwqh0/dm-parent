@@ -2,12 +2,11 @@ package com.dm.auth.entity;
 
 import com.dm.common.entity.AbstractEntity;
 import com.dm.security.authentication.UriResource.MatchType;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpMethod;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -16,8 +15,6 @@ import java.util.Set;
  * @author LiDong
  */
 @Entity
-@Getter
-@Setter
 @Table(name = "dm_resource_")
 public class AuthResource extends AbstractEntity {
 
@@ -102,29 +99,98 @@ public class AuthResource extends AbstractEntity {
         this.denyAuthorities.addAll(denyAuthorities);
     }
 
-//    /**
-//     * 指示是否拒绝所有的访问
-//     */
-//    @Column(name = "deny_all_")
-//    private boolean denyAll = true;
-//
-//    public void setDenyAll(boolean denyAll) {
-//        this.denyAll = denyAll;
-//        if (denyAll) {
-//            this.authenticated = false;
-//        }
-//    }
+    public AuthResource() {
+    }
 
-//    /**
-//     * 是否必须授权访问
-//     */
-//    @Column(name = "authenticated_")
-//    private boolean authenticated;
-//
-//    public void setAuthenticated(boolean authenticated) {
-//        this.authenticated = authenticated;
-//        if (authenticated) {
-//            this.denyAll = false;
-//        }
-//    }
+    public AuthResource(String name, Set<HttpMethod> methods, String matcher, MatchType matchType, Set<String> scope, String description, Set<Role> accessAuthorities, Set<Role> denyAuthorities) {
+        this.name = name;
+        this.methods = methods;
+        this.matcher = matcher;
+        this.matchType = matchType;
+        this.scope = scope;
+        this.description = description;
+        this.accessAuthorities = accessAuthorities;
+        this.denyAuthorities = denyAuthorities;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<HttpMethod> getMethods() {
+        return methods;
+    }
+
+    public void setMethods(Set<HttpMethod> methods) {
+        this.methods = methods;
+    }
+
+    public String getMatcher() {
+        return matcher;
+    }
+
+    public void setMatcher(String matcher) {
+        this.matcher = matcher;
+    }
+
+    public MatchType getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(MatchType matchType) {
+        this.matchType = matchType;
+    }
+
+    public Set<String> getScope() {
+        return scope;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<Role> getAccessAuthorities() {
+        return accessAuthorities;
+    }
+
+    public Set<Role> getDenyAuthorities() {
+        return denyAuthorities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        AuthResource that = (AuthResource) o;
+        return Objects.equals(name, that.name) && Objects.equals(methods, that.methods) && Objects.equals(matcher, that.matcher) && matchType == that.matchType && Objects.equals(scope, that.scope) && Objects.equals(description, that.description) && Objects.equals(accessAuthorities, that.accessAuthorities) && Objects.equals(denyAuthorities, that.denyAuthorities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, methods, matcher, matchType, scope, description, accessAuthorities, denyAuthorities);
+    }
+
+    @Override
+    public String toString() {
+        return "AuthResource{" +
+            "name='" + name + '\'' +
+            ", methods=" + methods +
+            ", matcher='" + matcher + '\'' +
+            ", matchType=" + matchType +
+            ", scope=" + scope +
+            ", description='" + description + '\'' +
+            ", accessAuthorities=" + accessAuthorities +
+            ", denyAuthorities=" + denyAuthorities +
+            '}';
+    }
+
 }

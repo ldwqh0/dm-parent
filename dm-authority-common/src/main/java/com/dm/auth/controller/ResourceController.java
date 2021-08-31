@@ -1,6 +1,5 @@
 package com.dm.auth.controller;
 
-import com.dm.auth.converter.ResourceConverter;
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.entity.AuthResource;
 import com.dm.auth.service.ResourceService;
@@ -9,7 +8,6 @@ import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.authentication.UriResource;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,12 +26,13 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  */
 @RestController
 @RequestMapping({"resources", "p/resources"})
-@RequiredArgsConstructor
 public class ResourceController {
 
     private final ResourceService resourceService;
 
-    private final ResourceConverter resourceConverter;
+    public ResourceController(ResourceService resourceService) {
+        this.resourceService = resourceService;
+    }
 
 
     /**

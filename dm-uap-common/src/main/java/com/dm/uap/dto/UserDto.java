@@ -2,12 +2,12 @@ package com.dm.uap.dto;
 
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
+import com.dm.security.core.userdetails.RoleDto;
 import com.dm.uap.entity.Address;
 import com.dm.uap.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -17,9 +17,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
 @JsonInclude(value = Include.NON_ABSENT)
 @JsonIgnoreProperties(allowSetters = true, value = {"password"})
 public class UserDto implements Serializable, IdentifiableDto<Long> {
@@ -158,5 +158,226 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
 
     private Address address;
 
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNo() {
+        return no;
+    }
+
+    public void setNo(String no) {
+        this.no = no;
+    }
+
+    public String getGivenName() {
+        return givenName;
+    }
+
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public User.Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(User.Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public boolean isPhoneNumberVerified() {
+        return phoneNumberVerified;
+    }
+
+    public void setPhoneNumberVerified(boolean phoneNumberVerified) {
+        this.phoneNumberVerified = phoneNumberVerified;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<RoleDto> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleDto> roles) {
+        this.roles = roles;
+    }
+
+    public String getScenicName() {
+        return scenicName;
+    }
+
+    public void setScenicName(String scenicName) {
+        this.scenicName = scenicName;
+    }
+
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+
+    public List<UserPostDto> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<UserPostDto> posts) {
+        this.posts = posts;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public String getZoneinfo() {
+        return zoneinfo;
+    }
+
+    public void setZoneinfo(String zoneinfo) {
+        this.zoneinfo = zoneinfo;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return emailVerified == userDto.emailVerified && phoneNumberVerified == userDto.phoneNumberVerified && Objects.equals(id, userDto.id) && Objects.equals(no, userDto.no) && Objects.equals(givenName, userDto.givenName) && Objects.equals(familyName, userDto.familyName) && Objects.equals(middleName, userDto.middleName) && Objects.equals(profile, userDto.profile) && Objects.equals(website, userDto.website) && gender == userDto.gender && Objects.equals(username, userDto.username) && Objects.equals(fullname, userDto.fullname) && Objects.equals(password, userDto.password) && Objects.equals(enabled, userDto.enabled) && Objects.equals(email, userDto.email) && Objects.equals(mobile, userDto.mobile) && Objects.equals(description, userDto.description) && Objects.equals(roles, userDto.roles) && Objects.equals(scenicName, userDto.scenicName) && Objects.equals(regionCode, userDto.regionCode) && Objects.equals(posts, userDto.posts) && Objects.equals(birthDate, userDto.birthDate) && Objects.equals(profilePhoto, userDto.profilePhoto) && Objects.equals(zoneinfo, userDto.zoneinfo) && Objects.equals(local, userDto.local) && Objects.equals(address, userDto.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, no, givenName, familyName, middleName, profile, website, gender, username, fullname, password, enabled, email, emailVerified, mobile, phoneNumberVerified, description, roles, scenicName, regionCode, posts, birthDate, profilePhoto, zoneinfo, local, address);
+    }
 }
 

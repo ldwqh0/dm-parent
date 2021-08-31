@@ -10,7 +10,6 @@ import com.dm.uap.repository.DepartmentRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.service.DepartmentService;
 import com.querydsl.core.BooleanBuilder;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,23 +25,24 @@ import java.util.Optional;
  */
 // 使用dto返回数据，方便缓存
 @Service
-@RequiredArgsConstructor
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final QDepartment qDepartment = QDepartment.department;
 
     private final DepartmentRepository departmentRepository;
 
-    private final DepartmentConverter departmentConverter;
-
     private final UserRepository userRepository;
+
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository, UserRepository userRepository) {
+        this.departmentRepository = departmentRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public DepartmentDto save(DepartmentDto data) {
         preCheck(data);
-        Department department = new Department();
-        departmentConverter.copyProperties(department, data);
+        Department department = copyProperties(new Department(), data);
         data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
         data.getDirector().map(userRepository::getByDto).ifPresent(department::setDirector);
         Department dep = departmentRepository.save(department);
@@ -70,15 +70,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Optional<DepartmentDto> findById(Long id) {
-        return departmentRepository.findById(id).map(departmentConverter::toDto);
+        return departmentRepository.findById(id).map(DepartmentConverter::toDto);
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public DepartmentDto update(Long id, DepartmentDto data) {
         preCheck(data);
-        Department department = departmentRepository.getById(id);
-        departmentConverter.copyProperties(department, data);
+        Department department = copyProperties(departmentRepository.getById(id), data);
         // 更新时先清空父级和负责人的原始
         department.setParent(null);
         department.setDirector(null);
@@ -133,7 +132,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     private DepartmentDto toDto(Department department) {
-        DepartmentDto result = departmentConverter.toDto(department);
+        DepartmentDto result = DepartmentConverter.toDto(department);
         assert result != null;
         long childrenCount = departmentRepository.childrenCounts(department);
         result.setHasChildren(childrenCount > 0);
@@ -142,4 +141,14 @@ public class DepartmentServiceImpl implements DepartmentService {
         result.setUserCount(userCount);
         return result;
     }
+
+    private Department copyProperties(Department model, DepartmentDto dto) {
+        model.setFullname(dto.getFullname());
+        model.setShortname(dto.getShortname());
+        model.setDescription(dto.getDescription());
+        model.setType(dto.getType());
+        model.setLogo(dto.getLogo());
+        return model;
+    }
+
 }

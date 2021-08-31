@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -16,7 +15,6 @@ import java.util.Optional;
  *
  * @author LiDong
  */
-@Data
 @JsonInclude(Include.NON_ABSENT)
 public class MenuDto implements Serializable, IdentifiableDto<Long> {
     private static final long serialVersionUID = 7184771144233410172L;
@@ -66,6 +64,117 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
     private Boolean openInNewWindow = Boolean.FALSE;
 
     private long childrenCount = 0;
+
+    public MenuDto() {
+    }
+
+    public MenuDto(Long id, String name, String title, Boolean enabled, String url, String icon, String description, MenuType type, Long order, MenuDto parent, Boolean openInNewWindow, long childrenCount) {
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.enabled = enabled;
+        this.url = url;
+        this.icon = icon;
+        this.description = description;
+        this.type = type;
+        this.order = order;
+        this.parent = parent;
+        this.openInNewWindow = openInNewWindow;
+        this.childrenCount = childrenCount;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public MenuType getType() {
+        return type;
+    }
+
+    public void setType(MenuType type) {
+        this.type = type;
+    }
+
+    public Long getOrder() {
+        return order;
+    }
+
+    public void setOrder(Long order) {
+        this.order = order;
+    }
+
+    public void setParent(MenuDto parent) {
+        this.parent = parent;
+    }
+
+    public Boolean getOpenInNewWindow() {
+        return openInNewWindow;
+    }
+
+    public void setOpenInNewWindow(Boolean openInNewWindow) {
+        this.openInNewWindow = openInNewWindow;
+    }
+
+    public long getChildrenCount() {
+        return childrenCount;
+    }
+
+    public void setChildrenCount(long childrenCount) {
+        this.childrenCount = childrenCount;
+    }
 
     @JsonGetter
     public boolean hasChildren() {

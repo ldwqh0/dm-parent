@@ -1,7 +1,6 @@
 package com.dm.uap.service;
 
 import com.dm.uap.dto.UserDto;
-import com.dm.uap.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,19 +18,19 @@ public interface UserService {
      *
      * @param user 要保存的用户信息
      */
-    User save(UserDto user);
+    UserDto save(UserDto user);
 
     Optional<UserDto> findById(long id);
 
     void delete(long id);
 
-    User update(long id, UserDto userDto);
+    UserDto update(long id, UserDto userDto);
 
     boolean checkPassword(long id, String password);
 
-    User resetPassword(long id, String password);
+    UserDto resetPassword(long id, String password);
 
-    Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable);
+    Page<UserDto> search(Long department, Long role, String roleGroup, String key, Pageable pageable);
 
     /**
      * 检测是否存在同名用户<br>
@@ -63,7 +62,7 @@ public interface UserService {
      */
     boolean userExistsByMobile(String mobile, Long... excludes);
 
-    User patch(long id, UserDto user);
+    UserDto patch(long id, UserDto user);
 
     /**
      * 保存用户的一部分信息（用户自身的私有信息）

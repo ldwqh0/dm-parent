@@ -1,37 +1,40 @@
-package com.dm.uap.entity;
+package com.dm.security.core.userdetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * 用户的角色，这个不同于角色，它仅仅表示用户的角色，不能用于角色的权限控制
- */
-@Entity
-@Table(name = "dm_role_")
-public class UserRole {
+public class RoleDto implements Serializable, GrantedAuthority {
 
+    private static final long serialVersionUID = -2204000372762540931L;
     /**
      * 角色id
      */
-    @Id
-    @Column(name = "id_", nullable = false)
     private Long id;
 
     /**
      * 角色组
      */
-    @Column(name = "group_", length = 100)
     private String group;
 
     /**
      * 角色名称
      */
-    @Column(name = "name_", length = 100)
     private String name;
 
+    /**
+     * 角色信息，用户安全认证
+     *
+     * @return authority全称
+     * @ignore 这个属性不给前端提供
+     */
+    @Override
+    @JsonGetter
+    public String getAuthority() {
+        return group + "_" + name;
+    }
 
     public Long getId() {
         return id;
@@ -61,8 +64,8 @@ public class UserRole {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserRole userRole = (UserRole) o;
-        return Objects.equals(id, userRole.id) && Objects.equals(group, userRole.group) && Objects.equals(name, userRole.name);
+        RoleDto roleDto = (RoleDto) o;
+        return Objects.equals(id, roleDto.id) && Objects.equals(group, roleDto.group) && Objects.equals(name, roleDto.name);
     }
 
     @Override

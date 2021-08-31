@@ -14,7 +14,6 @@ import com.dm.security.authentication.ResourceAuthorityAttribute;
 import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
 import com.querydsl.core.BooleanBuilder;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,25 +29,25 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-@RequiredArgsConstructor
 public class ResourceServiceImpl implements ResourceService, ResourceAuthorityService {
 
     private final ResourceRepository resourceRepository;
 
-    private final ResourceConverter resourceConverter;
-
     private final RoleRepository roleRepository;
 
     private final QAuthResource qResource = QAuthResource.authResource;
+
+    public ResourceServiceImpl(ResourceRepository resourceRepository, RoleRepository roleRepository) {
+        this.resourceRepository = resourceRepository;
+        this.roleRepository = roleRepository;
+    }
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityAttributes"}, allEntries = true)
     public ResourceDto save(ResourceDto dto) {
-        AuthResource resource = new AuthResource();
-        copyProperties(resource, dto);
-        return resourceConverter.toDto(resourceRepository.save(resource));
+        return ResourceConverter.toDto(resourceRepository.save(copyProperties(new AuthResource(), dto)));
     }
 
     @Override
@@ -68,9 +67,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityAttributes"}, allEntries = true)
     public ResourceDto update(long id, ResourceDto dto) {
-        AuthResource resource = resourceRepository.getById(id);
-        copyProperties(resource, dto);
-        return resourceConverter.toDto(resource);
+        return ResourceConverter.toDto(copyProperties(resourceRepository.getById(id), dto));
     }
 
     @Override
@@ -79,16 +76,16 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         BooleanBuilder query = new BooleanBuilder();
         if (StringUtils.isNotBlank(keyword)) {
             query.or(qResource.name.containsIgnoreCase(keyword))
-                    .or(qResource.description.containsIgnoreCase(keyword))
+                .or(qResource.description.containsIgnoreCase(keyword))
                 .or(qResource.matcher.containsIgnoreCase(keyword));
         }
-        return resourceRepository.findAll(query, pageable).map(resourceConverter::toListDto);
+        return resourceRepository.findAll(query, pageable).map(ResourceConverter::toListDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<ResourceDto> findById(long id) {
-        return resourceRepository.findById(id).map(resourceConverter::toDto);
+        return resourceRepository.findById(id).map(ResourceConverter::toDto);
     }
 
     @Override
@@ -156,11 +153,28 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
     }
 
     private AuthResource copyProperties(AuthResource authResource, ResourceDto dto) {
-        resourceConverter.copyProperties(authResource, dto);
+        authResource.setMatcher(dto.getMatcher());
+        authResource.setDescription(dto.getDescription());
+        authResource.setName(dto.getName());
+        authResource.setMatchType(dto.getMatchType());
+        authResource.setScope(dto.getScope());
+        authResource.setMethods(dto.getMethods());
         authResource.getDenyAuthorities().clear();
         authResource.getAccessAuthorities().clear();
         authResource.setAccessAuthorities(Sets.transform(dto.getAccessAuthorities(), roleRepository::getByDto));
         authResource.setDenyAuthorities(Sets.transform(dto.getDenyAuthorities(), roleRepository::getByDto));
         return authResource;
     }
+
+
+    //    @Override
+//    public AuthResource copyProperties(AuthResource model, ResourceDto dto) {
+//        model.setMatcher(dto.getMatcher());
+//        model.setDescription(dto.getDescription());
+//        model.setName(dto.getName());
+//        model.setMatchType(dto.getMatchType());
+//        model.setScope(dto.getScope());
+//        model.setMethods(dto.getMethods());
+//        return model;
+//    }
 }

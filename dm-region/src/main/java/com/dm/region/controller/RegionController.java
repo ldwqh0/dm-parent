@@ -1,11 +1,8 @@
 package com.dm.region.controller;
 
-import com.dm.collections.Lists;
 import com.dm.region.converter.RegionConverter;
 import com.dm.region.dto.RegionDto;
-import com.dm.region.entity.Region;
 import com.dm.region.service.RegionService;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,46 +21,44 @@ import java.util.Optional;
  * @author Administrator
  */
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("regions")
 public class RegionController {
 
     private final RegionService regionService;
 
-    private final RegionConverter regionConverter;
+    public RegionController(RegionService regionService) {
+        this.regionService = regionService;
+    }
 
     @GetMapping
     public List<RegionDto> findAll(@RequestParam(value = "parent", required = false) String parent,
                                    @RequestParam(value = "includeSelf", required = false, defaultValue = "true") Boolean includeSelf) {
-        List<Region> regions;
+        List<RegionDto> regions;
         if (StringUtils.isEmpty(parent)) {
             regions = regionService.findAll();
         } else {
             regions = regionService.findAllChildren(parent);
         }
         if (includeSelf && StringUtils.isNoneBlank(parent)) {
-            Optional<Region> self = regionService.findByCode(parent);
+            Optional<RegionDto> self = regionService.findByCode(parent);
             self.ifPresent(regions::add);
         }
-        return Lists.transform(regions, regionConverter::toDto);
+        return regions;
     }
 
     @GetMapping(value = "provinces")
     public List<RegionDto> findProvincial() {
-        List<Region> regions = regionService.findProvincials();
-        return Lists.transform(regions, regionConverter::toDto);
+        return regionService.findProvincials();
     }
 
-    @GetMapping(params = {"draw"})
-    public Page<RegionDto> find(@RequestParam("draw") Long draw,
-                                @RequestParam(value = "keyword", required = false) String keyword,
+    @GetMapping(params = {"page", "size"})
+    public Page<RegionDto> find(@RequestParam(value = "keyword", required = false) String keyword,
                                 @PageableDefault Pageable pageable) {
-        return regionService.find(keyword, pageable).map(regionConverter::toDto);
+        return regionService.find(keyword, pageable).map(RegionConverter::toDto);
     }
 
     @GetMapping(value = "children")
     public List<RegionDto> findChildren(@RequestParam(value = "code") String code) {
-        List<Region> regions = regionService.findChildren(code);
-        return Lists.transform(regions, regionConverter::toDto);
+        return regionService.findChildren(code);
     }
 }

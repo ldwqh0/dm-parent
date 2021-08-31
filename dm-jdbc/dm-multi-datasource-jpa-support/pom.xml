@@ -12,11 +12,6 @@
   <artifactId>dm-multi-datasource-jpa-support</artifactId>
   <dependencies>
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.dm</groupId>
       <artifactId>dm-common</artifactId>
     </dependency>

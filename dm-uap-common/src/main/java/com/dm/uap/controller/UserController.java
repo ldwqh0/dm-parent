@@ -3,13 +3,10 @@ package com.dm.uap.controller;
 import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
-import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.dto.UserDto;
-import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,12 +25,13 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RestController
 @RequestMapping("users")
 @Validated
-@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    private final UserConverter userConverter;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * 根据用户id获取用户信息
@@ -58,7 +56,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public UserDto save(@RequestBody @Validated({UserDto.New.class, DepartmentDto.ReferenceBy.class}) UserDto userDto) {
-        return userConverter.toDto(userService.save(userDto));
+        return userService.save(userDto);
     }
 
     /**
@@ -94,7 +92,7 @@ public class UserController {
             throw new DataValidateException("不能修改系统内置匿名用户");
         }
         if (StringUtils.equals(password, rePassword)) {
-            return userConverter.toDto(userService.resetPassword(id, password));
+            return userService.resetPassword(id, password);
         } else {
             throw new DataValidateException("两次密码输入不一致");
         }
@@ -117,8 +115,7 @@ public class UserController {
         if (id == 2) {
             throw new DataValidateException("不能修改系统内置匿名用户");
         }
-        User user = userService.update(id, userDto);
-        return userConverter.toDto(user);
+        return userService.update(id, userDto);
     }
 
     /**
@@ -134,7 +131,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     public UserDto patchUpdate(@PathVariable("id") @Min(value = 3, message = "不能修改系统内置匿名用户") long id,
                                @Validated({UserDto.Patch.class, DepartmentDto.ReferenceBy.class}) @RequestBody UserDto user) {
-        return userConverter.toDto(userService.patch(id, user));
+        return userService.patch(id, user);
     }
 
     /**
@@ -155,8 +152,7 @@ public class UserController {
         @RequestParam(value = "roleGroup", required = false) String roleGroup,
         @RequestParam(value = "keyword", required = false) String keyword,
         Pageable pageable) {
-        Page<User> result = userService.search(department, role, roleGroup, keyword, pageable);
-        return result.map(userConverter::toDto);
+        return userService.search(department, role, roleGroup, keyword, pageable);
     }
 
 

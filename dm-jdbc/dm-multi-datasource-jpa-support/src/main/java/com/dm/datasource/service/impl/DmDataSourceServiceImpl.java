@@ -26,7 +26,6 @@ import java.util.Optional;
 @Service
 public class DmDataSourceServiceImpl implements DmDataSourceService {
 
-    private final DmDataSourceConverter dmDataSourceConverter;
     private final DmDataSourceRepository dmDataSourceRepository;
     private final QDmDataSource qDataSource = QDmDataSource.dmDataSource;
 
@@ -38,18 +37,14 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
     }
 
     public DmDataSourceServiceImpl(
-        DmDataSourceConverter dataSourceConverter,
         DmDataSourceRepository dataSourceRepository) {
-        this.dmDataSourceConverter = dataSourceConverter;
         this.dmDataSourceRepository = dataSourceRepository;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public DmDataSource save(DmDataSourceDto connection) {
-        DmDataSource cnn = new DmDataSource();
-        dmDataSourceConverter.copyProperties(cnn, connection);
-        return dmDataSourceRepository.save(cnn);
+        return dmDataSourceRepository.save(copyProperties(new DmDataSource(), connection));
     }
 
     @Override
@@ -57,7 +52,7 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
     public DmDataSource update(Long id, DmDataSourceDto connection) {
         return dmDataSourceRepository.findById(id).map(cnn -> {
             closeConnection(cnn);
-            DmDataSource result = dmDataSourceConverter.copyProperties(cnn, connection);
+            DmDataSource result = copyProperties(cnn, connection);
             result.checkVersion(connection.getVersion());
             return dmDataSourceRepository.saveAndFlush(result);
         }).orElseThrow(DataNotExistException::new);
@@ -88,7 +83,7 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
     @Override
     public List<TableMeta> listTables(Long connection) {
         return dmDataSourceRepository.findById(connection)
-            .map(dmDataSourceConverter::toDataSourceProperties)
+            .map(DmDataSourceConverter::toDataSourceProperties)
             .map(properties -> {
                 try (Connection cnn = DataSourceProviderHolder.getConnection(properties)) {
                     return ConnectionUtils.listTables(cnn);
@@ -105,7 +100,21 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
      */
     private void closeConnection(DmDataSource dataSource) {
         if (this.dataSourceHolder != null) {
-            dataSourceHolder.closeAndRemove(dmDataSourceConverter.toDataSourceProperties(dataSource));
+            dataSourceHolder.closeAndRemove(DmDataSourceConverter.toDataSourceProperties(dataSource));
         }
+    }
+
+
+    private DmDataSource copyProperties(DmDataSource model, DmDataSourceDto source) {
+        model.setName(source.getName());
+        model.setDatabase(source.getDatabase());
+        model.setDbType(source.getDbType());
+        model.setHost(source.getHost());
+        model.setPassword(source.getPassword());
+        model.setPort(source.getPort());
+        model.setProperties(source.getProperties());
+        model.setRemark(source.getRemark());
+        model.setUsername(source.getUsername());
+        return model;
     }
 }

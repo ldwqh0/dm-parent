@@ -57,8 +57,6 @@ public class FileController {
 
     private final ThumbnailService thumbnailService;
 
-    private final FileInfoConverter fileInfoConverter;
-
     private final FileConfig config;
 
     private final FileStorageService fileStorageService;
@@ -76,7 +74,7 @@ public class FileController {
         MediaType.APPLICATION_JSON_VALUE
     })
     public FileInfoDto get(@PathVariable("id") UUID id) {
-        return fileInfoConverter.toDto(fileService.findById(id).orElseThrow(DataNotExistException::new));
+        return FileInfoConverter.toDto(fileService.findById(id).orElseThrow(DataNotExistException::new));
     }
 
     /**
@@ -98,7 +96,7 @@ public class FileController {
         infoDto.setSize(file.getSize());
         FileInfo file_ = fileService.save(file, infoDto);
         thumbnailService.createThumbnail(file_.getPath());
-        return fileInfoConverter.toDto(file_);
+        return FileInfoConverter.toDto(file_);
     }
 
     /**
@@ -113,7 +111,7 @@ public class FileController {
     public FileInfoDto findByNameAndHash(@RequestParam("filename") String filename,
                                          @RequestParam("sha256") String sha256,
                                          @RequestParam("md5") String md5) {
-        return fileService.findByNameAndHash(filename, sha256, md5).map(fileInfoConverter::toDto).orElse(null);
+        return fileService.findByNameAndHash(filename, sha256, md5).map(FileInfoConverter::toDto).orElse(null);
     }
 
     /**
@@ -184,7 +182,7 @@ public class FileController {
                     log.error("删除临时文件时发生异常", e);
                 }
             }
-            return fileInfoConverter.toDto(_result);
+            return FileInfoConverter.toDto(_result);
         } else {
             return null;
         }
@@ -369,11 +367,11 @@ public class FileController {
     /**
      * 文件的预览和下载
      *
-     * @param id 要下载的文件的id
-     * @param download 只是这个请求是下载，而不是预览。下载会返回特殊的请求头
-     * @param range 文件范围
+     * @param id        要下载的文件的id
+     * @param download  只是这个请求是下载，而不是预览。下载会返回特殊的请求头
+     * @param range     文件范围
      * @param userAgent 用户浏览器 agent 头
-     * @param request 下载请求
+     * @param request   下载请求
      * @return 下载响应实体
      * @download 这是一个文件下载请求
      */
@@ -432,17 +430,17 @@ public class FileController {
         @RequestParam(value = "level", defaultValue = "1") int level,
         WebRequest request) {
         return fileService.findById(id).filter(fileInfo -> thumbnailService.exists(fileInfo.getPath(), level)).map(
-            file -> file.getLastModifiedDate()
-                .filter(lastModify -> this.checkNotModified(request, lastModify))
-                .map(lastModify -> this.<Resource>buildNotModified())
-                .orElseGet(() -> {
-                    try {
-                        return this.buildThumbnailResponse(file, level);
-                    } catch (IOException e) {
-                        log.error("构建缩略图时发生错误", e);
-                        throw new RuntimeException(e);
-                    }
-                }))
+                file -> file.getLastModifiedDate()
+                    .filter(lastModify -> this.checkNotModified(request, lastModify))
+                    .map(lastModify -> this.<Resource>buildNotModified())
+                    .orElseGet(() -> {
+                        try {
+                            return this.buildThumbnailResponse(file, level);
+                        } catch (IOException e) {
+                            log.error("构建缩略图时发生错误", e);
+                            throw new RuntimeException(e);
+                        }
+                    }))
             .orElseGet(this::buildNotFount);
     }
 

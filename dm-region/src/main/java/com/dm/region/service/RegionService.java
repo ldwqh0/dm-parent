@@ -12,30 +12,25 @@ public interface RegionService {
 
     /**
      * 查询所有
-     *
-     * @return
      */
-    List<Region> findAll();
+    List<RegionDto> findAll();
 
     /**
      * 查询省会
-     *
-     * @return
      */
-    List<Region> findProvincials();
+    List<RegionDto> findProvincials();
 
     /**
      * 查询下级区县
      *
      * @param code
-     * @return
      */
-    List<Region> findChildren(String code);
+    List<RegionDto> findChildren(String code);
 
     /**
      * 批量保存区划数据
      */
-    List<Region> save(List<RegionDto> regions);
+    List<RegionDto> save(List<RegionDto> regions);
 
     boolean existAny();
 
@@ -45,9 +40,9 @@ public interface RegionService {
      * @param code 要查询的父代
      * @return 所有子代
      */
-    List<Region> findAllChildren(String code);
+    List<RegionDto> findAllChildren(String code);
 
-    Optional<Region> findByCode(String parent);
+    Optional<RegionDto> findByCode(String parent);
 
     Page<Region> find(String keyword, Pageable pageable);
 

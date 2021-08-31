@@ -2,7 +2,6 @@ package com.dm.springboot.autoconfigure.file;
 
 import com.dm.file.config.FileConfig;
 import com.dm.file.controller.FileController;
-import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.entity.FileInfo;
 import com.dm.file.listener.FileListener;
 import com.dm.file.repository.FileInfoRepository;
@@ -36,7 +35,6 @@ public class FileConfiguration {
     @Bean
     public FileInfoService fileInfoService(@Autowired FileInfoRepository fileInfoRepository) {
         return new FileServiceImpl(
-            fileInfoConverter(),
             fileStorageService(),
             fileInfoRepository
         );
@@ -47,17 +45,12 @@ public class FileConfiguration {
         return new FileController(
             fileInfoService(fileInfoRepository),
             thumbnailService(),
-            fileInfoConverter(),
             fileConfig(),
             fileStorageService(),
             packageFileService()
         );
     }
 
-    @Bean
-    public FileInfoConverter fileInfoConverter() {
-        return new FileInfoConverter();
-    }
 
     @Bean
     @ConfigurationProperties(prefix = "dm.fileserver")
@@ -87,8 +80,8 @@ public class FileConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(PackageFileService.class)
-    @Scope(value = "session",proxyMode = ScopedProxyMode.INTERFACES)
-    public PackageFileService packageFileService(){
+    @Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
+    public PackageFileService packageFileService() {
         return new MapPackageFileServiceImpl();
     }
 }

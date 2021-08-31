@@ -2,17 +2,17 @@ package com.dm.datasource.entity;
 
 import com.dm.common.entity.AbstractEntity;
 import com.dm.datasource.provider.DataSourceProperties.DbTypes;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "dm_datasource_")
 public class DmDataSource extends AbstractEntity {
+
+    public DmDataSource() {
+    }
 
     @Column(name = "name_", length = 50)
     private String name;
@@ -47,4 +47,116 @@ public class DmDataSource extends AbstractEntity {
     @Basic(fetch = FetchType.LAZY)
     private String remark;
 
+    public DmDataSource(String name, String host, Integer port, DbTypes dbType, String username, String password, String database, Map<String, String> properties, String remark) {
+        this.name = name;
+        this.host = host;
+        this.port = port;
+        this.dbType = dbType;
+        this.username = username;
+        this.password = password;
+        this.database = database;
+        this.properties = properties;
+        this.remark = remark;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        DmDataSource that = (DmDataSource) o;
+        return Objects.equals(name, that.name) && Objects.equals(host, that.host) && Objects.equals(port, that.port) && dbType == that.dbType && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(database, that.database) && Objects.equals(properties, that.properties) && Objects.equals(remark, that.remark);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, host, port, dbType, username, password, database, properties, remark);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public DbTypes getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(DbTypes dbType) {
+        this.dbType = dbType;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties = properties;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @Override
+    public String toString() {
+        return "DmDataSource{" +
+            "name='" + name + '\'' +
+            ", host='" + host + '\'' +
+            ", port=" + port +
+            ", dbType=" + dbType +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", database='" + database + '\'' +
+            ", properties=" + properties +
+            ", remark='" + remark + '\'' +
+            '}';
+    }
 }

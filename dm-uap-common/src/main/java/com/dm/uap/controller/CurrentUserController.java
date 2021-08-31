@@ -2,12 +2,10 @@ package com.dm.uap.controller;
 
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
-import com.dm.uap.converter.UserConverter;
-import com.dm.uap.dto.UpdatePasswordDto;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.dto.request.UpdatePasswordDto;
 import com.dm.uap.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +19,14 @@ import static org.springframework.http.HttpStatus.CREATED;
  */
 @RestController
 @RequestMapping("/users/current")
-@RequiredArgsConstructor
+
 public class CurrentUserController {
 
     private final UserService userService;
-    private final UserConverter userConverter;
+
+    public CurrentUserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * 获取当前用户的信息
@@ -67,7 +68,7 @@ public class CurrentUserController {
         if (userService.checkPassword(userId, data.getOldPassword())) {
             throw new DataValidateException("原始密码校验错误");
         }
-        return userConverter.toDto(userService.resetPassword(userId, data.getPassword()));
+        return userService.resetPassword(userId, data.getPassword());
     }
 
     private void validRePassword(String password, String rePassword) {

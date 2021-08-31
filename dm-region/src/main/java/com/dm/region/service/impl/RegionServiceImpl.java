@@ -1,5 +1,6 @@
 package com.dm.region.service.impl;
 
+import com.dm.collections.Lists;
 import com.dm.region.converter.RegionConverter;
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.QRegion;
@@ -7,7 +8,6 @@ import com.dm.region.entity.Region;
 import com.dm.region.repository.RegionRepository;
 import com.dm.region.service.RegionService;
 import com.querydsl.core.BooleanBuilder;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,42 +16,42 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class RegionServiceImpl implements RegionService {
 
     private final RegionRepository regionRepository;
 
-    private final RegionConverter regionConverter;
 
     private final QRegion qRegion = QRegion.region;
 
-    @Override
-    public List<Region> findAll() {
-        return regionRepository.findAll();
+    public RegionServiceImpl(RegionRepository regionRepository) {
+        this.regionRepository = regionRepository;
     }
 
     @Override
-    public List<Region> findProvincials() {
-        return regionRepository.findAllByParentCode_CodeIsNull();
+    @Transactional(readOnly = true)
+    public List<RegionDto> findAll() {
+        return Lists.transform(regionRepository.findAll(), RegionConverter::toDto);
     }
 
     @Override
-    public List<Region> findChildren(String code) {
-        return regionRepository.findAllByParentCode_Code(code);
+    @Transactional(readOnly = true)
+    public List<RegionDto> findProvincials() {
+        return Lists.transform(regionRepository.findAllByParentCode_CodeIsNull(), RegionConverter::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RegionDto> findChildren(String code) {
+        return Lists.transform(regionRepository.findAllByParentCode_Code(code), RegionConverter::toDto);
     }
 
     @Override
     @Transactional
-    public List<Region> save(List<RegionDto> regions) {
-        List<Region> re = regions.stream().map(region -> {
-            Region model = new Region();
-            regionConverter.copyProperties(model, region);
-            return model;
-        }).collect(Collectors.toList());
-        return regionRepository.saveAll(re);
+    public List<RegionDto> save(List<RegionDto> regions) {
+        List<Region> models = Lists.transform(regions, region -> this.copyProperties(new Region(), region));
+        return Lists.transform(regionRepository.saveAll(models), RegionConverter::toDto);
     }
 
     @Override
@@ -60,13 +60,15 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public List<Region> findAllChildren(String code) {
-        return regionRepository.findAllChildren(code);
+    @Transactional(readOnly = true)
+    public List<RegionDto> findAllChildren(String code) {
+        return Lists.transform(regionRepository.findAllChildren(code), RegionConverter::toDto);
     }
 
     @Override
-    public Optional<Region> findByCode(String parent) {
-        return regionRepository.findById(parent);
+    @Transactional(readOnly = true)
+    public Optional<RegionDto> findByCode(String parent) {
+        return regionRepository.findById(parent).map(RegionConverter::toDto);
     }
 
     @Override
@@ -93,5 +95,19 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Optional<Region> findNextSyncRegion() {
         return regionRepository.findByHrefNotNullAndSyncedIsFalse();
+    }
+
+
+    private Region copyProperties(Region model, RegionDto dto) {
+        model.setCode(dto.getCode());
+        model.setName(dto.getName());
+        model.setLatitude(dto.getLatitude());
+        model.setLongitude(dto.getLongitude());
+        if (dto.getParent() != null) {
+            Region regionParent = new Region();
+            copyProperties(regionParent, dto.getParent());
+            model.setParentCode(regionParent);
+        }
+        return model;
     }
 }

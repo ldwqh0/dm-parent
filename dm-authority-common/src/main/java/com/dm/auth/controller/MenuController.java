@@ -9,7 +9,6 @@ import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,12 +31,13 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @Api(tags = {"menu"})
 @RequestMapping({"menus", "p/menus"})
 @RestController
-@RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
 
-    private final MenuConverter menuConverter;
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     /**
      * 保存一个菜单
@@ -159,7 +159,7 @@ public class MenuController {
         } else if (DOWN.equals(order.getPosition())) {
             menu = menuService.moveDown(id);
         }
-        return menuConverter.toDto(menu);
+        return MenuConverter.toDto(menu);
     }
 
 

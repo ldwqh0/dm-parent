@@ -9,7 +9,6 @@ import com.dm.auth.service.RoleService;
 import com.dm.collections.CollectionUtils;
 import com.dm.common.exception.DataNotExistException;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,12 +25,14 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping({"menuAuthorities", "p/menuAuthorities"})
-@RequiredArgsConstructor
 public class MenuAuthorityController {
 
     private final RoleService roleService;
 
-    private final RoleConverter roleConverter;
+    public MenuAuthorityController(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
 
     /**
      * 保存一个角色的菜单权限配置
@@ -46,7 +47,7 @@ public class MenuAuthorityController {
     public MenuAuthorityDto save(@PathVariable("roleId") Long roleId,
                                  @RequestBody MenuAuthorityDto authorityDto) {
         Role menuAuthority = roleService.saveAuthority(roleId, authorityDto);
-        return roleConverter.toMenuAuthorityDto(menuAuthority);
+        return RoleConverter.toMenuAuthorityDto(menuAuthority);
     }
 
     /**
@@ -59,7 +60,7 @@ public class MenuAuthorityController {
     @GetMapping("{roleId}")
     @Transactional(readOnly = true)
     public MenuAuthorityDto get(@PathVariable("roleId") Long roleId) {
-        return roleService.findById(roleId).map(roleConverter::toMenuAuthorityDto)
+        return roleService.findById(roleId).map(RoleConverter::toMenuAuthorityDto)
             .orElseThrow(DataNotExistException::new);
     }
 

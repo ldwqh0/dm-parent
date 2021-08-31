@@ -3,11 +3,11 @@ package com.dm.region.service.impl;
 import com.dm.region.entity.Region;
 import com.dm.region.service.RegionService;
 import com.dm.region.service.RegionSyncService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -18,11 +18,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
-@RequiredArgsConstructor
 public class RegionSyncServiceImpl implements RegionSyncService {
 
     private final RegionService regionService;
+    private static final Logger log = LoggerFactory.getLogger(RegionServiceImpl.class);
+
+    public RegionSyncServiceImpl(RegionService regionService) {
+        this.regionService = regionService;
+    }
 
     private String resolveHref(String url, String href) {
         return StringUtils.join(StringUtils.substringBeforeLast(url, "/"), "/", href);

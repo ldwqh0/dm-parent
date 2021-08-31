@@ -4,20 +4,19 @@ import com.dm.auth.entity.Role.Status;
 import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 角色数据结构
  *
  * @author LiDong
  */
-@Data
 @JsonInclude(value = Include.NON_EMPTY)
 public class RoleDto implements IdentifiableDto<Long>, Serializable {
     private static final long serialVersionUID = 4725729366179649819L;
@@ -88,4 +87,69 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
         return group + "_" + name;
     }
 
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Status getState() {
+        return state;
+    }
+
+    public void setState(Status state) {
+        this.state = state;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RoleDto roleDto = (RoleDto) o;
+        return Objects.equals(id, roleDto.id) && Objects.equals(name, roleDto.name) && Objects.equals(description, roleDto.description) && state == roleDto.state && Objects.equals(group, roleDto.group);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, state, group);
+    }
+
+    @Override
+    public String toString() {
+        return "RoleDto{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", state=" + state +
+            ", group='" + group + '\'' +
+            '}';
+    }
 }

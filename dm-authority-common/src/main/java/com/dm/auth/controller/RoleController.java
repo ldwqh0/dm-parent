@@ -9,7 +9,6 @@ import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,12 +28,13 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RestController
 @RequestMapping({"roles", "p/roles"})
 @Validated
-@RequiredArgsConstructor
 public class RoleController {
 
     private final RoleService roleService;
 
-    private final RoleConverter roleConverter;
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     /**
      * 保存一个角色
@@ -52,7 +52,7 @@ public class RoleController {
             throw new DataValidateException("角色名称被占用");
         } else {
             Role role = roleService.save(roleDto);
-            return roleConverter.toDto(role);
+            return RoleConverter.toDto(role);
         }
     }
 
@@ -72,7 +72,7 @@ public class RoleController {
         if (roleService.nameExist(id, roleDto.getGroup(), roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
-            return roleConverter.toDto(roleService.update(id, roleDto));
+            return RoleConverter.toDto(roleService.update(id, roleDto));
         }
     }
 
@@ -85,7 +85,7 @@ public class RoleController {
     @ApiOperation("获取角色信息")
     @GetMapping("{id}")
     public RoleDto findById(@PathVariable("id") long id) {
-        return roleConverter.toDto(roleService.get(id).orElseThrow(DataNotExistException::new));
+        return RoleConverter.toDto(roleService.get(id).orElseThrow(DataNotExistException::new));
     }
 
     /**
@@ -117,7 +117,7 @@ public class RoleController {
         @RequestParam(value = "group", required = false) String group,
         @RequestParam(value = "keyword", required = false) String keyword,
         @PageableDefault Pageable pageable) {
-        return roleService.search(group, keyword, pageable).map(roleConverter::toDto);
+        return roleService.search(group, keyword, pageable).map(RoleConverter::toDto);
     }
 
     /**
@@ -128,7 +128,7 @@ public class RoleController {
     @ApiOperation("获取所有启用角色")
     @GetMapping
     public List<RoleDto> listEnabled() {
-        return Lists.transform(roleService.listAllEnabled(), roleConverter::toDto);
+        return Lists.transform(roleService.listAllEnabled(), RoleConverter::toDto);
     }
 
     /**

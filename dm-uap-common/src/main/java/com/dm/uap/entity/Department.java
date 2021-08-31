@@ -1,15 +1,13 @@
 package com.dm.uap.entity;
 
 import com.dm.common.entity.AbstractEntity;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Optional;
 
 @Entity
-@Getter
-@Setter
+
+
 @Table(name = "dm_department_", uniqueConstraints = {
     @UniqueConstraint(name = "uk_dm_department_parent_id_full_name_", columnNames = {"parent_id_", "full_name_"})
 })
@@ -76,11 +74,74 @@ public class Department extends AbstractEntity {
     private String logo;
 
 
+    /**
+     * 部门主管
+     */
     @ManyToOne
     @JoinColumn(name = "department_director_")
     private User director;
 
-    public Optional<User> getDirector(){
+    public Optional<User> getDirector() {
         return Optional.ofNullable(director);
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getShortname() {
+        return shortname;
+    }
+
+    public void setShortname(String shortname) {
+        this.shortname = shortname;
+    }
+
+    public Department getParent() {
+        return parent;
+    }
+
+    public void setParent(Department parent) {
+        this.parent = parent;
+    }
+
+    public Types getType() {
+        return type;
+    }
+
+    public void setType(Types type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getOrder() {
+        return order;
+    }
+
+    public void setOrder(Long order) {
+        this.order = order;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public void setDirector(User director) {
+        this.director = director;
     }
 }

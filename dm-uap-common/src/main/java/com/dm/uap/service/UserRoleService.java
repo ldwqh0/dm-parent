@@ -1,6 +1,7 @@
 package com.dm.uap.service;
 
-import com.dm.uap.dto.RoleDto;
+
+import com.dm.security.core.userdetails.RoleDto;
 
 public interface UserRoleService {
 

@@ -20,14 +20,11 @@ import java.util.UUID;
 @Service
 public class FileServiceImpl implements FileInfoService {
 
-    private final FileInfoConverter fileInfoConverter;
-
     private final FileStorageService storageService;
 
     private final FileInfoRepository fileInfoRepository;
 
-    public FileServiceImpl(FileInfoConverter fileInfoConverter, FileStorageService storageService, FileInfoRepository fileInfoRepository) {
-        this.fileInfoConverter = fileInfoConverter;
+    public FileServiceImpl(FileStorageService storageService, FileInfoRepository fileInfoRepository) {
         this.storageService = storageService;
         this.fileInfoRepository = fileInfoRepository;
     }
@@ -59,9 +56,7 @@ public class FileServiceImpl implements FileInfoService {
     }
 
     private FileInfo save(FileInfoDto _info) {
-        FileInfo fileInfo = new FileInfo();
-        fileInfoConverter.copyProperties(fileInfo, _info);
-        fileInfo = fileInfoRepository.save(fileInfo);
+        FileInfo fileInfo = fileInfoRepository.save(copyProperties(new FileInfo(), _info));
         String filename = _info.getFilename();
         String ext = DmFileUtils.getExt(filename);
         String storagePath = fileInfo.getId() + "." + ext;
@@ -90,4 +85,11 @@ public class FileServiceImpl implements FileInfoService {
         return fileInfoRepository.findAllById(files);
     }
 
+
+    private FileInfo copyProperties(FileInfo dest, FileInfoDto src) {
+        dest.setFilename(src.getFilename());
+        dest.setPath(src.getPath());
+        dest.setSize(src.getSize());
+        return dest;
+    }
 }

@@ -1,10 +1,10 @@
 package com.dm.uap.dto;
 
-import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
@@ -12,7 +12,6 @@ import java.io.Serializable;
  *
  * @author LiDong
  */
-@Data
 public class UserPostDto implements Serializable {
 
     private static final long serialVersionUID = -1344418453725050901L;
@@ -40,4 +39,32 @@ public class UserPostDto implements Serializable {
         super();
     }
 
+    public DepartmentDto getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(DepartmentDto department) {
+        this.department = department;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserPostDto that = (UserPostDto) o;
+        return Objects.equals(department, that.department) && Objects.equals(post, that.post);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(department, post);
+    }
 }

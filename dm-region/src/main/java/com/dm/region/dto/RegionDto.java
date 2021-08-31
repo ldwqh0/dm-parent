@@ -4,12 +4,10 @@ import com.dm.common.validation.groups.ReferenceGroup;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
-@Data
 @JsonInclude(Include.NON_EMPTY)
 public class RegionDto implements Serializable {
 
@@ -62,4 +60,43 @@ public class RegionDto implements Serializable {
         this.name = name;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public RegionDto getParent() {
+        return parent;
+    }
+
+    public void setParent(RegionDto parent) {
+        this.parent = parent;
+    }
 }

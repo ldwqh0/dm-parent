@@ -22,11 +22,6 @@
       <artifactId>dm-security-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>javax.annotation-api</artifactId>
     </dependency>
@@ -49,6 +44,20 @@
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>cz.habarta.typescript-generator</groupId>
+        <artifactId>typescript-generator-maven-plugin</artifactId>
+        <configuration>
+          <jsonLibrary>jackson2</jsonLibrary>
+          <outputKind>module</outputKind>
+          <outputFile>src/main/resources/public/ts/dm-auth.ts</outputFile>
+          <classPatterns>
+            <pattern>org.springframework.data.domain.Page</pattern>
+            <pattern>com.dm.auth.dto.*</pattern>
+          </classPatterns>
+        </configuration>
       </plugin>
     </plugins>
   </build>

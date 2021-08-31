@@ -5,11 +5,11 @@ import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -17,7 +17,6 @@ import java.util.Optional;
  *
  * @author LiDong
  */
-@Data
 @JsonInclude(Include.NON_EMPTY)
 public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
     private static final long serialVersionUID = 7184771144233410172L;
@@ -86,4 +85,145 @@ public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
         return children.remove(item);
     }
 
+    public MenuTreeDto() {
+    }
+
+    public MenuTreeDto(Long id, String name, String title, Boolean enabled, String url, String icon, String description, MenuType type, Long order, Boolean openInNewWindow, Long parentId, List<MenuTreeDto> children) {
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.enabled = enabled;
+        this.url = url;
+        this.icon = icon;
+        this.description = description;
+        this.type = type;
+        this.order = order;
+        this.openInNewWindow = openInNewWindow;
+        this.parentId = parentId;
+        this.children = children;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public MenuType getType() {
+        return type;
+    }
+
+    public void setType(MenuType type) {
+        this.type = type;
+    }
+
+    public Long getOrder() {
+        return order;
+    }
+
+    public void setOrder(Long order) {
+        this.order = order;
+    }
+
+    public Boolean getOpenInNewWindow() {
+        return openInNewWindow;
+    }
+
+    public void setOpenInNewWindow(Boolean openInNewWindow) {
+        this.openInNewWindow = openInNewWindow;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public void setChildren(List<MenuTreeDto> children) {
+        this.children = children;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MenuTreeDto that = (MenuTreeDto) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(title, that.title) && Objects.equals(enabled, that.enabled) && Objects.equals(url, that.url) && Objects.equals(icon, that.icon) && Objects.equals(description, that.description) && type == that.type && Objects.equals(order, that.order) && Objects.equals(openInNewWindow, that.openInNewWindow) && Objects.equals(parentId, that.parentId) && Objects.equals(children, that.children);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, title, enabled, url, icon, description, type, order, openInNewWindow, parentId, children);
+    }
+
+    @Override
+    public String toString() {
+        return "MenuTreeDto{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", title='" + title + '\'' +
+            ", enabled=" + enabled +
+            ", url='" + url + '\'' +
+            ", icon='" + icon + '\'' +
+            ", description='" + description + '\'' +
+            ", type=" + type +
+            ", order=" + order +
+            ", openInNewWindow=" + openInNewWindow +
+            ", parentId=" + parentId +
+            ", children=" + children +
+            '}';
+    }
 }

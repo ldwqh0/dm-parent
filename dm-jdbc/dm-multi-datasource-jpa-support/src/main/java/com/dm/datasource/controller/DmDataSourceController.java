@@ -26,11 +26,9 @@ import java.util.List;
 public class DmDataSourceController {
 
     private final DmDataSourceService dataSourceService;
-    private final DmDataSourceConverter dataSourceConverter;
 
-    public DmDataSourceController(DmDataSourceService dataSourceService, DmDataSourceConverter cnnConverter) {
+    public DmDataSourceController(DmDataSourceService dataSourceService) {
         this.dataSourceService = dataSourceService;
-        this.dataSourceConverter = cnnConverter;
     }
 
 
@@ -43,44 +41,44 @@ public class DmDataSourceController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DmDataSourceDto save(@Validated(Default.class) @RequestBody DmDataSourceDto connection) {
-        return dataSourceConverter.toDto(dataSourceService.save(connection));
+        return DmDataSourceConverter.toDto(dataSourceService.save(connection));
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public DmDataSourceDto update(@PathVariable("id") Long id,
                                   @RequestBody @Validated(Default.class) DmDataSourceDto connection) {
-        return dataSourceConverter.toDto(dataSourceService.update(id, connection));
+        return DmDataSourceConverter.toDto(dataSourceService.update(id, connection));
     }
 
     @GetMapping("{id}")
     public DmDataSourceDto get(@PathVariable("id") Long id) {
-        return dataSourceService.findById(id).map(dataSourceConverter::toDto).orElseThrow(DataNotExistException::new);
+        return dataSourceService.findById(id).map(DmDataSourceConverter::toDto).orElseThrow(DataNotExistException::new);
     }
 
     @GetMapping(params = {"page", "size"})
     public Page<DmDataSourceDto> list(
         @RequestParam(value = "keyword", required = false) String keyword,
         @PageableDefault Pageable pageable) {
-        return dataSourceService.list(keyword, pageable).map(dataSourceConverter::toSimpleDto);
+        return dataSourceService.list(keyword, pageable).map(DmDataSourceConverter::toSimpleDto);
     }
 
     @GetMapping(params = {"!page", "!size"})
     public List<DmDataSourceDto> list() {
-        return Lists.transform(dataSourceService.listAll(), dataSourceConverter::toDto);
+        return Lists.transform(dataSourceService.listAll(), DmDataSourceConverter::toDto);
     }
 
     @GetMapping("{cnn}/state")
     public CheckResult state(@PathVariable("cnn") Long id) {
         return dataSourceService.findById(id)
-            .map(dataSourceConverter::toDataSourceProperties)
+            .map(DmDataSourceConverter::toDataSourceProperties)
             .map(this::checkState)
             .orElseThrow(DataNotExistException::new);
     }
 
     @PostMapping(value = "state")
     public CheckResult state(@RequestBody DmDataSourceDto cnn) {
-        return checkState(dataSourceConverter.toDataSourceProperties(cnn));
+        return checkState(DmDataSourceConverter.toDataSourceProperties(cnn));
     }
 
     private CheckResult checkState(DataSourceProperties properties) {

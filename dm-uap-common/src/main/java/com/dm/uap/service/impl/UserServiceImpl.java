@@ -6,9 +6,8 @@ import com.dm.collections.Maps;
 import com.dm.collections.Sets;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
+import com.dm.security.core.userdetails.RoleDto;
 import com.dm.uap.converter.UserConverter;
-import com.dm.uap.converter.UserRoleConverter;
-import com.dm.uap.dto.RoleDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
@@ -22,7 +21,6 @@ import com.dm.uap.service.UserService;
 import com.dm.util.Assert;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,14 +35,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final UserConverter userConverter;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -52,9 +49,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRoleRepository userRoleRepository;
 
-    private final UserRoleConverter userRoleConverter;
 
     private final QUser qUser = QUser.user;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, DepartmentRepository departmentRepository, UserRoleRepository userRoleRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.departmentRepository = departmentRepository;
+        this.userRoleRepository = userRoleRepository;
+    }
 
     @Override
     public boolean exist() {
@@ -68,7 +71,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return Optional.ofNullable(username)
             .filter(StringUtils::isNotEmpty)
             .flatMap(userRepository::findOneByUsernameIgnoreCase)
-            .map(userConverter::toUserDetails)
+            .map(UserConverter::toUserDetails)
             .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
@@ -78,7 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return Optional.ofNullable(mobile)
             .filter(StringUtils::isNotEmpty)
             .flatMap(userRepository::findByMobileIgnoreCase)
-            .map(userConverter::toUserDetails)
+            .map(UserConverter::toUserDetails)
             .orElseThrow(() -> new UsernameNotFoundException(mobile));
     }
 
@@ -89,21 +92,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
-    public User save(UserDto userDto) {
+    public UserDto save(UserDto userDto) {
         validationUser(userDto);
         String password = userDto.getPassword();
         // 密码不能为空
         Assert.notEmpty(password).orElseThrow(() -> new DataValidateException("用户密码不能为空"));
-        User user = userConverter.copyProperties(new User(), userDto);
+        User user = copyProperties(new User(), userDto);
         user.setPassword(passwordEncoder.encode(password));
         addPostsAndRoles(user, userDto);
-        user = userRepository.save(user);
-        return user;
+        return UserConverter.toDto(userRepository.save(user));
     }
 
     @Override
     public Optional<UserDto> findById(long id) {
-        return userRepository.findById(id).map(userConverter::toDto);
+        return userRepository.findById(id).map(UserConverter::toDto);
     }
 
     @Override
@@ -124,11 +126,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
-    public User update(long id, UserDto userDto) {
+    public UserDto update(long id, UserDto userDto) {
         validationUser(userDto, id);
-        User user = userConverter.copyProperties(userRepository.getById(id), userDto);
+        User user = this.copyProperties(userRepository.getById(id), userDto);
         addPostsAndRoles(user, userDto);
-        return user;
+        return UserConverter.toDto(userRepository.save(user));
     }
 
     @Override
@@ -143,14 +145,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
-    public User resetPassword(long id, String password) {
+    public UserDto resetPassword(long id, String password) {
         User user = userRepository.getById(id);
         user.setPassword(passwordEncoder.encode(password));
-        return user;
+        return UserConverter.toDto(user);
     }
 
     @Override
-    public Page<User> search(Long department, Long role, String roleGroup, String key, Pageable pageable) {
+    public Page<UserDto> search(Long department, Long role, String roleGroup, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         if (Objects.nonNull(department)) {
             Department dep = departmentRepository.getById(department);
@@ -166,7 +168,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             query.and(qUser.username.containsIgnoreCase(key)
                 .or(qUser.fullname.containsIgnoreCase(key)));
         }
-        return userRepository.findAll(query, pageable);
+        return userRepository.findAll(query, pageable).map(UserConverter::toDto);
     }
 
     // 添加用户的职务和角色信息
@@ -188,7 +190,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     private UserRole toModel(RoleDto dto) {
         Long id = dto.getId();
-        UserRole role = userRoleConverter.copyProperties(userRoleRepository.existsById(id) ? userRoleRepository.getById(id) : new UserRole(), dto);
+        UserRole role = userRoleRepository.existsById(id) ? userRoleRepository.getById(id) : new UserRole();
+        role.setId(dto.getId());
+        role.setGroup(dto.getGroup());
+        role.setName(dto.getName());
         return userRoleRepository.save(role);
     }
 
@@ -201,8 +206,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public boolean userExistsByUsername(String username, Long... excludes) {
         BooleanExpression expression = qUser.username.equalsIgnoreCase(username);
-        if (ArrayUtils.isNotEmpty(excludes)) {
-            expression = expression.and(qUser.id.notIn(excludes));
+        List<Long> excludesList = Arrays.stream(excludes).filter(Objects::nonNull).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(excludesList)) {
+            expression = expression.and(qUser.id.notIn(excludesList));
         }
         return userRepository.exists(expression);
     }
@@ -237,12 +243,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         @CacheEvict(cacheNames = {"users"}, key = "#result.username.toLowerCase()"),
         @CacheEvict(cacheNames = {"users"}, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
     })
-    public User patch(long id, UserDto user) {
+    public UserDto patch(long id, UserDto user) {
         User originUser = userRepository.getById(id);
         if (Objects.nonNull(user.getEnabled())) {
             originUser.setEnabled(user.getEnabled());
         }
-        return userRepository.save(originUser);
+        return UserConverter.toDto(userRepository.save(originUser));
     }
 
     @Override
@@ -258,7 +264,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         originUser.setRegionCode(user.getRegionCode());
         originUser.setScenicName(user.getScenicName());
         originUser.setUsername(user.getUsername());
-        return userConverter.toDto(userRepository.save(originUser));
+        return UserConverter.toDto(userRepository.save(originUser));
     }
 
 
@@ -272,5 +278,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (StringUtils.isNotBlank(email)) {
             Assert.from(email, v -> !userExistsByEmail(v, exclude)).orElseThrow(() -> new DataValidateException("邮箱已经被占用"));
         }
+    }
+
+
+    private User copyProperties(User user, UserDto userDto) {
+        if (Objects.nonNull(user) && Objects.nonNull(userDto)) {
+            user.setEnabled(userDto.getEnabled());
+            user.setUsername(userDto.getUsername());
+            user.setFullname(userDto.getFullname());
+            user.setProfilePhoto(userDto.getProfilePhoto());
+            user.setMobile(userDto.getMobile());
+            user.setDescription(userDto.getDescription());
+            user.setEmail(userDto.getEmail());
+            user.setScenicName(userDto.getScenicName());
+            user.setRegionCode(userDto.getRegionCode());
+            user.setBirthDate(userDto.getBirthDate());
+            user.setNo(userDto.getNo());
+        }
+        return user;
     }
 }

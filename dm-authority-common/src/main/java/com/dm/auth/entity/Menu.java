@@ -2,15 +2,12 @@ package com.dm.auth.entity;
 
 import com.dm.collections.CollectionUtils;
 import com.dm.common.entity.AbstractEntity;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "dm_menu_", indexes = {
     @Index(columnList = "parent_", name = "idx_dm_menu_parent_")}, uniqueConstraints = {
@@ -121,5 +118,120 @@ public class Menu extends AbstractEntity {
 
     public Menu() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Long getOrder() {
+        return order;
+    }
+
+    public void setOrder(Long order) {
+        this.order = order;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Menu getParent() {
+        return parent;
+    }
+
+    public void setParent(Menu parent) {
+        this.parent = parent;
+    }
+
+    public MenuType getType() {
+        return type;
+    }
+
+    public void setType(MenuType type) {
+        this.type = type;
+    }
+
+    public Boolean getOpenInNewWindow() {
+        return openInNewWindow;
+    }
+
+    public void setOpenInNewWindow(Boolean openInNewWindow) {
+        this.openInNewWindow = openInNewWindow;
+    }
+
+    public List<Menu> getChildren() {
+        return children;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Menu menu = (Menu) o;
+        return enabled == menu.enabled && Objects.equals(name, menu.name) && Objects.equals(title, menu.title) && Objects.equals(url, menu.url) && Objects.equals(order, menu.order) && Objects.equals(icon, menu.icon) && Objects.equals(description, menu.description) && Objects.equals(parent, menu.parent) && type == menu.type && Objects.equals(openInNewWindow, menu.openInNewWindow) && Objects.equals(children, menu.children);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, title, enabled, url, order, icon, description, parent, type, openInNewWindow, children);
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+            "name='" + name + '\'' +
+            ", title='" + title + '\'' +
+            ", enabled=" + enabled +
+            ", url='" + url + '\'' +
+            ", order=" + order +
+            ", icon='" + icon + '\'' +
+            ", description='" + description + '\'' +
+            ", parent=" + parent +
+            ", type=" + type +
+            ", openInNewWindow=" + openInNewWindow +
+            ", children=" + children +
+            '}';
     }
 }

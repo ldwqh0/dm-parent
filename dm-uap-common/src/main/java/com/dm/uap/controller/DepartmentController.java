@@ -4,7 +4,6 @@ import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.service.DepartmentService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,10 +20,14 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  */
 @RestController
 @RequestMapping("departments")
-@RequiredArgsConstructor
 public class DepartmentController {
 
     private final DepartmentService departmentService;
+
+    public DepartmentController(DepartmentService departmentService) {
+        this.departmentService = departmentService;
+    }
+
 
     /**
      * 新增部门
@@ -109,9 +112,9 @@ public class DepartmentController {
      */
     @GetMapping(value = "validation", params = "fullname")
     public ValidationResult validationFullName(
-            @RequestParam("fullname") String fullname,
-            @RequestParam(value = "parentId", required = false) Long parentId,
-            @RequestParam(value = "exclude", required = false) Long exclude) {
+        @RequestParam("fullname") String fullname,
+        @RequestParam(value = "parentId", required = false) Long parentId,
+        @RequestParam(value = "exclude", required = false) Long exclude) {
         if (departmentService.existsByNameAndParent(fullname, parentId, exclude)) {
             return ValidationResult.failure("部门名称已经被占用");
         } else {

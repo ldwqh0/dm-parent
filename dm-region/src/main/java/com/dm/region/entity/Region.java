@@ -1,13 +1,8 @@
 package com.dm.region.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "dm_region_")
 public class Region implements Serializable {
@@ -65,4 +60,68 @@ public class Region implements Serializable {
 
     @Column(name = "synced_")
     private boolean synced = false;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Region getParentCode() {
+        return parentCode;
+    }
+
+    public void setParentCode(Region parentCode) {
+        this.parentCode = parentCode;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public boolean isSynced() {
+        return synced;
+    }
+
+    public void setSynced(boolean synced) {
+        this.synced = synced;
+    }
 }

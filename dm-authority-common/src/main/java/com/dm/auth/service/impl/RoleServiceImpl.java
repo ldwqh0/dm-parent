@@ -1,7 +1,6 @@
 package com.dm.auth.service.impl;
 
 import com.dm.auth.converter.MenuConverter;
-import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.RoleDto;
@@ -15,7 +14,6 @@ import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.RoleService;
 import com.dm.common.exception.DataNotExistException;
 import com.querydsl.core.BooleanBuilder;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,18 +28,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
-
-    private final RoleConverter roleConverter;
 
     private final RoleRepository roleRepository;
 
     private final MenuRepository menuRepository;
 
     private final ResourceRepository resourceRepository;
-
-    private final MenuConverter menuConverter;
 
     private final QRole qRole = QRole.role;
 
@@ -55,6 +48,12 @@ public class RoleServiceImpl implements RoleService {
         HttpMethod.HEAD,
         HttpMethod.OPTIONS,
     };
+
+    public RoleServiceImpl(RoleRepository roleRepository, MenuRepository menuRepository, ResourceRepository resourceRepository) {
+        this.roleRepository = roleRepository;
+        this.menuRepository = menuRepository;
+        this.resourceRepository = resourceRepository;
+    }
 
     @Override
     public boolean exist() {
@@ -71,7 +70,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackFor = Throwable.class)
     @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public Role save(RoleDto roleDto) {
-        return roleRepository.save(roleConverter.copyProperties(new Role(), roleDto));
+        return roleRepository.save(copyProperties(new Role(), roleDto));
     }
 
     @Override
@@ -89,7 +88,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackFor = Throwable.class)
     @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public Role update(long id, RoleDto roleDto) {
-        return roleRepository.save(roleConverter.copyProperties(roleRepository.getById(id), roleDto));
+        return roleRepository.save(copyProperties(roleRepository.getById(id), roleDto));
     }
 
     @Override
@@ -162,7 +161,7 @@ public class RoleServiceImpl implements RoleService {
             // 如果root是空，不做过滤
             // 如果root不是空，则查找root的子孙代
             .filter(menu -> Objects.isNull(root) || (!Objects.equals(menu.getId(), root) && this.isOffspringOf(menu, root))) // 只需要是
-            .map(menuConverter::toDto)
+            .map(MenuConverter::toDto)
             .collect(Collectors.toSet());
     }
 
@@ -234,6 +233,16 @@ public class RoleServiceImpl implements RoleService {
             query.and(qRole.id.ne(exclude));
         }
         return roleRepository.exists(query);
+    }
+
+    private Role copyProperties(Role role, RoleDto roleDto) {
+        if (role != null && roleDto != null) {
+            role.setName(roleDto.getName());
+            role.setDescription(roleDto.getDescription());
+            role.setState(roleDto.getState());
+            role.setGroup(roleDto.getGroup());
+        }
+        return role;
     }
 
 }
