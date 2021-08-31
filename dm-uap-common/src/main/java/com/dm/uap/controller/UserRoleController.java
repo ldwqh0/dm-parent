@@ -1,6 +1,6 @@
 package com.dm.uap.controller;
 
-import com.dm.security.core.userdetails.RoleDto;
+import com.dm.uap.dto.UserRoleDto;
 import com.dm.uap.service.UserRoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +21,7 @@ public class UserRoleController {
     }
 
     @PutMapping("{id}")
-    public RoleDto role(@PathVariable("id") @Min(4) Long id, @RequestBody RoleDto role) {
+    public UserRoleDto role(@PathVariable("id") @Min(4) Long id, @RequestBody UserRoleDto role) {
         return roleService.update(id, role);
     }
 

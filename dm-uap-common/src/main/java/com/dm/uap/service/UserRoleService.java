@@ -1,11 +1,11 @@
 package com.dm.uap.service;
 
 
-import com.dm.security.core.userdetails.RoleDto;
+import com.dm.uap.dto.UserRoleDto;
 
 public interface UserRoleService {
 
-    RoleDto update(Long id, RoleDto role);
+    UserRoleDto update(Long id, UserRoleDto role);
 
     void delete(Long id);
 }

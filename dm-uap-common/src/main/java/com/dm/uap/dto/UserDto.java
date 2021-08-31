@@ -2,7 +2,6 @@ package com.dm.uap.dto;
 
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
-import com.dm.security.core.userdetails.RoleDto;
 import com.dm.uap.entity.Address;
 import com.dm.uap.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -122,7 +121,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
      */
     @Valid
     @NotEmpty(groups = {New.class, Update.class})
-    private Set<RoleDto> roles;
+    private Set<UserRoleDto> roles;
 
     /**
      * 景区名称
@@ -295,11 +294,11 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
         this.description = description;
     }
 
-    public Set<RoleDto> getRoles() {
+    public Set<UserRoleDto> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<RoleDto> roles) {
+    public void setRoles(Set<UserRoleDto> roles) {
         this.roles = roles;
     }
 

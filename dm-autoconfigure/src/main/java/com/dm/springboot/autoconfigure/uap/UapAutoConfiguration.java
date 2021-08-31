@@ -1,8 +1,8 @@
 package com.dm.springboot.autoconfigure.uap;
 
-import com.dm.security.core.userdetails.RoleDto;
 import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapJCacheConfiguration;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.dto.UserRoleDto;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -52,11 +52,7 @@ public class UapAutoConfiguration implements InitializingBean {
             user.setFullname(fullname);
             user.setPassword(password);
             user.setEnabled(true);
-            RoleDto role = new RoleDto();
-            role.setId(1L);
-            role.setGroup("内置分组");
-            role.setName("ROLE_ADMIN");
-            user.setRoles(Collections.singleton(role));
+            user.setRoles(Collections.singleton(UserRoleDto.ROLE_ADMIN));
             userService.save(user);
         }
         // 建立默认匿名账号
@@ -66,11 +62,7 @@ public class UapAutoConfiguration implements InitializingBean {
             anonymous.setPassword("ANONYMOUS");
             anonymous.setEnabled(true);
             anonymous.setFullname("匿名用户");
-            RoleDto role = new RoleDto();
-            role.setId(3L);
-            role.setGroup("内置分组");
-            role.setName("ROLE_ANONYMOUS");
-            anonymous.setRoles(Collections.singleton(role));
+            anonymous.setRoles(Collections.singleton(UserRoleDto.ROLE_ANONYMOUS));
             userService.save(anonymous);
         }
     }

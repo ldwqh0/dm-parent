@@ -50,7 +50,11 @@
       </el-table-column>
       <el-table-column label="应用密钥">
         <template #default="{row}">
-          <el-button v-if="row.type==='CLIENT_CONFIDENTIAL'" type="text" @click="showSecret(row)">查看密钥</el-button>
+          <el-button v-if="row.type==='CLIENT_CONFIDENTIAL' || row.type==='CLIENT_RESOURCE'"
+                     type="text"
+                     @click="showSecret(row)">
+            查看密钥
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100px" fixed="right">

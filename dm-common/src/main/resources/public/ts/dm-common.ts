@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.32.889 on 2021-08-31 15:51:34.
+// Generated using typescript-generator version 2.32.889 on 2021-08-31 16:41:02.
 
 export interface AuditableDto extends Serializable {
     createBy?: Audit<number, string>;
@@ -31,8 +31,8 @@ export interface Page<T> extends Slice<T> {
 }
 
 export interface Audit<ID, NAME> {
-    username?: NAME;
     userid?: ID;
+    username?: NAME;
 }
 
 export interface Serializable {
@@ -46,10 +46,10 @@ export interface Sort extends Streamable<Order>, Serializable {
 export interface Pageable {
     offset?: number;
     sort?: Sort;
-    pageNumber?: number;
-    paged?: boolean;
-    pageSize?: number;
     unpaged?: boolean;
+    pageSize?: number;
+    paged?: boolean;
+    pageNumber?: number;
 }
 
 export interface PageImpl<T> extends Chunk<T>, Page<T> {
@@ -60,10 +60,10 @@ export interface Slice<T> extends Streamable<T> {
     content?: T[];
     number?: number;
     sort?: Sort;
-    last?: boolean;
     first?: boolean;
-    pageable?: Pageable;
+    last?: boolean;
     numberOfElements?: number;
+    pageable?: Pageable;
 }
 
 export interface Streamable<T> extends Iterable<T>, Supplier<Stream<T>> {

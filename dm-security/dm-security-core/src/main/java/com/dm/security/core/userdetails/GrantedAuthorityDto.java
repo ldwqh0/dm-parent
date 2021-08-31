@@ -1,15 +1,19 @@
 package com.dm.security.core.userdetails;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import org.springframework.security.core.GrantedAuthority;
 
 @JsonInclude(Include.NON_ABSENT)
 public class GrantedAuthorityDto implements GrantedAuthority {
     private static final long serialVersionUID = 4062924753193768577L;
     private String authority;
     private Long id;
+
+    public static final GrantedAuthorityDto ROLE_ADMIN = new GrantedAuthorityDto("内置分组_ROLE_ADMIN", 1L);
+    public static final GrantedAuthorityDto ROLE_AUTHENTICATED = new GrantedAuthorityDto("内置分组_ROLE_AUTHENTICATED", 2L);
+    public static final GrantedAuthorityDto ROLE_ANONYMOUS = new GrantedAuthorityDto("内置分组_ROLE_ANONYMOUS", 3L);
+
 
     public GrantedAuthorityDto(String authority, Long id) {
         super();

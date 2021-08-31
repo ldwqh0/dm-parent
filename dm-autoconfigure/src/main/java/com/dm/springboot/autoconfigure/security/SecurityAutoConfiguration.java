@@ -46,7 +46,7 @@ public class SecurityAutoConfiguration {
 
     @ConditionalOnClass(name = {
         "reactor.core.publisher.Mono",
-            "com.dm.security.core.userdetails.UserDetailsDto"})
+        "com.dm.security.core.userdetails.UserDetailsDto"})
     @ConditionalOnBean(type = {
         "org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter"})
     static class ReactiveCurrentUserConfiguration {
@@ -117,8 +117,7 @@ public class SecurityAutoConfiguration {
             http.authorizeRequests().anyRequest().authenticated().and().formLogin();
             // 设置匿名用户的默认分组
             UserDetailsDto ud = new UserDetailsDto();
-            List<GrantedAuthority> authorities = Collections
-                .singletonList(new GrantedAuthorityDto("内置分组_ROLE_ANONYMOUS"));
+            List<GrantedAuthority> authorities = Collections.singletonList(GrantedAuthorityDto.ROLE_ANONYMOUS);
             ud.setGrantedAuthority(authorities);
             http.anonymous().authorities(authorities).principal(ud);
             http.formLogin().successHandler(new LoginSuccessHandler(objectMapper)).failureHandler(new LoginFailureHandler(objectMapper));

@@ -1,6 +1,7 @@
 package com.dm.security.oauth2.client.userinfo;
 
 import com.dm.collections.CollectionUtils;
+import com.dm.security.core.userdetails.GrantedAuthorityDto;
 import com.dm.security.oauth2.core.OidcUserDetailsDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.TypeDescriptor;
@@ -126,7 +127,7 @@ public class DmReactiveOidcUserService implements ReactiveOAuth2UserService<Oidc
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
             // 给所有的已登录用户添加一个默认角色
-            authorities.add(new SimpleGrantedAuthority("内置分组_ROLE_AUTHENTICATED"));
+            authorities.add(GrantedAuthorityDto.ROLE_AUTHENTICATED);
             userdetails.setGrantedAuthority(authorities);
         }
         userdetails.setAttributes(idToken.getClaims());

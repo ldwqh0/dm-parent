@@ -68,6 +68,12 @@
                 autosize
                 show-word-limit />
     </el-form-item>
+    <el-form-item prop="description" label="连接说明：">
+      <el-input v-model="model.description"
+                type="textarea"
+                show-word-limit
+                maxlength="4000" />
+    </el-form-item>
     <el-form-item label-width="0" style="text-align: center">
       <el-button @click="$router.back()">取消</el-button>
       <el-button type="primary" @click="save">确定</el-button>

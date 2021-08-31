@@ -69,7 +69,7 @@ public final class UserConverter {
         dto.setFullname(user.getFullname());
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
-        dto.setGrantedAuthority(Sets.transform(user.getRoles(), RoleConverter::toDto));
+        dto.setGrantedAuthority(Sets.transform(user.getRoles(), RoleConverter::toGrantedAuthority));
         dto.setMobile(user.getMobile());
         return dto;
     }

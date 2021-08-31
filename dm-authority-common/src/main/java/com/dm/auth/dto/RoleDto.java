@@ -24,7 +24,8 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
     public RoleDto() {
     }
 
-    public RoleDto(String name, String group, String description) {
+    public RoleDto(Long id, String name, String group, String description) {
+        this.setId(id);
         this.name = name;
         this.group = group;
         this.description = description;

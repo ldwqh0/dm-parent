@@ -1,7 +1,7 @@
 package com.dm.uap.service.impl;
 
-import com.dm.security.core.userdetails.RoleDto;
 import com.dm.uap.converter.RoleConverter;
+import com.dm.uap.dto.UserRoleDto;
 import com.dm.uap.entity.UserRole;
 import com.dm.uap.repository.UserRoleRepository;
 import com.dm.uap.service.UserRoleService;
@@ -21,7 +21,7 @@ public class RoleServiceImpl implements UserRoleService {
     @Override
     @Transactional
     @CacheEvict(cacheNames = {"users"}, allEntries = true)
-    public RoleDto update(Long id, RoleDto dto) {
+    public UserRoleDto update(Long id, UserRoleDto dto) {
         return RoleConverter.toDto(userRoleRepository.save(copyProperties(userRoleRepository.getById(id), dto)));
     }
 
@@ -33,7 +33,7 @@ public class RoleServiceImpl implements UserRoleService {
     }
 
 
-    private UserRole copyProperties(UserRole model, RoleDto dto) {
+    private UserRole copyProperties(UserRole model, UserRoleDto dto) {
         model.setId(dto.getId());
         model.setName(dto.getName());
         model.setGroup(dto.getGroup());

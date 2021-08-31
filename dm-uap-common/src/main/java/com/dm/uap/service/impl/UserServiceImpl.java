@@ -6,10 +6,10 @@ import com.dm.collections.Maps;
 import com.dm.collections.Sets;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
-import com.dm.security.core.userdetails.RoleDto;
 import com.dm.uap.converter.UserConverter;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
+import com.dm.uap.dto.UserRoleDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.QUser;
 import com.dm.uap.entity.User;
@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-
 
     private final PasswordEncoder passwordEncoder;
 
@@ -188,7 +187,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      *
      * @param dto 要转换为model的role dto
      */
-    private UserRole toModel(RoleDto dto) {
+    private UserRole toModel(UserRoleDto dto) {
         Long id = dto.getId();
         UserRole role = userRoleRepository.existsById(id) ? userRoleRepository.getById(id) : new UserRole();
         role.setId(dto.getId());
