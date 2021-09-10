@@ -176,7 +176,7 @@
     <repository>
       <id>maven-dm</id>
       <name>Maven China Mirror</name>
-      <url>http://118.112.177.38:8081/repository/maven-public/</url>
+      <url>http://118.112.177.36:8081/repository/maven-public/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
