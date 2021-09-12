@@ -1,9 +1,6 @@
 package com.dm.uap.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -12,6 +9,17 @@ import java.util.Objects;
 @Entity
 @Table(name = "dm_role_")
 public class UserRole {
+
+    public enum Status {
+        /**
+         * 标识角色已启用
+         */
+        ENABLED,
+        /**
+         * 标识角色被禁用
+         */
+        DISABLED
+    }
 
     /**
      * 角色id
@@ -32,6 +40,12 @@ public class UserRole {
     @Column(name = "name_", length = 100)
     private String name;
 
+    @Version
+    @Column(name = "version_", nullable = false)
+    private Long version;
+
+    @Column(name = "state_", length = 50, nullable = false)
+    private String state = "ENABLED";
 
     public Long getId() {
         return id;

@@ -102,7 +102,7 @@ public class AuthAutoConfiguration {
             roleService.saveAuthority(role.getId(), authorities);
             return role;
         } else {
-            return null;
+            return roleService.findByFullname(fullname).get();
         }
     }
 
