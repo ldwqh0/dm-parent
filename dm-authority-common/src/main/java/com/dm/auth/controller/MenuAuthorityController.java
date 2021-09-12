@@ -4,7 +4,6 @@ import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.MenuTreeDto;
-import com.dm.auth.entity.Role;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.CollectionUtils;
 import com.dm.common.exception.DataNotExistException;
@@ -46,8 +45,7 @@ public class MenuAuthorityController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public MenuAuthorityDto save(@PathVariable("roleId") Long roleId,
                                  @RequestBody MenuAuthorityDto authorityDto) {
-        Role menuAuthority = roleService.saveAuthority(roleId, authorityDto);
-        return RoleConverter.toMenuAuthorityDto(menuAuthority);
+        return roleService.saveAuthority(roleId, authorityDto);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.dm.auth.entity;
 import com.dm.common.entity.AbstractEntity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,7 +44,7 @@ public class Role extends AbstractEntity {
         @Index(columnList = "role_id_", name = "IDX_dm_role_menu_role_id_"),
         @Index(columnList = "menu_id_", name = "IDX_dm_role_menu_menu_id_")
     })
-    private Set<Menu> menus;
+    private Set<Menu> menus = new HashSet<>();
 
     public Role() {
     }
@@ -53,7 +54,7 @@ public class Role extends AbstractEntity {
         this.group = group;
         this.state = state;
         this.description = description;
-        this.menus = menus;
+        this.setMenus(menus);
     }
 
     public String getFullName() {
@@ -97,7 +98,8 @@ public class Role extends AbstractEntity {
     }
 
     public void setMenus(Set<Menu> menus) {
-        this.menus = menus;
+        this.menus.clear();
+        this.menus.addAll(menus);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.dm.auth.service.impl;
 
 import com.dm.auth.converter.MenuConverter;
+import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.RoleDto;
@@ -61,16 +62,16 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> findByFullname(String authority) {
+    public Optional<RoleDto> findByFullname(String authority) {
         String[] groupRole = authority.split("\\_", 2);
-        return roleRepository.findByGroupAndName(groupRole[0], groupRole[1]);
+        return roleRepository.findByGroupAndName(groupRole[0], groupRole[1]).map(RoleConverter::toDto);
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
     @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
-    public Role save(RoleDto roleDto) {
-        return roleRepository.save(copyProperties(new Role(), roleDto));
+    public RoleDto save(RoleDto roleDto) {
+        return RoleConverter.toDto(roleRepository.save(copyProperties(new Role(), roleDto)));
     }
 
     @Override
@@ -127,14 +128,14 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "AuthorityMenus", allEntries = true)
-    public Role saveAuthority(Long roleId, MenuAuthorityDto authorityDto) {
+    public MenuAuthorityDto saveAuthority(Long roleId, MenuAuthorityDto authorityDto) {
         Role authority;
         if (roleRepository.existsById(roleId)) {
             authority = roleRepository.getById(roleId);
             Set<MenuDto> menus = authorityDto.getAuthorityMenus();
             Set<Menu> list = menus.stream().map(menuRepository::getByDto).collect(Collectors.toSet());
             authority.setMenus(list);
-            return authority;
+            return RoleConverter.toMenuAuthorityDto(roleRepository.save(authority));
         } else {
             throw new DataNotExistException("指定角色不存在");
         }
@@ -150,8 +151,9 @@ public class RoleServiceImpl implements RoleService {
     @Cacheable(cacheNames = "AuthorityMenus", sync = true, key = "#p0+'_p_'+#p1")
     @Transactional(readOnly = true)
     public Set<MenuDto> findAuthorityMenus(String authority, final Long root) {
+        String[] groupRole = authority.split("\\_", 2);
         Set<Menu> parents = new HashSet<>();
-        Set<Menu> menus = findByFullname(authority).map(Role::getMenus).orElseGet(Collections::emptySet);
+        Set<Menu> menus = roleRepository.findByGroupAndName(groupRole[0], groupRole[1]).map(Role::getMenus).orElseGet(Collections::emptySet);
         // 递归添加所有父级菜单
         menus.forEach(menu -> addParent(menu, parents));
         menus.addAll(parents);

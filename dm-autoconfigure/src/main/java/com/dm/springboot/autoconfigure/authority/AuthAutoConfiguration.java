@@ -8,19 +8,18 @@ import com.dm.auth.entity.Role;
 import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
-import com.dm.security.authentication.UriResource.MatchType;
+import com.dm.collections.Sets;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @ConditionalOnClass({Role.class})
 @EntityScan({"com.dm.auth"})
@@ -28,110 +27,83 @@ import java.util.stream.Collectors;
 @ComponentScan({"com.dm.auth"})
 @Import(AuthJCacheConfiguration.class)
 @RequiredArgsConstructor
+@Slf4j
 public class AuthAutoConfiguration {
 
     private final MenuService menuService;
 
     private final ResourceService resourceService;
 
-    private final RoleService authorityService;
-
     private final RoleService roleService;
 
     @PostConstruct
     public void init() {
-
-        // TODO 这里的逻辑要根据新的逻辑重新修改
-
-        // 初始化资源信息
-        initResource();
-
+        // 初始化菜单信息
+        Set<MenuDto> menus = initMenus();
         // 初始化角色信息
-        initRole();
+        Set<RoleDto> roles = initRoles(menus);
+        // 初始化资源信息
+        Set<ResourceDto> resources = initResources(roles);
     }
 
-
-    private void initResource() {
-        if (!resourceService.exist()) {
-            ResourceDto resource = new ResourceDto();
-            resource.setName("default");
-            resource.setMatchType(MatchType.ANT_PATH);
-            resource.setMatcher("/**");
-            resource.setDescription("默认资源类型");
-            resourceService.save(resource);
-
-            ResourceDto r2 = new ResourceDto();
-            r2.setName("用户可见菜单");
-            r2.setMatchType(MatchType.ANT_PATH);
-            r2.setMatcher("/p/menuAuthorities/current**/**");
-            r2.setDescription("当前用户可见菜单");
-            resourceService.save(r2);
+    private Set<MenuDto> initMenus() {
+        if (!menuService.exists()) {
+            MenuDto menuDto = new MenuDto();
+            menuDto.setName("index");
+            menuDto.setTitle("首页");
+            menuDto.setUrl("/");
+            return Collections.singleton(menuService.save(menuDto));
+        } else {
+            return Collections.emptySet();
         }
     }
 
-    private void initAuthority(Role role) {
-        List<MenuDto> menus = menuService.listOffspring(null, null, Sort.by("order"));
-        Long roleId = role.getId();
-        // 判断是否
-        // 默认角色ID
-        MenuAuthorityDto menuAuthority = new MenuAuthorityDto();
-        menuAuthority.setRoleName("内置分组_ROLE_ADMIN");
-        menuAuthority.setRoleId(roleId);
-        Set<MenuDto> menus_ = menus.stream().map(m -> {
-            MenuDto md = new MenuDto();
-            md.setId(m.getId());
-            md.setOrder(1L);
-            return md;
-        }).collect(Collectors.toSet());
-
-        // 初始化管理员角色的资源权限，默认授予default资源的全部权限
-        resourceService.findByName("default").ifPresent(resource -> {
-            // 将知道的授权组装为一个授权对象
-            // TODO　这里待处理
-//            ResourceAuthorityDto resourceAuthority = new ResourceAuthorityDto();
-//            resourceAuthority.setRoleName("内置分组_ROLE_ADMIN");
-//            resourceAuthority.setRoleId(roleId);
-//            Map<Long, ResourceOperation> operations = Maps
-//                .entry(resource.getId(), ResourceOperation.accessAll())
-//                .build();
-//            resourceAuthority.setResourceAuthorities(operations);
-//            roleService.saveAuthority(resourceAuthority);
-        });
-
-        menuAuthority.setAuthorityMenus(menus_);
-        authorityService.saveAuthority(roleId, menuAuthority);
+    private Set<ResourceDto> initResources(Set<RoleDto> roles) {
+        if (!resourceService.exist()) {
+            return Sets.hashSet(
+                initResource("default", "/**", "默认资源类型", roles),
+                initResource("用户可见菜单", "/p/menuAuthorities/current**/**", "当前用户可见菜单", roles)
+            );
+        } else {
+            return Collections.emptySet();
+        }
     }
 
-    private void initRole() {
+    private ResourceDto initResource(String name, String matcher, String description, Set<RoleDto> roles) {
+        ResourceDto r2 = new ResourceDto();
+        r2.setName(name);
+        r2.setMatcher(matcher);
+        r2.setDescription(description);
+        r2.setAccessAuthorities(roles);
+        return resourceService.save(r2);
+    }
+
+    private Set<RoleDto> initRoles(Set<MenuDto> menus) {
+        MenuAuthorityDto authorities = new MenuAuthorityDto();
+        authorities.setAuthorityMenus(menus);
         // 增加默认管理员角色
         // id=1
-        if (!roleService.existsByFullname("内置分组_ROLE_ADMIN")) {
-            RoleDto role = new RoleDto();
-            role.setName("ROLE_ADMIN");
-            role.setGroup("内置分组");
-            role.setDescription("系统内置管理员角色");
-            Role admin = roleService.save(role);
-//            new UserRole();
-            initAuthority(admin);
-        }
-        // 增加系统内置已登录用户角色，所有已登录用户均有该角色
-        // id=2
-        if (!roleService.existsByFullname("内置分组_ROLE_AUTHENTICATED")) {
-            RoleDto role = new RoleDto();
-            role.setName("ROLE_AUTHENTICATED");
-            role.setGroup("内置分组");
-            role.setDescription("系统内置认证通过角色，所有已经登录的用户均为该角色");
-            roleService.save(role);
-        }
-        // 增加默认匿名用户角色
-        // id=3
-        if (!roleService.existsByFullname("内置分组_ROLE_ANONYMOUS")) {
-            RoleDto role = new RoleDto();
-            role.setName("ROLE_ANONYMOUS");
-            role.setGroup("内置分组");
-            role.setDescription("系统内置匿名角色");
-            roleService.save(role);
-        }
-
+        return Sets.hashSet(
+            initRole("ROLE_ADMIN", "系统内置管理员角色", authorities),
+            initRole("ROLE_AUTHENTICATED", "系统内置认证通过角色，所有已经登录的用户均为该角色", authorities),
+            initRole("ROLE_ANONYMOUS", "系统内置匿名角色", authorities)
+        );
     }
+
+    private RoleDto initRole(String name, String description, MenuAuthorityDto authorities) {
+        String group = "内置分组";
+        String fullname = group + "_" + name;
+        if (!roleService.existsByFullname(fullname)) {
+            RoleDto role = new RoleDto();
+            role.setName(name);
+            role.setGroup(group);
+            role.setDescription(description);
+            role = roleService.save(role);
+            roleService.saveAuthority(role.getId(), authorities);
+            return role;
+        } else {
+            return null;
+        }
+    }
+
 }

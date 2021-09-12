@@ -44,7 +44,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     /**
      * 资源匹配方式
      */
-    private MatchType matchType;
+    private MatchType matchType = MatchType.ANT_PATH;
 
     /**
      * 允许访问角色信息

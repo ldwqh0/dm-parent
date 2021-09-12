@@ -137,7 +137,7 @@
     }
 
     created (): void {
-      if (this.id !== 0) {
+      if (Number.parseInt(`${this.id}`) !== 0) {
         http.get(`${URLS.resource}/${this.id}`).then(({ data }) => (this.data = data))
       }
       http.get(URLS.role).then(({ data }) => (this.roles = data))

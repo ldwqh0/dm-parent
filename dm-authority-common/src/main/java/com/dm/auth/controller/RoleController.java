@@ -2,7 +2,6 @@ package com.dm.auth.controller;
 
 import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.RoleDto;
-import com.dm.auth.entity.Role;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Lists;
 import com.dm.common.dto.ValidationResult;
@@ -51,8 +50,7 @@ public class RoleController {
         if (roleService.nameExist(null, roleDto.getGroup(), roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
-            Role role = roleService.save(roleDto);
-            return RoleConverter.toDto(role);
+            return roleService.save(roleDto);
         }
     }
 

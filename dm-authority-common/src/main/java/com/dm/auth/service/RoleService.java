@@ -26,7 +26,7 @@ public interface RoleService {
      * @param dto 角色信息
      * @return 保存后的角色实体
      */
-    Role save(RoleDto dto);
+    RoleDto save(RoleDto dto);
 
     Optional<Role> findById(Long id);
 
@@ -61,7 +61,7 @@ public interface RoleService {
      * @param authority 角色全民
      * @return 查找结果
      */
-    Optional<Role> findByFullname(String authority);
+    Optional<RoleDto> findByFullname(String authority);
 
     /**
      * 根据角色全民判断角色是否存在
@@ -81,7 +81,7 @@ public interface RoleService {
      * @param authorityDto 角色菜单授权信息
      * @return 更新菜单信息后的角色信息
      */
-    Role saveAuthority(Long roleId, MenuAuthorityDto authorityDto);
+    MenuAuthorityDto saveAuthority(Long roleId, MenuAuthorityDto authorityDto);
 
     /**
      * 根据角色查询菜单项目

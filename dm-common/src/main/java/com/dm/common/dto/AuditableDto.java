@@ -8,20 +8,20 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Data
-public class AuditableDto implements Serializable {
+public abstract class AuditableDto<UID extends Serializable, UNAME extends Serializable> implements Serializable {
     private static final long serialVersionUID = -5872361624625517456L;
 
     /**
      * 创建人
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Audit<Long,String> createBy;
+    private Audit<UID, UNAME> createBy;
 
     /**
      * 最后修改人
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Audit<Long,String> lastModifiedBy;
+    private Audit<UID, UNAME> lastModifiedBy;
 
     /**
      * 创建时间

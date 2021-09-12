@@ -3,11 +3,11 @@
            :rules="rules"
            :model="department"
            label-width="100px">
-    <el-form-item label="部门名称：" prop="fullname">
+    <el-form-item label="节点名称：" prop="fullname">
       <el-input v-model="department.fullname" maxlength="100" />
     </el-form-item>
 
-    <el-form-item label="部门简称：" prop="shortname">
+    <el-form-item label="节点简称：" prop="shortname">
       <el-input v-model="department.shortname" maxlength="100" />
     </el-form-item>
 

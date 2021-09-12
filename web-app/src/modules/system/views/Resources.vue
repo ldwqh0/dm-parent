@@ -66,6 +66,10 @@
     searchObj = {}
     ajax = URLS.resource
 
+    add (): void {
+      this.$router.push({ name: 'resource', params: { id: '0' } })
+    }
+
     del ({ id }: { id: number }): Promise<any> {
       return this.$confirm('此操作将永久删除该资源，是否继续?', '删除资源', {
         confirmButtonText: '确定',
