@@ -162,7 +162,12 @@ public class MenuController {
         return MenuConverter.toDto(menu);
     }
 
-
+    /**
+     * 获取一个菜单项目的所有上级
+     *
+     * @param menuId 要查询的菜单的id
+     * @return 菜单的所有上级
+     */
     @GetMapping("{menuId}/parents")
     public List<MenuDto> findParentsByMenuId(@PathVariable("menuId") Long menuId) {
         return menuService.findParentsByMenuId(menuId);

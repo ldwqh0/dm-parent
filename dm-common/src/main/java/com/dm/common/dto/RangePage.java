@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -24,7 +23,6 @@ public interface RangePage<T, M extends Comparable<?> & Serializable> extends Pa
      *
      * @return 返回上限信息
      */
-    @Nullable
     M getMax();
 
     @Override

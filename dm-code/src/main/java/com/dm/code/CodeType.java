@@ -7,9 +7,8 @@ import javax.persistence.Table;
 
 /**
  * 编码类型
- * 
- * @author 李东
  *
+ * @author 李东
  */
 @Entity
 @Table(name = "dm_code_type_")

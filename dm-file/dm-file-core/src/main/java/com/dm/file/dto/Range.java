@@ -13,7 +13,6 @@ import java.util.List;
  *
  * @author ldwqh0@outlook.con
  * @since 0.2.3
- *
  */
 
 public interface Range {
@@ -72,7 +71,7 @@ public interface Range {
     }
 
     static List<Range> of(List<String> strs, long count) throws RangeNotSatisfiableException {
-        return of(strs.toArray(new String[] {}), count);
+        return of(strs.toArray(new String[]{}), count);
     }
 
     static List<Range> of(String[] strs, long count) throws RangeNotSatisfiableException {

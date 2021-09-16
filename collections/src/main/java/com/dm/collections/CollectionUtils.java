@@ -17,7 +17,7 @@ public final class CollectionUtils {
 
     @SuppressWarnings("unchecked")
     public static <I, O, IC extends Collection<I>, OC extends Collection<O>> OC transform(IC input,
-            Function<I, O> converter) {
+                                                                                          Function<I, O> converter) {
         if (input instanceof Set) {
             Set<I> si = (Set<I>) input;
             return (OC) Sets.transform(si, converter);

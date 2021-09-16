@@ -5,11 +5,9 @@ import com.dm.uap.dto.UserRoleDto;
 import com.dm.uap.entity.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.annotation.Nonnull;
-
 public final class RoleConverter {
 
-    public static UserRoleDto toDto(@Nonnull UserRole model) {
+    public static UserRoleDto toDto(UserRole model) {
         UserRoleDto rd = new UserRoleDto();
         rd.setId(model.getId());
         rd.setName(model.getName());

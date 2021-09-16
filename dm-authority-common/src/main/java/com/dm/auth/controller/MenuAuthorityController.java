@@ -87,7 +87,13 @@ public class MenuAuthorityController {
         return Collections.emptyList();
     }
 
-
+    /**
+     * 获取当前用户可用菜单项目，返回树形结构
+     *
+     * @param user
+     * @param parentId
+     * @return
+     */
     @GetMapping(value = "current", params = {"type=tree"})
     public List<MenuTreeDto> systemMenuTree(Authentication user,
                                             @RequestParam(value = "parentId", required = false) Long parentId) {

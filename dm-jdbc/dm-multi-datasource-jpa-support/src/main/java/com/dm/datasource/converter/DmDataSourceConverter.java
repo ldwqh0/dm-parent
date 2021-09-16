@@ -5,12 +5,11 @@ import com.dm.datasource.dto.DmDataSourceDto;
 import com.dm.datasource.entity.DmDataSource;
 import com.dm.datasource.provider.DataSourceProperties;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 public final class DmDataSourceConverter {
 
-    public static DmDataSourceDto toDto(@Nonnull DmDataSource model) {
+    public static DmDataSourceDto toDto(DmDataSource model) {
         DmDataSourceDto dto = toSimpleDto(model);
         Map<String, String> additionalProperties = model.getProperties();
         if (Maps.isNotEmpty(additionalProperties)) {

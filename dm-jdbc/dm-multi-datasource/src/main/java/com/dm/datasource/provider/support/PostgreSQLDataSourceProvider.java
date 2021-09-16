@@ -35,14 +35,14 @@ public class PostgreSQLDataSourceProvider implements DataSourceProvider {
     public String getUrl(DataSourceProperties info) {
         Map<String, String> additionalProperties = info.getAdditionalProperties();
         String query = StringUtils.join("?", additionalProperties.entrySet().stream().map(entry -> StringUtils.join(entry.getKey(), "=", entry.getValue()))
-                .collect(Collectors.joining("&")));
+            .collect(Collectors.joining("&")));
         return StringUtils.join(
-                "jdbc:postgresql://",
-                info.getHost(),
-                ":",
-                info.getPort(),
-                "/",
-                info.getDatabase(),
-                query);
+            "jdbc:postgresql://",
+            info.getHost(),
+            ":",
+            info.getPort(),
+            "/",
+            info.getDatabase(),
+            query);
     }
 }

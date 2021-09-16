@@ -42,15 +42,15 @@ public class OracleDataSourceProvider implements DataSourceProvider {
         String query = "";
         if (!additionalProperties.isEmpty()) {
             query = StringUtils.join("?", additionalProperties.entrySet().stream().map(entry -> StringUtils.join(entry.getKey(), "=", entry.getValue()))
-                    .collect(Collectors.joining("&")));
+                .collect(Collectors.joining("&")));
         }
         return StringUtils.join(
-                "jdbc:oracle:thin:@",
-                info.getHost(),
-                ":",
-                info.getPort(),
-                ":",
-                info.getDatabase(),
-                query);
+            "jdbc:oracle:thin:@",
+            info.getHost(),
+            ":",
+            info.getPort(),
+            ":",
+            info.getDatabase(),
+            query);
     }
 }

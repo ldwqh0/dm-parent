@@ -87,17 +87,17 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
     }
 
     @Override
-    public Optional<Audit<Long,String>> getLastModifiedBy() {
+    public Optional<Audit<Long, String>> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
     @Override
-    public void setLastModifiedBy(Audit<Long,String> lastModifiedBy) {
+    public void setLastModifiedBy(Audit<Long, String> lastModifiedBy) {
         this.lastModifiedBy = new ModifyAudit(lastModifiedBy);
     }
 
     @Override
-    public void setCreatedBy(Audit<Long,String> createBy) {
+    public void setCreatedBy(Audit<Long, String> createBy) {
         this.createdBy = new CreateAudit(createBy);
     }
 

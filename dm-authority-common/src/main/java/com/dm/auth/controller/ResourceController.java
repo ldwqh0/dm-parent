@@ -14,7 +14,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -96,22 +95,11 @@ public class ResourceController {
      * @param keyword  搜索关键字
      * @return 搜索结果
      */
-    @GetMapping(params = {"draw"})
+    @GetMapping(params = {"page"})
     public Page<ResourceDto> search(
         @PageableDefault Pageable pageable,
         @RequestParam(value = "keyword", required = false) String keyword) {
         return resourceService.search(keyword, pageable);
-    }
-
-    /**
-     * 获取所有可用资源
-     *
-     * @return 资源列表
-     */
-    @Deprecated
-    public List<ResourceDto> listAll() {
-        return Collections.emptyList();
-        // return Lists.transform(resourceService.listAll(), resourceConverter::toDto);
     }
 
     /**
@@ -135,8 +123,7 @@ public class ResourceController {
             return ValidationResult.success();
         }
     }
-
-    private boolean exist(@NotNull String matcher, @NotNull UriResource.MatchType matchType, Collection<HttpMethod> methods, @Nullable Long exclude) {
+    private boolean exist(@NotNull String matcher, @NotNull UriResource.MatchType matchType, Collection<HttpMethod> methods, Long exclude) {
         if (Objects.isNull(methods)) {
             methods = Collections.emptySet();
         }
