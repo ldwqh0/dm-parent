@@ -44,7 +44,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         preCheck(data);
         Department department = copyProperties(new Department(), data);
         data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
-        data.getDirector().map(userRepository::getByDto).ifPresent(department::setDirector);
+        department.setDirector(data.getDirector());
         Department dep = departmentRepository.save(department);
         // 设置部门的顺序
         dep.setOrder(dep.getId());
@@ -83,7 +83,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         department.setDirector(null);
         // 重新设置新的配置和原始数据
         data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
-        data.getDirector().map(userRepository::getByDto).ifPresent(department::setDirector);
+        department.setDirector(data.getDirector());
         return this.toDto(departmentRepository.save(department));
     }
 

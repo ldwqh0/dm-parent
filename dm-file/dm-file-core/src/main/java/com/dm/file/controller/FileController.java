@@ -15,8 +15,10 @@ import com.dm.file.service.ThumbnailService;
 import com.dm.file.util.DmFileUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
@@ -47,11 +49,12 @@ import java.util.zip.ZipOutputStream;
 /**
  * 文件
  */
-@Slf4j
+
 @RequestMapping("files")
 @RestController
 @RequiredArgsConstructor
 public class FileController {
+    private static final Logger log= LoggerFactory.getLogger(FileController.class);
 
     private final FileInfoService fileService;
 

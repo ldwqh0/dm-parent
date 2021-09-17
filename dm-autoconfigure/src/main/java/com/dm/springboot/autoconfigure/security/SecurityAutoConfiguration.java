@@ -7,7 +7,6 @@ import com.dm.security.web.authentication.LoginSuccessHandler;
 import com.dm.security.web.controller.CurrentAuthorityController;
 import com.dm.security.web.controller.CurrentUserReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
@@ -107,10 +106,13 @@ public class SecurityAutoConfiguration {
 
     @ConditionalOnClass({Servlet.class, WebSecurityConfigurerAdapter.class})
     @ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class, SecurityWebFilterChain.class})
-    @RequiredArgsConstructor
     static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         private final ObjectMapper objectMapper;
+
+        SecurityConfiguration(ObjectMapper objectMapper) {
+            this.objectMapper = objectMapper;
+        }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {

@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "dm_role_", uniqueConstraints = {@UniqueConstraint(name = "uk_dm_role_group_name_", columnNames = {"group_", "name_"})})
+@Table(name = "dm_role_", uniqueConstraints = {@UniqueConstraint(name = "UK_dm_role_group_name_", columnNames = {"group_", "name_"})})
 public class Role extends AbstractEntity {
 
     public enum Status {

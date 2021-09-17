@@ -94,11 +94,11 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     /**
      * 负责人
      */
-    private UserDto director;
+    private String director;
 
 
-    public Optional<UserDto> getDirector() {
-        return Optional.ofNullable(director);
+    public String getDirector() {
+        return this.director;
     }
 
     /**
@@ -175,7 +175,7 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         this.parent = parent;
     }
 
-    public void setDirector(UserDto director) {
+    public void setDirector(String director) {
         this.director = director;
     }
 

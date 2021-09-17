@@ -2,9 +2,11 @@ package com.dm.file.listener;
 
 
 import com.dm.file.config.FileConfig;
+import com.dm.file.controller.FileController;
 import com.dm.file.entity.FileInfo;
 import com.dm.file.service.FileStorageService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.PostRemove;
@@ -12,8 +14,10 @@ import javax.persistence.PostRemove;
 /**
  * 文件处理侦听器
  */
-@Slf4j
+
 public class FileListener {
+
+    private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
     private FileStorageService storageService;
 

@@ -20,9 +20,9 @@ import org.springframework.util.Assert;
 import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.service.DingTalkService;
 
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
+
 public class OrganizationInternalAppAuthcodeAuthenticationProvider implements AuthenticationProvider, InitializingBean {
 
     private AuthenticationUserDetailsService<DingTalkAuthCodeAuthenticationToken> userDetailsService;

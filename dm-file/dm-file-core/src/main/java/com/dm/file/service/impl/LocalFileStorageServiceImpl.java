@@ -3,8 +3,9 @@ package com.dm.file.service.impl;
 import com.dm.file.config.FileConfig;
 import com.dm.file.service.FileStorageService;
 import com.dm.file.util.DmFileUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +20,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-@Slf4j
+
 public class LocalFileStorageServiceImpl implements FileStorageService {
+
+    private static final Logger log = LoggerFactory.getLogger(LocalFileStorageServiceImpl.class);
 
     private final FileConfig config;
 
@@ -74,7 +77,7 @@ public class LocalFileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public Resource getResource(String filename, Long start, Long end, String... parents) throws IOException {
+    public Resource getResource(String filename, Long start, Long end, String... parents) {
         return getResource(filename, parents);
     }
 

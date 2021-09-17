@@ -3,8 +3,9 @@ package com.dm.file.service.impl;
 import com.dm.file.service.FileStorageService;
 import com.dm.file.service.ThumbnailService;
 import com.dm.file.util.DmFileUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import javax.imageio.ImageIO;
@@ -14,8 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-@Slf4j
+
 public class DefaultThumbnailServiceImpl implements ThumbnailService {
+    private static final Logger log = LoggerFactory.getLogger(DefaultThumbnailServiceImpl.class);
 
     private final FileStorageService storageService;
 

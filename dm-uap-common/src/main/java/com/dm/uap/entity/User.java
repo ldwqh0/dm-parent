@@ -14,18 +14,18 @@ import java.util.*;
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "dm_user_", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_dm_user_username_", columnNames = {"username_"}),
-    @UniqueConstraint(name = "uk_dm_user_email_", columnNames = {"email_"}),
-    @UniqueConstraint(name = "uk_dm_user_mobile_", columnNames = {"mobile_"}),
-    @UniqueConstraint(name = "uk_dm_user_no_", columnNames = "no_")
+    @UniqueConstraint(name = "UK_dm_user_username_", columnNames = {"username_"}),
+    @UniqueConstraint(name = "UK_dm_user_email_", columnNames = {"email_"}),
+    @UniqueConstraint(name = "UK_dm_user_mobile_", columnNames = {"mobile_"}),
+    @UniqueConstraint(name = "UK_dm_user_no_", columnNames = "no_")
 })
 public class User extends AbstractEntity {
 
     /**
      * 用户名
      */
-    @Column(name = "username_", unique = true, length = 50)
     @NotNull
+    @Column(name = "username_", length = 50)
     private String username;
 
     /**
@@ -71,13 +71,13 @@ public class User extends AbstractEntity {
     @Column(name = "fullname_", length = 200)
     private String fullname;
 
-    @Column(name = "email_", length = 100, unique = true)
+    @Column(name = "email_", length = 100)
     private String email;
 
     @Column(name = "email_verified_", nullable = false)
     private boolean emailVerified = false;
 
-    @Column(name = "mobile_", length = 20, unique = true)
+    @Column(name = "mobile_", length = 20)
     private String mobile;
 
     @Column(name = "phone_number_verified_", nullable = false)
@@ -105,7 +105,7 @@ public class User extends AbstractEntity {
     }, inverseJoinColumns = {
         @JoinColumn(name = "role_id_", foreignKey = @ForeignKey(name = "FK_dm_user_role_role_"))
     }, uniqueConstraints = {
-        @UniqueConstraint(name = "uk_dm_user_role_user_role_", columnNames = {"user_id_", "role_id_"})
+        @UniqueConstraint(name = "UK_dm_user_role_user_role_", columnNames = {"user_id_", "role_id_"})
     })
     private Set<UserRole> roles = new HashSet<>();
 
@@ -121,7 +121,7 @@ public class User extends AbstractEntity {
     @JoinTable(name = "dm_user_post_", joinColumns = {
         @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_post_user_id_"))
     }, uniqueConstraints = {
-        @UniqueConstraint(name = "uk_user_id_department_id_post_", columnNames = {"user_id_", "department_id_", "post_"})
+        @UniqueConstraint(name = "UK_user_id_department_id_post_", columnNames = {"user_id_", "department_id_", "post_"})
     }, indexes = {
         @Index(name = "IDX_dm_user_post_user_id_", columnList = "user_id_"),
         @Index(name = "IDX_dm_user_post_department_id_", columnList = "department_id_")
@@ -160,7 +160,7 @@ public class User extends AbstractEntity {
     @ElementCollection
     @JoinTable(name = "dm_user_attribute_",
         joinColumns = {
-            @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_dm_user_attribute_user_id_"))
+            @JoinColumn(name = "user_id_", foreignKey = @ForeignKey(name = "FK_dm_user_attribute_user_id_"))
         })
     @MapKeyColumn(name = "key_")
     @Column(name = "value_")

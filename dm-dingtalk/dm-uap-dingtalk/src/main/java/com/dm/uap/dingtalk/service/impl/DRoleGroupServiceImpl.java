@@ -22,12 +22,12 @@ import com.dm.uap.dingtalk.repository.DRoleGroupRepository;
 import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.service.DRoleGroupService;
 
-import lombok.extern.slf4j.Slf4j;
+
 
 import static java.lang.Boolean.*;
 
 @Service
-@Slf4j
+
 public class DRoleGroupServiceImpl implements DRoleGroupService {
 
     @Autowired

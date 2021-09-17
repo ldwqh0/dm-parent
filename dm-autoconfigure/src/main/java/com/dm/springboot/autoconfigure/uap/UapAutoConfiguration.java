@@ -5,7 +5,7 @@ import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserRoleDto;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -33,12 +33,16 @@ import java.util.Objects;
 @ComponentScan({"com.dm.uap"})
 @EnableConfigurationProperties({DefaultUserProperties.class})
 @Import({UapJCacheConfiguration.class, UapAutoConfiguration.UapBeanConfiguration.class})
-@RequiredArgsConstructor
 public class UapAutoConfiguration implements InitializingBean {
 
     private final DefaultUserProperties defaultUser;
 
     private final UserService userService;
+
+    public UapAutoConfiguration(DefaultUserProperties defaultUser, UserService userService) {
+        this.defaultUser = defaultUser;
+        this.userService = userService;
+    }
 
     private void initUser() {
         String username = defaultUser.getUsername();

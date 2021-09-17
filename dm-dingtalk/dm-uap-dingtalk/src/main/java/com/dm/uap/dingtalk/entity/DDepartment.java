@@ -42,7 +42,7 @@ public class DDepartment extends CorpLongEntity {
      * 一个钉钉部门对应的系统部门
      */
     @OneToOne(cascade = {MERGE, PERSIST, REFRESH, DETACH})
-    @JoinColumn(name = "dm_department_id_")
+    @JoinColumn(name = "department_id_")
     public Department department;
 
     /**

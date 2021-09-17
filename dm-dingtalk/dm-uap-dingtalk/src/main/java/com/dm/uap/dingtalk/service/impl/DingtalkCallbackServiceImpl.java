@@ -9,9 +9,9 @@ import com.dm.uap.dingtalk.service.DRoleService;
 import com.dm.uap.dingtalk.service.DUserService;
 import com.dm.uap.dingtalk.service.DingtalkCallbackService;
 
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
+
 public class DingtalkCallbackServiceImpl implements DingtalkCallbackService {
 
     private DUserService dUserService;

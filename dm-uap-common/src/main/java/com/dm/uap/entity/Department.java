@@ -3,13 +3,12 @@ package com.dm.uap.entity;
 import com.dm.common.entity.AbstractEntity;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 @Entity
 
 
 @Table(name = "dm_department_", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_dm_department_parent_id_full_name_", columnNames = {"parent_id_", "full_name_"})
+    @UniqueConstraint(name = "UK_dm_department_parent_id_full_name_", columnNames = {"parent_id_", "full_name_"})
 })
 public class Department extends AbstractEntity {
 
@@ -77,12 +76,11 @@ public class Department extends AbstractEntity {
     /**
      * 部门主管
      */
-    @ManyToOne
-    @JoinColumn(name = "department_director_")
-    private User director;
+    @Column(name = "director_")
+    private String director;
 
-    public Optional<User> getDirector() {
-        return Optional.ofNullable(director);
+    public String getDirector() {
+        return this.director;
     }
 
     public String getFullname() {
@@ -141,7 +139,7 @@ public class Department extends AbstractEntity {
         this.logo = logo;
     }
 
-    public void setDirector(User director) {
+    public void setDirector(String director) {
         this.director = director;
     }
 }

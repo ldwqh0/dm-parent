@@ -1,6 +1,15 @@
 package com.dm.springboot.autoconfigure.dingtalk;
 
+import com.dm.dingtalk.api.callback.CallbackController;
+import com.dm.dingtalk.api.callback.CallbackProperties;
+import com.dm.dingtalk.api.service.DingTalkService;
+import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
+import com.dm.dingtalk.api.service.impl.DefaultDingTalkServiceImpl;
+import com.dm.dingtalk.api.service.impl.OrganizationInternalAppAccessTokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -10,22 +19,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.dm.dingtalk.api.callback.CallbackController;
-import com.dm.dingtalk.api.callback.CallbackProperties;
-import com.dm.dingtalk.api.service.DingTalkService;
-import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
-import com.dm.dingtalk.api.service.impl.DefaultDingTalkServiceImpl;
-import com.dm.dingtalk.api.service.impl.OrganizationInternalAppAccessTokenService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Configuration
 @ConfigurationProperties(prefix = "dingtalk")
 @ConditionalOnClass(DefaultDingTalkServiceImpl.class)
-@ConditionalOnProperty(prefix = "dingtalk", name = { "appkey", "appsecret" })
+@ConditionalOnProperty(prefix = "dingtalk", name = {"appkey", "appsecret"})
 public class DingTalkConfiguration {
+
+    private static final Logger log = LoggerFactory.getLogger(DingTalkConfiguration.class);
 
     private String appkey;
     private String appsecret;
@@ -77,7 +77,7 @@ public class DingTalkConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "dingtalk", name = { "corp-id" })
+    @ConditionalOnProperty(prefix = "dingtalk", name = {"corp-id"})
     public DingtalkAccessTokenService organizationInternalAppAccessTokenService() {
         log.info("Init default OrganizationInternalAppAccessTokenService with appkey[{}]", appkey);
         return new OrganizationInternalAppAccessTokenService(appkey, appsecret, corpId);
@@ -94,13 +94,13 @@ public class DingTalkConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DingtalkConfigurerAdapter.class)
-    @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
+    @ConditionalOnProperty(prefix = "dingtalk.callback", name = {"aes-key", "token"})
     public DingtalkConfigurerAdapter adapter() {
         return new DingtalkConfigurerAdapter();
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "dingtalk.callback", name = { "aes-key", "token" })
+    @ConditionalOnProperty(prefix = "dingtalk.callback", name = {"aes-key", "token"})
     public CallbackController callbackController(@Autowired ObjectMapper om) {
         CallbackController c = new CallbackController();
         DingtalkConfigurerAdapter adapter = adapter();

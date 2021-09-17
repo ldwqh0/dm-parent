@@ -18,11 +18,11 @@ import com.dm.uap.dingtalk.repository.DDepartmentRepository;
 import com.dm.uap.dingtalk.service.DDepartmentService;
 import com.dm.uap.repository.DepartmentRepository;
 
-import lombok.extern.slf4j.Slf4j;
+
 import static java.lang.Boolean.*;
 
 @Service
-@Slf4j
+
 public class DDepartmentServiceImpl implements DDepartmentService {
 
     @Autowired

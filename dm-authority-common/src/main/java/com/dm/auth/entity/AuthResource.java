@@ -26,8 +26,8 @@ public class AuthResource extends AbstractEntity {
 
     @ElementCollection
     @CollectionTable(name = "dm_resource_method_", joinColumns = {
-        @JoinColumn(name = "dm_resource_id_")
-    })
+        @JoinColumn(name = "resource_id_")
+    }, foreignKey = @ForeignKey(name = "FK_dm_resource_method_dm_resource_id_"))
     @Enumerated(EnumType.STRING)
     private Set<HttpMethod> methods = new HashSet<>();
 
@@ -50,10 +50,10 @@ public class AuthResource extends AbstractEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "scope_")
     @CollectionTable(name = "dm_resource_scope_", joinColumns = {
-        @JoinColumn(name = "resource_", foreignKey = @ForeignKey(name = "FK_dm_resource_scope_resource_"))
+        @JoinColumn(name = "resource_id_")
     }, indexes = {
-        @Index(name = "IDX_dm_resource_scope_resource_", columnList = "resource_")
-    })
+        @Index(name = "IDX_dm_resource_scope_resource_", columnList = "resource_id_")
+    }, foreignKey = @ForeignKey(name = "FK_dm_resource_scope_dm_resource_id_"))
     private Set<String> scope = new HashSet<>();
 
     public void setScope(Set<String> scope) {
@@ -74,8 +74,11 @@ public class AuthResource extends AbstractEntity {
 
     @ManyToMany
     @JoinTable(name = "dm_resource_access_authority_", joinColumns = {
-        @JoinColumn(name = "dm_resource_id_")
-    })
+        @JoinColumn(name = "resource_id_")
+    }, inverseJoinColumns = {
+        @JoinColumn(name = "role_id_")
+    }, foreignKey = @ForeignKey(name = "dm_resource_access_authority_dm_resource_id_"),
+        inverseForeignKey = @ForeignKey(name = "dm_resource_access_authority_dm_role_id_"))
     private Set<Role> accessAuthorities = new HashSet<>();
 
     public void setAccessAuthorities(Set<Role> accessAuthorities) {
@@ -90,8 +93,11 @@ public class AuthResource extends AbstractEntity {
      */
     @ManyToMany
     @JoinTable(name = "dm_resource_deny_authority_", joinColumns = {
-        @JoinColumn(name = "dm_resource_id_")
-    })
+        @JoinColumn(name = "resource_id_")
+    }, inverseJoinColumns = {
+        @JoinColumn(name = "role_id_")
+    }, foreignKey = @ForeignKey(name = "dm_resource_deny_authority_dm_resource_id_"),
+        inverseForeignKey = @ForeignKey(name = "dm_resource_deny_authority_role_id_"))
     private Set<Role> denyAuthorities = new HashSet<>();
 
     public void setDenyAuthorities(Set<Role> denyAuthorities) {

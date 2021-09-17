@@ -2,7 +2,7 @@ package com.dm.springboot.autoconfigure.common;
 
 import com.dm.common.entity.Audit;
 import com.dm.security.core.userdetails.UserDetailsDto;
-import lombok.RequiredArgsConstructor;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -25,12 +25,15 @@ import java.util.Optional;
  */
 @Configuration
 @ConditionalOnBean(AuditingHandler.class)
-@RequiredArgsConstructor
 public class AuditingAutoConfiguration {
 
 	private final AuditingHandler handler;
 
-	/**
+    public AuditingAutoConfiguration(AuditingHandler handler) {
+        this.handler = handler;
+    }
+
+    /**
 	 * 修改AuditingHandler的DateTimeProvider使用，ZonedDateTime获取当前时间<br>
 	 * 这个正确的修改方式应该是 在 @EnableJpaAuditing(dateTimeProviderRef =
 	 * "zonedDateTimeProvider") 指定<br>

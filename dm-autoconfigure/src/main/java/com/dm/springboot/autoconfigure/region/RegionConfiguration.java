@@ -7,9 +7,9 @@ import com.dm.region.service.RegionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.MapType;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,17 +25,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@EntityScan({ "com.dm.region" })
-@EnableJpaRepositories({ "com.dm.region" })
-@ComponentScan({ "com.dm.region" })
+@EntityScan({"com.dm.region"})
+@EnableJpaRepositories({"com.dm.region"})
+@ComponentScan({"com.dm.region"})
 @Configuration
 @ConditionalOnClass(Region.class)
-@Slf4j
-@RequiredArgsConstructor
 public class RegionConfiguration {
+
+    private static final Logger log = LoggerFactory.getLogger(RegionConfiguration.class);
+
     private final ObjectMapper objectMapper;
 
     private final RegionService regionService;
+
+    public RegionConfiguration(ObjectMapper objectMapper, RegionService regionService) {
+        this.objectMapper = objectMapper;
+        this.regionService = regionService;
+    }
 
     /**
      * 初始化区县数据
@@ -45,9 +51,9 @@ public class RegionConfiguration {
         if (!regionService.existAny()) {
             try (InputStream iStream = this.getClass().getClassLoader().getResourceAsStream("regions.json")) {
                 MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class,
-                        String.class);
+                    String.class);
                 CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class,
-                        elementType);
+                    elementType);
                 List<Map<String, Object>> result = objectMapper.readValue(iStream, collectionType);
                 if (CollectionUtils.isNotEmpty(result)) {
                     List<RegionDto> regions = result.stream().map(r -> {

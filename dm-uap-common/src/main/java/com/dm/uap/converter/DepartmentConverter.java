@@ -18,7 +18,7 @@ public final class DepartmentConverter {
         result.setDescription(model.getDescription());
         result.setType(model.getType());
         result.setLogo(model.getLogo());
-        model.getDirector().map(UserConverter::toSimpleDto).ifPresent(result::setDirector);
+        result.setDirector(model.getDirector());
         return result;
     }
 

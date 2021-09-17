@@ -19,7 +19,7 @@ import static javax.persistence.CascadeType.*;
 @Setter
 @Table(name = "dd_user_", indexes = {
     @Index(columnList = "deleted_", name = "idx_dd_user_deleted_"),
-    @Index(columnList = "corp_id_,userid_", name = "uk_dd_user_corpid_userid_")
+    @Index(columnList = "corp_id_,userid_", name = "UK_dd_user_corpid_userid_")
 })
 @IdClass(DUserId.class)
 public class DUser {
@@ -146,7 +146,7 @@ public class DUser {
     private Set<DRole> roles;
 
     @OneToOne(cascade = {MERGE, PERSIST, REFRESH, DETACH})
-    @JoinColumn(name = "dm_user_id_")
+    @JoinColumn(name = "user_id_")
     private User user;
 
     /**

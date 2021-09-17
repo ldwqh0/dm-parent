@@ -20,7 +20,7 @@ public class DRole extends CorpLongEntity {
     private String name;
 
     @OneToOne(cascade = {DETACH, MERGE, PERSIST, REFRESH})
-    @JoinColumn(name = "dm_role_id_")
+    @JoinColumn(name = "role_id_")
     private Role role;
 
     @ManyToOne(cascade = REFRESH)

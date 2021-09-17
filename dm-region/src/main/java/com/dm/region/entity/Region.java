@@ -30,7 +30,7 @@ public class Region implements Serializable {
      * 编码
      */
     @Id
-    @Column(name = "code_", nullable = false, unique = true, length = 20)
+    @Column(name = "code_", nullable = false, length = 20)
     private String code;
 
     /**
@@ -43,7 +43,7 @@ public class Region implements Serializable {
      * 上级编码
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_code_")
+    @JoinColumn(name = "parent_code_", foreignKey = @ForeignKey(name = "FK_dm_code_parent_"))
     private Region parentCode;
 
     @Column(name = "longitude_")

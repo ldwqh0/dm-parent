@@ -21,7 +21,9 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners({AuditingEntityListener.class, FileListener.class})
-@Table(name = "dm_file_", indexes = {
+@Table(name = "dm_file_", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"path_"}, name = "UK_dm_file_path_")
+}, indexes = {
     @Index(name = "idx_dm_file_created_date_", columnList = "created_date_"),
     @Index(name = "idx_dm_file_created_user_id_", columnList = "created_user_id_"),
     @Index(name = "idx_dm_file_created_user_name_", columnList = "created_user_name_"),
@@ -39,12 +41,14 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
     })
     private UUID id;
 
+    @Embedded
     private CreateAudit createdBy;
 
     @Column(name = "created_date_")
     @CreatedDate
     private ZonedDateTime createdDate = ZonedDateTime.now();
 
+    @Embedded
     private ModifyAudit lastModifiedBy;
 
     @Column(name = "last_modified_date_")
@@ -60,7 +64,7 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
     /**
      * 文件存储路径
      */
-    @Column(name = "path_", unique = true)
+    @Column(name = "path_")
     private String path;
 
     /**

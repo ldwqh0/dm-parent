@@ -45,12 +45,12 @@ import com.dm.uap.entity.Department;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.UserRepository;
 
-import lombok.extern.slf4j.Slf4j;
+
 
 import static java.lang.Boolean.*;
 
 @Service
-@Slf4j
+
 public class DUserServiceImpl implements DUserService {
 
     @Autowired

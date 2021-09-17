@@ -34,7 +34,7 @@ public class DRoleGroup extends CorpLongEntity {
     private Set<DRole> roles;
 
 //    @OneToOne(cascade = { DETACH, MERGE, PERSIST, REFRESH })
-//    @JoinColumn(name = "dm_group_id_")
+//    @JoinColumn(name = "group_id_")
 //    private RoleGroup group;
 
     /**

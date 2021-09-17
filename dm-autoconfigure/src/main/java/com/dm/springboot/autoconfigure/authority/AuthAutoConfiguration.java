@@ -9,8 +9,6 @@ import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Sets;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,8 +24,6 @@ import java.util.Set;
 @EnableJpaRepositories({"com.dm.auth"})
 @ComponentScan({"com.dm.auth"})
 @Import(AuthJCacheConfiguration.class)
-@RequiredArgsConstructor
-@Slf4j
 public class AuthAutoConfiguration {
 
     private final MenuService menuService;
@@ -35,6 +31,12 @@ public class AuthAutoConfiguration {
     private final ResourceService resourceService;
 
     private final RoleService roleService;
+
+    public AuthAutoConfiguration(MenuService menuService, ResourceService resourceService, RoleService roleService) {
+        this.menuService = menuService;
+        this.resourceService = resourceService;
+        this.roleService = roleService;
+    }
 
     @PostConstruct
     public void init() {

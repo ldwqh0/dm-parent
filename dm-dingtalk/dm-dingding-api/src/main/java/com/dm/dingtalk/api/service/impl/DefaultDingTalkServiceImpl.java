@@ -8,8 +8,10 @@ import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -17,8 +19,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-@Slf4j
+
 public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
+    private static final Logger log= LoggerFactory.getLogger(DefaultDingTalkServiceImpl.class);
+
     private static final String SERVER = "https://oapi.dingtalk.com";
 
     private RestTemplate restTemplate;

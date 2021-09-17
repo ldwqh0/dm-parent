@@ -4,9 +4,11 @@ import com.dm.collections.Maps;
 import com.dm.dingtalk.api.crypto.DingAes;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +29,9 @@ import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("dingTalk/callback")
-@Slf4j
 public class CallbackController {
+
+    private static final Logger log= LoggerFactory.getLogger(CallbackController.class);
 
     private Map<String, Consumer<Event>> handlers;
 
