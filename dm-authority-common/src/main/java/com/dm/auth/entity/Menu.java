@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "dm_menu_", indexes = {
-    @Index(columnList = "parent_", name = "idx_dm_menu_parent_")
-}, uniqueConstraints = {
+@Table(name = "dm_menu_", uniqueConstraints = {
     @UniqueConstraint(name = "UK_dm_menu_parent_name_", columnNames = {"name_", "parent_"})
+}, indexes = {
+    @Index(name = "IDX_dm_menu_parent_", columnList = "parent_"),
+    @Index(name = "IDX_dm_menu_enabled_", columnList = "enabled_")
 })
 public class Menu extends AbstractEntity {
 

@@ -18,7 +18,8 @@ import java.util.*;
 }, indexes = {
     @Index(name = "UDX_dm_user_email_", columnList = "email_", unique = true),
     @Index(name = "UDX_dm_user_mobile_", columnList = "mobile_", unique = true),
-    @Index(name = "UDX_dm_user_no_", columnList = "no_", unique = true)
+    @Index(name = "UDX_dm_user_no_", columnList = "no_", unique = true),
+    @Index(name = "IDX_dm_user_enabled_", columnList = "enabled_")
 })
 public class User extends AbstractEntity {
 
