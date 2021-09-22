@@ -15,9 +15,10 @@ import java.util.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "dm_user_", uniqueConstraints = {
     @UniqueConstraint(name = "UK_dm_user_username_", columnNames = {"username_"}),
-    @UniqueConstraint(name = "UK_dm_user_email_", columnNames = {"email_"}),
-    @UniqueConstraint(name = "UK_dm_user_mobile_", columnNames = {"mobile_"}),
-    @UniqueConstraint(name = "UK_dm_user_no_", columnNames = "no_")
+}, indexes = {
+    @Index(name = "UDX_dm_user_email_", columnList = "email_", unique = true),
+    @Index(name = "UDX_dm_user_mobile_", columnList = "mobile_", unique = true),
+    @Index(name = "UDX_dm_user_no_", columnList = "no_", unique = true)
 })
 public class User extends AbstractEntity {
 
@@ -25,7 +26,7 @@ public class User extends AbstractEntity {
      * 用户名
      */
     @NotNull
-    @Column(name = "username_", length = 50)
+    @Column(name = "username_", length = 50, nullable = false)
     private String username;
 
     /**
@@ -56,7 +57,7 @@ public class User extends AbstractEntity {
     /**
      * 用户密码
      */
-    @Column(name = "password_", length = 100)
+    @Column(name = "password_", length = 100, nullable = false)
     private String password;
 
     @Column(name = "expired_", nullable = false)

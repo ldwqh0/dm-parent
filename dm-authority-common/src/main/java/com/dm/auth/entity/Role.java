@@ -8,7 +8,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "dm_role_", uniqueConstraints = {@UniqueConstraint(name = "UK_dm_role_group_name_", columnNames = {"group_", "name_"})})
+@Table(name = "dm_role_", uniqueConstraints = {
+    @UniqueConstraint(name = "UK_dm_role_group_name_", columnNames = {"group_", "name_"})
+}, indexes = {
+    @Index(name = "IDX_dm_role_state_", columnList = "state_")
+})
 public class Role extends AbstractEntity {
 
     public enum Status {
@@ -25,7 +29,7 @@ public class Role extends AbstractEntity {
     @Column(name = "name_", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "group_", nullable = false)
+    @Column(name = "group_", length = 100, nullable = false)
     private String group;
 
     @Column(name = "state_", length = 50, nullable = false)

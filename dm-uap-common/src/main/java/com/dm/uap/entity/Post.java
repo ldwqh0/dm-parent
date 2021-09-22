@@ -11,13 +11,12 @@ import javax.persistence.ManyToOne;
  * @author LiDong
  */
 @Embeddable
-
 public class Post {
 
-    @Column(name = "name_")
+    @Column(name = "name_", nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "department_id_")
     private Department department;
 

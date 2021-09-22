@@ -15,7 +15,11 @@ import java.util.Set;
  * @author LiDong
  */
 @Entity
-@Table(name = "dm_resource_")
+@Table(name = "dm_resource_", uniqueConstraints = {
+    @UniqueConstraint(name = "UK_dm_resource_name_", columnNames = "name_")
+}, indexes = {
+    @Index(name = "UDX_dm_resource_match_type_matcher_", columnList = "matcher_,match_type_")
+})
 public class AuthResource extends AbstractEntity {
 
     /**

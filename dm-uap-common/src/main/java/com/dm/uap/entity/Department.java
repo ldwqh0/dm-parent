@@ -35,13 +35,13 @@ public class Department extends AbstractEntity {
     /**
      * 部门名称
      */
-    @Column(name = "full_name_", length = 100)
+    @Column(name = "full_name_", length = 100, nullable = false)
     private String fullname;
 
     /**
      * 短名称
      */
-    @Column(name = "short_name_", length = 100)
+    @Column(name = "short_name_", length = 100, nullable = false)
     private String shortname;
 
     /**
@@ -52,7 +52,7 @@ public class Department extends AbstractEntity {
     private Department parent;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type_")
+    @Column(name = "type_", nullable = false)
     private Types type;
 
     /**

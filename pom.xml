@@ -38,6 +38,7 @@
     <module>dm-authority-common</module>
     <!-- 区划模块 -->
     <module>dm-region</module>
+    <module>dm-hibernate-ext</module>
     <!-- 自动配置工具 -->
     <module>dm-autoconfigure</module>
     <!-- 钉钉API模块 -->
@@ -347,6 +348,11 @@
       <dependency>
         <groupId>com.dm</groupId>
         <artifactId>dm-multi-datasource-jpa-support</artifactId>
+        <version>${dm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dm</groupId>
+        <artifactId>dm-hibernate-ext</artifactId>
         <version>${dm.version}</version>
       </dependency>
     </dependencies>

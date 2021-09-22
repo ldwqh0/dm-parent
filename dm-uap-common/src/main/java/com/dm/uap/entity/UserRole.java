@@ -7,7 +7,11 @@ import java.util.Objects;
  * 用户的角色，这个不同于角色，它仅仅表示用户的角色，不能用于角色的权限控制
  */
 @Entity
-@Table(name = "dm_role_")
+@Table(name = "dm_role_", uniqueConstraints = {
+    @UniqueConstraint(name = "UK_dm_role_group_name_", columnNames = {"group_", "name_"})
+}, indexes = {
+    @Index(name = "IDX_dm_role_state_", columnList = "state_")
+})
 public class UserRole {
 
     public enum Status {
@@ -31,13 +35,13 @@ public class UserRole {
     /**
      * 角色组
      */
-    @Column(name = "group_", length = 100)
+    @Column(name = "group_", length = 100, nullable = false)
     private String group;
 
     /**
      * 角色名称
      */
-    @Column(name = "name_", length = 100)
+    @Column(name = "name_", length = 100, nullable = false)
     private String name;
 
     @Version
@@ -78,6 +82,7 @@ public class UserRole {
         UserRole userRole = (UserRole) o;
         return Objects.equals(id, userRole.id) && Objects.equals(group, userRole.group) && Objects.equals(name, userRole.name);
     }
+
 
     @Override
     public int hashCode() {

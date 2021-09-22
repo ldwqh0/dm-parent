@@ -22,12 +22,14 @@ import java.util.UUID;
 @Entity
 @EntityListeners({AuditingEntityListener.class, FileListener.class})
 @Table(name = "dm_file_", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"path_"}, name = "UK_dm_file_path_")
+    @UniqueConstraint(name = "UK_dm_file_path_", columnNames = {"path_"})
 }, indexes = {
     @Index(name = "idx_dm_file_created_date_", columnList = "created_date_"),
     @Index(name = "idx_dm_file_created_user_id_", columnList = "created_user_id_"),
     @Index(name = "idx_dm_file_created_user_name_", columnList = "created_user_name_"),
-    @Index(name = "idx_dm_file_hash", columnList = "file_name_,sha256_,md5_")
+    @Index(name = "idx_fm_file_sha256_", columnList = "sha256_"),
+    @Index(name = "idx_dm_file_md5_", columnList = "md5_"),
+    @Index(name = "idx_dm_file_filename_", columnList = "file_name_")
 })
 public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateTime>, Serializable {
     private static final long serialVersionUID = -914974010332311193L;
@@ -64,7 +66,7 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
     /**
      * 文件存储路径
      */
-    @Column(name = "path_")
+    @Column(name = "path_", nullable = false)
     private String path;
 
     /**
