@@ -30,7 +30,11 @@ public class Menu extends AbstractEntity {
         /**
          * 链接到超链接
          */
-        HYPERLINK
+        HYPERLINK,
+        /**
+         * 子菜单
+         */
+        SUBMENU
     }
 
     /**
