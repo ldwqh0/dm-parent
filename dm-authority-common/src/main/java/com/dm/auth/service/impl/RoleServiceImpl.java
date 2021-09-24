@@ -24,7 +24,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,8 +33,6 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     private final MenuRepository menuRepository;
-
-    private final ResourceRepository resourceRepository;
 
     private final QRole qRole = QRole.role;
 
@@ -53,7 +50,6 @@ public class RoleServiceImpl implements RoleService {
     public RoleServiceImpl(RoleRepository roleRepository, MenuRepository menuRepository, ResourceRepository resourceRepository) {
         this.roleRepository = roleRepository;
         this.menuRepository = menuRepository;
-        this.resourceRepository = resourceRepository;
     }
 
     @Override
@@ -209,7 +205,7 @@ public class RoleServiceImpl implements RoleService {
      * @param root 要判断是否为parentId的子菜单
      * @return 判定结果
      */
-    private boolean isOffspringOf( Menu menu, Long root) {
+    private boolean isOffspringOf(Menu menu, Long root) {
         Menu parent = menu.getParent();
         if (Objects.isNull(parent)) {
             return Objects.isNull(root);

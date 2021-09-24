@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -183,5 +184,18 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
 
     public Optional<MenuDto> getParent() {
         return Optional.ofNullable(parent);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MenuDto menuDto = (MenuDto) o;
+        return childrenCount == menuDto.childrenCount && Objects.equals(id, menuDto.id) && Objects.equals(name, menuDto.name) && Objects.equals(title, menuDto.title) && Objects.equals(enabled, menuDto.enabled) && Objects.equals(url, menuDto.url) && Objects.equals(icon, menuDto.icon) && Objects.equals(description, menuDto.description) && type == menuDto.type && Objects.equals(order, menuDto.order) && Objects.equals(parent, menuDto.parent) && Objects.equals(openInNewWindow, menuDto.openInNewWindow);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, title, enabled, url, icon, description, type, order, parent, openInNewWindow, childrenCount);
     }
 }
