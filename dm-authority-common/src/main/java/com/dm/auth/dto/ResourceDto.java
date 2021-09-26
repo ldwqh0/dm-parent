@@ -5,6 +5,7 @@ import com.dm.security.authentication.UriResource.MatchType;
 import org.springframework.http.HttpMethod;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -95,7 +96,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public void setMethods(Set<HttpMethod> methods) {
-        this.methods = methods;
+        this.methods = Collections.unmodifiableSet(new HashSet<>(methods));
     }
 
     public String getMatcher() {
@@ -119,7 +120,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public void setScope(Set<String> scope) {
-        this.scope = scope;
+        this.scope = Collections.unmodifiableSet(new HashSet<>(scope));
     }
 
     public MatchType getMatchType() {
@@ -135,7 +136,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public void setAccessAuthorities(Set<RoleDto> accessAuthorities) {
-        this.accessAuthorities = accessAuthorities;
+        this.accessAuthorities = Collections.unmodifiableSet(new HashSet<>(accessAuthorities));
     }
 
     public Set<RoleDto> getDenyAuthorities() {
@@ -143,7 +144,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public void setDenyAuthorities(Set<RoleDto> denyAuthorities) {
-        this.denyAuthorities = denyAuthorities;
+        this.denyAuthorities = Collections.unmodifiableSet(new HashSet<>(denyAuthorities));
     }
 
     @Override

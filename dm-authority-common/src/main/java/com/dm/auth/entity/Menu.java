@@ -5,8 +5,10 @@ import com.dm.common.entity.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name = "dm_menu_", uniqueConstraints = {
@@ -94,13 +96,14 @@ public class Menu extends AbstractEntity {
     private Boolean openInNewWindow = Boolean.FALSE;
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Menu> children;
+    private List<Menu> children = new ArrayList<>();
 
     public void setChildren(List<Menu> children) {
+        this.children.clear();
         if (CollectionUtils.isNotEmpty(children)) {
             children.forEach(child -> child.setParent(this));
         }
-        this.children = children;
+        this.children.addAll(children);
     }
 
     public Menu(@NotNull String name) {
@@ -117,10 +120,6 @@ public class Menu extends AbstractEntity {
         this.url = url;
     }
 
-    public Menu children(List<Menu> children) {
-        this.setChildren(children);
-        return this;
-    }
 
     public Menu() {
 
@@ -182,8 +181,8 @@ public class Menu extends AbstractEntity {
         this.description = description;
     }
 
-    public Menu getParent() {
-        return parent;
+    public Optional<Menu> getParent() {
+        return Optional.ofNullable(parent);
     }
 
     public void setParent(Menu parent) {

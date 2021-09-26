@@ -173,20 +173,11 @@
         })
     }
 
-    edit ({
-      type,
-      id
-    }: ClientDto): void {
+    edit ({ type, id = '' }: ClientDto): void {
       if (type === ClientType.CLIENT_RESOURCE) {
-        this.$router.push({
-          name: 'rClient',
-          params: { id }
-        })
+        this.$router.push({ name: 'rClient', params: { id: `${id}` } })
       } else {
-        this.$router.push({
-          name: 'client',
-          params: { id }
-        })
+        this.$router.push({ name: 'client', params: { id: `${id}` } })
       }
     }
   }

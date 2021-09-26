@@ -3,6 +3,7 @@ package com.dm.uap.entity;
 import com.dm.common.entity.AbstractEntity;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 
@@ -99,8 +100,8 @@ public class Department extends AbstractEntity {
         this.shortname = shortname;
     }
 
-    public Department getParent() {
-        return parent;
+    public Optional<Department> getParent() {
+        return Optional.ofNullable(parent);
     }
 
     public void setParent(Department parent) {

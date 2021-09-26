@@ -29,7 +29,7 @@
   import { Component, Prop, Vue } from 'vue-property-decorator'
   import urls from '../URLS'
   import { ClientDto, ClientType } from '@/types/service'
-  import { CallbackFunction, Rules } from 'async-validator'
+  import { Rules } from 'async-validator'
 
   /**
    * 资源服务器编辑页面
@@ -46,17 +46,18 @@
       type: ClientType.CLIENT_RESOURCE
     }
 
-    rules: Rules = {
-      name: [{
-        required: true,
-        message: '名称不能为空'
-      }, {
-        validator: this.validateExists
-      }]
-    }
-
-    validateExists (rules: Rules, value: string, callback: CallbackFunction): void {
-      callback()
+    get rules (): Rules {
+      return {
+        name: [{
+          required: true,
+          message: '名称不能为空'
+        }, {
+          validator: (rules, value, callback) => {
+            // TODO 验证client是否存在
+            callback()
+          }
+        }]
+      }
     }
 
     save (): Promise<unknown> {

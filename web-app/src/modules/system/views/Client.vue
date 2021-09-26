@@ -113,51 +113,50 @@
       refreshTokenValiditySeconds: 7200 * 2
     }
 
-    rules: Rules = {
-      name: [{
-        required: true,
-        message: '名称不能为空'
-      }, {
-        max: 50,
-        message: '名称最长不能超过50个字符'
-      }],
-      registeredRedirectUris: [{
-        required: true,
-        message: '授权回调地址不能为空'
-      }, {
-        validator: this.uriValidator
-      }],
-      accessTokenValiditySeconds: [{
-        required: true,
-        message: 'Access Token有效期不能为空'
-      }, {
-        type: 'number',
-        max: 10000000,
-        message: 'Access Token最大值不能超过10000000'
-      }],
-      refreshTokenValiditySeconds: [{
-        required: true,
-        message: 'Refresh Token不能为空'
-      }, {
-        type: 'number',
-        max: 20000000,
-        message: 'Refresh Token最大值不能超过20000000'
-      }],
-      description: [{
-        max: 4000,
-        message: '应用描述信息不能超过4000个字符'
-      }]
-    }
-
-    uriValidator (rule: Rules, value: string[], callback: (error?: string | string[] | Error | void) => void): void {
-      const urls = value.map(it => it.trim()).filter(it => !isEmpty(it))
-      for (const url of urls) {
-        if (url.length > 500) {
-          callback(new Error('单个回调URL的长度不能超过500'))
-          return
-        }
+    get rules (): Rules {
+      return {
+        name: [{
+          required: true,
+          message: '名称不能为空'
+        }, {
+          max: 50,
+          message: '名称最长不能超过50个字符'
+        }],
+        registeredRedirectUris: [{
+          required: true,
+          message: '授权回调地址不能为空'
+        }, {
+          validator: (rule, value: string[], callback) => {
+            const urls = value.map(it => it.trim()).filter(it => !isEmpty(it))
+            for (const url of urls) {
+              if (url.length > 500) {
+                return callback(new Error('单个回调URL的长度不能超过500'))
+              }
+            }
+            callback()
+          }
+        }],
+        accessTokenValiditySeconds: [{
+          required: true,
+          message: 'Access Token有效期不能为空'
+        }, {
+          type: 'number',
+          max: 10000000,
+          message: 'Access Token最大值不能超过10000000'
+        }],
+        refreshTokenValiditySeconds: [{
+          required: true,
+          message: 'Refresh Token不能为空'
+        }, {
+          type: 'number',
+          max: 20000000,
+          message: 'Refresh Token最大值不能超过20000000'
+        }],
+        description: [{
+          max: 4000,
+          message: '应用描述信息不能超过4000个字符'
+        }]
       }
-      callback()
     }
 
     get registeredRedirectUris (): string {

@@ -166,56 +166,56 @@
 
     roles: RoleDto[] = []
 
-    rules: Rules = {
-      username: [{
-        required: true,
-        message: '请输入用户名',
-        trigger: 'blur'
-      }],
-      fullname: [{
-        required: true,
-        message: '用户姓名不能为空',
-        trigger: 'blur'
-      }],
-      password: [{
-        required: true,
-        message: '密码不能为空',
-        trigger: 'blur'
-      }],
-      repassword: [{
-        required: true,
-        message: '确认密码不能为空'
-      }, {
-        validator: this.validateRePassword,
-        trigger: 'blur'
-      }],
-      mobile: [{
-        required: true,
-        message: '用户手机号不能为空',
-        trigger: 'blur'
-      }, {
-        len: 11,
-        message: '请输入正确的手机号码'
-      }],
-      roles: [{
-        required: true,
-        message: '用户角色不能为空',
-        trigger: 'blur'
-      }],
-      email: [{
-        type: 'email',
-        message: '请输入正确的邮箱地址',
-        trigger: 'blur'
-      }]
-    }
-
-    validateRePassword (rule: Rules, value: string, callback: (error?: Error) => void): void {
-      if (value === '') {
-        callback(new Error('确认密码不能为空'))
-      } else if (value !== this.user.password) {
-        callback(new Error('两次输入密码不一致!'))
-      } else {
-        callback()
+    get rules (): Rules {
+      return {
+        username: [{
+          required: true,
+          message: '请输入用户名',
+          trigger: 'blur'
+        }],
+        fullname: [{
+          required: true,
+          message: '用户姓名不能为空',
+          trigger: 'blur'
+        }],
+        password: [{
+          required: true,
+          message: '密码不能为空',
+          trigger: 'blur'
+        }],
+        repassword: [{
+          required: true,
+          message: '确认密码不能为空'
+        }, {
+          trigger: 'blur',
+          validator: (rule, value, callback) => {
+            if (value === '') {
+              callback(new Error('确认密码不能为空'))
+            } else if (value !== this.user.password) {
+              callback(new Error('两次输入密码不一致!'))
+            } else {
+              callback()
+            }
+          }
+        }],
+        mobile: [{
+          required: true,
+          message: '用户手机号不能为空',
+          trigger: 'blur'
+        }, {
+          len: 11,
+          message: '请输入正确的手机号码'
+        }],
+        roles: [{
+          required: true,
+          message: '用户角色不能为空',
+          trigger: 'blur'
+        }],
+        email: [{
+          type: 'email',
+          message: '请输入正确的邮箱地址',
+          trigger: 'blur'
+        }]
       }
     }
 

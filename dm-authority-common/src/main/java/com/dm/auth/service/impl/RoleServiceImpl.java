@@ -181,11 +181,10 @@ public class RoleServiceImpl implements RoleService {
      * @param collection 子菜单列表
      */
     private void addParent(Menu menu, Set<Menu> collection) {
-        Menu parent = menu.getParent();
-        if (parent != null) {
-            collection.add(menu.getParent());
-            addParent(parent, collection);
-        }
+        menu.getParent().ifPresent(it -> {
+            collection.add(it);
+            addParent(it, collection);
+        });
     }
 
     /**
@@ -195,7 +194,7 @@ public class RoleServiceImpl implements RoleService {
      * @return 返回是否会被禁用
      */
     private boolean isEnabled(Menu menu) {
-        return menu == null || (menu.isEnabled() && isEnabled(menu.getParent()));
+        return menu.isEnabled() && menu.getParent().map(this::isEnabled).orElse(true);
     }
 
     /**
@@ -206,14 +205,8 @@ public class RoleServiceImpl implements RoleService {
      * @return 判定结果
      */
     private boolean isOffspringOf(Menu menu, Long root) {
-        Menu parent = menu.getParent();
-        if (Objects.isNull(parent)) {
-            return Objects.isNull(root);
-        } else if (Objects.equals(parent.getId(), root)) {
-            return true;
-        } else {
-            return isOffspringOf(parent, root);
-        }
+        return menu.getParent().map(it -> Objects.equals(it.getId(), root) || isOffspringOf(it, root))
+            .orElseGet(() -> Objects.isNull(root));
     }
 
     @Override

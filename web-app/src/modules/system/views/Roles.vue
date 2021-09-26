@@ -1,7 +1,6 @@
 <template>
   <div class="roles">
-    <el-form :inline="true"
-             :model="searchObj">
+    <el-form :inline="true" :model="searchObj">
       <el-row>
         <el-col :span="12">
           <el-form-item class="pull-left">
@@ -126,9 +125,7 @@
         type: 'warning'
       }).then(() => http.delete(`${urls.role}/${id}`))
         .then(() => (this.$refs.table as any).reloadData())
-        .catch(e => {
-          console.error(e)
-        })
+        .catch(e => console.error(e))
     }
 
     saveRole (): void {

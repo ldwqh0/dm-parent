@@ -3,12 +3,11 @@
     <el-aside width="250px" style="border-right: solid 1px #efefef;box-sizing: content-box">
       <el-tree ref="tree"
                :expand-on-click-node="false"
-               :default-expanded-keys="['']"
+               :default-expanded-keys="[current.id]"
                node-key="id"
                :props="treeProp"
-               :load="loadNode"
-               lazy
-               @current-change="nodeChange">
+               :data="displayMenuTree"
+               @current-change="selectNode">
         <template #default="{node}">
           <span>
             <i :class="node.data.icon || 'el-icon-menu'" />&nbsp;{{ node.label }}
@@ -26,7 +25,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item class="float-right">
-              <el-button type="primary" @click="add">新增</el-button>
+              <el-button type="primary" @click="currentEdit={}">新增</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -44,7 +43,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="id" label="操作" :min-width="120">
-          <template #default="{row:{enabled,id}}">
+          <template #default="{row:{enabled,id},row}">
             <el-button v-if="enabled"
                        type="text"
                        @click="patch({id,enabled:false})">
@@ -55,7 +54,7 @@
                        @click="patch({id,enabled:true})">
               启用
             </el-button>
-            <el-button type="text" @click="edit({id})">编辑</el-button>
+            <el-button type="text" @click="currentEdit=row">编辑</el-button>
             <el-button type="text" @click="move({id,position:'UP'})">上移</el-button>
             <el-button type="text" @click="move({id,position:'DOWN'})">下移</el-button>
             <el-button type="text" @click="del({id})">删除</el-button>
@@ -81,15 +80,13 @@
   import Vue from 'vue'
   import { Component } from 'vue-property-decorator'
   import { namespace } from 'vuex-class'
-  import http, { simpleHttp } from '@/http'
+  import http from '@/http'
   import URLS from '../URLS'
-  import { MenuDto, Page } from '@/types/service'
-  import { TreeNode } from 'element-ui/types/tree'
-  import isNil from 'lodash/isNil'
+  import { MenuDto, MenuTreeItem } from '@/types/service'
   import { TreeProps } from '@/types/element'
-  import { AxiosResponse } from 'axios'
   import Menu from './Menu.vue'
 
+  const menuModule = namespace('system/menu')
   const httpModel = namespace('http')
   @Component({
     components: {
@@ -97,7 +94,7 @@
     }
   })
   export default class Menus extends Vue {
-    current: MenuDto | null = null
+    current: MenuDto = { id: 0 }
     currentEdit: MenuDto | null = null
 
     treeProp: TreeProps<unknown, MenuDto> = { // 树形机构显示熟属性
@@ -110,6 +107,12 @@
     @httpModel.Getter('loading')
     loading!: boolean
 
+    @menuModule.Action('loadAll')
+    loadAll!: () => Promise<MenuDto[]>
+
+    @menuModule.Getter('tree')
+    menuTree!: MenuTreeItem[]
+
     ajax = URLS.menus
 
     search: {
@@ -119,62 +122,42 @@
     get serverParams (): Record<string, unknown> {
       return {
         keyword: this.search.keyword,
-        parentId: this.current?.id
+        parentId: this.current?.id === 0 ? null : this.current?.id
       }
     }
 
-    add (): void {
-      this.currentEdit = {}
+    get displayMenuTree (): MenuTreeItem[] {
+      return [{
+        id: 0,
+        title: '全部',
+        children: this.menuTree
+      }]
     }
 
-    edit (data: MenuDto): void {
-      this.currentEdit = data
+    created (): void {
+      this.loadAll().then(() => this.selectNode(this.current))
     }
 
-    move ({
-      id,
-      position
-    }: { id: number, position: string }): Promise<unknown> {
+    move ({ id, position }: { id: number, position: string }): Promise<unknown> {
       return http.put<MenuDto>(`${URLS.menus}/${id}/order`, { position })
-        .then(({ data: { parent } }) => this.reloadTreeAndTable(parent))
+        .then(() => this.reload())
         .then(() => this.$message({
           message: '修改成功！',
           type: 'success'
         }))
     }
 
-    /**
-     * 从网络获取一个树的子节点
-     * */
-    loadChildren (parentId: string | number): Promise<AxiosResponse<Page<MenuDto>>> {
-      return simpleHttp.get<Page<MenuDto>>(`${URLS.menus}`, {
-        params: {
-          parentId,
-          enabled: true,
-          page: 0,
-          size: 2000
-        }
-      })
-    }
-
-    /**
-     * 左侧树懒加载节点
-     */
-    loadNode ({ key }: TreeNode<number, MenuDto>, resolve: (r: MenuDto[]) => void): void {
-      if (isNil(key)) {
-        resolve([{
-          id: '' as any,
-          title: '根菜单'
-        }])
-      } else {
-        this.loadChildren(key).then(({ data: { content } }) => resolve(content ?? []))
-      }
+    saveMenu (): Promise<any> {
+      return (this.$refs.menu as any).submit()
+        .then(() => {
+          this.reload()
+          this.currentEdit = null
+        })
     }
 
     patch (menu: MenuDto): Promise<any> {
       return http.patch<MenuDto>(`${URLS.menus}/${menu.id}`, menu)
-        .then(({ data: { parent } }) => this.reloadTreeAndTable(parent)
-        )
+        .then(() => this.reload())
     }
 
     del (data: MenuDto): Promise<any> {
@@ -183,7 +166,7 @@
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => http.delete(`${URLS.menus}/${data.id}`))
-        .then(() => this.reloadTreeAndTable(this.current))
+        .then(() => this.reload())
         .catch(e => {
           if (e === 'cancel') {
             this.$message.info('已取消删除')
@@ -191,29 +174,14 @@
         })
     }
 
-    nodeChange (current: MenuDto): void {
+    selectNode (current: MenuDto): void {
+      (this.$refs.tree as any).setCurrentNode(current)
       this.current = current
     }
 
-    saveMenu (): Promise<any> {
-      return (this.$refs.menu as any).submit()
-        .then(({ data: { parent } }: any) => {
-          this.reloadTreeAndTable(parent)
-          this.currentEdit = null
-        })
-    }
-
-    /**
-     * 重新加载树和表格
-     * @param node
-     */
-    reloadTreeAndTable (node?: MenuDto | null): void {
-      const id = node?.id ?? '';
-      // 重新刷新表格
+    reload (): void {
       (this.$refs.table as any).reloadData()
-      this.loadChildren(id)
-        // 重新加载某个父节点的子节点
-        .then(({ data: { content } }) => (this.$refs.tree as any).updateKeyChildren(id, content ?? []))
+      this.loadAll().then(() => this.selectNode(this.current))
     }
   }
 </script>

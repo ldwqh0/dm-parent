@@ -21,7 +21,9 @@ function cancelAll (): Promise<unknown> {
 }
 
 http.interceptors.request.use(config => {
-  // console.log('从指定地址加载数据', config.url, config)
+  if (process.env.NODE_ENV === 'development') {
+    console.debug(`从指定地址请求数据：url: ${config.url}`, config)
+  }
   config.paramsSerializer = (params) => qs.stringify(params, { arrayFormat: 'repeat' })
   commitRequest(config)
   return config
@@ -31,7 +33,7 @@ http.interceptors.request.use(config => {
 
 http.interceptors.response.use(response => {
   if (process.env.NODE_ENV === 'development') {
-    console.debug(`url: ${response.config?.url}`, response)
+    console.debug(`从指定地址获取响应：url: ${response.config?.url}`, response)
   }
   commitComplete(response.config)
   return response
@@ -42,8 +44,14 @@ http.interceptors.response.use(response => {
 
 http.interceptors.response.use(data => data, (error): Promise<unknown> => {
   if (error.response?.status === 401) {
-    // 如果检测到401时，
-    window.location.reload()
+    cancelAll().then(() => {
+      if (process.env.NODE_ENV === 'development') {
+        window.location.href = `${env.CONTEXT_PATH}gw/login`
+      } else {
+        // 如果检测到401时，刷新页面
+        window.location.reload()
+      }
+    })
   }
   commitError(error?.response?.data?.message ?? '服务器发生未知错误')
   return Promise.reject(error)

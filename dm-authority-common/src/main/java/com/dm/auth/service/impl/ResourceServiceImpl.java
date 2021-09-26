@@ -79,7 +79,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
                 .or(qResource.description.containsIgnoreCase(keyword))
                 .or(qResource.matcher.containsIgnoreCase(keyword));
         }
-        return resourceRepository.findAll(query, pageable).map(ResourceConverter::toListDto);
+        return resourceRepository.findAll(query, pageable).map(ResourceConverter::toSimpleDto);
     }
 
     @Override

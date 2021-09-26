@@ -104,4 +104,12 @@ public final class Lists {
             return input.stream().map(converter).collect(Collectors.toList());
         }
     }
+
+    public static <T> T last(List<T> collection) {
+        if (CollectionUtils.isEmpty(collection)) {
+            return null;
+        } else {
+            return collection.get(collection.size() - 1);
+        }
+    }
 }

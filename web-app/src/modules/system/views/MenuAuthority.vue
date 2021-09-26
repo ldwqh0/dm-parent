@@ -18,7 +18,6 @@
   import URLS from '../URLS'
   import { TreeProps } from 'element-ui/types/tree'
 
-  // const authorityScope = namespace('system/menuAuthority')
   const menuScope = namespace('system/menu')
 
   @Component
@@ -41,10 +40,6 @@
       }
     }
 
-    // 更新权限信息
-    // @authorityScope.Action('update')
-    // updateAuthority
-
     // 获取菜单列表
     @menuScope.Action('loadAll')
     listMenus!: () => Promise<any>
@@ -66,6 +61,6 @@
     }
   }
 </script>
-<style lang="less">
+<style scoped lang="less">
 
 </style>

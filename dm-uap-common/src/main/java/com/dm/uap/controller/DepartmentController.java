@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -97,8 +98,11 @@ public class DepartmentController {
      * @return 部门信息的列表
      */
     @GetMapping(params = "scope=all")
-    public List<DepartmentDto> listAll() {
-        return departmentService.findAll();
+    public List<DepartmentDto> listAll(
+        @RequestParam(value = "parentId", required = false) Long parentId,
+        @SortDefault(direction = Sort.Direction.ASC, sort = {"order"}) Sort sort
+    ) {
+        return departmentService.listOffspring(parentId, sort);
     }
 
     /**

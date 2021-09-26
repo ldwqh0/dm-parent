@@ -24,7 +24,6 @@
                    style="width: 100%;"
                    clearable
                    :options="departmentTree"
-
                    :props="cascadeProps" />
     </el-form-item>
 
@@ -43,34 +42,36 @@
   import { CascaderProps } from 'element-ui/types/cascader-panel'
   import http, { simpleHttp } from '@/http'
   import urls from '../URLS'
-  import { listToTree } from '@/utils'
   import isNil from 'lodash/isNil'
   import { Rules } from 'async-validator'
+  import { ValidationResult } from '@/types/service/service-common'
+  import { namespace } from 'vuex-class'
+  import isEmpty from 'lodash/isEmpty'
 
+  const departmentModule = namespace('system/department')
   @Component
   export default class Department extends Vue {
     @Prop({
       type: [String, Number],
       required: false,
-      default: '0'
+      default: () => 0
     })
-    id!: string
+    id!: string | number
 
     @Prop({
       type: [String, Number],
-      required: true
+      required: false
     })
-    parentId!: string
+    parentId?: number | string
 
-    allDepartments: DepartmentDto[] = []
+    @departmentModule.Getter('tree')
+    departmentTree!: DepartmentTreeItem[]
 
-    get departmentTree (): DepartmentTreeItem[] {
-      return listToTree(this.allDepartments)
-    }
+    @departmentModule.Getter('map')
+    departmentMap!: { [key: string]: DepartmentDto }
 
     department: DepartmentDto = {
-      type: Types.DEPARTMENT,
-      parent: { id: Number.parseInt(this.parentId) }
+      type: Types.DEPARTMENT
     }
 
     cascadeProps: CascaderProps<number, DepartmentDto> = {
@@ -82,60 +83,71 @@
       checkStrictly: true
     }
 
-    rules: Rules = {
-      type: [{
-        required: true,
-        message: '节点类型不能为空'
-      }],
-      fullname: [{
-        required: true,
-        message: '部门全称不能为空',
-        trigger: 'blur'
-      }, {
-        type: 'string',
-        max: 100,
-        message: '不能超过100个字符'
-      }, {
-        trigger: 'blur',
-        validator: this.validateFullname
-      }],
-      shortname: [{
-        required: true,
-        message: '部门简称不能为空',
-        trigger: 'blur'
-      }, {
-        type: 'string',
-        max: 100,
-        message: '不能超过100个字符'
-      }],
-      description: [{
-        type: 'string',
-        max: 1000,
-        message: '不能超过1000个字符'
-      }]
-    }
-
-    validateFullname (rules: unknown, value: string, callback: (error?: Error) => void): Promise<unknown> {
-      return simpleHttp.get(`${urls.department}/validation`, {
-        params: {
-          fullname: value,
-          parentId: this.department.parent?.id,
-          exclude: this.id
-        }
-      }).then(({
-        data: {
-          result,
-          message
-        }
-      }) => {
-        if (result === 'success') {
-          callback()
-        } else {
-          callback(new Error(message))
-        }
-      }).catch(e => {
-        callback(new Error(e))
-      })
+    get rules (): Rules {
+      return {
+        type: [{
+          required: true,
+          message: '节点类型不能为空'
+        }],
+        fullname: [{
+          required: true,
+          message: '部门全称不能为空',
+          trigger: 'blur'
+        }, {
+          type: 'string',
+          max: 100,
+          message: '不能超过100个字符'
+        }, {
+          trigger: 'blur',
+          validator: (rules, value, callback): Promise<unknown> => {
+            return simpleHttp.get<ValidationResult>(`${urls.department}/validation`, {
+              params: {
+                fullname: value,
+                parentId: this.department.parent?.id,
+                exclude: this.id
+              }
+            }).then(({ data: { success, message = '无错误信息' } }) => {
+              if (success) {
+                callback()
+              } else {
+                callback(new Error(message))
+              }
+            }).catch(e => {
+              callback(new Error(e))
+            })
+          }
+        }],
+        shortname: [{
+          required: true,
+          message: '部门简称不能为空',
+          trigger: 'blur'
+        }, {
+          type: 'string',
+          max: 100,
+          message: '不能超过100个字符'
+        }],
+        description: [{
+          type: 'string',
+          max: 1000,
+          message: '不能超过1000个字符'
+        }],
+        parent: [{
+          validator: (rule, value, callback) => {
+            if (isNil(value)) {
+              callback()
+            } else {
+              let parent: DepartmentDto = this.departmentMap[`${value.id}`]
+              while (!isEmpty(parent)) {
+                if (this.department.id === parent.id) {
+                  return callback(new Error('不能将一个节点的上级节点设置为它自身或它的子节点'))
+                }
+                parent = this.departmentMap[`${parent.parent?.id}`]
+              }
+              callback()
+            }
+          }
+        }]
+      }
     }
 
     get parent (): number | null {
@@ -151,19 +163,19 @@
     }
 
     created (): void {
-      // 加载所有部门的列表
-      http.get(`${urls.department}`, { params: { scope: 'all' } }).then(({ data }) => {
-        this.allDepartments = data
-      })
       // 加载当前部门信息
-      if (Number.parseInt(this.id) > 0) {
+      if (Number.parseInt(`${this.id}`) > 0) {
         http.get(`${urls.department}/${this.id}`).then(({ data }) => (this.department = data))
+      } else {
+        if (!isNil(this.parentId) && !isNaN(Number.parseInt(`${this.parentId}`))) {
+          this.department.parent = { id: Number.parseInt(`${this.parentId}`) }
+        }
       }
     }
 
     submit (): Promise<DepartmentDto> {
       return (this.$refs.form as any).validate().then(() => {
-        if (Number.parseInt(this.id) > 0) {
+        if (Number.parseInt(`${this.id}`) > 0) {
           return http.put(`${urls.department}/${this.id}`, this.department)
         } else {
           return http.post(`${urls.department}`, this.department)
@@ -172,6 +184,6 @@
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 
 </style>

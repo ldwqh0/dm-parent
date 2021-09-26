@@ -14,7 +14,7 @@ interface SecurityState {
 const module: Module<SecurityState, RootState> = {
   namespaced: true,
   state: {
-    menus: defaultMenus,
+    menus: [],
     user: {}
   },
   mutations: {

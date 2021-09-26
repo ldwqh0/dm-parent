@@ -117,10 +117,10 @@ public class MenuController {
      * @return 查询到的菜单列表
      */
     @ApiOperation("根据关键字查询菜单")
-    @GetMapping(params = {"page"})
+    @GetMapping
     public Page<MenuDto> list(@RequestParam(value = "keyword", defaultValue = "", required = false) String keyword,
-                              @RequestParam(value = "enabled", defaultValue = "", required = false) Boolean enabled,
-                              @RequestParam(value = "parentId", defaultValue = "", required = false) Long parentId,
+                              @RequestParam(value = "enabled", required = false) Boolean enabled,
+                              @RequestParam(value = "parentId", required = false) Long parentId,
                               @PageableDefault(direction = Direction.ASC, sort = "order") Pageable pageable) {
         return menuService.search(parentId, enabled, keyword, pageable);
     }
@@ -161,18 +161,6 @@ public class MenuController {
         }
         return MenuConverter.toDto(menu);
     }
-
-    /**
-     * 获取一个菜单项目的所有上级
-     *
-     * @param menuId 要查询的菜单的id
-     * @return 菜单的所有上级
-     */
-    @GetMapping("{menuId}/parents")
-    public List<MenuDto> findParentsByMenuId(@PathVariable("menuId") Long menuId) {
-        return menuService.findParentsByMenuId(menuId);
-    }
-
 
     /**
      * 对菜单名字进行校验

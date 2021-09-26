@@ -52,5 +52,4 @@ public interface MenuService {
 
     boolean existsByName(String name, Long exclude);
 
-    List<MenuDto> findParentsByMenuId(Long menuId);
 }

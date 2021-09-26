@@ -17,7 +17,7 @@
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
   import { Rules } from 'async-validator'
-  import urls from '../../mweb/myInfo/urls'
+  import urls from '../urls'
   import http from '@/http'
 
   @Component
@@ -60,7 +60,7 @@
 
     submit (): Promise<any> {
       return (this.$refs.form as any).validate()
-        .then(() => http.patch(`${urls.myInfo}/password`, this.rePasswords))
+        .then(() => http.patch(`${urls.currentUser}/password`, this.rePasswords))
         .then(() => this.$message.success('密码修改成功'))
         .catch((e: any) => Promise.reject(e))
     }

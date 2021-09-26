@@ -3,12 +3,11 @@
     <el-aside width="250px" style="border-right: solid 1px #efefef;box-sizing: content-box">
       <el-tree ref="tree"
                class="tree"
+               :data="displayDepartmentTree"
                :expand-on-click-node="false"
                node-key="id"
                :props="treeProp"
-               :default-expanded-keys="defaultExpands"
-               lazy
-               :load="loadNode"
+               :default-expanded-keys="[current.id]"
                @current-change="selectNode">
         <template #default="{ node }">
           <span>
@@ -37,8 +36,7 @@
               </el-col>
             </el-row>
           </el-form>
-          <ele-data-tables v-if="departmentQuery.parentId"
-                           ref="table"
+          <ele-data-tables ref="table"
                            :ajax="departmentUrl"
                            :server-params="departmentQuery"
                            pagination-layout="total, sizes, prev, pager, next, jumper">
@@ -106,28 +104,31 @@
         </el-tab-pane>
       </el-tabs>
     </el-main>
-    <el-dialog v-if="departmentEditVisible"
-               :visible.sync="departmentEditVisible"
-               :close-on-click-modal="false">
-      <department :id="currentEdit.id"
+    <!--部门编辑对话框-->
+    <el-dialog v-if="currentDepartment"
+               :visible="true"
+               :close-on-click-modal="false"
+               @close="currentDepartment=null">
+      <department :id="currentDepartment.id"
                   ref="departmentForm"
                   v-loading="loading"
                   :parent-id="current.id" />
       <template #footer>
-        <el-button @click="departmentEditVisible=false">取消</el-button>
+        <el-button @click="currentDepartment=null">取消</el-button>
         <el-button type="primary" :loading="loading" @click="saveDepartment">确定</el-button>
       </template>
     </el-dialog>
 
-    <el-dialog v-if="userEditVisible"
-               :visible.sync="userEditVisible"
-               :close-on-click-modal="false">
-      <user :id="currentEdit.id"
+    <el-dialog v-if="currentUser"
+               :visible="true"
+               :close-on-click-modal="false"
+               @close="currentUser=null">
+      <user :id="currentUser.id"
             ref="user"
             v-loading="loading"
             :department-id="current.id" />
       <template #footer>
-        <el-button @click="userEditVisible=false">取消</el-button>
+        <el-button @click="currentUser=null">取消</el-button>
         <el-button type="primary" :loading="loading" @click="saveUser">确定</el-button>
       </template>
     </el-dialog>
@@ -136,24 +137,23 @@
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
-  import { TreeNode } from 'element-ui/types/tree'
   import http from '@/http'
   import urls from '../URLS'
-  import { DepartmentDto, Page, UserDto } from '@/types/service'
+  import { DepartmentDto, DepartmentTreeItem, UserDto } from '@/types/service'
   import { TreeProps } from '@/types/element'
-  import isNil from 'lodash/isNil'
   import Department from './Department.vue'
   import User from './User.vue'
   import { namespace } from 'vuex-class'
+  import isNil from 'lodash/isNil'
 
-  const departmentTypes = {
+  const departmentTypes: { [key: string]: string } = {
     DEPARTMENT: '部门',
     ORGANS: '机构',
     GROUP: '分组'
-  } as { [key: string]: string }
+  }
 
   const httpModel = namespace('http')
-
+  const departmentModule = namespace('system/department')
   @Component({
     components: {
       User,
@@ -166,41 +166,50 @@
     }
   })
   export default class Departments extends Vue {
-    current: DepartmentDto = {}
-    departmentEditVisible = false
-    // 当前的编辑项目
-    currentEdit: DepartmentDto | UserDto = {}
+    current: DepartmentDto = { id: 0 }
 
-    userEditVisible = false
+    currentDepartment: DepartmentDto | null = null
+    currentUser: UserDto | null = null
+
+    departmentUrl = urls.department
+    userUrl = urls.user
 
     @httpModel.Getter('loading')
     loading!: boolean
+
+    @departmentModule.Action('loadAll')
+    loadAll!: () => Promise<unknown>
+
+    @departmentModule.Getter('tree')
+    departmentTree!: DepartmentTreeItem[]
+
+    @departmentModule.Mutation('department')
+    commitDepartment!: (payload: DepartmentDto) => void
+
+    get displayDepartmentTree (): DepartmentTreeItem[] {
+      return [{
+        id: 0,
+        fullname: '全部',
+        shortname: '全部',
+        children: this.departmentTree
+      }]
+    }
 
     searchObj = {
       keyword: ''
     }
 
-    get defaultExpands (): number[] {
-      // 默认选择中当前项目
-      // 只在第一次是生效
-      if (this.current?.id) {
-        return [this.current.id]
-      } else {
-        return []
-      }
-    }
-
     get departmentQuery (): { [key: string]: any } {
       return {
         ...this.searchObj,
-        parentId: this.current?.id
+        parentId: this.current?.id === 0 ? null : this.current.id
       }
     }
 
     get userQuery (): { [key: string]: any } {
       return {
         ...this.searchObj,
-        department: this.current?.id
+        department: this.current?.id === 0 ? null : this.current.id
       }
     }
 
@@ -208,83 +217,44 @@
       return { // 树形机构显示属性
         children: 'children',
         label: 'fullname',
-        disabled: '',
-        // 判断某个部门是否有叶子节点
-        isLeaf: (data: DepartmentDto) => !data.hasChildren
+        disabled: ''
       }
     }
 
-    departmentUrl = urls.department
-    userUrl = urls.user
-
-    loadNode ({ key }: TreeNode<number, DepartmentDto>, reslove: (v: DepartmentDto[]) => void): void {
-      // 加载某个节点
-      this.loadChildren(key).then(result => {
-        reslove(result)
-        return result
-      }).then(([root] = []) => {
-        // 如果加载的是根节点，选中根节点
-        if (isNil(key)) {
-          this.selectNode(root)
-        }
-      })
-    }
-
-    loadChildren (parentId: number): Promise<DepartmentDto[]> {
-      return http.get<Page<DepartmentDto>>(`${urls.department}`, {
-        params: {
-          parentId,
-          page: 0,
-          size: 10000
-        }
-      }).then(({ data: { content } }) => (content ?? []))
-    }
-
-    updateTreeNode (id?: number): Promise<unknown> {
-      if (id !== undefined) {
-        return this.loadChildren(id).then((data) => {
-          (this.$refs.tree as any).updateKeyChildren(id, data)
-        })
-      } else {
-        return Promise.reject(new Error('需要更新的节点为空'))
-      }
+    created (): void {
+      this.loadAll().then(() => this.selectNode(this.current))
     }
 
     editDepartment (department: DepartmentDto): void {
-      this.currentEdit = department
-      this.departmentEditVisible = true
+      this.currentDepartment = department
     }
 
     saveDepartment (): Promise<unknown> {
-      return (this.$refs.departmentForm as any).submit().then(({ data }: { data: DepartmentDto }) => {
-        this.departmentEditVisible = false;
-        // 保存之后需要刷新当前页面
-        (this.$refs.table as any).reloadData()
-        // 保存刷新当前部门的树
-        if (!isNil(this.current?.id)) {
-          this.updateTreeNode(this.current.id)
-        }
-        // 如果当前树不等于修改后的部门树,说明将部门修改到了其他节点，还要刷新相应的节点
-        if (this.current?.id !== data.parent?.id) {
-          this.updateTreeNode(data.parent?.id)
-        }
-      })
+      return (this.$refs.departmentForm as any)
+        .submit().then(({ data }: { data: DepartmentDto }) => {
+          this.currentDepartment = null
+          this.commitDepartment(data);
+          // 保存之后需要刷新当前页面
+          (this.$refs.table as any).reloadData()
+        })
     }
 
     editUser (user: UserDto): void {
-      this.currentEdit = user
-      this.userEditVisible = true
+      this.currentUser = user
     }
 
     saveUser (): Promise<unknown> {
       return (this.$refs.user as any).submit().then(() => {
-        this.userEditVisible = false;
+        this.currentUser = null;
         (this.$refs.userTable as any).reloadData()
       })
     }
 
     selectNode (data: DepartmentDto): void {
       // 当树形结构选择项改变时,更新表格搜索参数
+      if (!isNil(data.id)) {
+        (this.$refs.tree as any).setCurrentNode(data)
+      }
       this.current = data
     }
   }

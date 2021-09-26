@@ -25,7 +25,6 @@ export default function (envParams, { mode = 'development' } = {}) {
     devServer: {
       publicPath: envParams.CONTEXT_PATH,
       contentBase: resolve(__dirname, '..', 'public'),
-      index: 'cc.html',
       overlay: {
         warnings: false,
         errors: true

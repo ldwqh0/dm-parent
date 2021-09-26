@@ -58,11 +58,6 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         super();
     }
 
-    /**
-     * 是否有子部门
-     */
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private boolean hasChildren = false;
 
     /**
      * 子部门个数
@@ -95,7 +90,6 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
      * 负责人
      */
     private String director;
-
 
     public String getDirector() {
         return this.director;
@@ -147,12 +141,12 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         this.type = type;
     }
 
+    /**
+     * 是否有子部门
+     */
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public boolean isHasChildren() {
-        return hasChildren;
-    }
-
-    public void setHasChildren(boolean hasChildren) {
-        this.hasChildren = hasChildren;
+        return this.childrenCount > 0;
     }
 
     public long getChildrenCount() {
@@ -192,11 +186,11 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DepartmentDto that = (DepartmentDto) o;
-        return hasChildren == that.hasChildren && childrenCount == that.childrenCount && userCount == that.userCount && Objects.equals(id, that.id) && Objects.equals(fullname, that.fullname) && Objects.equals(shortname, that.shortname) && Objects.equals(description, that.description) && type == that.type && Objects.equals(parent, that.parent) && Objects.equals(director, that.director) && Objects.equals(logo, that.logo);
+        return childrenCount == that.childrenCount && userCount == that.userCount && Objects.equals(id, that.id) && Objects.equals(fullname, that.fullname) && Objects.equals(shortname, that.shortname) && Objects.equals(description, that.description) && type == that.type && Objects.equals(parent, that.parent) && Objects.equals(director, that.director) && Objects.equals(logo, that.logo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullname, shortname, description, type, hasChildren, childrenCount, userCount, parent, director, logo);
+        return Objects.hash(id, fullname, shortname, description, type, childrenCount, userCount, parent, director, logo);
     }
 }

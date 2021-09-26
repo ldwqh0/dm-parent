@@ -136,7 +136,8 @@ public class AuthResource extends AbstractEntity {
     }
 
     public void setMethods(Set<HttpMethod> methods) {
-        this.methods = methods;
+        this.methods.clear();
+        this.methods.addAll(methods);
     }
 
     public String getMatcher() {

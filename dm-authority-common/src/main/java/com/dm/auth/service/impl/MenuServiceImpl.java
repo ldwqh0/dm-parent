@@ -166,45 +166,32 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu moveUp(long id) {
-        Menu one = menuRepository.getById(id);
-        Long order = one.getOrder();
-        Menu parent = one.getParent();
-        BooleanExpression exp;
-        if (Objects.isNull(parent)) {
-            exp = qMenu.parent.isNull();
-        } else {
-            exp = qMenu.parent.eq(parent);
-        }
-        exp = exp.and(QMenu.menu.order.lt(order));
-        Sort sort = Sort.by(Direction.DESC, "order");
-        PageRequest request = PageRequest.of(0, 1, sort);
-        Iterable<Menu> thats = menuRepository.findAll(exp, request);
-        Iterator<Menu> iterator = thats.iterator();
-        if (iterator.hasNext()) {
-            Menu that = iterator.next();
-            one.setOrder(that.getOrder());
-            that.setOrder(order);
-        }
-        return one;
+        return move(id, "up");
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public Menu moveDown(long id) {
+        return move(id, "down");
+    }
+
+    private Menu move(long id, String pos) {
         Menu one = menuRepository.getById(id);
         Long order = one.getOrder();
-        BooleanExpression expression;
-        Menu parent = one.getParent();
-        if (Objects.isNull(parent)) {
-            expression = qMenu.parent.isNull();
+        BooleanExpression expression = one.getParent()
+            .map(qMenu.parent::eq)
+            .orElseGet(qMenu.parent::isNull);
+        Sort sort;
+        if ("down".equalsIgnoreCase(pos)) {
+            expression = expression.and(qMenu.order.gt(order));
+            sort = Sort.by(Direction.ASC, "order");
         } else {
-            expression = qMenu.parent.eq(parent);
+            expression = expression.and(qMenu.order.lt(order));
+            sort = Sort.by(Direction.DESC, "order");
         }
-        expression = expression.and(QMenu.menu.order.gt(order));
-        Sort sort = Sort.by(Direction.ASC, "order");
-        PageRequest request = PageRequest.of(0, 1, sort);
-        Iterator<Menu> thats = menuRepository.findAll(expression, request).iterator();
+        Iterator<Menu> thats = menuRepository.findAll(expression, PageRequest.of(0, 1, sort)).iterator();
         if (thats.hasNext()) {
             Menu that = thats.next();
             one.setOrder(that.getOrder());
@@ -219,12 +206,14 @@ public class MenuServiceImpl implements MenuService {
     private void preCheck(MenuDto menu) {
         Long menuId = menu.getId();
         if (Objects.nonNull(menuId)) {
-            Menu parent = menu.getParent().map(MenuDto::getId).flatMap(menuRepository::findById).orElse(null);
-            while (Objects.nonNull(parent)) {
-                if (Objects.equals(menuId, parent.getId())) {
+            Optional<Menu> parent = menu.getParent()
+                .map(MenuDto::getId)
+                .flatMap(menuRepository::findById);
+            while (parent.isPresent()) {
+                if (Objects.equals(menuId, parent.get().getId())) {
                     throw new DataValidateException("不能将一个节点的父级节点设置为它自身或它的叶子节点");
                 }
-                parent = parent.getParent();
+                parent = parent.get().getParent();
             }
         }
     }
@@ -246,7 +235,7 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuDto> listOffspring(Long parentId, Boolean enabled, Sort sort) {
         List<Menu> menus;
         if (Objects.isNull(parentId)) {
-            menus = menuRepository.findAll();
+            menus = menuRepository.findAll(sort);
         } else {
             menus = new ArrayList<>();
             listChildren(menus, parentId, sort);
@@ -271,7 +260,7 @@ public class MenuServiceImpl implements MenuService {
      * @return 如果被启用返回true, 否则返回false
      */
     private boolean isEnabled(Menu menu) {
-        return menu == null || (menu.isEnabled() && isEnabled(menu.getParent()));
+        return menu.isEnabled() && menu.getParent().map(this::isEnabled).orElse(true);
     }
 
     @Override
@@ -287,23 +276,6 @@ public class MenuServiceImpl implements MenuService {
             query.and(qMenu.id.notIn(exclude));
         }
         return menuRepository.exists(query);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<MenuDto> findParentsByMenuId(Long menuId) {
-        if (Objects.isNull(menuId)) {
-            return Collections.emptyList();
-        } else {
-            ArrayList<MenuDto> parents = new ArrayList<>();
-            Menu menu = menuRepository.getById(menuId);
-            Menu parent = menu.getParent();
-            while (!Objects.isNull(parent)) {
-                parents.add(MenuConverter.toDto(parent));
-                parent = parent.getParent();
-            }
-            return parents;
-        }
     }
 
     /**
