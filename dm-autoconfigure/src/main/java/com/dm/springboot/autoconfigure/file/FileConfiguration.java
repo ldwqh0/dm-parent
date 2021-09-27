@@ -68,6 +68,7 @@ public class FileConfiguration {
     public FileListener fileListener() {
         FileListener fileListener = new FileListener();
         fileListener.setStorageService(fileStorageService());
+        fileListener.setFileConfig(fileConfig());
         return fileListener;
     }
 

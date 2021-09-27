@@ -4,7 +4,6 @@ import com.dm.datasource.DataSourceBuilder;
 import com.dm.datasource.HikariDataSourceBuilder;
 import com.dm.datasource.provider.DataSourceProperties;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import javax.sql.DataSource;
@@ -23,7 +22,7 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
 
     private DataSourceBuilder dataSourceBuilder = new HikariDataSourceBuilder();
 
-    @Autowired(required = false)
+    //    @Autowired(required = false)
     public void setDataSourceBuilder(DataSourceBuilder dataSourceBuilder) {
         this.dataSourceBuilder = dataSourceBuilder;
     }

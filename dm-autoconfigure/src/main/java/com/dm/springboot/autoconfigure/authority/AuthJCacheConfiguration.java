@@ -12,8 +12,8 @@ import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 import java.util.Objects;
 
-@ConditionalOnClass(CacheManager.class)
 @Configuration
+@ConditionalOnClass(CacheManager.class)
 public class AuthJCacheConfiguration implements InitializingBean {
 
     private CacheManager jCacheManager = null;

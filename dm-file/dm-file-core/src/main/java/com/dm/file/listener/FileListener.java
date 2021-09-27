@@ -7,7 +7,6 @@ import com.dm.file.entity.FileInfo;
 import com.dm.file.service.FileStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.PostRemove;
 
@@ -23,12 +22,10 @@ public class FileListener {
 
     private FileConfig fileConfig;
 
-    @Autowired(required = false)
     public void setStorageService(FileStorageService storageService) {
         this.storageService = storageService;
     }
 
-    @Autowired
     public void setFileConfig(FileConfig fileConfig) {
         this.fileConfig = fileConfig;
     }
