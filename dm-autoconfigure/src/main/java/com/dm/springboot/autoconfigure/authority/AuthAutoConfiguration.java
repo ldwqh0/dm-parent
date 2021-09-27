@@ -10,20 +10,17 @@ import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Sets;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.Set;
 
 @ConditionalOnClass({Role.class})
-@EntityScan({"com.dm.auth"})
-@EnableJpaRepositories({"com.dm.auth"})
-@ComponentScan({"com.dm.auth"})
-@Import(AuthJCacheConfiguration.class)
+
+//@EnableJpaRepositories({"com.dm.auth"})
+//@ComponentScan({"com.dm.auth"})
+@Import({AuthBeanDefineConfiguration.class, AuthJCacheConfiguration.class})
 public class AuthAutoConfiguration {
 
     private final MenuService menuService;

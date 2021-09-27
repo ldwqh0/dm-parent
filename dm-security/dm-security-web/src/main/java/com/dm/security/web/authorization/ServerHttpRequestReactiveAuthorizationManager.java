@@ -29,7 +29,7 @@ public class ServerHttpRequestReactiveAuthorizationManager
 
     private ResourceAuthorityService resourceAuthorityService = null;
 
-    @Autowired(required = false)
+    @Autowired
     public void setResourceAuthorityService(ResourceAuthorityService resourceAuthorityService) {
         this.resourceAuthorityService = resourceAuthorityService;
     }

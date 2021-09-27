@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
+//@Service
 public class LoginLogServiceImpl implements LoginLogService {
 
     private final LoginLogRepository loginLogRepository;

@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Service
 public class ResourceServiceImpl implements ResourceService, ResourceAuthorityService {
 
     private final ResourceRepository resourceRepository;

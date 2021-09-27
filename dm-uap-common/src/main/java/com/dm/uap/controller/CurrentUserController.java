@@ -19,7 +19,6 @@ import static org.springframework.http.HttpStatus.CREATED;
  */
 @RestController
 @RequestMapping("/users/current")
-
 public class CurrentUserController {
 
     private final UserService userService;

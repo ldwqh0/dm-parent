@@ -13,24 +13,29 @@ import com.dm.file.service.impl.DefaultThumbnailServiceImpl;
 import com.dm.file.service.impl.FileServiceImpl;
 import com.dm.file.service.impl.LocalFileStorageServiceImpl;
 import com.dm.file.service.impl.MapPackageFileServiceImpl;
+import com.dm.springboot.autoconfigure.DmEntityScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
+
+import javax.persistence.EntityManager;
 
 @Configuration
 @ConditionalOnClass(FileInfo.class)
-@EnableConfigurationProperties(FileConfiguration.class)
-@EntityScan(basePackages = "com.dm.file")
-@EnableJpaRepositories(basePackages = "com.dm.file")
+@DmEntityScan("com.dm.file")
 public class FileConfiguration {
+
+    @Bean
+    public FileInfoRepository fileInfoRepository(EntityManager em) {
+        return new JpaRepositoryFactory(em).getRepository(FileInfoRepository.class);
+    }
+
 
     @Bean
     public FileInfoService fileInfoService(@Autowired FileInfoRepository fileInfoRepository) {

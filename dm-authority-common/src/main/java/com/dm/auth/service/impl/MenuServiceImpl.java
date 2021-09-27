@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;

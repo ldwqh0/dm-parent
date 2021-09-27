@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Service
+//@Service
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final QDepartment qDepartment = QDepartment.department;

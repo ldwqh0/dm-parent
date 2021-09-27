@@ -8,7 +8,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+//@Service
+//TODO 这里要添加一个service
 public class RegionSyncServiceImpl implements RegionSyncService {
 
     private final RegionService regionService;

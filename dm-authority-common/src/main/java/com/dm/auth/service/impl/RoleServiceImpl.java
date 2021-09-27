@@ -10,7 +10,6 @@ import com.dm.auth.entity.QRole;
 import com.dm.auth.entity.Role;
 import com.dm.auth.entity.Role.Status;
 import com.dm.auth.repository.MenuRepository;
-import com.dm.auth.repository.ResourceRepository;
 import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.RoleService;
 import com.dm.common.exception.DataNotExistException;
@@ -27,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
@@ -47,10 +45,11 @@ public class RoleServiceImpl implements RoleService {
         HttpMethod.OPTIONS,
     };
 
-    public RoleServiceImpl(RoleRepository roleRepository, MenuRepository menuRepository, ResourceRepository resourceRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, MenuRepository menuRepository) {
         this.roleRepository = roleRepository;
         this.menuRepository = menuRepository;
     }
+
 
     @Override
     public boolean exist() {

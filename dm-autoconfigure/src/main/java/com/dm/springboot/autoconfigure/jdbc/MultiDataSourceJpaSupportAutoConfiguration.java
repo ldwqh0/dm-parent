@@ -5,17 +5,23 @@ import com.dm.datasource.entity.DmDataSource;
 import com.dm.datasource.repository.DmDataSourceRepository;
 import com.dm.datasource.service.DmDataSourceService;
 import com.dm.datasource.service.impl.DmDataSourceServiceImpl;
+import com.dm.springboot.autoconfigure.DmEntityScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
+
+import javax.persistence.EntityManager;
 
 @Configuration
 @ConditionalOnClass(DmDataSource.class)
-@EntityScan(basePackages = "com.dm.datasource.entity")
-@EnableJpaRepositories(basePackages = "com.dm.datasource.repository")
+@DmEntityScan("com.dm.datasource.entity")
 public class MultiDataSourceJpaSupportAutoConfiguration {
+
+    @Bean
+    public DmDataSourceRepository dmDataSourceRepository(EntityManager em) {
+        return new JpaRepositoryFactory(em).getRepository(DmDataSourceRepository.class);
+    }
 
     @Bean
     public DmDataSourceController dataSourceController(DmDataSourceRepository dmDataSourceRepository) {

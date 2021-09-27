@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
 public class FileServiceImpl implements FileInfoService {
 
     private final FileStorageService storageService;

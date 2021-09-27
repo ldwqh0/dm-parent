@@ -5,19 +5,11 @@ import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserRoleDto;
 import com.dm.uap.entity.User;
 import com.dm.uap.service.UserService;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -28,11 +20,8 @@ import java.util.Collections;
 import java.util.Objects;
 
 @ConditionalOnClass(User.class)
-@EntityScan({"com.dm.uap"})
-@EnableJpaRepositories({"com.dm.uap"})
-@ComponentScan({"com.dm.uap"})
 @EnableConfigurationProperties({DefaultUserProperties.class})
-@Import({UapJCacheConfiguration.class, UapAutoConfiguration.UapBeanConfiguration.class})
+@Import({UapJCacheConfiguration.class, UapBeanDefineConfiguration.class})
 public class UapAutoConfiguration implements InitializingBean {
 
     private final DefaultUserProperties defaultUser;
@@ -80,13 +69,6 @@ public class UapAutoConfiguration implements InitializingBean {
         initUser();
     }
 
-    static class UapBeanConfiguration {
-        @Bean
-        @ConditionalOnMissingBean(PasswordEncoder.class)
-        public PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
-        }
-    }
 
     @ConditionalOnClass(CacheManager.class)
     static class UapJCacheConfiguration {

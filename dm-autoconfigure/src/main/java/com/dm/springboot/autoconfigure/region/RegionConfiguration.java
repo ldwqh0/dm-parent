@@ -11,10 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.context.annotation.Import;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -25,11 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@EntityScan({"com.dm.region"})
-@EnableJpaRepositories({"com.dm.region"})
-@ComponentScan({"com.dm.region"})
 @Configuration
 @ConditionalOnClass(Region.class)
+@Import(RegionBeanDefineConfiguration.class)
 public class RegionConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(RegionConfiguration.class);
@@ -48,6 +44,7 @@ public class RegionConfiguration {
      */
     @PostConstruct
     public void initRegion() {
+
         if (!regionService.existAny()) {
             try (InputStream iStream = this.getClass().getClassLoader().getResourceAsStream("regions.json")) {
                 MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class,

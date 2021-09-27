@@ -23,7 +23,6 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public class DmDataSourceServiceImpl implements DmDataSourceService {
 
     private final DmDataSourceRepository dmDataSourceRepository;
