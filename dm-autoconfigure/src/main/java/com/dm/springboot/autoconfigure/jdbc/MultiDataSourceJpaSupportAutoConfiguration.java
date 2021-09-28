@@ -13,7 +13,6 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 
 import javax.persistence.EntityManager;
 
-@Configuration
 @ConditionalOnClass(DmDataSource.class)
 @DmEntityScan("com.dm.datasource.entity")
 public class MultiDataSourceJpaSupportAutoConfiguration {

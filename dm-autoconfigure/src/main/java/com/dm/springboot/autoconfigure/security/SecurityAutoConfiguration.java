@@ -25,16 +25,20 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.Servlet;
 import java.util.Collections;
 import java.util.List;
 
-@Configuration
 public class SecurityAutoConfiguration {
 
     @Configuration
-    @ConditionalOnClass(name = {"javax.servlet.Servlet", "com.dm.security.core.userdetails.UserDetailsDto"})
+    @ConditionalOnClass(value = {
+        Servlet.class,
+        UserDetailsDto.class,
+        CurrentAuthorityController.class
+    })
     static class CurrentUserConfiguration {
         @Bean
         public CurrentAuthorityController currentAuthorityController() {
@@ -43,9 +47,11 @@ public class SecurityAutoConfiguration {
 
     }
 
-    @ConditionalOnClass(name = {
-        "reactor.core.publisher.Mono",
-        "com.dm.security.core.userdetails.UserDetailsDto"})
+    @ConditionalOnClass(value = {
+        Mono.class,
+        UserDetailsDto.class,
+        CurrentUserReactiveController.class
+    })
     @ConditionalOnBean(type = {
         "org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter"})
     static class ReactiveCurrentUserConfiguration {

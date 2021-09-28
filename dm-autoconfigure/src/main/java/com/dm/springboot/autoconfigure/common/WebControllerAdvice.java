@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
-@Configuration
 @AutoConfigureBefore({ErrorMvcAutoConfiguration.class})
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class WebControllerAdvice {

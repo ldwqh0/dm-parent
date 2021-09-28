@@ -9,6 +9,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,19 +24,10 @@ public class DmEntityScannerRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        List<String> existsPackages = EntityScanPackages.get((BeanFactory) registry).getPackageNames();
         List<String> basePackages = AutoConfigurationPackages.get((BeanFactory) registry);
-        basePackages.forEach(packageName -> {
-            if (!existsPackages.contains(packageName)) {
-                EntityScanPackages.register(registry, packageName);
-            }
-        });
-        Set<String> usePackage = getPackagesToScan(importingClassMetadata);
-        usePackage.forEach(packageName -> {
-            if (!existsPackages.contains(packageName)) {
-                EntityScanPackages.register(registry, packageName);
-            }
-        });
+        List<String> packages = new ArrayList<>(basePackages);
+        packages.addAll(getPackagesToScan(importingClassMetadata));
+        EntityScanPackages.register(registry, packages);
     }
 
     private Set<String> getPackagesToScan(AnnotationMetadata metadata) {

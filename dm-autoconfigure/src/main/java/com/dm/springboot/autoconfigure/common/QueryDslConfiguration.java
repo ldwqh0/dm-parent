@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-@Configuration
 @ConditionalOnBean(EntityManagerFactory.class)
 @ConditionalOnClass(JPAQueryFactory.class)
 @AutoConfigureAfter(HibernateJpaAutoConfiguration.class)

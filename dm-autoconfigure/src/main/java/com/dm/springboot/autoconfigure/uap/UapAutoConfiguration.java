@@ -1,6 +1,5 @@
 package com.dm.springboot.autoconfigure.uap;
 
-import com.dm.springboot.autoconfigure.uap.UapAutoConfiguration.UapJCacheConfiguration;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserRoleDto;
 import com.dm.uap.entity.User;
@@ -21,7 +20,7 @@ import java.util.Objects;
 
 @ConditionalOnClass(User.class)
 @EnableConfigurationProperties({DefaultUserProperties.class})
-@Import({UapJCacheConfiguration.class, UapBeanDefineConfiguration.class})
+@Import({UapBeanDefineConfiguration.class, UapAutoConfiguration.UapJCacheConfiguration.class})
 public class UapAutoConfiguration implements InitializingBean {
 
     private final DefaultUserProperties defaultUser;
@@ -29,6 +28,7 @@ public class UapAutoConfiguration implements InitializingBean {
     private final UserService userService;
 
     public UapAutoConfiguration(DefaultUserProperties defaultUser, UserService userService) {
+        System.out.println("here");
         this.defaultUser = defaultUser;
         this.userService = userService;
     }

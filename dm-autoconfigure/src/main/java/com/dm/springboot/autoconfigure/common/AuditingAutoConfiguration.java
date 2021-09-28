@@ -23,7 +23,6 @@ import java.util.Optional;
  *
  * @author LiDong
  */
-@Configuration
 @ConditionalOnBean(AuditingHandler.class)
 public class AuditingAutoConfiguration {
 

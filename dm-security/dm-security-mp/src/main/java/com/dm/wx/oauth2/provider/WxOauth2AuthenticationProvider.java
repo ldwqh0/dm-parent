@@ -12,10 +12,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.security.authentication.AccountExpiredException;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
@@ -69,7 +66,7 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
             return null;
         }
         try {
-            final String code = authentication.getCredentials().toString();
+            final String code = String.valueOf(authentication.getCredentials());
             final WxOAuth2AccessToken token = wxOAuth2Service.getAccessToken(code);
             final WxOauth2AccessTokenAuthenticationToken authenticationToken = new WxOauth2AccessTokenAuthenticationToken(token, Collections.singleton(new SimpleGrantedAuthority("ROLE_WX_USER")));
             if (authenticationUserDetailsService != null) {
@@ -79,7 +76,7 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
             }
             return authenticationToken;
         } catch (WxErrorException e) {
-            throw new RuntimeException(e);
+            throw new BadCredentialsException("微信登录时发生错误", e);
         }
     }
 

@@ -10,9 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
  * @author 根据微信
- *
  */
 public class WxCodeAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -26,11 +24,13 @@ public class WxCodeAuthenticationProcessingFilter extends AbstractAuthentication
 
     public WxCodeAuthenticationProcessingFilter(RequestMatcher matcher) {
         super(matcher);
+
+
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+        throws AuthenticationException {
         String code = request.getParameter("code");
         return this.getAuthenticationManager().authenticate(new WxOAuth2CodeAuthentication(code));
     }

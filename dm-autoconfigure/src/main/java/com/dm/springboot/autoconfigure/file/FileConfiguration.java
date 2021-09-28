@@ -19,16 +19,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 
 import javax.persistence.EntityManager;
 
-@Configuration
-@ConditionalOnClass(FileInfo.class)
 @DmEntityScan("com.dm.file")
+@ConditionalOnClass(FileInfo.class)
 public class FileConfiguration {
 
     @Bean
@@ -36,23 +34,27 @@ public class FileConfiguration {
         return new JpaRepositoryFactory(em).getRepository(FileInfoRepository.class);
     }
 
-
     @Bean
-    public FileInfoService fileInfoService(@Autowired FileInfoRepository fileInfoRepository) {
+    public FileInfoService fileInfoService(@Autowired FileInfoRepository fileInfoRepository,
+                                           FileStorageService fileStorageService) {
         return new FileServiceImpl(
-            fileStorageService(),
+            fileStorageService,
             fileInfoRepository
         );
     }
 
     @Bean
-    public FileController fileController(@Autowired FileInfoRepository fileInfoRepository) {
+    public FileController fileController(FileInfoService fileInfoService,
+                                         ThumbnailService thumbnailService,
+                                         FileConfig fileConfig,
+                                         FileStorageService fileStorageService,
+                                         PackageFileService packageFileService) {
         return new FileController(
-            fileInfoService(fileInfoRepository),
-            thumbnailService(),
-            fileConfig(),
-            fileStorageService(),
-            packageFileService()
+            fileInfoService,
+            thumbnailService,
+            fileConfig,
+            fileStorageService,
+            packageFileService
         );
     }
 
@@ -65,23 +67,24 @@ public class FileConfiguration {
 
 
     @Bean
-    public FileListener fileListener() {
+    public FileListener fileListener(FileStorageService fileStorageService,
+                                     FileConfig fileConfig) {
         FileListener fileListener = new FileListener();
-        fileListener.setStorageService(fileStorageService());
-        fileListener.setFileConfig(fileConfig());
+        fileListener.setStorageService(fileStorageService);
+        fileListener.setFileConfig(fileConfig);
         return fileListener;
     }
 
     @Bean
     @ConditionalOnMissingBean(FileStorageService.class)
-    public FileStorageService fileStorageService() {
-        return new LocalFileStorageServiceImpl(fileConfig());
+    public FileStorageService fileStorageService(FileConfig fileConfig) {
+        return new LocalFileStorageServiceImpl(fileConfig);
     }
 
     @Bean
     @ConditionalOnMissingBean(ThumbnailService.class)
-    public ThumbnailService thumbnailService() {
-        return new DefaultThumbnailServiceImpl(fileStorageService());
+    public ThumbnailService thumbnailService(FileStorageService fileStorageService) {
+        return new DefaultThumbnailServiceImpl(fileStorageService);
     }
 
     @Bean

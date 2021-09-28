@@ -3,7 +3,6 @@ package com.dm.springboot.autoconfigure.authority;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Configuration;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -12,7 +11,6 @@ import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 import java.util.Objects;
 
-@Configuration
 @ConditionalOnClass(CacheManager.class)
 public class AuthJCacheConfiguration implements InitializingBean {
 

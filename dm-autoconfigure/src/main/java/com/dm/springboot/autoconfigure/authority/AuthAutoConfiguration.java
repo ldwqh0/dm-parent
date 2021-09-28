@@ -17,9 +17,6 @@ import java.util.Collections;
 import java.util.Set;
 
 @ConditionalOnClass({Role.class})
-
-//@EnableJpaRepositories({"com.dm.auth"})
-//@ComponentScan({"com.dm.auth"})
 @Import({AuthBeanDefineConfiguration.class, AuthJCacheConfiguration.class})
 public class AuthAutoConfiguration {
 

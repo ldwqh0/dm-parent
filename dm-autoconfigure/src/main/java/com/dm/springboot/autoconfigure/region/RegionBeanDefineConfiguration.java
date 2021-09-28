@@ -2,6 +2,7 @@ package com.dm.springboot.autoconfigure.region;
 
 import com.dm.region.controller.RegionController;
 import com.dm.region.repository.RegionRepository;
+import com.dm.region.repository.impl.RegionRepositoryImpl;
 import com.dm.region.service.RegionService;
 import com.dm.region.service.impl.RegionServiceImpl;
 import com.dm.springboot.autoconfigure.DmEntityScan;
@@ -12,9 +13,11 @@ import javax.persistence.EntityManager;
 
 @DmEntityScan({"com.dm.region"})
 public class RegionBeanDefineConfiguration {
+
+
     @Bean
     public RegionRepository regionRepository(EntityManager em) {
-        return new JpaRepositoryFactory(em).getRepository(RegionRepository.class);
+        return new JpaRepositoryFactory(em).getRepository(RegionRepository.class, new RegionRepositoryImpl(em));
     }
 
     @Bean
