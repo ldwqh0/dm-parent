@@ -94,6 +94,7 @@ public class UapBeanDefineConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(CurrentUserController.class)
     public CurrentUserController currentUserController(UserService userService) {
         return new CurrentUserController(userService);
     }

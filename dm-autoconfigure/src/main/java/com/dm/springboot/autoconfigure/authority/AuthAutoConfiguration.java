@@ -58,7 +58,8 @@ public class AuthAutoConfiguration {
         if (!resourceService.exist()) {
             return Sets.hashSet(
                 initResource("default", "/**", "默认资源类型", roles),
-                initResource("用户可见菜单", "/p/menuAuthorities/current**/**", "当前用户可见菜单", roles)
+                initResource("用户可见菜单", "/p/menuAuthorities/current**/**", "当前用户可见菜单", roles),
+                initResource("当前用户信息", "/p/authorities/current", "当前用户信息", roles)
             );
         } else {
             return Collections.emptySet();
@@ -89,7 +90,7 @@ public class AuthAutoConfiguration {
     private RoleDto initRole(String name, String description, MenuAuthorityDto authorities) {
         String group = "内置分组";
         String fullname = group + "_" + name;
-        if (!roleService.existsByFullname(fullname)) {
+        return roleService.findByFullname(fullname).orElseGet(() -> {
             RoleDto role = new RoleDto();
             role.setName(name);
             role.setGroup(group);
@@ -97,9 +98,6 @@ public class AuthAutoConfiguration {
             role = roleService.save(role);
             roleService.saveAuthority(role.getId(), authorities);
             return role;
-        } else {
-            return roleService.findByFullname(fullname).get();
-        }
+        });
     }
-
 }

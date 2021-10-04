@@ -2,6 +2,7 @@ package com.dm.security.oauth2.server.resource.introspection;
 
 import com.dm.security.oauth2.core.OAuth2UserDetailsDto;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -62,7 +63,10 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
                     }
                 });
             }
-            user.setId(Long.valueOf((String) response.getSubject()));
+            String subString = String.valueOf(response.getSubject());
+            if (NumberUtils.isCreatable(subString)) {
+                user.setId(NumberUtils.createLong(subString));
+            }
             user.setEnabled(true);
             user.setClientId(response.getClientId());
             user.setGrantedAuthority(authorities);

@@ -33,32 +33,25 @@ import java.util.List;
 
 public class SecurityAutoConfiguration {
 
-    @Configuration
     @ConditionalOnClass(value = {
         Servlet.class,
         UserDetailsDto.class,
         CurrentAuthorityController.class
     })
-    static class CurrentUserConfiguration {
-        @Bean
-        public CurrentAuthorityController currentAuthorityController() {
-            return new CurrentAuthorityController();
-        }
-
+    @Bean
+    public CurrentAuthorityController currentAuthorityController() {
+        return new CurrentAuthorityController();
     }
 
+
+    @Bean
     @ConditionalOnClass(value = {
         Mono.class,
         UserDetailsDto.class,
         CurrentUserReactiveController.class
     })
-    @ConditionalOnBean(type = {
-        "org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter"})
-    static class ReactiveCurrentUserConfiguration {
-        @Bean
-        public CurrentUserReactiveController currentUserReactiveController() {
-            return new CurrentUserReactiveController();
-        }
+    public CurrentUserReactiveController currentUserReactiveController() {
+        return new CurrentUserReactiveController();
     }
 
     @Configuration

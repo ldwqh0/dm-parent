@@ -75,6 +75,15 @@ public class UserRole {
         this.name = name;
     }
 
+    public UserRole() {
+    }
+
+    public UserRole(Long id, String group, String name) {
+        this.id = id;
+        this.group = group;
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -5,7 +5,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -13,9 +12,8 @@ import java.util.*;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "dm_user_", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_dm_user_username_", columnNames = {"username_"}),
-}, indexes = {
+@Table(name = "dm_user_", indexes = {
+    @Index(name = "UDX_dm_user_username_", columnList = "username_", unique = true),
     @Index(name = "UDX_dm_user_email_", columnList = "email_", unique = true),
     @Index(name = "UDX_dm_user_mobile_", columnList = "mobile_", unique = true),
     @Index(name = "UDX_dm_user_no_", columnList = "no_", unique = true),
@@ -26,8 +24,7 @@ public class User extends AbstractEntity {
     /**
      * 用户名
      */
-    @NotNull
-    @Column(name = "username_", length = 50, nullable = false)
+    @Column(name = "username_", length = 50)
     private String username;
 
     /**
@@ -58,7 +55,7 @@ public class User extends AbstractEntity {
     /**
      * 用户密码
      */
-    @Column(name = "password_", length = 100, nullable = false)
+    @Column(name = "password_", length = 100)
     private String password;
 
     @Column(name = "expired_", nullable = false)

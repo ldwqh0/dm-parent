@@ -28,7 +28,6 @@ public class UapAutoConfiguration implements InitializingBean {
     private final UserService userService;
 
     public UapAutoConfiguration(DefaultUserProperties defaultUser, UserService userService) {
-        System.out.println("here");
         this.defaultUser = defaultUser;
         this.userService = userService;
     }

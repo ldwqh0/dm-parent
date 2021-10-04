@@ -15,6 +15,10 @@
       <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.nimbusds</groupId>
+      <artifactId>oauth2-oidc-sdk</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.dm</groupId>
       <artifactId>dm-common</artifactId>
     </dependency>
