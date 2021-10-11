@@ -36,8 +36,7 @@ public class UserInfoOpaqueTokenIntrospector implements OpaqueTokenIntrospector 
     public UserInfoOpaqueTokenIntrospector(String introspectionUri, String clientId, String clientSecret) {
         this.url = introspectionUri;
         RestTemplate restTemplate = new RestTemplate();
-        new RestTemplate();
-        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(clientId, clientSecret));
+        restTemplate.setInterceptors(Collections.singletonList(new BasicAuthenticationInterceptor(clientId, clientSecret)));
         this.restOperations = restTemplate;
     }
 

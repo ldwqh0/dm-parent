@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.type.MapType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Import;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @ConditionalOnClass(Region.class)
 @Import(RegionBeanDefineConfiguration.class)
-public class RegionConfiguration {
+public class RegionConfiguration implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(RegionConfiguration.class);
 
@@ -40,9 +40,7 @@ public class RegionConfiguration {
     /**
      * 初始化区县数据
      */
-    @PostConstruct
-    public void initRegion() {
-
+    public void afterPropertiesSet() {
         if (!regionService.existAny()) {
             try (InputStream iStream = this.getClass().getClassLoader().getResourceAsStream("regions.json")) {
                 MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class,
@@ -72,4 +70,6 @@ public class RegionConfiguration {
             }
         }
     }
+
+
 }

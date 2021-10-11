@@ -66,7 +66,7 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
     /**
      * 文件存储路径
      */
-    @Column(name = "path_", nullable = false)
+    @Column(name = "path_", length = 1000)
     private String path;
 
     /**

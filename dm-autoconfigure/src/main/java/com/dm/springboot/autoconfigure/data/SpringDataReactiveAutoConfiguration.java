@@ -8,8 +8,8 @@ import org.springframework.data.web.ReactivePageableHandlerMethodArgumentResolve
 import org.springframework.data.web.ReactiveSortHandlerMethodArgumentResolver;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnClass(Pageable.class)
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class SpringDataReactiveAutoConfiguration {
 
     @Bean

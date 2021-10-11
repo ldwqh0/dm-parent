@@ -13,7 +13,6 @@ public class MapPackageFileServiceImpl implements PackageFileService {
 
     private final Map<String, PackageFileDto> requests = new ConcurrentHashMap<>();
 
-
     @Override
     @Transactional
     public PackageFileDto save(PackageFileDto request) {
@@ -34,8 +33,8 @@ public class MapPackageFileServiceImpl implements PackageFileService {
         return Optional.ofNullable(result);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteById(String id) {
         requests.remove(id);
     }

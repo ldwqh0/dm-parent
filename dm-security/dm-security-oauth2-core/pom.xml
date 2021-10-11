@@ -11,20 +11,12 @@
   <artifactId>dm-security-oauth2-core</artifactId>
   <dependencies>
     <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-oauth2-core</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.dm</groupId>
       <artifactId>dm-security-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-oauth2-resource-server</artifactId>
     </dependency>
   </dependencies>
 </project>

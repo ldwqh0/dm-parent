@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  * 部门管理
  */
 @RestController
-@RequestMapping("departments")
+@RequestMapping({"departments", "u/departments"})
 public class DepartmentController {
 
     private final DepartmentService departmentService;

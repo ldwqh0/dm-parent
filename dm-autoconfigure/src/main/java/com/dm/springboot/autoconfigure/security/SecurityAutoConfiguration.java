@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -31,6 +32,11 @@ import javax.servlet.Servlet;
 import java.util.Collections;
 import java.util.List;
 
+@Import({
+    SecurityAutoConfiguration.SecurityConfiguration.class,
+    SecurityAutoConfiguration.DmOAuth2ResourceServerAutoConfiguration.class,
+    SecurityAutoConfiguration.ReactiveSecurityConfiguration.class
+})
 public class SecurityAutoConfiguration {
 
     @ConditionalOnClass(value = {
@@ -103,6 +109,7 @@ public class SecurityAutoConfiguration {
         }
     }
 
+    @Configuration
     @ConditionalOnClass({Servlet.class, WebSecurityConfigurerAdapter.class})
     @ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class, SecurityWebFilterChain.class})
     static class SecurityConfiguration extends WebSecurityConfigurerAdapter {

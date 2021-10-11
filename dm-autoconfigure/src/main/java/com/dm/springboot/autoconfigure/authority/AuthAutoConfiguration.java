@@ -9,16 +9,16 @@ import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Sets;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Import;
 
-import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.Set;
 
 @ConditionalOnClass({Role.class})
 @Import({AuthBeanDefineConfiguration.class, AuthJCacheConfiguration.class})
-public class AuthAutoConfiguration {
+public class AuthAutoConfiguration implements InitializingBean {
 
     private final MenuService menuService;
 
@@ -30,16 +30,6 @@ public class AuthAutoConfiguration {
         this.menuService = menuService;
         this.resourceService = resourceService;
         this.roleService = roleService;
-    }
-
-    @PostConstruct
-    public void init() {
-        // 初始化菜单信息
-        Set<MenuDto> menus = initMenus();
-        // 初始化角色信息
-        Set<RoleDto> roles = initRoles(menus);
-        // 初始化资源信息
-        Set<ResourceDto> resources = initResources(roles);
     }
 
     private Set<MenuDto> initMenus() {
@@ -99,5 +89,15 @@ public class AuthAutoConfiguration {
             roleService.saveAuthority(role.getId(), authorities);
             return role;
         });
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        // 初始化菜单信息
+        Set<MenuDto> menus = initMenus();
+        // 初始化角色信息
+        Set<RoleDto> roles = initRoles(menus);
+        // 初始化资源信息
+        Set<ResourceDto> resources = initResources(roles);
     }
 }

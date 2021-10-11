@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  * 用户管理
  */
 @RestController
-@RequestMapping("users")
+@RequestMapping({"users", "u/users"})
 @Validated
 public class UserController {
 

@@ -8,7 +8,6 @@ import com.dm.datasource.service.impl.DmDataSourceServiceImpl;
 import com.dm.springboot.autoconfigure.DmEntityScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 
 import javax.persistence.EntityManager;
@@ -23,10 +22,9 @@ public class MultiDataSourceJpaSupportAutoConfiguration {
     }
 
     @Bean
-    public DmDataSourceController dataSourceController(DmDataSourceRepository dmDataSourceRepository) {
-        return new DmDataSourceController(dmDataSourceService(dmDataSourceRepository));
+    public DmDataSourceController dataSourceController(DmDataSourceService dmDataSourceService) {
+        return new DmDataSourceController(dmDataSourceService);
     }
-
 
     @Bean
     public DmDataSourceService dmDataSourceService(DmDataSourceRepository dmDataSourceRepository) {
