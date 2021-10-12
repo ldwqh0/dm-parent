@@ -8,7 +8,7 @@ import org.hibernate.dialect.unique.UniqueDelegate;
  */
 public class SQLServer2012ExtDialect extends SQLServer2012Dialect {
 
-    private UniqueDelegate uniqueDelegate = new SqlServer2008UniqueDelegate(this);
+    private final UniqueDelegate uniqueDelegate = new SqlServer2008UniqueDelegate(this);
 
     @Override
     public UniqueDelegate getUniqueDelegate() {

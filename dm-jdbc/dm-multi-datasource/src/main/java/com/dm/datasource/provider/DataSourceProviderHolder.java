@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class DataSourceProviderHolder {
 
-    private static Map<DataSourceProperties.DbTypes, DataSourceProvider> providers = new ConcurrentHashMap<>();
+    private static final Map<DataSourceProperties.DbTypes, DataSourceProvider> providers = new ConcurrentHashMap<>();
 
 
     private DataSourceProviderHolder() {

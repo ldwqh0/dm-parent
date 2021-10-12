@@ -48,7 +48,7 @@ public class Role extends AbstractEntity {
         @Index(columnList = "role_id_", name = "IDX_dm_role_menu_role_id_"),
         @Index(columnList = "menu_id_", name = "IDX_dm_role_menu_menu_id_")
     })
-    private Set<Menu> menus = new HashSet<>();
+    private final Set<Menu> menus = new HashSet<>();
 
     public Role() {
     }

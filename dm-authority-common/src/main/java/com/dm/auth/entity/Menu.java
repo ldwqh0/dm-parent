@@ -96,7 +96,7 @@ public class Menu extends AbstractEntity {
     private Boolean openInNewWindow = Boolean.FALSE;
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Menu> children = new ArrayList<>();
+    private final List<Menu> children = new ArrayList<>();
 
     public void setChildren(List<Menu> children) {
         this.children.clear();

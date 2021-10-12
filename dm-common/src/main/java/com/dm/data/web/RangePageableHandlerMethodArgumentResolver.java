@@ -23,9 +23,9 @@ public class RangePageableHandlerMethodArgumentResolver extends PageableHandlerM
 
     private static final SortHandlerMethodArgumentResolver DEFAULT_SORT_RESOLVER = new SortHandlerMethodArgumentResolver();
 
-    private SortArgumentResolver sortResolver;
+    private final SortArgumentResolver sortResolver;
 
-    private Function<String, ? extends Serializable> maxArgumentResolver = (NumberUtils::createLong);
+    private final Function<String, ? extends Serializable> maxArgumentResolver = (NumberUtils::createLong);
 
 //    public void setMaxArgumentResolver(Function<String, ? extends Serializable> maxArgumentResolver) {
 //        this.maxArgumentResolver = maxArgumentResolver;
