@@ -7,9 +7,8 @@ import com.dm.security.verification.VerificationCodeStorage;
  * 基于session保存的 {@link VerificationCodeStorage}<br>
  * 需要将这个Storage配置为sessionScope Bean <br>
  * 所有相关的校验都会忽略id属性
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public class SessionScopeVerificationCodeStorage implements VerificationCodeStorage {
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * TOP DingTalk-API: dingtalk.oapi.department.list response.
- * 
+ *
  * @author top auto create
  * @since 1.0, null
  */
@@ -155,7 +155,7 @@ public class OapiDepartmentListResponse extends TaobaoResponse {
         @Override
         public String toString() {
             return "Department [autoAddUser=" + autoAddUser + ", createDeptGroup=" + createDeptGroup + ", id=" + id
-                    + ", name=" + name + ", parentid=" + parentid + ", sourceIdentifier=" + sourceIdentifier + "]";
+                + ", name=" + name + ", parentid=" + parentid + ", sourceIdentifier=" + sourceIdentifier + "]";
         }
 
     }

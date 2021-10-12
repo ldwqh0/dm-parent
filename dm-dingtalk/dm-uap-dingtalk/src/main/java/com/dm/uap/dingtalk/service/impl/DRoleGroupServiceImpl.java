@@ -23,7 +23,6 @@ import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.service.DRoleGroupService;
 
 
-
 import static java.lang.Boolean.*;
 
 @Service
@@ -53,16 +52,15 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
 
     /**
      * 从钉钉加载角色和角色组数据，并保存在本地
-     * 
-     * @param corpid
      *
+     * @param corpid
      * @return
      */
     private List<DRoleGroup> fetchRoleGroup(final String corpid) {
         List<OpenRoleGroup> roleGroups = dingTalkService.fetchRoleGroups(corpid);
         List<Long> roleGroupIds = roleGroups.stream().map(OpenRoleGroup::getGroupId).collect(Collectors.toList());
         List<Long> roleIds = roleGroups.stream().map(OpenRoleGroup::getRoles)
-                .flatMap(List::stream).map(OpenRole::getId).collect(Collectors.toList());
+            .flatMap(List::stream).map(OpenRole::getId).collect(Collectors.toList());
         // 逻辑删除已经在钉钉中被删除的角色
         if (CollectionUtils.isNotEmpty(roleIds)) {
             dRoleRepository.setDeletedByCorpIdAndIdNotIn(corpid, roleIds, TRUE);
@@ -79,19 +77,19 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
         List<DRoleGroup> result = roleGroups.stream().map(originalGroup -> {
             Long groupId = originalGroup.getGroupId();
             final DRoleGroup dRoleGroup = dRoleGroupRepository.existsById(corpid, groupId)
-                    ? dRoleGroupRepository.getById(corpid, groupId)
-                    : new DRoleGroup(corpid, groupId);
+                ? dRoleGroupRepository.getById(corpid, groupId)
+                : new DRoleGroup(corpid, groupId);
             dRoleGroupConverter.copyProperties(dRoleGroup, originalGroup);
             List<OpenRole> fetchRoles = originalGroup.getRoles();
             if (CollectionUtils.isNotEmpty(fetchRoles)) {
                 Set<DRole> dRoles = fetchRoles.stream()
-                        .map(oRole -> {
-                            Long roleid = oRole.getId();
-                            DRole dRole = dRoleRepository.existsById(corpid, roleid)
-                                    ? dRoleRepository.getById(corpid, roleid)
-                                    : new DRole(corpid, roleid);
-                            return dRoleConverter.copyProperties(dRole, oRole);
-                        }).collect(Collectors.toSet());
+                    .map(oRole -> {
+                        Long roleid = oRole.getId();
+                        DRole dRole = dRoleRepository.existsById(corpid, roleid)
+                            ? dRoleRepository.getById(corpid, roleid)
+                            : new DRole(corpid, roleid);
+                        return dRoleConverter.copyProperties(dRole, oRole);
+                    }).collect(Collectors.toSet());
                 dRoleGroup.setRoles(dRoles);
             }
             return dRoleGroup;
@@ -127,7 +125,6 @@ public class DRoleGroupServiceImpl implements DRoleGroupService {
 //        }).collect(Collectors.toList());
 //        return uRoleGroupRepository.saveAll(results);
 //    }
-
     @Override
     @Transactional
     public void syncToUap(String corpid) {

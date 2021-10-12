@@ -9,7 +9,7 @@ public interface NoiseProducer {
     /**
      * Adds noise to an image. It uses four factor values to determine the noise
      * curve.
-     * 
+     *
      * @param image       the image to add the noise to
      * @param factorOne
      * @param factorTwo

@@ -8,7 +8,7 @@ import com.dm.uap.dingtalk.entity.DDepartment;
 public interface DDepartmentService {
     /**
      * 保存一条钉钉部门信息
-     * 
+     *
      * @param dDepartment
      * @return
      */
@@ -16,7 +16,7 @@ public interface DDepartmentService {
 
     /**
      * 保存一批钉钉部门信息
-     * 
+     *
      * @param dDepartments
      * @return
      */
@@ -29,7 +29,7 @@ public interface DDepartmentService {
 
     /**
      * 尝试清理
-     * 
+     *
      * @param corpid
      */
     void clear(String corpid);

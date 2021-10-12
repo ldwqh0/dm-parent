@@ -16,15 +16,13 @@ import java.util.Map;
 
 /**
  * Session配置<br>
- *
+ * <p>
  * 根据实际情况启用不同的WebSession<br>
  * 在单机环境下，使用 {@link EnableSpringWebSession}<br>
  * 根据实际情况确定是否使用其它的Session存储<br>
  * 具体的可以参考<a href="https://spring.io/projects/spring-session">Spring session</a>
  *
- *
  * @author LiDong
- *
  */
 @Configuration
 @EnableSpringWebSession

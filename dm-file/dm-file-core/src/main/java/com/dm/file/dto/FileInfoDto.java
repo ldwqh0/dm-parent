@@ -6,13 +6,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@Data
 @JsonInclude(value = Include.NON_EMPTY)
 public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
 
@@ -57,4 +55,62 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ZonedDateTime createTime;
 
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    public Audit<Long, String> getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Audit<Long, String> createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Audit<Long, String> getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(Audit<Long, String> lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public ZonedDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(ZonedDateTime createTime) {
+        this.createTime = createTime;
+    }
 }

@@ -15,7 +15,7 @@ export interface ClientDto {
   scopes?: string[];
   registeredRedirectUris?: string[];
   enabled?: boolean;
-  description?:string;
+  description?: string;
 }
 
 export interface DepartmentDto extends IdentifiableDto<number>, Serializable {

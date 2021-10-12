@@ -15,9 +15,8 @@ import reactor.core.publisher.Mono;
 
 /**
  * 一个基于代理的登出处理器
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public class DelegatingServerLogoutSuccessHandler implements ServerLogoutSuccessHandler {
     private final List<DelegateLogoutSuccessEntry> delegateLogoutSuccessHandler;
@@ -31,16 +30,16 @@ public class DelegatingServerLogoutSuccessHandler implements ServerLogoutSuccess
     @Override
     public Mono<Void> onLogoutSuccess(WebFilterExchange exchange, Authentication authentication) {
         return Flux.fromIterable(this.delegateLogoutSuccessHandler)
-                .filterWhen(entry -> isMatch(exchange.getExchange(), entry))
-                .map(DelegateLogoutSuccessEntry::getLogoutSuccessHandler)
-                .defaultIfEmpty(this.defaultLogoutSuccessHandler)
-                .flatMap(entryPoint -> entryPoint.onLogoutSuccess(exchange, authentication))
-                .next();
+            .filterWhen(entry -> isMatch(exchange.getExchange(), entry))
+            .map(DelegateLogoutSuccessEntry::getLogoutSuccessHandler)
+            .defaultIfEmpty(this.defaultLogoutSuccessHandler)
+            .flatMap(entryPoint -> entryPoint.onLogoutSuccess(exchange, authentication))
+            .next();
     }
 
     private Mono<Boolean> isMatch(ServerWebExchange exchange, DelegateLogoutSuccessEntry entry) {
         ServerWebExchangeMatcher matcher = entry.getMatcher();
         return matcher.matches(exchange)
-                .map(ServerWebExchangeMatcher.MatchResult::isMatch);
+            .map(ServerWebExchangeMatcher.MatchResult::isMatch);
     }
 }

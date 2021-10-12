@@ -7,9 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 /**
  * 通过钉钉用户信息获取到的 AuthenticationToken
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public class DingTalkAuthCodeAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = -1002298305299878178L;
@@ -41,7 +40,7 @@ public class DingTalkAuthCodeAuthenticationToken extends AbstractAuthenticationT
     public void setAuthenticated(boolean isAuthenticated) {
         if (isAuthenticated) {
             throw new IllegalArgumentException(
-                    "Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
+                "Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
         }
         super.setAuthenticated(false);
     }

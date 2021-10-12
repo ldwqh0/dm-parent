@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * TOP DingTalk-API: dingtalk.oapi.role.list response.
- * 
+ *
  * @author top auto create
  * @since 1.0, null
  */

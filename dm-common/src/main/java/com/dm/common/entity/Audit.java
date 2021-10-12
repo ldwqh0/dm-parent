@@ -1,6 +1,5 @@
 package com.dm.common.entity;
 
-import lombok.Data;
 
 import java.io.Serializable;
 
@@ -35,9 +34,23 @@ public interface Audit<ID extends Serializable, NAME extends Serializable> {
 
 }
 
-@Data
 class SimpleAuditImpl<ID extends Serializable, NAME extends Serializable> implements Audit<ID, NAME>, Serializable {
+    private static final long serialVersionUID = 7129258376953572142L;
     private final ID userid;
     private final NAME username;
-    private static final long serialVersionUID = 7129258376953572142L;
+
+    public SimpleAuditImpl(ID userid, NAME username) {
+        this.userid = userid;
+        this.username = username;
+    }
+
+    @Override
+    public ID getUserid() {
+        return userid;
+    }
+
+    @Override
+    public NAME getUsername() {
+        return username;
+    }
 }

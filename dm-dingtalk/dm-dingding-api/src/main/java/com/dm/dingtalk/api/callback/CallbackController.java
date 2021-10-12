@@ -31,7 +31,7 @@ import java.util.function.Consumer;
 @RequestMapping("dingTalk/callback")
 public class CallbackController {
 
-    private static final Logger log= LoggerFactory.getLogger(CallbackController.class);
+    private static final Logger log = LoggerFactory.getLogger(CallbackController.class);
 
     private Map<String, Consumer<Event>> handlers;
 
@@ -43,11 +43,11 @@ public class CallbackController {
 
     /**
      * 对于ISV开发来说，$key填写对应的suiteKey。<br>
-     *
+     * <p>
      * 对于定制服务商开发来说，$key填写对应的customKey。<br>
-     *
+     * <p>
      * 对于企业内部开发来说，$key填写企业的Corpid。<br>
-     *
+     * <p>
      * 参考 <a href="https://ding-doc.dingtalk.com/doc#/faquestions/ltr370">钉钉开发文档</a>
      */
     private String envkey;
@@ -76,12 +76,12 @@ public class CallbackController {
         this.envkey = envkey;
     }
 
-    @PostMapping(params = { "signature" })
+    @PostMapping(params = {"signature"})
     public ResponseEntity<?> apply(
-            @RequestParam("signature") String signature,
-            @RequestParam("timestamp") Long timestamp,
-            @RequestParam("nonce") String nonce,
-            @RequestBody CallbackRequest rsp) {
+        @RequestParam("signature") String signature,
+        @RequestParam("timestamp") Long timestamp,
+        @RequestParam("nonce") String nonce,
+        @RequestBody CallbackRequest rsp) {
         log.debug("接收到回调请求，signature={},timestamp={},nonce={}", signature, timestamp, nonce);
         String encrypt = rsp.getEncrypt();
         try {
@@ -152,8 +152,8 @@ public class CallbackController {
      * @throws BadPaddingException
      */
     private CallbackResponse okResponse()
-            throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException,
+        InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         String time = String.valueOf(ZonedDateTime.now().toEpochSecond());
         String nonce = getRandomStr(RANDOM_LENGTH);
         EncryptMessage msg = EncryptMessage.of(nonce, "success", envkey);
@@ -219,7 +219,7 @@ public class CallbackController {
      * @return
      */
     private String signature(String token, String time, String noce, String msg) {
-        String[] all = new String[] { token, time, noce, msg };
+        String[] all = new String[]{token, time, noce, msg};
         Arrays.sort(all);
         return DigestUtils.sha1Hex(StringUtils.join(all));
     }

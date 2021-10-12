@@ -2,7 +2,7 @@ package com.dm.dingtalk.api.response;
 
 /**
  * TOP DingTalk-API: dingtalk.oapi.user.create response.
- * 
+ *
  * @author top auto create
  * @since 1.0, null
  */

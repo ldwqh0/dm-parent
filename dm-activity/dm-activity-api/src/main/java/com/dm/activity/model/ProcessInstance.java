@@ -4,7 +4,6 @@ package com.dm.activity.model;
  * 一个流程实例
  *
  * @author ldwqh0@outlook.com
- *
  */
 public interface ProcessInstance<ID> {
 

@@ -12,41 +12,39 @@ import reactor.core.publisher.Mono;
 
 /**
  * 验证一个请求不是 resource server的请求，即请求头中没有Authorization头信息，参数中没有access_token
- * 
- * @author ldwqh0@outlook.com
- * 
- * @since 1.0.0
  *
+ * @author ldwqh0@outlook.com
+ * @since 1.0.0
  */
 public class NotBearerTokenServerWebExchangeMatcher implements ServerWebExchangeMatcher {
 
     private static final Pattern authorizationPattern = Pattern.compile(
-            "^Bearer (?<token>[a-zA-Z0-9-._~+/]+)=*$",
-            Pattern.CASE_INSENSITIVE);
+        "^Bearer (?<token>[a-zA-Z0-9-._~+/]+)=*$",
+        Pattern.CASE_INSENSITIVE);
 
     @Override
     public Mono<MatchResult> matches(ServerWebExchange exchange) {
         return Mono.just(exchange)
-                .map(ServerWebExchange::getRequest)
-                .filter(this::matchBearer)
-                .flatMap(i -> MatchResult.notMatch())
-                .switchIfEmpty(MatchResult.match());
+            .map(ServerWebExchange::getRequest)
+            .filter(this::matchBearer)
+            .flatMap(i -> MatchResult.notMatch())
+            .switchIfEmpty(MatchResult.match());
     }
 
     /**
      * 匹配bearer请求头和access_token参数
-     * 
+     *
      * @param request
      * @return
      */
     private boolean matchBearer(ServerHttpRequest request) {
         return matchBearerHeader(request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
-                || StringUtils.isNotEmpty(request.getQueryParams().getFirst("access_token"));
+            || StringUtils.isNotEmpty(request.getQueryParams().getFirst("access_token"));
     }
 
     /**
      * 匹配bearer请求头
-     * 
+     *
      * @param header
      * @return
      */

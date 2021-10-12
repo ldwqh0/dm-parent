@@ -75,9 +75,9 @@ public class FishEyeGimpy implements GimpyEngine {
                 if (d1 < distance) {
 
                     int j2 = widthMiddle
-                            + (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (x - widthMiddle));
+                        + (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (x - widthMiddle));
                     int k2 = heightMiddle
-                            + (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (y - heightMiddle));
+                        + (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (y - heightMiddle));
                     baseImage.setRGB(x, y, pix[j2 * imageHeight + k2]);
                 }
             }

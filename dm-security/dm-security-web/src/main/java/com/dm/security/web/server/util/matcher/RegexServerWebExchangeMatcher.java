@@ -30,13 +30,13 @@ public class RegexServerWebExchangeMatcher implements ServerWebExchangeMatcher {
     @Override
     public Mono<MatchResult> matches(ServerWebExchange exchange) {
         return Mono.just(exchange)
-                .map(ServerWebExchange::getRequest)
-                .filter(request -> httpMethod != null && request.getMethod() != null
-                        && httpMethod.equals(request.getMethod()))
-                .map(request -> request.getURI().getPath())
-                .filter(url -> pattern.matcher(url).matches())
-                .flatMap(url -> MatchResult.match())
-                .or(MatchResult.notMatch());
+            .map(ServerWebExchange::getRequest)
+            .filter(request -> httpMethod != null && request.getMethod() != null
+                && httpMethod.equals(request.getMethod()))
+            .map(request -> request.getURI().getPath())
+            .filter(url -> pattern.matcher(url).matches())
+            .flatMap(url -> MatchResult.match())
+            .or(MatchResult.notMatch());
     }
 
 }

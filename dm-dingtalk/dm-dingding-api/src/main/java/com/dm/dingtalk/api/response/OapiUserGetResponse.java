@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * TOP DingTalk-API: dingtalk.oapi.user.get response.
- * 
+ *
  * @author top auto create
  * @since 1.0, null
  */

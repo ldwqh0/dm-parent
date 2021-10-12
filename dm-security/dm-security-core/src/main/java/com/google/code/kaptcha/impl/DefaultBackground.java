@@ -30,25 +30,25 @@ public class DefaultBackground extends Configurable implements BackgroundProduce
 
         // create an opaque image
         BufferedImage imageWithBackground = new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_RGB);
+            BufferedImage.TYPE_INT_RGB);
 
         Graphics2D graph = (Graphics2D) imageWithBackground.getGraphics();
         RenderingHints hints = new RenderingHints(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_OFF);
+            RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_OFF);
 
         hints.add(new RenderingHints(RenderingHints.KEY_COLOR_RENDERING,
-                RenderingHints.VALUE_COLOR_RENDER_QUALITY));
+            RenderingHints.VALUE_COLOR_RENDER_QUALITY));
         hints.add(new RenderingHints(RenderingHints.KEY_ALPHA_INTERPOLATION,
-                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY));
+            RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY));
 
         hints.add(new RenderingHints(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY));
+            RenderingHints.VALUE_RENDER_QUALITY));
 
         graph.setRenderingHints(hints);
 
         GradientPaint paint = new GradientPaint(0, 0, colorFrom, width, height,
-                colorTo);
+            colorTo);
         graph.setPaint(paint);
         graph.fill(new Rectangle2D.Double(0, 0, width, height));
 

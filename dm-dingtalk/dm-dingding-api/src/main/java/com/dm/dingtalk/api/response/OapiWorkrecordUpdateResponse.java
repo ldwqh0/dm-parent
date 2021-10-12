@@ -2,9 +2,8 @@ package com.dm.dingtalk.api.response;
 
 /**
  * 更新待办的响应
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public class OapiWorkrecordUpdateResponse extends TaobaoResponse {
 

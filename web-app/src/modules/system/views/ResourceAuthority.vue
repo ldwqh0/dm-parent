@@ -84,9 +84,9 @@
     created (): void {
       Promise.all([http.get(`${URLS.resource}`), http.get(`${URLS.resourceAuthorities}/${this.roleId}`)])
         .then(([{ data: resources }, { data: { resourceAuthorities = {} } }]) => resources.map((resource: any) => ({
-          ...resource,
-          ...resourceAuthorities[resource.id]
-        }))
+            ...resource,
+            ...resourceAuthorities[resource.id]
+          }))
         ).then(result => (this.data.authorities = result))
     }
   }

@@ -14,13 +14,14 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import static javax.persistence.CascadeType.*;
 
 @Entity
 @Getter
 @Setter
 @IdClass(CorpLongId.class)
-@Table(name = "dd_role_group_", indexes = { @Index(name = "idx_dd_role_group_deleted_", columnList = "deleted_") })
+@Table(name = "dd_role_group_", indexes = {@Index(name = "idx_dd_role_group_deleted_", columnList = "deleted_")})
 public class DRoleGroup extends CorpLongEntity {
 
     @Column(name = "name_")
@@ -28,8 +29,8 @@ public class DRoleGroup extends CorpLongEntity {
 
     @OneToMany(cascade = ALL)
     @JoinColumns({
-            @JoinColumn(name = "dd_role_group_id_", referencedColumnName = "id_"),
-            @JoinColumn(name = "dd_role_group_corp_id_", referencedColumnName = "corp_id_")
+        @JoinColumn(name = "dd_role_group_id_", referencedColumnName = "id_"),
+        @JoinColumn(name = "dd_role_group_corp_id_", referencedColumnName = "corp_id_")
     })
     private Set<DRole> roles;
 

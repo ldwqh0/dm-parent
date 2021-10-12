@@ -63,13 +63,13 @@ public class DDepartmentServiceImpl implements DDepartmentService {
         }
         // 将抓取到的数据映射为实体
         List<DDepartment> dDepartments_ = departments.stream()
-                .map(_department -> {
-                    DDepartment result = dDepartmentRepository.existsById(corpid, _department.getId())
-                            ? dDepartmentRepository.getById(corpid, _department.getId())
-                            : dDepartmentRepository.save(new DDepartment(corpid, _department.getId()));
-                    return dDepartmentConverter.copyProperties(result, _department);
-                })
-                .collect(Collectors.toList());
+            .map(_department -> {
+                DDepartment result = dDepartmentRepository.existsById(corpid, _department.getId())
+                    ? dDepartmentRepository.getById(corpid, _department.getId())
+                    : dDepartmentRepository.save(new DDepartment(corpid, _department.getId()));
+                return dDepartmentConverter.copyProperties(result, _department);
+            })
+            .collect(Collectors.toList());
         return dDepartmentRepository.saveAll(dDepartments_);
     }
 

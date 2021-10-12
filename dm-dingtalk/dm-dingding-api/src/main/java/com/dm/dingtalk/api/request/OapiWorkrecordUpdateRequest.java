@@ -7,9 +7,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * 更新待办事项请求模型
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public class OapiWorkrecordUpdateRequest implements Serializable {
 

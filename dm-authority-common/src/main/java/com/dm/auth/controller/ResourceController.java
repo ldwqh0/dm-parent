@@ -123,6 +123,7 @@ public class ResourceController {
             return ValidationResult.success();
         }
     }
+
     private boolean exist(@NotNull String matcher, @NotNull UriResource.MatchType matchType, Collection<HttpMethod> methods, Long exclude) {
         if (Objects.isNull(methods)) {
             methods = Collections.emptySet();

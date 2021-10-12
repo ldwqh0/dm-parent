@@ -1,20 +1,19 @@
 package com.dm.dingtalk.api.response;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
-
-import lombok.Data;
 
 /**
  * 获取用户待办事项的响应
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public class OapiWorkrecordGetbyuseridResponse extends TaobaoResponse {
 
@@ -131,10 +130,38 @@ class OapiWorkRecord implements Serializable {
         this.forms = forms;
     }
 
-    @Data
     static class FormItem implements Serializable {
         private static final long serialVersionUID = -1997517300506297746L;
         private String title;
         private String content;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FormItem formItem = (FormItem) o;
+            return Objects.equals(title, formItem.title) && Objects.equals(content, formItem.content);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(title, content);
+        }
     }
 }

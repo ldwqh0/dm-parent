@@ -6,7 +6,6 @@ import java.util.List;
  * 流程定义
  *
  * @author ldwqh0@outlook.com
- *
  */
 public interface ProcessDefinition {
 

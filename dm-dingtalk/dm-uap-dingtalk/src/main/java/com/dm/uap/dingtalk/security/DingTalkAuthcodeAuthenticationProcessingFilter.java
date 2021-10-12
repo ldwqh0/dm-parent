@@ -12,8 +12,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
-
-
 public class DingTalkAuthcodeAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     public DingTalkAuthcodeAuthenticationProcessingFilter() {
@@ -22,7 +20,7 @@ public class DingTalkAuthcodeAuthenticationProcessingFilter extends AbstractAuth
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+        throws AuthenticationException {
         String authCode = request.getParameter("auth_code");
         log.debug("Get auth_code from parameter, auth_code=[" + authCode + "]");
         DingTalkAuthCodeAuthenticationToken token = new DingTalkAuthCodeAuthenticationToken(authCode);

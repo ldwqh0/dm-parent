@@ -1,12 +1,12 @@
 package com.dm.file.dto;
 
 import com.dm.file.exception.RangeNotSatisfiableException;
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 标识一个文件下载范围请求的范围
@@ -82,10 +82,27 @@ public interface Range {
         return result;
     }
 
-    @Data
     class RangeImpl implements Range {
         private long start;
         private long end;
+
+        @Override
+        public long getStart() {
+            return start;
+        }
+
+        public void setStart(long start) {
+            this.start = start;
+        }
+
+        @Override
+        public long getEnd() {
+            return end;
+        }
+
+        public void setEnd(long end) {
+            this.end = end;
+        }
 
         @Override
         public long getContentLength() {
@@ -95,6 +112,19 @@ public interface Range {
         public RangeImpl(long start, long end) {
             this.start = start;
             this.end = end;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            RangeImpl range = (RangeImpl) o;
+            return start == range.start && end == range.end;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(start, end);
         }
     }
 

@@ -25,7 +25,7 @@ public class ShadowGimpy extends Configurable implements GimpyEngine {
     public BufferedImage getDistortedImage(BufferedImage baseImage) {
         NoiseProducer noiseProducer = getConfig().getNoiseImpl();
         BufferedImage distortedImage = new BufferedImage(baseImage.getWidth(),
-                baseImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            baseImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D graph = (Graphics2D) distortedImage.getGraphics();
 

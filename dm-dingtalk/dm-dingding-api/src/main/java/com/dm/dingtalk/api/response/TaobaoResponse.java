@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * TOPAPI基础响应信息。
- * 
+ *
  * @author fengsheng
  */
 public abstract class TaobaoResponse implements Serializable {
@@ -98,8 +98,8 @@ public abstract class TaobaoResponse implements Serializable {
 
     public boolean isSuccess() {
         return (this.errorCode == null || this.errorCode.isEmpty() || this.errorCode.equals("0"))
-                && (this.subCode == null || this.subCode.isEmpty())
-                && (this.flag == null || this.flag.isEmpty());
+            && (this.subCode == null || this.subCode.isEmpty())
+            && (this.flag == null || this.flag.isEmpty());
     }
 
     public String getRequestId() {

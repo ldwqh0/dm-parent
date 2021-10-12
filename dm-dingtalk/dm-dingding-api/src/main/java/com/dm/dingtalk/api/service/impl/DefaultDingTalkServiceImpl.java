@@ -21,7 +21,7 @@ import java.util.*;
 
 
 public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
-    private static final Logger log= LoggerFactory.getLogger(DefaultDingTalkServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultDingTalkServiceImpl.class);
 
     private static final String SERVER = "https://oapi.dingtalk.com";
 

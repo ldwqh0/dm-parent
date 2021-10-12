@@ -7,9 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 /**
  * 微信公众号包装 Code
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public class WxOAuth2CodeAuthentication implements Authentication {
 

@@ -31,7 +31,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException {
+                                        Authentication authentication) throws IOException {
         // 是否重定向,如果参数中有redirect参数，系统会自动跳转到相应的地址
         String redirect = request.getParameter("redirect_uri");
         if (isJsonRequest(request)) {

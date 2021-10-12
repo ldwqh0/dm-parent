@@ -14,8 +14,6 @@ import com.dm.file.service.PackageFileService;
 import com.dm.file.service.ThumbnailService;
 import com.dm.file.util.DmFileUtils;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +50,8 @@ import java.util.zip.ZipOutputStream;
 
 @RequestMapping("files")
 @RestController
-@RequiredArgsConstructor
 public class FileController {
-    private static final Logger log= LoggerFactory.getLogger(FileController.class);
+    private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
     private final FileInfoService fileService;
 
@@ -65,6 +62,18 @@ public class FileController {
     private final FileStorageService fileStorageService;
 
     private final PackageFileService packageFileService;
+
+    public FileController(FileInfoService fileService,
+                          ThumbnailService thumbnailService,
+                          FileConfig config,
+                          FileStorageService fileStorageService,
+                          PackageFileService packageFileService) {
+        this.fileService = fileService;
+        this.thumbnailService = thumbnailService;
+        this.config = config;
+        this.fileStorageService = fileStorageService;
+        this.packageFileService = packageFileService;
+    }
 
     /**
      * 获取文件信息

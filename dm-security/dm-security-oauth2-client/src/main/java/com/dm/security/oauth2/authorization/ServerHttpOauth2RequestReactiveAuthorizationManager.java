@@ -49,8 +49,8 @@ public class ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerH
                     // TODO 验证的方法应该以授权结果中的scope为准，不应该以客户端请求的scope为准
                     // 但作为客户端，如何获取用户授权的scope是个问题
                     return this.authorizedClientRepository.loadAuthorizedClient(
-                        token.getAuthorizedClientRegistrationId(),
-                        token, context.getExchange())
+                            token.getAuthorizedClientRegistrationId(),
+                            token, context.getExchange())
                         .map(client -> containsScope(client, attribute))
                         .switchIfEmpty(Mono.error(AuthorizedClientNotFoundException::new));
                 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 
 /**
  * 同步日志
- * 
+ *
  * @author ldwqh0@outlook.com
  */
 @Getter

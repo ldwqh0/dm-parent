@@ -21,8 +21,6 @@ import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.dm.dingtalk.api.service.DingTalkService;
 
 
-
-
 public class OrganizationInternalAppAuthcodeAuthenticationProvider implements AuthenticationProvider, InitializingBean {
 
     private AuthenticationUserDetailsService<DingTalkAuthCodeAuthenticationToken> userDetailsService;
@@ -43,7 +41,7 @@ public class OrganizationInternalAppAuthcodeAuthenticationProvider implements Au
     }
 
     public void setUserDetailsService(
-            AuthenticationUserDetailsService<DingTalkAuthCodeAuthenticationToken> userDetailsService) {
+        AuthenticationUserDetailsService<DingTalkAuthCodeAuthenticationToken> userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -54,7 +52,7 @@ public class OrganizationInternalAppAuthcodeAuthenticationProvider implements Au
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.isInstanceOf(DingTalkAuthCodeAuthenticationToken.class, authentication,
-                "DingTalkAuthcodeAuthenticationProvider only support DingTalkAuthCodeAuthenticationToken");
+            "DingTalkAuthcodeAuthenticationProvider only support DingTalkAuthCodeAuthenticationToken");
         // 首先通过钉钉API获取钉钉用户信息
         DingTalkAuthCodeAuthenticationToken token = (DingTalkAuthCodeAuthenticationToken) authentication;
         OapiUserGetuserinfoResponse rsp = null;

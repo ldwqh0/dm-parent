@@ -8,7 +8,7 @@ public interface DRoleGroupService {
 
     /**
      * 尝试物理删除角色组信息
-     * 
+     *
      * @param corpid
      */
     void clear(String corpid);

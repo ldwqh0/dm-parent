@@ -1,19 +1,19 @@
 {
-	"properties": [
-		{
-			"name": "system.default.su",
-			"type": "com.dm.springboot.autoconfigure.uap.DefaultUserProperties",
-			"sourceType": "com.dm.springboot.autoconfigure.uap.DefaultUserProperties"
-		},
-		{
-			"name": "dingtalk",
-			"type": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration",
-			"sourceType": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration.DingClientConfigCongiguration"
-		},
-		{
-			"name": "dm.fileserver",
-			"type": "com.dm.file.config.FileConfig",
-			"sourceType": "com.dm.file.config.FileConfig"
-		}
-	]
+  "properties": [
+    {
+      "name": "system.default.su",
+      "type": "com.dm.springboot.autoconfigure.uap.DefaultUserProperties",
+      "sourceType": "com.dm.springboot.autoconfigure.uap.DefaultUserProperties"
+    },
+    {
+      "name": "dingtalk",
+      "type": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration",
+      "sourceType": "com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration.DingClientConfigCongiguration"
+    },
+    {
+      "name": "dm.fileserver",
+      "type": "com.dm.file.config.FileConfig",
+      "sourceType": "com.dm.file.config.FileConfig"
+    }
+  ]
 }

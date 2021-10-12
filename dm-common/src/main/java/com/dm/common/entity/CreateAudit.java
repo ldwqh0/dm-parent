@@ -1,12 +1,10 @@
 package com.dm.common.entity;
 
-import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-@Getter
 public class CreateAudit implements Audit<Long, String> {
 
 
@@ -35,4 +33,13 @@ public class CreateAudit implements Audit<Long, String> {
         this(audit.getUserid(), audit.getUsername());
     }
 
+    @Override
+    public Long getUserid() {
+        return userid;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
 }

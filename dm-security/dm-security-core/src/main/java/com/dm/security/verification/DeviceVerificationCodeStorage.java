@@ -4,9 +4,8 @@ import java.util.Optional;
 
 /**
  * 第三方工具验证码服务
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public interface DeviceVerificationCodeStorage {
 

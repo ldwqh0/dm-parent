@@ -9,11 +9,11 @@ public class ConfigException extends RuntimeException {
 
     public ConfigException(String paramName, String paramValue, Throwable cause) {
         super("Invalid value '" + paramValue + "' for config parameter '"
-                + paramName + "'.", cause);
+            + paramName + "'.", cause);
     }
 
     public ConfigException(String paramName, String paramValue, String message) {
         super("Invalid value '" + paramValue + "' for config parameter '"
-                + paramName + "'. " + message);
+            + paramName + "'. " + message);
     }
 }

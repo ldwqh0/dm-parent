@@ -13,9 +13,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * 待办事项请求模型
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public class OapiWorkrecordAddRequest implements Serializable {
 
@@ -57,9 +56,9 @@ public class OapiWorkrecordAddRequest implements Serializable {
 
     /**
      * 外部业务id，建议带上业务方来源字段，防止与其他业务方冲突<br>
-     * 
+     * <p>
      * 比如一个请假业务，在自由的系统中，某次请假的业务ID为 103 <br>
-     * 
+     * <p>
      * 则对于该业务的待办只能存在一条，不能对某个业务有多个重复的待办事项
      */
     private String bizId;
@@ -152,9 +151,8 @@ public class OapiWorkrecordAddRequest implements Serializable {
 
     /**
      * 待办事项表单
-     * 
-     * @author ldwqh0@outlook.com
      *
+     * @author ldwqh0@outlook.com
      */
     static class FormItem implements Serializable {
         private static final long serialVersionUID = -1658665027320281649L;

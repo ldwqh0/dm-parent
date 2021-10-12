@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * TOP DingTalk-API: dingtalk.oapi.department.list_ids response.
- * 
+ *
  * @author top auto create
  * @since 1.0, null
  */

@@ -11,7 +11,7 @@ spring:
             scope:
               - openid
               - profile
-#            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+        #            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
         provider:
           oauth2:
             issuer-uri: http://127.0.0.1:8887/oauth2

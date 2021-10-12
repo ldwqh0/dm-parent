@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 待办事项响应模型
- * 
- * @author ldwqh0@outlook.com
  *
+ * @author ldwqh0@outlook.com
  */
 public class OapiWorkrecordAddResponse extends TaobaoResponse {
     private static final long serialVersionUID = 6127843317528511781L;

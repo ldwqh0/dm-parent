@@ -10,8 +10,6 @@ import com.dm.uap.dingtalk.service.DUserService;
 import com.dm.uap.dingtalk.service.DingtalkCallbackService;
 
 
-
-
 public class DingtalkCallbackServiceImpl implements DingtalkCallbackService {
 
     private DUserService dUserService;

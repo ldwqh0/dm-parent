@@ -35,7 +35,7 @@ public class DingAes {
      * @throws BadPaddingException
      */
     public byte[] encrypt(byte[] value) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         // 加密，需要设置补码模式
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecretKeySpec skeySpec = new SecretKeySpec(key, algorithm);
@@ -45,7 +45,7 @@ public class DingAes {
     }
 
     public String encryptToBase64String(byte[] bytes) throws InvalidKeyException, NoSuchAlgorithmException,
-            NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         return Base64.getEncoder().encodeToString(encrypt(bytes));
     }
 
@@ -63,7 +63,7 @@ public class DingAes {
      */
     public byte[] decrypt(String value) throws InvalidKeyException,
         NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
-            BadPaddingException, InvalidAlgorithmParameterException {
+        BadPaddingException, InvalidAlgorithmParameterException {
         // 钉钉的解密无补码，也是奇葩
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
         SecretKeySpec skeySpec = new SecretKeySpec(key, algorithm);

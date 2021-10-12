@@ -10,9 +10,11 @@ import org.apache.commons.lang3.StringUtils;
  * This class provides helper methods in parsing configuration values.
  */
 public class ConfigHelper {
-    /** */
+    /**
+     *
+     */
     public Color getColor(String paramName, String paramValue,
-            Color defaultColor) {
+                          Color defaultColor) {
         Color color;
         if (StringUtils.isBlank(paramValue)) {
             color = defaultColor;
@@ -24,9 +26,11 @@ public class ConfigHelper {
         return color;
     }
 
-    /** */
+    /**
+     *
+     */
     public Color createColorFromCommaSeparatedValues(String paramName,
-            String paramValue) {
+                                                     String paramValue) {
         Color color;
         String[] colorValues = paramValue.split(",");
         try {
@@ -40,7 +44,7 @@ public class ConfigHelper {
                 color = new Color(r, g, b);
             } else {
                 throw new ConfigException(paramName, paramValue,
-                        "Color can only have 3 (RGB) or 4 (RGB with Alpha) values.");
+                    "Color can only have 3 (RGB) or 4 (RGB with Alpha) values.");
             }
         } catch (NumberFormatException nfe) {
             throw new ConfigException(paramName, paramValue, nfe);
@@ -52,7 +56,9 @@ public class ConfigHelper {
         return color;
     }
 
-    /** */
+    /**
+     *
+     */
     public Color createColorFromFieldValue(String paramName, String paramValue) {
         Color color;
         try {
@@ -68,9 +74,11 @@ public class ConfigHelper {
         return color;
     }
 
-    /** */
+    /**
+     *
+     */
     public Object getClassInstance(String paramName, String paramValue,
-            Object defaultInstance, Config config) {
+                                   Object defaultInstance, Config config) {
         Object instance;
         if (StringUtils.isBlank(paramValue)) {
             instance = defaultInstance;
@@ -91,9 +99,11 @@ public class ConfigHelper {
         return instance;
     }
 
-    /** */
+    /**
+     *
+     */
     public Font[] getFonts(String paramName, String paramValue, int fontSize,
-            Font[] defaultFonts) {
+                           Font[] defaultFonts) {
         Font[] fonts;
         if ("".equals(paramValue) || paramValue == null) {
             fonts = defaultFonts;
@@ -107,9 +117,11 @@ public class ConfigHelper {
         return fonts;
     }
 
-    /** */
+    /**
+     *
+     */
     public int getPositiveInt(String paramName, String paramValue,
-            int defaultInt) {
+                              int defaultInt) {
         int intValue;
         if ("".equals(paramValue) || paramValue == null) {
             intValue = defaultInt;
@@ -118,7 +130,7 @@ public class ConfigHelper {
                 intValue = Integer.parseInt(paramValue);
                 if (intValue < 1) {
                     throw new ConfigException(paramName, paramValue,
-                            "Value must be greater than or equals to 1.");
+                        "Value must be greater than or equals to 1.");
                 }
             } catch (NumberFormatException nfe) {
                 throw new ConfigException(paramName, paramValue, nfe);
@@ -127,9 +139,11 @@ public class ConfigHelper {
         return intValue;
     }
 
-    /** */
+    /**
+     *
+     */
     public char[] getChars(String paramName, String paramValue,
-            char[] defaultChars) {
+                           char[] defaultChars) {
         char[] chars;
         if ("".equals(paramValue) || paramValue == null) {
             chars = defaultChars;
@@ -139,23 +153,27 @@ public class ConfigHelper {
         return chars;
     }
 
-    /** */
+    /**
+     *
+     */
     public boolean getBoolean(String paramName, String paramValue,
-            boolean defaultValue) {
+                              boolean defaultValue) {
         boolean booleanValue;
         if ("yes".equals(paramValue) || "".equals(paramValue)
-                || paramValue == null) {
+            || paramValue == null) {
             booleanValue = defaultValue;
         } else if ("no".equals(paramValue)) {
             booleanValue = false;
         } else {
             throw new ConfigException(paramName, paramValue,
-                    "Value must be either yes or no.");
+                "Value must be either yes or no.");
         }
         return booleanValue;
     }
 
-    /** */
+    /**
+     *
+     */
     private void setConfigurable(Object object, Config config) {
         if (object instanceof Configurable) {
             ((Configurable) object).setConfig(config);

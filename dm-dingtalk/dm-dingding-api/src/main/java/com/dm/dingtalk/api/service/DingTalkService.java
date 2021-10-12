@@ -24,29 +24,28 @@ import com.dm.dingtalk.api.response.OpenRole;
 
 /**
  * 钉钉服务器交互API
- * 
- * @author LiDong
  *
+ * @author LiDong
  */
 public interface DingTalkService {
 
     /**
      * 获取部门列表信息
-     * 
+     *
      * @return
      */
     List<Department> fetchDepartments(String corpId);
 
     /**
      * 获取角色组
-     * 
+     *
      * @return
      */
     List<OpenRoleGroup> fetchRoleGroups(String corpId);
 
     /**
      * 创建一个钉钉用户
-     * 
+     *
      * @param request
      * @return
      */
@@ -54,7 +53,7 @@ public interface DingTalkService {
 
     /**
      * 更新一个钉钉用户
-     * 
+     *
      * @param request
      * @return
      */
@@ -62,7 +61,7 @@ public interface DingTalkService {
 
     /**
      * 根据免登录授权码获取用户信息
-     * 
+     *
      * @param authCode
      * @return
      */
@@ -70,7 +69,7 @@ public interface DingTalkService {
 
     /**
      * 获取一个部门的用户列表
-     * 
+     *
      * @param depId
      * @return
      */
@@ -78,7 +77,7 @@ public interface DingTalkService {
 
     /**
      * 获取一个用户的信息
-     * 
+     *
      * @param userid
      * @return
      */
@@ -86,14 +85,14 @@ public interface DingTalkService {
 
     /**
      * 从钉钉服务器上删除一个用户
-     * 
+     *
      * @param userid
      */
     void deleteUser(String corpId, String userid);
 
     /**
      * 批量设置用户角色信息
-     * 
+     *
      * @param userIds
      * @param roleIds
      * @return
@@ -105,7 +104,7 @@ public interface DingTalkService {
      * 添加待办事项<br>
      * 参考<a href=
      * "https://ding-doc.dingtalk.com/doc#/serverapi2/gpmpiq">https://ding-doc.dingtalk.com/doc#/serverapi2/gpmpiq</a>
-     * 
+     *
      * @param request
      * @return
      */
@@ -115,7 +114,7 @@ public interface DingTalkService {
      * 更新待办事项，该操作会将待办事项从用户的待办事项列表中删除<br>
      * 参考<a href=
      * "https://ding-doc.dingtalk.com/doc#/serverapi2/cxls8y">https://ding-doc.dingtalk.com/doc#/serverapi2/cxls8y</a>
-     * 
+     *
      * @return
      */
     OapiWorkrecordUpdateResponse updateWorkRecord(String corpId, OapiWorkrecordUpdateRequest request);
@@ -124,7 +123,7 @@ public interface DingTalkService {
      * 获取某个用户的待办事项列表，每次最多50条<br>
      * 参考<a href=
      * "https://ding-doc.dingtalk.com/doc#/serverapi2/neevhm">https://ding-doc.dingtalk.com/doc#/serverapi2/neevhm</a>
-     * 
+     *
      * @param request
      * @return
      */
@@ -133,7 +132,7 @@ public interface DingTalkService {
 
     /**
      * 获取指定企业的指定角色信息
-     * 
+     *
      * @param corpid 指定的企业
      * @param roleid 指定的角色
      * @return

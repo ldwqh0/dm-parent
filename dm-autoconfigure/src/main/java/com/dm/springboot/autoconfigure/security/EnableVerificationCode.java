@@ -8,15 +8,14 @@ import org.springframework.context.annotation.Import;
 
 /**
  * 增加验证码的Bean注册
- * 
+ *
  * @author ldwqh0@outlook.com
  * @since 0.2.3
- *
  */
 @Retention(value = java.lang.annotation.RetentionPolicy.RUNTIME)
-@Target(value = { java.lang.annotation.ElementType.TYPE })
+@Target(value = {java.lang.annotation.ElementType.TYPE})
 @Configuration
-@Import({ VerificationCodeConfiguration.class })
+@Import({VerificationCodeConfiguration.class})
 public @interface EnableVerificationCode {
 
 }
