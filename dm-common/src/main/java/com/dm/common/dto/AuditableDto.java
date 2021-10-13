@@ -10,14 +10,37 @@ import java.util.Objects;
 public abstract class AuditableDto<UID extends Serializable, UNAME extends Serializable> implements Serializable {
     private static final long serialVersionUID = -5872361624625517456L;
 
+    /**
+     * 创建人
+     *
+     * @ignore
+     */
     private Audit<UID, UNAME> createBy;
 
+    /**
+     * 最后修改人
+     *
+     * @ignore
+     */
     private Audit<UID, UNAME> lastModifiedBy;
 
+    /**
+     * 创建时间
+     *
+     * @ignore
+     */
     private ZonedDateTime createdTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @ignore
+     */
     private ZonedDateTime lastModifiedTime;
 
+    /**
+     * 创建人
+     */
     public Audit<UID, UNAME> getCreateBy() {
         return createBy;
     }
@@ -30,6 +53,9 @@ public abstract class AuditableDto<UID extends Serializable, UNAME extends Seria
         this.createBy = createBy;
     }
 
+    /**
+     * 创建人
+     */
     public Audit<UID, UNAME> getLastModifiedBy() {
         return lastModifiedBy;
     }
@@ -42,6 +68,9 @@ public abstract class AuditableDto<UID extends Serializable, UNAME extends Seria
         this.lastModifiedBy = lastModifiedBy;
     }
 
+    /**
+     * 创建时间
+     */
     public ZonedDateTime getCreatedTime() {
         return createdTime;
     }
@@ -54,6 +83,9 @@ public abstract class AuditableDto<UID extends Serializable, UNAME extends Seria
         this.createdTime = createdTime;
     }
 
+    /**
+     * 最后修改时间
+     */
     public ZonedDateTime getLastModifiedTime() {
         return lastModifiedTime;
     }

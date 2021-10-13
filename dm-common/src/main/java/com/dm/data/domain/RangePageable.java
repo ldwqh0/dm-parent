@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.Optional;
 
 public interface RangePageable<T extends Serializable> extends Pageable {
+    /**
+     * 最大范围
+     */
     Optional<T> getMax();
 }
 
