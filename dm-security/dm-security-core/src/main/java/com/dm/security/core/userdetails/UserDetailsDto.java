@@ -27,7 +27,7 @@ public class UserDetailsDto implements UserDetails {
     private boolean enabled;
     private boolean locked;
     private Collection<? extends GrantedAuthority> grantedAuthority;
-    private String fullname;
+    private String fullName;
 
     private String mobile;
 
@@ -133,12 +133,12 @@ public class UserDetailsDto implements UserDetails {
         this.id = id;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
     public String getScenicName() {

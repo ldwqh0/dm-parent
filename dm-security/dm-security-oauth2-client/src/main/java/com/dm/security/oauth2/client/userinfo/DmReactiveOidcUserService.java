@@ -132,7 +132,7 @@ public class DmReactiveOidcUserService implements ReactiveOAuth2UserService<Oidc
         }
         userdetails.setAttributes(idToken.getClaims());
         userdetails.setUsername(idToken.getPreferredUsername());
-        userdetails.setFullname(idToken.getFullName());
+        userdetails.setFullName(idToken.getFullName());
         userdetails.setMobile(idToken.getPhoneNumber());
         userdetails.setEmail(idToken.getEmail());
         return userdetails;

@@ -17,7 +17,7 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
         OAuth2UserDetailsDto userDetailsDto = new OAuth2UserDetailsDto();
         userDetailsDto.setId(Maps.getLong(map, StandardClaimNames.SUB));
         userDetailsDto.setUsername(Maps.getString(map, StandardClaimNames.PREFERRED_USERNAME));
-        userDetailsDto.setFullname(Maps.getString(map, StandardClaimNames.NAME));
+        userDetailsDto.setFullName(Maps.getString(map, StandardClaimNames.NAME));
         userDetailsDto.setRegionCode((String) map.get("regionCode"));
         if (Objects.nonNull(map.get("roles"))) {
             @SuppressWarnings("unchecked")

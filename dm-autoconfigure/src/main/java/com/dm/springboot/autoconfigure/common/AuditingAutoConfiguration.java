@@ -26,17 +26,10 @@ public class AuditingAutoConfiguration {
     @ConditionalOnClass({AuditorAware.class, UserDetailsDto.class})
     @ConditionalOnMissingBean(AuditorAware.class)
     public AuditorAware<Audit<?, ?>> auditorAware() {
-        return () -> {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null) {
-                Object principal = authentication.getPrincipal();
-                if (principal instanceof UserDetailsDto) {
-                    UserDetailsDto userdetails = (UserDetailsDto) principal;
-                    String name = StringUtils.isBlank(userdetails.getFullname()) ? userdetails.getUsername() : userdetails.getFullname();
-                    return Optional.of(Audit.of(userdetails.getId(), name));
-                }
-            }
-            return Optional.empty();
-        };
+        return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+            .map(Authentication::getPrincipal)
+            .filter(it -> it instanceof UserDetailsDto)
+            .map(it -> (UserDetailsDto) it)
+            .map(it -> Audit.of(it.getId(), StringUtils.getIfBlank(it.getFullName(), it::getUsername)));
     }
 }

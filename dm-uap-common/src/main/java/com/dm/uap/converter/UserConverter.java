@@ -66,7 +66,7 @@ public final class UserConverter {
         dto.setEnabled(user.isEnabled());
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
-        dto.setFullname(user.getFullname());
+        dto.setFullName(user.getFullname());
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
         dto.setGrantedAuthority(Sets.transform(user.getRoles(), RoleConverter::toGrantedAuthority));
