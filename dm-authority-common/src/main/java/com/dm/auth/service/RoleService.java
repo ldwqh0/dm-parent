@@ -30,16 +30,6 @@ public interface RoleService {
 
     Optional<Role> findById(Long id);
 
-    /**
-     * 判断是否存在指定名称的角色是否存在，需要排除掉指定的ID，用于前的段角色重名验证
-     *
-     * @param id    需要排除的角色id
-     * @param name  要验证的角色名称
-     * @param group 角色所在的角色组
-     * @return 存在返回true, 不存在返回false
-     */
-    boolean nameExist(Long id, String group, String name);
-
     Role update(long id, RoleDto roleDto);
 
     Optional<Role> get(long id);
@@ -64,15 +54,29 @@ public interface RoleService {
     Optional<RoleDto> findByFullname(String authority);
 
     /**
-     * 根据角色全民判断角色是否存在
+     * 根据角色全名判断角色是否存在
      *
      * @param authority 角色全名
      * @return 判断结果，如果存在返回true,否则返回false
      */
-    boolean existsByFullname(String authority);
+    default boolean existsByFullname(String authority) {
+        String[] groupName = authority.split("\\_", 2);
+        return existsByFullname(groupName[0], groupName[1]);
+    }
 
-    boolean existsByFullname(String name, String group, Long exclude);
+    default boolean existsByFullname(String group, String name) {
+        return existsByFullname(group, name, null);
+    }
 
+    /**
+     * 判断角色是否存在
+     *
+     * @param group   角色分组
+     * @param name    角色名称
+     * @param exclude 要排除的项目
+     * @return 存在返回true, 不存在返回false
+     */
+    boolean existsByFullname(String group, String name, Long exclude);
 
     /**
      * 保存角色的菜单授权信息

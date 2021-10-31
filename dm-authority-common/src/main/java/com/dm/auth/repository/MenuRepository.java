@@ -19,4 +19,8 @@ public interface MenuRepository
 
     @Query("select count(m) from Menu m where m.parent=:parent")
     long childrenCount(Menu parent);
+
+    boolean existsByName(String name);
+
+    boolean existsByNameAndIdNot(String name, Long exclude);
 }

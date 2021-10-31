@@ -21,7 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -39,7 +38,6 @@ public class MenuServiceImpl implements MenuService {
         this.menuRepository = menuRepository;
         this.roleRepository = roleRepository;
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -269,12 +267,11 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public boolean existsByName(String name, Long exclude) {
-        BooleanBuilder query = new BooleanBuilder();
-        query.and(qMenu.name.eq(name));
-        if (!Objects.isNull(exclude)) {
-            query.and(qMenu.id.notIn(exclude));
+        if (Objects.isNull(exclude)) {
+            return menuRepository.existsByName(name);
+        } else {
+            return menuRepository.existsByNameAndIdNot(name, exclude);
         }
-        return menuRepository.exists(query);
     }
 
     /**

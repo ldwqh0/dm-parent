@@ -20,7 +20,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -67,17 +66,6 @@ public class RoleServiceImpl implements RoleService {
     @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public RoleDto save(RoleDto roleDto) {
         return RoleConverter.toDto(roleRepository.save(copyProperties(new Role(), roleDto)));
-    }
-
-    @Override
-    public boolean nameExist(Long id, String group, String name) {
-        BooleanBuilder builder = new BooleanBuilder();
-        if (id != null) {
-            builder.and(qRole.id.ne(id));
-        }
-        builder.and(qRole.group.eq(group));
-        builder.and(qRole.name.eq(name));
-        return roleRepository.exists(builder);
     }
 
     @Override
@@ -167,7 +155,6 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.listGroups();
     }
 
-
     @Override
     public Optional<Role> findById(Long id) {
         return roleRepository.findById(id);
@@ -209,20 +196,17 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean existsByFullname(String authority) {
-        String[] groupName = authority.split("\\_", 2);
-        return roleRepository.existsByGroupAndName(groupName[0], groupName[1]);
+    public boolean existsByFullname(String group, String name) {
+        return roleRepository.existsByGroupAndName(group, name);
     }
 
     @Override
-    public boolean existsByFullname(String name, String group, Long exclude) {
-        BooleanBuilder query = new BooleanBuilder();
-        query.and(qRole.name.eq(name)).and(qRole.group.eq(group))
-        ;
-        if (!Objects.isNull(exclude)) {
-            query.and(qRole.id.ne(exclude));
+    public boolean existsByFullname(String group, String name, Long exclude) {
+        if (Objects.isNull(exclude)) {
+            return roleRepository.existsByGroupAndName(group, name);
+        } else {
+            return roleRepository.existsByGroupAndNameAndIdNot(group, name, exclude);
         }
-        return roleRepository.exists(query);
     }
 
     private Role copyProperties(Role role, RoleDto roleDto) {

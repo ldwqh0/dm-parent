@@ -32,9 +32,9 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
         DataSourceProperties properties = determineCurrentLookupKey();
         DataSource resolved = null;
         if (Objects.nonNull(properties)) {
-            String key = properties.getKey().intern();
+            String key = properties.getKey();
             if ((resolved = dataSources.get(key)) == null) {
-                synchronized (key) {
+                synchronized (dataSources) {
                     if ((resolved = dataSources.get(key)) == null) {
                         resolved = add(properties);
                     }
@@ -67,6 +67,8 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
                 DataSource dataSource = dataSources.remove(key);
                 if (Objects.nonNull(dataSource) && dataSource instanceof HikariDataSource) {
                     ((HikariDataSource) dataSource).close();
+                } else {
+                    throw new RuntimeException("the data source is not a supported data source");
                 }
             }
         } catch (Exception e) {
@@ -76,21 +78,11 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
         }
     }
 
-    @Override
-    public DataSource add(DataSourceProperties properties) {
-        final String key = properties.getKey().intern();
-        DataSource exist = dataSources.get(key);
-        if (exist == null) {
-            synchronized (key) {
-                exist = dataSources.get(key);
-                if (exist == null) {
-                    DataSource dataSource = dataSourceBuilder.buildDataSource(properties);
-                    dataSources.put(key, dataSource);
-                    return dataSource;
-                }
-            }
-        }
-        return null;
+    private DataSource add(DataSourceProperties properties) {
+        final String key = properties.getKey();
+        DataSource dataSource = dataSourceBuilder.buildDataSource(properties);
+        dataSources.put(key, dataSource);
+        return dataSource;
     }
 
     // TODO 需要增加定时检测功能

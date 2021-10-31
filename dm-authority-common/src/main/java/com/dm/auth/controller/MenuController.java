@@ -3,10 +3,10 @@ package com.dm.auth.controller;
 import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.OrderDto;
-import com.dm.auth.entity.Menu;
 import com.dm.auth.service.MenuService;
 import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
+import com.dm.common.exception.DataValidateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
@@ -153,13 +153,13 @@ public class MenuController {
     @PutMapping("{id}/order")
     @ApiOperation("移动菜单")
     public MenuDto order(@PathVariable("id") Long id, @RequestBody OrderDto order) {
-        Menu menu = null;
         if (UP.equals(order.getPosition())) {
-            menu = menuService.moveUp(id);
+            return MenuConverter.toDto(menuService.moveUp(id));
         } else if (DOWN.equals(order.getPosition())) {
-            menu = menuService.moveDown(id);
+            return MenuConverter.toDto(menuService.moveDown(id));
+        } else {
+            throw new DataValidateException("error");
         }
-        return MenuConverter.toDto(menu);
     }
 
     /**

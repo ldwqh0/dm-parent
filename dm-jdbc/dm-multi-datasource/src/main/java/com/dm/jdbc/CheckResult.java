@@ -8,7 +8,7 @@ public interface CheckResult {
     String getMessage();
 
     static CheckResult success() {
-        return new CheckResultImpl(Boolean.TRUE, null);
+        return new CheckResultImpl(Boolean.TRUE);
     }
 
     static CheckResult failure(Exception ex) {
@@ -27,6 +27,10 @@ public interface CheckResult {
         @Override
         public String getMessage() {
             return message;
+        }
+
+        public CheckResultImpl(Boolean result) {
+            this(result, null);
         }
 
         public CheckResultImpl(Boolean result, String message) {
