@@ -46,6 +46,7 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
     /**
      * 最后修改人
      */
+    //TODO findbugs故障
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Audit<Long, String> lastModifiedBy;
 

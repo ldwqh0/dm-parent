@@ -42,4 +42,5 @@ public class OidcUserDetailsDto extends OAuth2UserDetailsDto implements OidcUser
         return this.idToken;
     }
 
+    //TODO 重写equalse
 }

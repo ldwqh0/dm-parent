@@ -57,6 +57,7 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
                 throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
             }
 
+            // TODO spotbugs 错误
             ParameterizedTypeReference<Map<String, Object>> typeReference = new ParameterizedTypeReference<Map<String, Object>>() {
             };
 

@@ -27,15 +27,6 @@ public class DmFileUtils {
         return "";
     }
 
-    /**
-     * 获取文件扩展名
-     *
-     * @param filename 要获取扩展名的文件名
-     * @return 获取到的扩展名
-     */
-    public static String getExt(String filename) {
-        return StringUtils.substringAfterLast(filename, ".").toLowerCase(Locale.ROOT);
-    }
 
     /**
      * 连接多个文件为一个文件

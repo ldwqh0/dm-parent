@@ -1,14 +1,12 @@
 package com.dm.file.service.impl;
 
-import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.dto.FileInfoDto;
 import com.dm.file.entity.FileInfo;
 import com.dm.file.exception.FileStorageException;
 import com.dm.file.repository.FileInfoRepository;
 import com.dm.file.service.FileInfoService;
 import com.dm.file.service.FileStorageService;
-import com.dm.file.util.DmFileUtils;
-import org.springframework.stereotype.Service;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,7 +55,7 @@ public class FileServiceImpl implements FileInfoService {
     private FileInfo save(FileInfoDto _info) {
         FileInfo fileInfo = fileInfoRepository.save(copyProperties(new FileInfo(), _info));
         String filename = _info.getFilename();
-        String ext = DmFileUtils.getExt(filename);
+        String ext = FilenameUtils.getExtension(filename);
         String storagePath = fileInfo.getId() + "." + ext;
         fileInfo.setPath(storagePath);
         return fileInfo;

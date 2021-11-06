@@ -2,7 +2,7 @@ package com.dm.file.service.impl;
 
 import com.dm.file.service.FileStorageService;
 import com.dm.file.service.ThumbnailService;
-import com.dm.file.util.DmFileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
         this.storageService = storageService;
     }
 
-    private void createThumbnail(Image image, String filename, int level) throws IOException {
+    protected void createThumbnail(Image image, String filename, int level) throws IOException {
         try (OutputStream oStream = storageService.getOutputStream(filename, "th" + level)) {
             int o_w = image.getWidth(null);
             int o_h = image.getHeight(null);
@@ -44,8 +44,8 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
     }
 
     @Override
-    public void createThumbnail(String filename) {
-        String ext = DmFileUtils.getExt(filename);
+    public void createThumbnail(String filename) throws IOException {
+        String ext = FilenameUtils.getExtension(filename);
         if (ArrayUtils.contains(imgExt, ext)) {
             try (InputStream iStream = storageService.getResource(filename).getInputStream()) {
                 Image image = ImageIO.read(iStream);
@@ -56,6 +56,11 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
                 log.error("创建文件缩略图时出错", e);
             }
         }
+    }
+
+    @Override
+    public void deleteThumbnail(String filename) {
+        // todo 删除文件缩略图待实现
     }
 
     @Override

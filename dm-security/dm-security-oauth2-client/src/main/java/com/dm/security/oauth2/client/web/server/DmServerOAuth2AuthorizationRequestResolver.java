@@ -139,7 +139,7 @@ public class DmServerOAuth2AuthorizationRequestResolver
 
     @Override
     public Mono<OAuth2AuthorizationRequest> resolve(ServerWebExchange exchange) {
-        ServerWebExchangeMatcher authorizationRequestMatcher = this.authorizationRequestMatcher;
+//        ServerWebExchangeMatcher authorizationRequestMatcher = this.authorizationRequestMatcher;
         return this.authorizationRequestMatcher.matches(exchange)
             .filter(ServerWebExchangeMatcher.MatchResult::isMatch)
             .map(ServerWebExchangeMatcher.MatchResult::getVariables)

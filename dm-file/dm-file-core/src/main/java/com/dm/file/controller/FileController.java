@@ -14,6 +14,7 @@ import com.dm.file.service.PackageFileService;
 import com.dm.file.service.ThumbnailService;
 import com.dm.file.util.DmFileUtils;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -493,7 +494,7 @@ public class FileController {
             long contentLength = fileSize; // 内容长度
             String contentRange; // 响应范围
             String path = file.getPath();
-            String ext = DmFileUtils.getExt(filename);
+            String ext = FilenameUtils.getExtension(filename);
             String contentType = config.getMime(ext);
             Range range = null;
             // 计算range

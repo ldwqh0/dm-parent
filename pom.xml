@@ -47,6 +47,7 @@
     <!-- <module>dm-uap-dingtalk</module> -->
     <!-- 文件模块 -->
     <module>dm-file/dm-file-core</module>
+    <module>dm-file/dm-file-stream</module>
     <module>dm-file/dm-file-spring-boot-starter</module>
     <!--行政区划模块 -->
     <module>dm-code</module>
