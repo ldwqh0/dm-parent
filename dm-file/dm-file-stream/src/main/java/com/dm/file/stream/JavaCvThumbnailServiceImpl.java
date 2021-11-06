@@ -13,10 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * 利用javacv库对文件进行缩略图创建
@@ -55,17 +53,6 @@ public class JavaCvThumbnailServiceImpl extends DefaultThumbnailServiceImpl impl
                 });
 
                 int result = process.waitFor();
-                BufferedReader br1 = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                BufferedReader br2 = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-                String line1 = null;
-                String line2 = null;
-                while ((line1 = br1.readLine()) != null) {
-                    System.out.println(line1);
-                }
-                while ((line2 = br2.readLine()) != null) {
-                    System.out.println(line2);
-                }
                 if (result != 0) {
                     throw new RuntimeException("抓取视频图像时发生错误");
                 }

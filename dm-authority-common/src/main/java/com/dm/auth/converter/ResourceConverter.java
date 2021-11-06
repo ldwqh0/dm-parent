@@ -16,6 +16,7 @@ public final class ResourceConverter {
         dto.setMatcher(model.getMatcher());
         dto.setDescription(model.getDescription());
         dto.setMatchType(model.getMatchType());
+        dto.setMethods(model.getMethods());
         return dto;
     }
 

@@ -74,7 +74,7 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
         final String uri = resource.getUri();
         if (MatchType.ANT_PATH.equals(matchType)) {
             return resource.getMethod()
-                .map(method -> new AntPathRequestMatcher(method.toString(), uri))
+                .map(method -> new AntPathRequestMatcher(uri, method.toString()))
                 .orElseGet(() -> new AntPathRequestMatcher(uri))
                 .matches(request);
         }

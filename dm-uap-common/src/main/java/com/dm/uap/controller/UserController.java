@@ -5,6 +5,7 @@ import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.dto.UserDto;
+import com.dm.uap.dto.request.ResetPasswordRequest;
 import com.dm.uap.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -75,24 +76,22 @@ public class UserController {
     /**
      * 强制更新用户密码
      *
-     * @param id         要更新密码的用户
-     * @param password   新密码
-     * @param rePassword 重复新密码
+     * @param id      要更新密码的用户
+     * @param request 密码重置请求
      * @return 更新密码后的用户
      */
     @ApiOperation("重置用户密码")
-    @PatchMapping(value = {"{id}/password"}, params = {"!oldPassword"})
+    @PatchMapping(value = {"{id}/password"})
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public UserDto resetPassword(
         @PathVariable("id") Long id,
-        @RequestParam("password") String password,
-        @RequestParam("rePassword") String rePassword) {
+        @RequestBody ResetPasswordRequest request) {
         if (id == 2) {
             throw new DataValidateException("不能修改系统内置匿名用户");
         }
-        if (StringUtils.equals(password, rePassword)) {
-            return userService.resetPassword(id, password);
+        if (StringUtils.equals(request.getPassword(), request.getRePassword())) {
+            return userService.resetPassword(id, request.getPassword());
         } else {
             throw new DataValidateException("两次密码输入不一致");
         }
