@@ -3,6 +3,7 @@ package com.dm.security.web.controller;
 import com.dm.security.annotation.CurrentUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
@@ -14,9 +15,9 @@ public class CurrentAuthorityController {
         return p;
     }
 
-    @GetMapping("session")
     @ResponseBody
-    public Object session(WebRequest request) {
+    @RequestMapping("session")
+    public String session(WebRequest request) {
         return request.getSessionId();
     }
 }
