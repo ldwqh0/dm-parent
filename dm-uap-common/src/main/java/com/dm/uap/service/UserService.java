@@ -71,4 +71,5 @@ public interface UserService {
      * @param user   要保存的用户信息
      */
     UserDto saveOwnerInfo(Long userId, UserDto user);
+
 }

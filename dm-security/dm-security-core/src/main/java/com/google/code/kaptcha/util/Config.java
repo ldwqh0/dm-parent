@@ -1,14 +1,6 @@
 package com.google.code.kaptcha.util;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.util.Properties;
-
-import com.google.code.kaptcha.BackgroundProducer;
-import com.google.code.kaptcha.Constants;
-import com.google.code.kaptcha.GimpyEngine;
-import com.google.code.kaptcha.NoiseProducer;
-import com.google.code.kaptcha.Producer;
+import com.google.code.kaptcha.*;
 import com.google.code.kaptcha.impl.DefaultBackground;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.impl.DefaultNoise;
@@ -17,6 +9,9 @@ import com.google.code.kaptcha.text.TextProducer;
 import com.google.code.kaptcha.text.WordRenderer;
 import com.google.code.kaptcha.text.impl.DefaultTextCreator;
 import com.google.code.kaptcha.text.impl.DefaultWordRenderer;
+
+import java.awt.*;
+import java.util.Properties;
 
 /**
  * {@link Config} retrieves configuration values from properties file and

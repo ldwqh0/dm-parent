@@ -35,8 +35,8 @@ public class AuthBeanDefineConfiguration {
     }
 
     @Bean
-    public RoleService roleService(RoleRepository roleRepository, MenuRepository menuRepository) {
-        return new RoleServiceImpl(roleRepository, menuRepository);
+    public RoleService roleService(RoleRepository roleRepository, MenuRepository menuRepository, EntityManager entityManager) {
+        return new RoleServiceImpl(roleRepository, menuRepository, entityManager);
     }
 
     @Bean

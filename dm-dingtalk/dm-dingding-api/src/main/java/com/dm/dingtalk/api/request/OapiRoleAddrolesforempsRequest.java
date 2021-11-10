@@ -1,13 +1,12 @@
 package com.dm.dingtalk.api.request;
 
-import java.util.function.Predicate;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 /**
  * TOP DingTalk-API: dingtalk.oapi.role.addrolesforemps request

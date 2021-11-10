@@ -35,7 +35,7 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
      * 完整名称
      */
     @NotNull(groups = {New.class})
-    private String fullname;
+    private String fullName;
 
     /**
      * 短名称
@@ -109,12 +109,12 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         this.id = id;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getShortname() {
@@ -186,11 +186,11 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DepartmentDto that = (DepartmentDto) o;
-        return childrenCount == that.childrenCount && userCount == that.userCount && Objects.equals(id, that.id) && Objects.equals(fullname, that.fullname) && Objects.equals(shortname, that.shortname) && Objects.equals(description, that.description) && type == that.type && Objects.equals(parent, that.parent) && Objects.equals(director, that.director) && Objects.equals(logo, that.logo);
+        return childrenCount == that.childrenCount && userCount == that.userCount && Objects.equals(id, that.id) && Objects.equals(fullName, that.fullName) && Objects.equals(shortname, that.shortname) && Objects.equals(description, that.description) && type == that.type && Objects.equals(parent, that.parent) && Objects.equals(director, that.director) && Objects.equals(logo, that.logo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullname, shortname, description, type, childrenCount, userCount, parent, director, logo);
+        return Objects.hash(id, fullName, shortname, description, type, childrenCount, userCount, parent, director, logo);
     }
 }

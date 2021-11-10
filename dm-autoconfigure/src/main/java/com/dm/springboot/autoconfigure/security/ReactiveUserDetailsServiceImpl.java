@@ -1,10 +1,10 @@
 package com.dm.springboot.autoconfigure.security;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import reactor.core.publisher.Mono;
+
+import java.util.concurrent.CompletableFuture;
 
 public class ReactiveUserDetailsServiceImpl implements ReactiveUserDetailsService {
 

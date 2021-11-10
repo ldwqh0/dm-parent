@@ -37,7 +37,7 @@ public final class UserConverter {
     public static UserDto toSimpleDto(User model) {
         UserDto dto = new UserDto();
         dto.setId(model.getId());
-        dto.setFullname(model.getFullname());
+        dto.setFullName(model.getFullName());
         dto.setUsername(model.getUsername());
         dto.setMobile(model.getMobile());
         dto.setPhoneNumberVerified(model.isPhoneNumberVerified());
@@ -66,7 +66,7 @@ public final class UserConverter {
         dto.setEnabled(user.isEnabled());
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
-        dto.setFullName(user.getFullname());
+        dto.setFullName(user.getFullName());
         dto.setScenicName(user.getScenicName());
         dto.setRegionCode(user.getRegionCode());
         dto.setGrantedAuthority(Sets.transform(user.getRoles(), RoleConverter::toGrantedAuthority));

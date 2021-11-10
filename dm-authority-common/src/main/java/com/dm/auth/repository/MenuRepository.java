@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MenuRepository
     extends JpaRepository<Menu, Long>, QuerydslPredicateExecutor<Menu>, IdentifiableDtoRepository<Menu, Long> {
@@ -23,4 +24,7 @@ public interface MenuRepository
     boolean existsByName(String name);
 
     boolean existsByNameAndIdNot(String name, Long exclude);
+
+    @Query("select max(m.id) from Menu m")
+    Optional<Long> findMaxId();
 }

@@ -1,10 +1,10 @@
 package com.dm.springboot.autoconfigure.security;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
  * 增加验证码的Bean注册

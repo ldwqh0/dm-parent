@@ -1,9 +1,9 @@
 package com.dm.security.verification;
 
-import java.time.ZonedDateTime;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import java.time.ZonedDateTime;
 
 public class VerificationCode {
 

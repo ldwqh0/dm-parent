@@ -1,14 +1,11 @@
 package com.google.code.kaptcha.impl;
 
-import java.awt.Color;
-import java.awt.GradientPaint;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-
 import com.google.code.kaptcha.BackgroundProducer;
 import com.google.code.kaptcha.util.Configurable;
+
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 /**
  * Default implementation of {@link BackgroundProducer}, adds a gradient

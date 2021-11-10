@@ -77,7 +77,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
      */
     @NotNull(groups = {New.class, Update.class})
     @Size(max = 200, groups = {Default.class})
-    private String fullname;
+    private String fullName;
 
     /**
      * 密码
@@ -230,12 +230,12 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
         this.username = username;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getPassword() {
@@ -371,12 +371,12 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return emailVerified == userDto.emailVerified && phoneNumberVerified == userDto.phoneNumberVerified && Objects.equals(id, userDto.id) && Objects.equals(no, userDto.no) && Objects.equals(givenName, userDto.givenName) && Objects.equals(familyName, userDto.familyName) && Objects.equals(middleName, userDto.middleName) && Objects.equals(profile, userDto.profile) && Objects.equals(website, userDto.website) && gender == userDto.gender && Objects.equals(username, userDto.username) && Objects.equals(fullname, userDto.fullname) && Objects.equals(password, userDto.password) && Objects.equals(enabled, userDto.enabled) && Objects.equals(email, userDto.email) && Objects.equals(mobile, userDto.mobile) && Objects.equals(description, userDto.description) && Objects.equals(roles, userDto.roles) && Objects.equals(scenicName, userDto.scenicName) && Objects.equals(regionCode, userDto.regionCode) && Objects.equals(posts, userDto.posts) && Objects.equals(birthDate, userDto.birthDate) && Objects.equals(profilePhoto, userDto.profilePhoto) && Objects.equals(zoneinfo, userDto.zoneinfo) && Objects.equals(local, userDto.local) && Objects.equals(address, userDto.address);
+        return emailVerified == userDto.emailVerified && phoneNumberVerified == userDto.phoneNumberVerified && Objects.equals(id, userDto.id) && Objects.equals(no, userDto.no) && Objects.equals(givenName, userDto.givenName) && Objects.equals(familyName, userDto.familyName) && Objects.equals(middleName, userDto.middleName) && Objects.equals(profile, userDto.profile) && Objects.equals(website, userDto.website) && gender == userDto.gender && Objects.equals(username, userDto.username) && Objects.equals(fullName, userDto.fullName) && Objects.equals(password, userDto.password) && Objects.equals(enabled, userDto.enabled) && Objects.equals(email, userDto.email) && Objects.equals(mobile, userDto.mobile) && Objects.equals(description, userDto.description) && Objects.equals(roles, userDto.roles) && Objects.equals(scenicName, userDto.scenicName) && Objects.equals(regionCode, userDto.regionCode) && Objects.equals(posts, userDto.posts) && Objects.equals(birthDate, userDto.birthDate) && Objects.equals(profilePhoto, userDto.profilePhoto) && Objects.equals(zoneinfo, userDto.zoneinfo) && Objects.equals(local, userDto.local) && Objects.equals(address, userDto.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, no, givenName, familyName, middleName, profile, website, gender, username, fullname, password, enabled, email, emailVerified, mobile, phoneNumberVerified, description, roles, scenicName, regionCode, posts, birthDate, profilePhoto, zoneinfo, local, address);
+        return Objects.hash(id, no, givenName, familyName, middleName, profile, website, gender, username, fullName, password, enabled, email, emailVerified, mobile, phoneNumberVerified, description, roles, scenicName, regionCode, posts, birthDate, profilePhoto, zoneinfo, local, address);
     }
 }
 

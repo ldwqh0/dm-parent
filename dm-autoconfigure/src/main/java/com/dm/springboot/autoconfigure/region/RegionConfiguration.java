@@ -41,12 +41,10 @@ public class RegionConfiguration implements InitializingBean {
      * 初始化区县数据
      */
     public void afterPropertiesSet() {
-        if (!regionService.existAny()) {
+        if (!regionService.exist()) {
             try (InputStream iStream = this.getClass().getClassLoader().getResourceAsStream("regions.json")) {
-                MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class,
-                    String.class);
-                CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class,
-                    elementType);
+                MapType elementType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, String.class);
+                CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, elementType);
                 List<Map<String, Object>> result = objectMapper.readValue(iStream, collectionType);
                 if (CollectionUtils.isNotEmpty(result)) {
                     List<RegionDto> regions = result.stream().map(r -> {

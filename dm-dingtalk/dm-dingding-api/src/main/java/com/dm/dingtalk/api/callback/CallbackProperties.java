@@ -1,9 +1,9 @@
 package com.dm.dingtalk.api.callback;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
+import java.util.Set;
 
 public class CallbackProperties {
 

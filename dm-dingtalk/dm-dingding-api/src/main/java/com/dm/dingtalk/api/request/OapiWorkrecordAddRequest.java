@@ -1,15 +1,14 @@
 package com.dm.dingtalk.api.request;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * 待办事项请求模型

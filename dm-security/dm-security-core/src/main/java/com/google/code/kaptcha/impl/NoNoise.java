@@ -1,9 +1,9 @@
 package com.google.code.kaptcha.impl;
 
-import java.awt.image.BufferedImage;
-
 import com.google.code.kaptcha.NoiseProducer;
 import com.google.code.kaptcha.util.Configurable;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Imlemention of NoiseProducer that does nothing.

@@ -1,9 +1,9 @@
 package com.dm.dingtalk.api.request;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
+import java.io.Serializable;
 
 /**
  * 更新待办事项请求模型

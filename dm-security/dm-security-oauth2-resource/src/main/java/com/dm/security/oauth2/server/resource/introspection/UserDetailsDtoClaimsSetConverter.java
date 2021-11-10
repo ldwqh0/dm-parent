@@ -70,8 +70,8 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
             user.setEnabled(true);
             user.setClientId(response.getClientId());
             user.setGrantedAuthority(authorities);
-            // 设置用户的fullname
-            user.setFullName((String) response.getOrDefault("fullname", ""));
+            // 设置用户的fullName
+            user.setFullName((String) response.getOrDefault("fullName", ""));
             return user;
         } else {
             logger.trace("Did not validate token since it is inactive");

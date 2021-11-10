@@ -97,7 +97,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
 
     @Override
     public boolean exist() {
-        return resourceRepository.count() > 0;
+        return resourceRepository.findMaxId().isPresent();
     }
 
     @Override

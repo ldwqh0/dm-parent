@@ -12,7 +12,7 @@ import com.dm.uap.service.UserRoleService;
 import com.dm.uap.service.UserService;
 import com.dm.uap.service.impl.DepartmentServiceImpl;
 import com.dm.uap.service.impl.LoginLogServiceImpl;
-import com.dm.uap.service.impl.RoleServiceImpl;
+import com.dm.uap.service.impl.UserRoleServiceImpl;
 import com.dm.uap.service.impl.UserServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -69,7 +69,7 @@ public class UapBeanDefineConfiguration {
     @Bean
     @ConditionalOnMissingBean(UserRoleService.class)
     public UserRoleService userRoleService(UserRoleRepository userRoleRepository) {
-        return new RoleServiceImpl(userRoleRepository);
+        return new UserRoleServiceImpl(userRoleRepository);
     }
 
 

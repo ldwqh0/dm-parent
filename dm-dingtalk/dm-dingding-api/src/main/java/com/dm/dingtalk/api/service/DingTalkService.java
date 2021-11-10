@@ -1,26 +1,13 @@
 package com.dm.dingtalk.api.service;
 
+import com.dm.dingtalk.api.callback.CallbackProperties;
+import com.dm.dingtalk.api.request.*;
+import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
+import com.dm.dingtalk.api.response.*;
+import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
+
 import java.util.Collection;
 import java.util.List;
-
-import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
-import com.dm.dingtalk.api.callback.CallbackProperties;
-import com.dm.dingtalk.api.request.OapiUserCreateRequest;
-import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
-import com.dm.dingtalk.api.request.OapiWorkrecordAddRequest;
-import com.dm.dingtalk.api.request.OapiWorkrecordGetbyuseridRequest;
-import com.dm.dingtalk.api.request.OapiWorkrecordUpdateRequest;
-import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
-import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
-import com.dm.dingtalk.api.response.OapiUserCreateResponse;
-import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
-import com.dm.dingtalk.api.response.OapiUserGetResponse;
-import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
-import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
-import com.dm.dingtalk.api.response.OapiWorkrecordAddResponse;
-import com.dm.dingtalk.api.response.OapiWorkrecordGetbyuseridResponse;
-import com.dm.dingtalk.api.response.OapiWorkrecordUpdateResponse;
-import com.dm.dingtalk.api.response.OpenRole;
 
 /**
  * 钉钉服务器交互API

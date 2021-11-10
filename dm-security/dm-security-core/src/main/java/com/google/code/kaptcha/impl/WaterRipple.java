@@ -1,14 +1,14 @@
 package com.google.code.kaptcha.impl;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import com.google.code.kaptcha.GimpyEngine;
 import com.google.code.kaptcha.NoiseProducer;
 import com.google.code.kaptcha.util.Configurable;
 import com.jhlabs.image.RippleFilter;
 import com.jhlabs.image.TransformFilter;
 import com.jhlabs.image.WaterFilter;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * {@link WaterRipple} adds water ripple effect to an image.

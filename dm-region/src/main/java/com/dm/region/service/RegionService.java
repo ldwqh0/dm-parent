@@ -32,8 +32,6 @@ public interface RegionService {
      */
     List<RegionDto> save(List<RegionDto> regions);
 
-    boolean existAny();
-
     /**
      * 获取指定节点的所有子代
      *

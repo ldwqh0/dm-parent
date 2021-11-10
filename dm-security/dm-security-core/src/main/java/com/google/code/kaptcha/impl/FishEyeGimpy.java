@@ -1,10 +1,9 @@
 package com.google.code.kaptcha.impl;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import com.google.code.kaptcha.GimpyEngine;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * {@link FishEyeGimpy} adds fish eye effect with vertical and horizontal lines.

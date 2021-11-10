@@ -1,9 +1,9 @@
 package com.google.code.kaptcha.text.impl;
 
-import java.util.Random;
-
 import com.google.code.kaptcha.text.TextProducer;
 import com.google.code.kaptcha.util.Configurable;
+
+import java.util.Random;
 
 /**
  * {@link DefaultTextCreator} creates random text from an array of characters

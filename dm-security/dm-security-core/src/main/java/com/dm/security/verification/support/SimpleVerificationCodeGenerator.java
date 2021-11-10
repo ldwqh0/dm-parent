@@ -1,10 +1,10 @@
 package com.dm.security.verification.support;
 
-import java.util.Random;
-import java.util.UUID;
-
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeGenerator;
+
+import java.util.Random;
+import java.util.UUID;
 
 public class SimpleVerificationCodeGenerator implements VerificationCodeGenerator {
 

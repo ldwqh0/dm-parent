@@ -37,13 +37,13 @@ public class Department extends AbstractEntity {
      * 部门名称
      */
     @Column(name = "full_name_", length = 100, nullable = false)
-    private String fullname;
+    private String fullName;
 
     /**
      * 短名称
      */
     @Column(name = "short_name_", length = 100, nullable = false)
-    private String shortname;
+    private String shortName;
 
     /**
      * 上级部门
@@ -84,20 +84,20 @@ public class Department extends AbstractEntity {
         return this.director;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public String getShortname() {
-        return shortname;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setShortname(String shortname) {
-        this.shortname = shortname;
+    public void setShortName(String shortname) {
+        this.shortName = shortname;
     }
 
     public Optional<Department> getParent() {

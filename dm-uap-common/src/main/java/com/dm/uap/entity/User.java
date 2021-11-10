@@ -67,8 +67,8 @@ public class User extends AbstractEntity {
     @Column(name = "enabled_", nullable = false)
     private boolean enabled = true;
 
-    @Column(name = "fullname_", length = 200)
-    private String fullname;
+    @Column(name = "full_name_", length = 200)
+    private String fullName;
 
     @Column(name = "email_", length = 100)
     private String email;
@@ -291,12 +291,12 @@ public class User extends AbstractEntity {
         this.enabled = enabled;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -426,11 +426,11 @@ public class User extends AbstractEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         User user = (User) o;
-        return accountExpired == user.accountExpired && credentialsExpired == user.credentialsExpired && enabled == user.enabled && emailVerified == user.emailVerified && phoneNumberVerified == user.phoneNumberVerified && Objects.equals(username, user.username) && Objects.equals(no, user.no) && Objects.equals(givenName, user.givenName) && Objects.equals(familyName, user.familyName) && Objects.equals(middleName, user.middleName) && Objects.equals(profile, user.profile) && Objects.equals(website, user.website) && gender == user.gender && Objects.equals(password, user.password) && Objects.equals(fullname, user.fullname) && Objects.equals(email, user.email) && Objects.equals(mobile, user.mobile) && Objects.equals(description, user.description) && Objects.equals(zoneinfo, user.zoneinfo) && Objects.equals(local, user.local) && Objects.equals(address, user.address) && Objects.equals(roles, user.roles) && Objects.equals(posts, user.posts) && Objects.equals(orders, user.orders) && Objects.equals(regionCode, user.regionCode) && Objects.equals(attributes, user.attributes) && Objects.equals(birthDate, user.birthDate) && Objects.equals(scenicName, user.scenicName) && Objects.equals(profilePhoto, user.profilePhoto) && Objects.equals(lastModifiedTime, user.lastModifiedTime);
+        return accountExpired == user.accountExpired && credentialsExpired == user.credentialsExpired && enabled == user.enabled && emailVerified == user.emailVerified && phoneNumberVerified == user.phoneNumberVerified && Objects.equals(username, user.username) && Objects.equals(no, user.no) && Objects.equals(givenName, user.givenName) && Objects.equals(familyName, user.familyName) && Objects.equals(middleName, user.middleName) && Objects.equals(profile, user.profile) && Objects.equals(website, user.website) && gender == user.gender && Objects.equals(password, user.password) && Objects.equals(fullName, user.fullName) && Objects.equals(email, user.email) && Objects.equals(mobile, user.mobile) && Objects.equals(description, user.description) && Objects.equals(zoneinfo, user.zoneinfo) && Objects.equals(local, user.local) && Objects.equals(address, user.address) && Objects.equals(roles, user.roles) && Objects.equals(posts, user.posts) && Objects.equals(orders, user.orders) && Objects.equals(regionCode, user.regionCode) && Objects.equals(attributes, user.attributes) && Objects.equals(birthDate, user.birthDate) && Objects.equals(scenicName, user.scenicName) && Objects.equals(profilePhoto, user.profilePhoto) && Objects.equals(lastModifiedTime, user.lastModifiedTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), username, no, givenName, familyName, middleName, profile, website, gender, password, accountExpired, credentialsExpired, enabled, fullname, email, emailVerified, mobile, phoneNumberVerified, description, zoneinfo, local, address, roles, posts, orders, regionCode, attributes, birthDate, scenicName, profilePhoto, lastModifiedTime);
+        return Objects.hash(super.hashCode(), username, no, givenName, familyName, middleName, profile, website, gender, password, accountExpired, credentialsExpired, enabled, fullName, email, emailVerified, mobile, phoneNumberVerified, description, zoneinfo, local, address, roles, posts, orders, regionCode, attributes, birthDate, scenicName, profilePhoto, lastModifiedTime);
     }
 }

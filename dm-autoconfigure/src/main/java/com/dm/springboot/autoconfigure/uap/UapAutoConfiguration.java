@@ -35,13 +35,13 @@ public class UapAutoConfiguration implements InitializingBean {
     private void initUser() {
         String username = defaultUser.getUsername();
         String password = defaultUser.getPassword();
-        String fullname = defaultUser.getFullname();
+        String fullName = defaultUser.getFullName();
 
         // 建立初始管理员账号
         if (!userService.exist()) {
             UserDto user = new UserDto();
             user.setUsername(username);
-            user.setFullname(fullname);
+            user.setFullName(fullName);
             user.setPassword(password);
             user.setEnabled(true);
             user.setRoles(Collections.singleton(UserRoleDto.ROLE_ADMIN));
@@ -53,7 +53,7 @@ public class UapAutoConfiguration implements InitializingBean {
             anonymous.setUsername("ANONYMOUS");
             anonymous.setPassword("ANONYMOUS");
             anonymous.setEnabled(true);
-            anonymous.setFullname("匿名用户");
+            anonymous.setFullName("匿名用户");
             anonymous.setRoles(Collections.singleton(UserRoleDto.ROLE_ANONYMOUS));
             userService.save(anonymous);
         }

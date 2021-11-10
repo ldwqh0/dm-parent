@@ -1,9 +1,9 @@
 package com.dm.wx.oauth2.provider;
 
-import java.util.Collection;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 /**
  * 微信公众号包装 Code

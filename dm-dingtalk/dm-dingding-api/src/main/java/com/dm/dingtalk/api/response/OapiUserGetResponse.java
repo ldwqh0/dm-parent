@@ -1,8 +1,8 @@
 package com.dm.dingtalk.api.response;
 
-import java.util.List;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * TOP DingTalk-API: dingtalk.oapi.user.get response.

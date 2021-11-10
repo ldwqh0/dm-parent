@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -97,8 +96,8 @@ public class DepartmentServiceImpl implements DepartmentService {
             query.and(qDepartment.parent.id.eq(parentId));
         }
         if (StringUtils.isNotBlank(key)) {
-            query.and(qDepartment.fullname.containsIgnoreCase(key)
-                .or(qDepartment.shortname.containsIgnoreCase(key))
+            query.and(qDepartment.fullName.containsIgnoreCase(key)
+                .or(qDepartment.shortName.containsIgnoreCase(key))
                 .or(qDepartment.description.containsIgnoreCase(key))
             );
         }
@@ -111,9 +110,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public boolean existsByNameAndParent(String fullname, Long parentId, Long exclude) {
+    public boolean existsByNameAndParent(String fullName, Long parentId, Long exclude) {
         BooleanBuilder query = new BooleanBuilder();
-        query.and(qDepartment.fullname.eq(fullname));
+        query.and(qDepartment.fullName.eq(fullName));
         if (Objects.isNull(parentId)) {
             query.and(qDepartment.parent.isNull());
         } else {
@@ -146,8 +145,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     private Department copyProperties(Department model, DepartmentDto dto) {
-        model.setFullname(dto.getFullname());
-        model.setShortname(dto.getShortname());
+        model.setFullName(dto.getFullName());
+        model.setShortName(dto.getShortname());
         model.setDescription(dto.getDescription());
         model.setType(dto.getType());
         model.setLogo(dto.getLogo());

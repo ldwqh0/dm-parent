@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public boolean exist() {
-        return userRepository.count() > 0;
+        return userRepository.findMaxId().isPresent();
     }
 
     @Override
@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         if (StringUtils.isNotBlank(key)) {
             query.and(qUser.username.containsIgnoreCase(key)
-                .or(qUser.fullname.containsIgnoreCase(key)));
+                .or(qUser.fullName.containsIgnoreCase(key)));
         }
         return userRepository.findAll(query, pageable).map(UserConverter::toDto);
     }
@@ -254,7 +254,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         originUser.setBirthDate(user.getBirthDate());
         originUser.setDescription(user.getDescription());
         originUser.setEmail(user.getEmail());
-        originUser.setFullname(user.getFullname());
+        originUser.setFullName(user.getFullName());
         originUser.setMobile(user.getMobile());
         originUser.setNo(user.getNo());
         originUser.setRegionCode(user.getRegionCode());
@@ -281,7 +281,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (Objects.nonNull(user) && Objects.nonNull(userDto)) {
             user.setEnabled(userDto.getEnabled());
             user.setUsername(userDto.getUsername());
-            user.setFullname(userDto.getFullname());
+            user.setFullName(userDto.getFullName());
             user.setProfilePhoto(userDto.getProfilePhoto());
             user.setMobile(userDto.getMobile());
             user.setDescription(userDto.getDescription());

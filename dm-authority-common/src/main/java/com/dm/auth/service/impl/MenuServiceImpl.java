@@ -262,7 +262,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public boolean exists() {
-        return menuRepository.count() > 0;
+        return menuRepository.findMaxId().isPresent();
     }
 
     @Override

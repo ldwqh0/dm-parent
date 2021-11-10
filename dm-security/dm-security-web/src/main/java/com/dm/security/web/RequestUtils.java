@@ -1,8 +1,8 @@
 package com.dm.security.web;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 public abstract class RequestUtils {
 

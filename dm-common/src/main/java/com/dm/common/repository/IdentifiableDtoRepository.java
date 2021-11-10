@@ -1,5 +1,10 @@
 package com.dm.common.repository;
 
+import com.dm.collections.CollectionUtils;
+import com.dm.common.dto.IdentifiableDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,13 +12,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.validation.constraints.NotNull;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.dm.collections.CollectionUtils;
-import com.dm.common.dto.IdentifiableDto;
 
 public interface IdentifiableDtoRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 

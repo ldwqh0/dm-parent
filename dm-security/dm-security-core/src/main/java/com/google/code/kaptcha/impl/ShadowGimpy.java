@@ -1,15 +1,15 @@
 package com.google.code.kaptcha.impl;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.Random;
-
 import com.google.code.kaptcha.GimpyEngine;
 import com.google.code.kaptcha.NoiseProducer;
 import com.google.code.kaptcha.util.Configurable;
 import com.jhlabs.image.RippleFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TransformFilter;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 
 /**
  * {@link ShadowGimpy} adds shadow to the text on the image and two noises.

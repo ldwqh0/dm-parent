@@ -1,8 +1,7 @@
 package com.dm.dingtalk.api.crypto;
 
-import org.junit.jupiter.api.Test;
-
 import com.dm.dingtalk.api.callback.EncryptMessage;
+import org.junit.jupiter.api.Test;
 
 public class DingAesTest {
 

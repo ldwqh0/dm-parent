@@ -14,13 +14,13 @@ public class DefaultUserProperties {
 
     private String password;
 
-    private String fullname;
+    private String fullName;
 
     public DefaultUserProperties() {
         super();
         this.username = "admin";
         this.password = "123456";
-        this.fullname = "系统管理员";
+        this.fullName = "系统管理员";
     }
 
     /**
@@ -60,15 +60,15 @@ public class DefaultUserProperties {
      *
      * @return 全名
      */
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
     /**
      * 获取系统初始化默认用户的全名称
      */
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
 }

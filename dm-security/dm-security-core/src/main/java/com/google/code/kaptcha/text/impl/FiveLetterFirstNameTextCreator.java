@@ -1,8 +1,8 @@
 package com.google.code.kaptcha.text.impl;
 
-import java.util.Random;
-
 import com.google.code.kaptcha.text.TextProducer;
+
+import java.util.Random;
 
 /**
  * {@link FiveLetterFirstNameTextCreator} creates random text of 5-letter first

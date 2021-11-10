@@ -6,7 +6,6 @@ import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
 import com.dm.security.authentication.UriResource.MatchType;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;

@@ -28,6 +28,15 @@ public interface RoleService {
      */
     RoleDto save(RoleDto dto);
 
+    /**
+     * 带ID保存角色，这个方法不要在业务中使用，通常用于数据初始化。
+     * <p>
+     * 如果指定id的角色已经存在，不应该修改任何数据
+     *
+     * @param roleDto 带ID保存
+     */
+    RoleDto saveWithId(RoleDto roleDto);
+
     Optional<Role> findById(Long id);
 
     Role update(long id, RoleDto roleDto);
@@ -51,7 +60,7 @@ public interface RoleService {
      * @param authority 角色全民
      * @return 查找结果
      */
-    Optional<RoleDto> findByFullname(String authority);
+    Optional<RoleDto> findByFullName(String authority);
 
     /**
      * 根据角色全名判断角色是否存在
@@ -59,13 +68,13 @@ public interface RoleService {
      * @param authority 角色全名
      * @return 判断结果，如果存在返回true,否则返回false
      */
-    default boolean existsByFullname(String authority) {
+    default boolean existsByFullName(String authority) {
         String[] groupName = authority.split("\\_", 2);
-        return existsByFullname(groupName[0], groupName[1]);
+        return existsByFullName(groupName[0], groupName[1]);
     }
 
-    default boolean existsByFullname(String group, String name) {
-        return existsByFullname(group, name, null);
+    default boolean existsByFullName(String group, String name) {
+        return existsByFullName(group, name, null);
     }
 
     /**
@@ -76,7 +85,7 @@ public interface RoleService {
      * @param exclude 要排除的项目
      * @return 存在返回true, 不存在返回false
      */
-    boolean existsByFullname(String group, String name, Long exclude);
+    boolean existsByFullName(String group, String name, Long exclude);
 
     /**
      * 保存角色的菜单授权信息

@@ -1,16 +1,13 @@
 package com.google.code.kaptcha.text.impl;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import com.google.code.kaptcha.text.WordRenderer;
+import com.google.code.kaptcha.util.Configurable;
+
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-
-import com.google.code.kaptcha.text.WordRenderer;
-import com.google.code.kaptcha.util.Configurable;
 
 /**
  * The default implementation of {@link WordRenderer}, creates an image with a

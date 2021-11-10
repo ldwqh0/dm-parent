@@ -11,7 +11,6 @@ import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -50,11 +49,6 @@ public class RegionServiceImpl implements RegionService {
     public List<RegionDto> save(List<RegionDto> regions) {
         List<Region> models = Lists.transform(regions, region -> this.copyProperties(new Region(), region));
         return Lists.transform(regionRepository.saveAll(models), RegionConverter::toDto);
-    }
-
-    @Override
-    public boolean existAny() {
-        return regionRepository.count() > 0;
     }
 
     @Override

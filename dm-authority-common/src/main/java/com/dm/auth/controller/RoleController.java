@@ -47,7 +47,7 @@ public class RoleController {
     @ResponseStatus(CREATED)
     public RoleDto save(@RequestBody @Validated(RoleDto.New.class) RoleDto roleDto) {
         // 不允许将角色添加到内置分组
-        if (roleService.existsByFullname(roleDto.getGroup(), roleDto.getName())) {
+        if (roleService.existsByFullName(roleDto.getGroup(), roleDto.getName())) {
             throw new DataValidateException("角色名称被占用");
         } else {
             return roleService.save(roleDto);
@@ -67,7 +67,7 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public RoleDto update(@PathVariable("id") @Min(4) long id, @RequestBody @Validated({RoleDto.Update.class}) RoleDto roleDto) {
-        if (roleService.existsByFullname(roleDto.getGroup(), roleDto.getName(), id)) {
+        if (roleService.existsByFullName(roleDto.getGroup(), roleDto.getName(), id)) {
             throw new DataValidateException("角色名称被占用");
         } else {
             return RoleConverter.toDto(roleService.update(id, roleDto));
@@ -142,7 +142,7 @@ public class RoleController {
         @RequestParam("name") String name,
         @RequestParam("group") String group,
         @RequestParam(value = "exclude", required = false) Long exclude) {
-        if (roleService.existsByFullname(group, name, exclude)) {
+        if (roleService.existsByFullName(group, name, exclude)) {
             return ValidationResult.failure("指定角色已经存在");
         } else {
             return ValidationResult.success();

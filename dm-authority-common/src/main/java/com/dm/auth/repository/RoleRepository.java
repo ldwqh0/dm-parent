@@ -26,4 +26,7 @@ public interface RoleRepository extends IdentifiableDtoRepository<Role, Long>, Q
 
     @Query("select distinct(r.group) from Role r")
     List<String> listGroups();
+
+    @Query("select max(r.id) from Role r")
+    Optional<Long> findMaxId();
 }

@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,8 @@ public class RoleServiceImpl implements RoleService {
     private final MenuRepository menuRepository;
 
     private final QRole qRole = QRole.role;
+
+    private final EntityManager entityManager;
 
     // 进行请求限定的请求类型
     private final HttpMethod[] methods = {
@@ -44,19 +47,21 @@ public class RoleServiceImpl implements RoleService {
         HttpMethod.OPTIONS,
     };
 
-    public RoleServiceImpl(RoleRepository roleRepository, MenuRepository menuRepository) {
+
+    public RoleServiceImpl(RoleRepository roleRepository, MenuRepository menuRepository, EntityManager entityManager) {
         this.roleRepository = roleRepository;
         this.menuRepository = menuRepository;
+        this.entityManager = entityManager;
     }
 
 
     @Override
     public boolean exist() {
-        return roleRepository.count() > 0;
+        return roleRepository.findMaxId().isPresent();
     }
 
     @Override
-    public Optional<RoleDto> findByFullname(String authority) {
+    public Optional<RoleDto> findByFullName(String authority) {
         String[] groupRole = authority.split("\\_", 2);
         return roleRepository.findByGroupAndName(groupRole[0], groupRole[1]).map(RoleConverter::toDto);
     }
@@ -66,6 +71,22 @@ public class RoleServiceImpl implements RoleService {
     @CacheEvict(cacheNames = {"AuthorityMenus", "AuthorityAttributes"}, allEntries = true)
     public RoleDto save(RoleDto roleDto) {
         return RoleConverter.toDto(roleRepository.save(copyProperties(new Role(), roleDto)));
+    }
+
+    @Override
+    @Transactional
+    public RoleDto saveWithId(RoleDto roleDto) {
+        if (roleRepository.existsById(roleDto.getId())) {
+            throw new RuntimeException("the role with give id has been exist");
+        } else {
+            entityManager.persist(new PrimaryRole(
+                roleDto.getId(),
+                roleDto.getName(),
+                roleDto.getGroup(),
+                roleDto.getDescription()
+            ));
+            return roleDto;
+        }
     }
 
     @Override
@@ -196,12 +217,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean existsByFullname(String group, String name) {
+    public boolean existsByFullName(String group, String name) {
         return roleRepository.existsByGroupAndName(group, name);
     }
 
     @Override
-    public boolean existsByFullname(String group, String name, Long exclude) {
+    public boolean existsByFullName(String group, String name, Long exclude) {
         if (Objects.isNull(exclude)) {
             return roleRepository.existsByGroupAndName(group, name);
         } else {
@@ -217,6 +238,47 @@ public class RoleServiceImpl implements RoleService {
             role.setGroup(roleDto.getGroup());
         }
         return role;
+    }
+}
+
+/**
+ * 这个类仅仅用户带id保存
+ */
+@Entity
+@Table(name = "dm_role_")
+class PrimaryRole {
+
+    @Id
+    @Column(name = "id_")
+    private Long id;
+
+    @Column(name = "name_", length = 100, nullable = false)
+    private String name;
+
+    @Column(name = "group_", length = 100, nullable = false)
+    private String group;
+
+
+    @Column(name = "state_", length = 50, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status state = Status.ENABLED;
+
+
+    @Column(name = "description_", length = 2000)
+    private String description;
+
+    @Version
+    @Column(name = "version_", nullable = false)
+    private Long version = 0L;
+
+    public PrimaryRole() {
+    }
+
+    public PrimaryRole(Long id, String name, String group, String description) {
+        this.id = id;
+        this.name = name;
+        this.group = group;
+        this.description = description;
     }
 
 }

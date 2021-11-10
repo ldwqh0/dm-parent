@@ -36,4 +36,8 @@ public interface ResourceRepository extends JpaRepository<AuthResource, Long>, Q
     @Query("select distinct scope from AuthResource ar join ar.scope scope")
     List<String> listScopes();
 
+
+    @Query("select max(ar.id) from AuthResource ar")
+    Optional<Long> findMaxId();
+
 }

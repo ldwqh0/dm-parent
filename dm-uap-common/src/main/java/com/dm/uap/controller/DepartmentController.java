@@ -108,18 +108,18 @@ public class DepartmentController {
     /**
      * 验证名称是否被占用
      *
-     * @param fullname 要验证的名称
+     * @param fullName 要验证的名称
      * @param parentId 要验证的父级的范围
      * @param exclude  要排除的id
      * @return 验证结果
      * @apiNote 验证部门名称是否被占用，在同一个父级部门下，不允许有同名部门存在
      */
-    @GetMapping(value = "validation", params = "fullname")
+    @GetMapping(value = "validation", params = "fullName")
     public ValidationResult validationFullName(
-        @RequestParam("fullname") String fullname,
+        @RequestParam("fullName") String fullName,
         @RequestParam(value = "parentId", required = false) Long parentId,
         @RequestParam(value = "exclude", required = false) Long exclude) {
-        if (departmentService.existsByNameAndParent(fullname, parentId, exclude)) {
+        if (departmentService.existsByNameAndParent(fullName, parentId, exclude)) {
             return ValidationResult.failure("部门名称已经被占用");
         } else {
             return ValidationResult.success();

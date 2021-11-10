@@ -1,13 +1,12 @@
 package com.dm.security.web.server.util.matcher;
 
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.web.server.ServerWebExchange;
-
 import reactor.core.publisher.Mono;
+
+import java.util.regex.Pattern;
 
 public class RegexServerWebExchangeMatcher implements ServerWebExchangeMatcher {
 

@@ -11,8 +11,8 @@ public final class DepartmentConverter {
     public static DepartmentDto toSimpleDto(Department model) {
         DepartmentDto result = new DepartmentDto();
         result.setId(model.getId());
-        result.setFullname(model.getFullname());
-        result.setShortname(model.getShortname());
+        result.setFullName(model.getFullName());
+        result.setShortname(model.getShortName());
         result.setDescription(model.getDescription());
         result.setType(model.getType());
         result.setLogo(model.getLogo());

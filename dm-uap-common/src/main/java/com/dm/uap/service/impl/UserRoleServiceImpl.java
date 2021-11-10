@@ -6,15 +6,13 @@ import com.dm.uap.entity.UserRole;
 import com.dm.uap.repository.UserRoleRepository;
 import com.dm.uap.service.UserRoleService;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-//@Service("userRoleService")
-public class RoleServiceImpl implements UserRoleService {
+public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository userRoleRepository;
 
-    public RoleServiceImpl(UserRoleRepository userRoleRepository) {
+    public UserRoleServiceImpl(UserRoleRepository userRoleRepository) {
         this.userRoleRepository = userRoleRepository;
     }
 

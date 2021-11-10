@@ -1,10 +1,9 @@
 package com.google.code.kaptcha.util;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.lang.reflect.Field;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.awt.*;
+import java.lang.reflect.Field;
 
 /**
  * This class provides helper methods in parsing configuration values.

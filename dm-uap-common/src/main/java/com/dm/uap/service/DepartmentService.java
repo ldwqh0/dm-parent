@@ -22,7 +22,7 @@ public interface DepartmentService {
 
     List<DepartmentDto> findAll();
 
-    boolean existsByNameAndParent(String fullname, Long parentId, Long exclude);
+    boolean existsByNameAndParent(String fullName, Long parentId, Long exclude);
 
     /**
      * 获取某个部门的下级部门树

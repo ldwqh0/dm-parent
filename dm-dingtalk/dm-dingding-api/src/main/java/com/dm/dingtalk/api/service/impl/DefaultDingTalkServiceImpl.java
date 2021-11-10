@@ -8,7 +8,6 @@ import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
 import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

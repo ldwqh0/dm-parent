@@ -4,7 +4,6 @@ import com.dm.collections.Maps;
 import com.dm.dingtalk.api.crypto.DingAes;
 import com.dm.dingtalk.api.service.DingTalkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

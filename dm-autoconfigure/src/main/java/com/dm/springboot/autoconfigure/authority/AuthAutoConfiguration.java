@@ -71,21 +71,22 @@ public class AuthAutoConfiguration implements InitializingBean {
         // 增加默认管理员角色
         // id=1
         return Sets.hashSet(
-            initRole("ROLE_ADMIN", "系统内置管理员角色", authorities),
-            initRole("ROLE_AUTHENTICATED", "系统内置认证通过角色，所有已经登录的用户均为该角色", authorities),
-            initRole("ROLE_ANONYMOUS", "系统内置匿名角色", authorities)
+            initRole(1L, "ROLE_ADMIN", "系统内置管理员角色", authorities),
+            initRole(2L, "ROLE_AUTHENTICATED", "系统内置认证通过角色，所有已经登录的用户均为该角色", authorities),
+            initRole(3L, "ROLE_ANONYMOUS", "系统内置匿名角色", authorities)
         );
     }
 
-    private RoleDto initRole(String name, String description, MenuAuthorityDto authorities) {
+    private RoleDto initRole(Long roleId, String name, String description, MenuAuthorityDto authorities) {
         String group = "内置分组";
-        String fullname = group + "_" + name;
-        return roleService.findByFullname(fullname).orElseGet(() -> {
+        String fullName = group + "_" + name;
+        return roleService.findByFullName(fullName).orElseGet(() -> {
             RoleDto role = new RoleDto();
+            role.setId(roleId);
             role.setName(name);
             role.setGroup(group);
             role.setDescription(description);
-            role = roleService.save(role);
+            role = roleService.saveWithId(role);
             roleService.saveAuthority(role.getId(), authorities);
             return role;
         });

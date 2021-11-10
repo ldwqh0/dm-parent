@@ -1,17 +1,15 @@
 package com.google.code.kaptcha.impl;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
-
 import com.google.code.kaptcha.BackgroundProducer;
 import com.google.code.kaptcha.GimpyEngine;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.text.TextProducer;
 import com.google.code.kaptcha.text.WordRenderer;
 import com.google.code.kaptcha.util.Configurable;
+
+import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 
 /**
  * Default {@link Producer} implementation which draws a captcha image using

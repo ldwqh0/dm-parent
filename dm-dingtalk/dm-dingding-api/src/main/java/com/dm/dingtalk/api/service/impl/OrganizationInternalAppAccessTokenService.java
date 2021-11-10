@@ -1,13 +1,12 @@
 package com.dm.dingtalk.api.service.impl;
 
-import java.time.ZonedDateTime;
-import java.util.Objects;
-
+import com.dm.dingtalk.api.response.AccessTokenResponse;
+import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.client.RestTemplate;
 
-import com.dm.dingtalk.api.response.AccessTokenResponse;
-import com.dm.dingtalk.api.service.DingtalkAccessTokenService;
+import java.time.ZonedDateTime;
+import java.util.Objects;
 
 /**
  * 企业内部应用token服务

@@ -1,11 +1,11 @@
 package com.dm.springboot.autoconfigure.dingtalk;
 
+import com.dm.dingtalk.api.callback.Event;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import com.dm.dingtalk.api.callback.Event;
 
 public class DingtalkConfigurerAdapter {
 

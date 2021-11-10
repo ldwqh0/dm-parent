@@ -1,17 +1,16 @@
 package com.dm.security.web.authentication;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.logout.HttpStatusReturningServerLogoutSuccessHandler;
 import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.web.server.ServerWebExchange;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 一个基于代理的登出处理器

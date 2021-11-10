@@ -1,8 +1,8 @@
 package com.google.code.kaptcha.text.impl;
 
-import java.util.Random;
-
 import com.google.code.kaptcha.text.TextProducer;
+
+import java.util.Random;
 
 /**
  * TextProducer Implementation that will return Chinese characters..
