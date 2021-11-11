@@ -40,11 +40,6 @@
       <artifactId>hibernate-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>com.dm</groupId>
       <artifactId>dm-common</artifactId>
     </dependency>

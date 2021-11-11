@@ -5,7 +5,6 @@ import com.dm.common.exception.DataValidateException;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.request.UpdatePasswordDto;
 import com.dm.uap.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +56,6 @@ public class CurrentUserController {
      * @param data   修改密码后的用户信息
      * @return 修改密码之后的用户信息
      */
-    @ApiOperation("修改当前用户密码")
     @PatchMapping("password")
     @ResponseStatus(CREATED)
     public UserDto changePassword(

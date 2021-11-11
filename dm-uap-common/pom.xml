@@ -31,11 +31,6 @@
       <artifactId>jakarta.validation-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>com.dm</groupId>
       <artifactId>compiler-shim</artifactId>
     </dependency>

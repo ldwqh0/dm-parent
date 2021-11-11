@@ -7,7 +7,6 @@ import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.request.ResetPasswordRequest;
 import com.dm.uap.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +39,6 @@ public class UserController {
      * @param id 用户ID
      * @return 获取到的用户信息
      */
-    @ApiOperation("根据ID获取用户")
     @GetMapping("{id}")
     public UserDto findById(@PathVariable("id") Long id) {
         return userService.findById(id).orElseThrow(DataNotExistException::new);
@@ -52,7 +50,6 @@ public class UserController {
      * @param userDto 用户信息
      * @return 保存后的用户信息
      */
-    @ApiOperation("新增保存用户")
     @PostMapping
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
@@ -65,7 +62,6 @@ public class UserController {
      *
      * @param id 要删除的用户的ID
      */
-    @ApiOperation("删除用户")
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
@@ -80,7 +76,6 @@ public class UserController {
      * @param request 密码重置请求
      * @return 更新密码后的用户
      */
-    @ApiOperation("重置用户密码")
     @PatchMapping(value = {"{id}/password"})
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
@@ -105,7 +100,6 @@ public class UserController {
      * @param userDto 用户信息
      * @return 更新后的用户信息
      */
-    @ApiOperation("更新用户")
     @PutMapping("{id}")
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
@@ -118,14 +112,13 @@ public class UserController {
     }
 
     /**
-     * 更新用户的部分信息
+     * 更新用户的部分信息，没有明确指定的信息不会被修改
      *
      * @param id   要更新的用户的ID
      * @param user 用户信息
      * @return 更新后的用户信息
      * @apiNote 暂时只支持修改用户的禁用信息, 其他的暂时不做修改
      */
-    @ApiOperation("更新用户指定信息，未明确指定的信息不会被修改")
     @PatchMapping("{id}")
     @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     public UserDto patchUpdate(@PathVariable("id") @Min(value = 3, message = "不能修改系统内置匿名用户") long id,
@@ -143,7 +136,6 @@ public class UserController {
      * @param pageable   分页信息
      * @return 用户信息的分页响应
      */
-    @ApiOperation("列表查询用户")
     @GetMapping
     public Page<UserDto> list(
         @RequestParam(value = "department", required = false) Long department,

@@ -7,7 +7,6 @@ import com.dm.auth.dto.MenuTreeDto;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.CollectionUtils;
 import com.dm.common.exception.DataNotExistException;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -69,7 +68,6 @@ public class MenuAuthorityController {
      * @return 可见菜单项目的列表
      * @apiNote 根据登录用户获取菜单, 当某个子菜单可用时，父菜单也会被列出来
      */
-    @ApiOperation("获取当前用户的可用菜单项")
     @GetMapping("current")
     public List<MenuDto> systemMenu(Authentication user,
                                     @RequestParam(value = "parentId", required = false) Long parentId) {

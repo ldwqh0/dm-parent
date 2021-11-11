@@ -7,7 +7,6 @@ import com.dm.collections.Lists;
 import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -41,7 +40,6 @@ public class RoleController {
      * @param roleDto 要包存的角色的信息
      * @return 保存后的角色
      */
-    @ApiOperation("保存角色")
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
@@ -62,7 +60,6 @@ public class RoleController {
      * @return 修改后的角色信息
      * @apiNote 角色最小ID为4，1、2、3是系统内置角色，禁止修改 <br>
      */
-    @ApiOperation("更新角色")
     @PutMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
@@ -80,7 +77,6 @@ public class RoleController {
      * @param id 要获取的角色的id
      * @return 角色的信息
      */
-    @ApiOperation("获取角色信息")
     @GetMapping("{id}")
     public RoleDto findById(@PathVariable("id") long id) {
         return RoleConverter.toDto(roleService.get(id).orElseThrow(DataNotExistException::new));
@@ -92,7 +88,6 @@ public class RoleController {
      * @param id 待删除的角色的ID
      * @apiNote 内置的三个角色不允许被修改, 也就是id<3 的角色不允许被修改
      */
-    @ApiOperation("删除角色")
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
@@ -109,7 +104,6 @@ public class RoleController {
      * @param pageable 分页信息
      * @return 查询到的角色信息
      */
-    @ApiOperation("查询角色")
     @GetMapping(params = {"page", "size"})
     public Page<RoleDto> list(
         @RequestParam(value = "group", required = false) String group,
@@ -123,7 +117,6 @@ public class RoleController {
      *
      * @return 获取到的角色的列表
      */
-    @ApiOperation("获取所有启用角色")
     @GetMapping
     public List<RoleDto> listEnabled() {
         return Lists.transform(roleService.listAllEnabled(), RoleConverter::toDto);

@@ -7,8 +7,6 @@ import com.dm.auth.service.MenuService;
 import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,7 +26,6 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 /**
  * 菜单管理
  */
-@Api(tags = {"menu"})
 @RequestMapping({"menus", "p/menus"})
 @RestController
 public class MenuController {
@@ -45,7 +42,6 @@ public class MenuController {
      * @param menuDto 要保存的菜单信息
      * @return 保存后的菜单信息
      */
-    @ApiOperation("保存菜单")
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
@@ -60,7 +56,6 @@ public class MenuController {
      * @param menuDto 更新后的菜单信息
      * @return 更新完成的菜单信息
      */
-    @ApiOperation("更新菜单")
     @PutMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
@@ -74,7 +69,6 @@ public class MenuController {
      * @param id 菜单ID
      * @return 获取到的菜单信息
      */
-    @ApiOperation("获取菜单")
     @GetMapping("{id}")
     public MenuDto findById(@PathVariable("id") Long id) {
         return menuService.findById(id).orElseThrow(DataNotExistException::new);
@@ -86,7 +80,6 @@ public class MenuController {
      * @param id 要删除的菜单项目
      * @apiNote 删除菜单时要谨慎，因为会同时删除这个菜单下的所有子菜单
      */
-    @ApiOperation("删除菜单")
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
@@ -102,7 +95,6 @@ public class MenuController {
      * @return 更新后的菜单信息
      * @apiNote 当前只能改变菜单的enabled状态
      */
-    @ApiOperation("更新菜单部分信息")
     @PatchMapping("{id}")
     public MenuDto patch(@PathVariable("id") long id, @RequestBody MenuDto menu) {
         return menuService.patch(id, menu);
@@ -116,7 +108,6 @@ public class MenuController {
      * @param parentId 上级菜单的Id
      * @return 查询到的菜单列表
      */
-    @ApiOperation("根据关键字查询菜单")
     @GetMapping
     public Page<MenuDto> list(@RequestParam(value = "keyword", defaultValue = "", required = false) String keyword,
                               @RequestParam(value = "enabled", required = false) Boolean enabled,
@@ -134,12 +125,10 @@ public class MenuController {
      * @param enabled  是否仅仅获取可以用的菜单项，为否或者为空表示获取所有菜单项
      * @return 所有的菜单的列表
      */
-    @ApiOperation("获取可用菜单树")
     @GetMapping(params = {"scope=all"})
-    public List<MenuDto> list(
-        @RequestParam(value = "parentId", required = false) Long parentId,
-        @RequestParam(value = "enabled", required = false) Boolean enabled,
-        @SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
+    public List<MenuDto> list(@RequestParam(value = "parentId", required = false) Long parentId,
+                              @RequestParam(value = "enabled", required = false) Boolean enabled,
+                              @SortDefault(direction = Direction.ASC, sort = {"order"}) Sort sort) {
         return menuService.listOffspring(parentId, enabled, sort);
     }
 
@@ -151,7 +140,6 @@ public class MenuController {
      * @return 移动后的菜单值
      */
     @PutMapping("{id}/order")
-    @ApiOperation("移动菜单")
     public MenuDto order(@PathVariable("id") Long id, @RequestBody OrderDto order) {
         if (UP.equals(order.getPosition())) {
             return MenuConverter.toDto(menuService.moveUp(id));
@@ -178,5 +166,4 @@ public class MenuController {
             return ValidationResult.success();
         }
     }
-
 }

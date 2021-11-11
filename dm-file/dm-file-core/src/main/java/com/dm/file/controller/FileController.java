@@ -13,7 +13,6 @@ import com.dm.file.service.FileStorageService;
 import com.dm.file.service.PackageFileService;
 import com.dm.file.service.ThumbnailService;
 import com.dm.file.util.DmFileUtils;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -98,7 +97,6 @@ public class FileController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("上传文件")
     public FileInfoDto upload(@RequestParam("file") MultipartFile file) throws Exception {
         String originalFilename = file.getOriginalFilename();
         FileInfoDto infoDto = new FileInfoDto();
@@ -162,7 +160,6 @@ public class FileController {
      * @throws Exception 保存异常
      */
     @PostMapping(headers = {"chunk-index"})
-    @ApiOperation("文件分块上传文件")
     public FileInfoDto upload(
         @RequestHeader("chunk-index") int chunkIndex,
         @RequestHeader("file-id") String tempId,
@@ -387,7 +384,6 @@ public class FileController {
      * @return 下载响应实体
      * @download 这是一个文件下载请求
      */
-    @ApiOperation("预览/下载文件")
     @GetMapping(value = "{id}", produces = {
         MediaType.IMAGE_GIF_VALUE,
         MediaType.IMAGE_JPEG_VALUE,
