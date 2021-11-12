@@ -5,7 +5,7 @@ import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.security.web.authentication.LoginFailureHandler;
 import com.dm.security.web.authentication.LoginSuccessHandler;
 import com.dm.security.web.controller.CurrentAuthorityController;
-import com.dm.security.web.controller.CurrentUserReactiveController;
+import com.dm.security.web.controller.CurrentReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
@@ -54,10 +54,10 @@ public class SecurityAutoConfiguration {
     @ConditionalOnClass(value = {
         Mono.class,
         UserDetailsDto.class,
-        CurrentUserReactiveController.class
+        CurrentReactiveController.class
     })
-    public CurrentUserReactiveController currentUserReactiveController() {
-        return new CurrentUserReactiveController();
+    public CurrentReactiveController currentUserReactiveController() {
+        return new CurrentReactiveController();
     }
 
     @Configuration
