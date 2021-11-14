@@ -5,10 +5,12 @@ import com.dm.auth.entity.AuthResource;
 import com.dm.security.authentication.UriResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ResourceService {
 
@@ -32,5 +34,7 @@ public interface ResourceService {
 
     List<String> listScopes();
 
-    List<AuthResource> findByMatcherAnExcludeById(String matcher, UriResource.MatchType matchType, Long exclude);
+//    List<AuthResource> findByMatcherAnExcludeById(String matcher, UriResource.MatchType matchType, Long exclude);
+
+    boolean exist(String matcher, UriResource.MatchType matchType, Set<HttpMethod> methods, Long exclude);
 }

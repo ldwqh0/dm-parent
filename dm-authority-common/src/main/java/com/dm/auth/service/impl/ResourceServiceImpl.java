@@ -74,8 +74,8 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         BooleanBuilder query = new BooleanBuilder();
         if (StringUtils.isNotBlank(keyword)) {
             query.or(qResource.name.containsIgnoreCase(keyword))
-                .or(qResource.description.containsIgnoreCase(keyword))
-                .or(qResource.matcher.containsIgnoreCase(keyword));
+                    .or(qResource.description.containsIgnoreCase(keyword))
+                    .or(qResource.matcher.containsIgnoreCase(keyword));
         }
         return resourceRepository.findAll(query, pageable).map(ResourceConverter::toSimpleDto);
     }
@@ -91,8 +91,8 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
     @Cacheable(cacheNames = "AuthorityAttributes", key = "'all_resource'", sync = true)
     public Collection<ResourceAuthorityAttribute> listAll() {
         return resourceRepository.findAll().stream()
-            .flatMap(this::toResourceAuthorityAttribute)
-            .collect(Collectors.toList());
+                .flatMap(this::toResourceAuthorityAttribute)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -120,7 +120,24 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuthResource> findByMatcherAnExcludeById(String matcher, UriResource.MatchType matchType, Long exclude) {
+    public boolean exist(String matcher, UriResource.MatchType matchType, Set<HttpMethod> methods, Long exclude) {
+        if (Objects.isNull(methods)) {
+            methods = Collections.emptySet();
+        }
+        List<AuthResource> resources = this.findByMatcherAnExcludeById(matcher, matchType, exclude);
+        for (AuthResource it : resources) {
+            Set<HttpMethod> existMethods = it.getMethods();
+            if (CollectionUtils.isEmpty(existMethods) && CollectionUtils.isEmpty(methods)) {
+                return true;
+            }
+            if (CollectionUtils.containsAny(existMethods, methods)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<AuthResource> findByMatcherAnExcludeById(String matcher, UriResource.MatchType matchType, Long exclude) {
         if (Objects.isNull(exclude)) {
             return resourceRepository.findByMatcherAndMatchType(matcher, matchType);
         } else {
@@ -128,25 +145,24 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         }
     }
 
-
-    Stream<ResourceAuthorityAttribute> toResourceAuthorityAttribute(AuthResource resource) {
+    private Stream<ResourceAuthorityAttribute> toResourceAuthorityAttribute(AuthResource resource) {
         Set<HttpMethod> methods = resource.getMethods();
         Stream<ResourceAuthorityAttribute> attributes;
         if (CollectionUtils.isEmpty(methods)) {
             attributes = Stream.of(UriResource.of(resource.getMatcher(), resource.getMatchType(), resource.getScope()))
-                .map(ResourceAuthorityAttribute::new);
+                    .map(ResourceAuthorityAttribute::new);
         } else {
             attributes = resource.getMethods().stream()
-                .map(method -> UriResource.of(method, resource.getMatcher(), resource.getMatchType(), resource.getScope()))
-                .map(ResourceAuthorityAttribute::new);
+                    .map(method -> UriResource.of(method, resource.getMatcher(), resource.getMatchType(), resource.getScope()))
+                    .map(ResourceAuthorityAttribute::new);
         }
         return attributes.peek(attribute -> {
             resource.getAccessAuthorities()
-                .stream().map(Role::getFullName)
-                .forEach(attribute::addAccessAuthority);
+                    .stream().map(Role::getFullName)
+                    .forEach(attribute::addAccessAuthority);
             resource.getDenyAuthorities()
-                .stream().map(Role::getFullName)
-                .forEach(attribute::addDenyAuthority);
+                    .stream().map(Role::getFullName)
+                    .forEach(attribute::addDenyAuthority);
         });
     }
 
@@ -164,15 +180,4 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         return authResource;
     }
 
-
-    //    @Override
-//    public AuthResource copyProperties(AuthResource model, ResourceDto dto) {
-//        model.setMatcher(dto.getMatcher());
-//        model.setDescription(dto.getDescription());
-//        model.setName(dto.getName());
-//        model.setMatchType(dto.getMatchType());
-//        model.setScope(dto.getScope());
-//        model.setMethods(dto.getMethods());
-//        return model;
-//    }
 }

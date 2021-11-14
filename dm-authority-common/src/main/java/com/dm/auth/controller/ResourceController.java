@@ -1,9 +1,7 @@
 package com.dm.auth.controller;
 
 import com.dm.auth.dto.ResourceDto;
-import com.dm.auth.entity.AuthResource;
 import com.dm.auth.service.ResourceService;
-import com.dm.collections.CollectionUtils;
 import com.dm.common.dto.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
@@ -14,8 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -43,7 +40,7 @@ public class ResourceController {
     @PostMapping
     @ResponseStatus(value = CREATED)
     public ResourceDto save(@RequestBody ResourceDto resource) {
-        if (exist(resource.getMatcher(), resource.getMatchType(), resource.getMethods(), null)) {
+        if (resourceService.exist(resource.getMatcher(), resource.getMatchType(), resource.getMethods(), null)) {
             throw new DataValidateException("指定的资源已经存在了");
         }
         return resourceService.save(resource);
@@ -70,7 +67,7 @@ public class ResourceController {
     @PutMapping("{id}")
     @ResponseStatus(value = CREATED)
     public ResourceDto update(@PathVariable("id") Long id, @RequestBody ResourceDto resource) {
-        if (exist(resource.getMatcher(), resource.getMatchType(), resource.getMethods(), id)) {
+        if (resourceService.exist(resource.getMatcher(), resource.getMatchType(), resource.getMethods(), id)) {
             throw new DataValidateException("指定的资源已经存在了");
         }
         return resourceService.update(id, resource);
@@ -85,7 +82,7 @@ public class ResourceController {
     @GetMapping("{id}")
     public ResourceDto get(@PathVariable("id") Long id) {
         return resourceService.findById(id)
-            .orElseThrow(DataNotExistException::new);
+                .orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -97,8 +94,8 @@ public class ResourceController {
      */
     @GetMapping(params = {"page"})
     public Page<ResourceDto> search(
-        @PageableDefault Pageable pageable,
-        @RequestParam(value = "keyword", required = false) String keyword) {
+            @PageableDefault Pageable pageable,
+            @RequestParam(value = "keyword", required = false) String keyword) {
         return resourceService.search(keyword, pageable);
     }
 
@@ -113,31 +110,16 @@ public class ResourceController {
      */
     @RequestMapping("validation")
     public ValidationResult validate(
-        @RequestParam("matcher") String matcher,
-        @RequestParam("matchType") UriResource.MatchType matchType,
-        @RequestParam(value = "methods", required = false) Set<HttpMethod> methods,
-        @RequestParam(value = "exclude", required = false) Long exclude) {
-        if (exist(matcher, matchType, methods, exclude)) {
+            @RequestParam("matcher") String matcher,
+            @RequestParam("matchType") UriResource.MatchType matchType,
+            @RequestParam(value = "methods", required = false) Set<HttpMethod> methods,
+            @RequestParam(value = "exclude", required = false) Long exclude) {
+        if (resourceService.exist(matcher, matchType, methods, exclude)) {
             return ValidationResult.failure("指定资源配置已经存在");
         } else {
             return ValidationResult.success();
         }
     }
 
-    private boolean exist(@NotNull String matcher, @NotNull UriResource.MatchType matchType, Collection<HttpMethod> methods, Long exclude) {
-        if (Objects.isNull(methods)) {
-            methods = Collections.emptySet();
-        }
-        List<AuthResource> resources = resourceService.findByMatcherAnExcludeById(matcher, matchType, exclude);
-        for (AuthResource it : resources) {
-            Set<HttpMethod> existMethods = it.getMethods();
-            if (CollectionUtils.isEmpty(existMethods) && CollectionUtils.isEmpty(methods)) {
-                return true;
-            }
-            if (CollectionUtils.containsAny(existMethods, methods)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 }

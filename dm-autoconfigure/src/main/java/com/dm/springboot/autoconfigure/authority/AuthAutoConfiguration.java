@@ -71,9 +71,9 @@ public class AuthAutoConfiguration implements InitializingBean {
         // 增加默认管理员角色
         // id=1
         return Sets.hashSet(
-            initRole(1L, "ROLE_ADMIN", "系统内置管理员角色", authorities),
-            initRole(2L, "ROLE_AUTHENTICATED", "系统内置认证通过角色，所有已经登录的用户均为该角色", authorities),
-            initRole(3L, "ROLE_ANONYMOUS", "系统内置匿名角色", authorities)
+                initRole(1L, "ROLE_AUTHENTICATED", "系统内置认证通过角色，所有已经登录的用户均为该角色", authorities),
+                initRole(2L, "ROLE_ANONYMOUS", "系统内置匿名角色", authorities),
+                initRole(3L, "ROLE_ADMIN", "系统内置管理员角色", authorities)
         );
     }
 

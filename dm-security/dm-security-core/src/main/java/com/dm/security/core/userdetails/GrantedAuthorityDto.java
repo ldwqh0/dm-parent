@@ -10,9 +10,9 @@ public class GrantedAuthorityDto implements GrantedAuthority {
     private String authority;
     private Long id;
 
-    public static final GrantedAuthorityDto ROLE_ADMIN = new GrantedAuthorityDto("内置分组_ROLE_ADMIN", 1L);
-    public static final GrantedAuthorityDto ROLE_AUTHENTICATED = new GrantedAuthorityDto("内置分组_ROLE_AUTHENTICATED", 2L);
-    public static final GrantedAuthorityDto ROLE_ANONYMOUS = new GrantedAuthorityDto("内置分组_ROLE_ANONYMOUS", 3L);
+    public static final GrantedAuthorityDto ROLE_ADMIN = new GrantedAuthorityDto("内置分组_ROLE_ADMIN", 3L);
+    public static final GrantedAuthorityDto ROLE_AUTHENTICATED = new GrantedAuthorityDto("内置分组_ROLE_AUTHENTICATED", 1L);
+    public static final GrantedAuthorityDto ROLE_ANONYMOUS = new GrantedAuthorityDto("内置分组_ROLE_ANONYMOUS", 2L);
 
 
     public GrantedAuthorityDto(String authority, Long id) {
