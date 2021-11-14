@@ -84,7 +84,7 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
      * @return 获取角色的全程
      * @apiNote 角色的全称是 {group}_{name}
      */
-    public String getFullname() {
+    public String getFullName() {
         return group + "_" + name;
     }
 
@@ -146,11 +146,11 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
     @Override
     public String toString() {
         return "RoleDto{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", description='" + description + '\'' +
-            ", state=" + state +
-            ", group='" + group + '\'' +
-            '}';
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", state=" + state +
+                ", group='" + group + '\'' +
+                '}';
     }
 }

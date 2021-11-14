@@ -47,9 +47,9 @@ public class AuthAutoConfiguration implements InitializingBean {
     private Set<ResourceDto> initResources(Set<RoleDto> roles) {
         if (!resourceService.exist()) {
             return Sets.hashSet(
-                initResource("default", "/**", "默认资源类型", roles),
-                initResource("用户可见菜单", "/p/menuAuthorities/current**/**", "当前用户可见菜单", roles),
-                initResource("当前用户信息", "/p/authorities/current", "当前用户信息", roles)
+                    initResource("default", "/**", "默认资源类型", roles),
+                    initResource("用户可见菜单", "/p/menuAuthorities/current**/**", "当前用户可见菜单", roles),
+                    initResource("当前用户信息", "/p/authorities/current", "当前用户信息", roles)
             );
         } else {
             return Collections.emptySet();
@@ -57,12 +57,12 @@ public class AuthAutoConfiguration implements InitializingBean {
     }
 
     private ResourceDto initResource(String name, String matcher, String description, Set<RoleDto> roles) {
-        ResourceDto r2 = new ResourceDto();
-        r2.setName(name);
-        r2.setMatcher(matcher);
-        r2.setDescription(description);
-        r2.setAccessAuthorities(roles);
-        return resourceService.save(r2);
+        ResourceDto resource = new ResourceDto();
+        resource.setName(name);
+        resource.setMatcher(matcher);
+        resource.setDescription(description);
+        resource.setAccessAuthorities(roles);
+        return resourceService.save(resource);
     }
 
     private Set<RoleDto> initRoles(Set<MenuDto> menus) {
