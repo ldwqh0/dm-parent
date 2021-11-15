@@ -11,6 +11,7 @@ com.dm.springboot.autoconfigure.file.FileConfiguration,\
 com.dm.springboot.autoconfigure.common.QueryDslConfiguration,\
 com.dm.springboot.autoconfigure.wx.WxConfiguration,\
 com.dm.springboot.autoconfigure.jdbc.MultiDataSourceAutoConfiguration,\
-com.dm.springboot.autoconfigure.jdbc.MultiDataSourceJpaSupportAutoConfiguration
+com.dm.springboot.autoconfigure.jdbc.MultiDataSourceJpaSupportAutoConfiguration,\
+com.dm.springboot.autoconfigure.web.DmErrorMvcAutoConfiguration
 org.springframework.context.ApplicationListener=\
 org.springframework.boot.context.ApplicationPidFileWriter
