@@ -33,7 +33,7 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
     }
 
     public void setAttributes(Map<String, Object> attributes) {
-        this.attributes = attributes;
+        this.attributes = new HashMap<>(attributes);
     }
 
     public void putAttribute(String key, Object value) {
@@ -78,6 +78,6 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
             return false;
         OAuth2UserDetailsDto other = (OAuth2UserDetailsDto) obj;
         return Objects.equals(attributes, other.attributes) && Objects.equals(clientId, other.clientId)
-            && Objects.equals(scopes, other.scopes);
+                && Objects.equals(scopes, other.scopes);
     }
 }

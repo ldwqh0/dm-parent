@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.util.Map;
 
+@JsonInclude(value = JsonInclude.Include.NON_ABSENT)
 public class OidcUserDetailsDto extends OAuth2UserDetailsDto implements OidcUser {
 
     private static final long serialVersionUID = 8549068884661769277L;
@@ -31,7 +32,7 @@ public class OidcUserDetailsDto extends OAuth2UserDetailsDto implements OidcUser
     }
 
     @Override
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_ABSENT)
     public OidcUserInfo getUserInfo() {
         return this.userinfo;
     }

@@ -21,7 +21,7 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
 
     private final FileStorageService storageService;
 
-    private static final String[] imgExt = {"jpg", "png", "bmp", "jpeg"};
+    private static final String[] imgExt = {"jpg", "png", "bmp", "jpeg", "jfif"};
     private final int[][] levelScales = {{128, 128}, {256, 256}, {512, 512}, {1080, 1920}};
 
     public DefaultThumbnailServiceImpl(FileStorageService storageService) {
