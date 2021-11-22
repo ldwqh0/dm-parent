@@ -3,4 +3,5 @@ plugins {
 }
 dependencies {
     api(project(":dm-file-core"))
+    api(project(":dm-autoconfigure"))
 }

@@ -7,6 +7,8 @@ include("dm-file-spring-boot-starter")
 project(":dm-file-spring-boot-starter").projectDir = file("dm-file/dm-file-spring-boot-starter")
 include("dm-autoconfigure")
 include("dm-authority-common")
+
+
 include("dm-security-core")
 project(":dm-security-core").projectDir = file("dm-security/dm-security-core")
 include("dm-security-web")
@@ -23,13 +25,17 @@ project(":dm-security-oauth2-resource").projectDir = file("dm-security/dm-securi
 include("dm-security-oauth2-client")
 project(":dm-security-oauth2-client").projectDir = file("dm-security/dm-security-oauth2-client")
 
+include("dm-security-spring-boot-starter")
+project(":dm-security-spring-boot-starter").projectDir = file("dm-security/dm-security-spring-boot-starter")
+
 include("dm-oauth2-resource-server-spring-boot-starter")
-project(":dm-oauth2-resource-server-spring-boot-starter").projectDir = file("dm-security/dm-oauth2-resource-server-spring-boot-starter")
+project(":dm-oauth2-resource-server-spring-boot-starter").projectDir =
+    file("dm-security/dm-oauth2-resource-server-spring-boot-starter")
+
 include("dm-oauth2-client-spring-boot-starter")
 project(":dm-oauth2-client-spring-boot-starter").projectDir = file("dm-security/dm-oauth2-client-spring-boot-starter")
 
 project(":dm-multi-datasource").projectDir = file("dm-jdbc/dm-multi-datasource")
-
 
 include("dm-multi-datasource-jpa-support")
 project(":dm-multi-datasource-jpa-support").projectDir = file("dm-jdbc/dm-multi-datasource-jpa-support")

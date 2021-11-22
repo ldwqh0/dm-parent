@@ -2,10 +2,10 @@ plugins {
     id("com.dm.java-conventions")
 }
 dependencies {
-    implementation("com.nimbusds:oauth2-oidc-sdk")
-    implementation(project(":dm-common"))
-    implementation(project(":dm-autoconfigure"))
-    implementation(project(":dm-security-core"))
-    implementation(project(":dm-security-web"))
-    implementation(project(":dm-security-oauth2-resource"))
+    api("com.nimbusds:oauth2-oidc-sdk")
+    api(project(":dm-common"))
+    api(project(":dm-autoconfigure"))
+    api(project(":dm-security-core"))
+    api(project(":dm-security-web"))
+    api(project(":dm-security-oauth2-resource"))
 }
