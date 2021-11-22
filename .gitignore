@@ -26,3 +26,6 @@ rebel.xml
 .sts4-cache
 application.pid
 /web-app/dist
+
+build
+.gradle
