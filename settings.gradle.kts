@@ -41,7 +41,3 @@ include("dm-multi-datasource-jpa-support")
 project(":dm-multi-datasource-jpa-support").projectDir = file("dm-jdbc/dm-multi-datasource-jpa-support")
 include("dm-region")
 include("dm-uap-common")
-
-//include("oidc-server-configuration")
-
-//include("oidc-server-spring-boot-starter")

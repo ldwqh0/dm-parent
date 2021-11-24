@@ -1,20 +1,37 @@
+group = "com.dm"
+version = V.V.project
+
 repositories {
     mavenLocal()
     mavenCentral()
 }
-group = "com.dm"
-version = V.V.project
 
 plugins {
     `java-library`
     `maven-publish`
+    `eclipse`
     id("io.spring.dependency-management")
-
 }
 
+eclipse {
+    sourceSets {
+        main {
+            java {
+                srcDir("build/generated/sources/annotationProcessor/java/main")
+            }
+        }
+    }
 
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
+    classpath {
+	    println("before")	   
+	    println(plusConfigurations)
+        plusConfigurations.plus(configurations.compileOnly)
+        //plusConfigurations.plus(configurations.providedCompile)
+         println("after")
+      	println(plusConfigurations)
+    }
+}
+
 
 dependencyManagement {
     imports {
@@ -31,7 +48,11 @@ dependencyManagement {
     }
 }
 
+
+
 java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
     withSourcesJar()
 }
 
