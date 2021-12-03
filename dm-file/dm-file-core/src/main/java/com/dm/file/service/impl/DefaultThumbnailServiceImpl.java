@@ -45,7 +45,7 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
 
     @Override
     public void createThumbnail(String filename) throws IOException {
-        String ext = FilenameUtils.getExtension(filename);
+        String ext = FilenameUtils.getExtension(filename).toLowerCase();
         if (ArrayUtils.contains(imgExt, ext)) {
             try (InputStream iStream = storageService.getResource(filename).getInputStream()) {
                 Image image = ImageIO.read(iStream);
