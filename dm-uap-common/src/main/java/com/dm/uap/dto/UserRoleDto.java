@@ -6,9 +6,9 @@ import java.util.Objects;
 public class UserRoleDto implements Serializable {
     private static final long serialVersionUID = 899681831260794295L;
 
+    public static final UserRoleDto ROLE_ADMIN = new UserRoleDto(3L, "内置分组", "ROLE_ADMIN");
     public static final UserRoleDto ROLE_AUTHENTICATED = new UserRoleDto(1L, "内置分组", "ROLE_AUTHENTICATED");
     public static final UserRoleDto ROLE_ANONYMOUS = new UserRoleDto(2L, "内置分组", "ROLE_ANONYMOUS");
-    public static final UserRoleDto ROLE_ADMIN = new UserRoleDto(3L, "内置分组", "ROLE_ADMIN");
     /**
      * 角色id
      */

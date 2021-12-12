@@ -23,12 +23,12 @@ eclipse {
     }
 
     classpath {
-	    println("before")	   
-	    println(plusConfigurations)
+        println("before")
+        println(plusConfigurations)
         plusConfigurations.plus(configurations.compileOnly)
         //plusConfigurations.plus(configurations.providedCompile)
-         println("after")
-      	println(plusConfigurations)
+        println("after")
+        println(plusConfigurations)
     }
 }
 
@@ -40,10 +40,10 @@ dependencyManagement {
     }
     dependencies {
         dependencies {
-            dependency("commons-io:commons-io:2.11.0")
+            dependency("commons-io:commons-io:${V.V.commons_io}")
             dependency("com.querydsl:querydsl-jpa:${V.V.queryDsl}")
-            dependency("org.jsoup:jsoup:1.14.3")
-            dependency("com.github.binarywang:weixin-java-mp:4.1.0")
+            dependency("org.jsoup:jsoup:${V.V.jsoup}")
+            dependency("com.github.binarywang:weixin-java-mp:${V.V.weixin_java_mp}")
         }
     }
 }

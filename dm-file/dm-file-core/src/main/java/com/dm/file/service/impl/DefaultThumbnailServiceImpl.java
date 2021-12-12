@@ -2,8 +2,6 @@ package com.dm.file.service.impl;
 
 import com.dm.file.service.FileStorageService;
 import com.dm.file.service.ThumbnailService;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -14,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 
 public class DefaultThumbnailServiceImpl implements ThumbnailService {
@@ -21,7 +20,6 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
 
     private final FileStorageService storageService;
 
-    private static final String[] imgExt = {"jpg", "png", "bmp", "jpeg", "jfif"};
     private final int[][] levelScales = {{128, 128}, {256, 256}, {512, 512}, {1080, 1920}};
 
     public DefaultThumbnailServiceImpl(FileStorageService storageService) {
@@ -45,16 +43,18 @@ public class DefaultThumbnailServiceImpl implements ThumbnailService {
 
     @Override
     public void createThumbnail(String filename) throws IOException {
-        String ext = FilenameUtils.getExtension(filename);
-        if (ArrayUtils.contains(imgExt, ext)) {
-            try (InputStream iStream = storageService.getResource(filename).getInputStream()) {
-                Image image = ImageIO.read(iStream);
+        try (InputStream iStream = storageService.getResource(filename).getInputStream()) {
+            Image image = ImageIO.read(iStream);
+            if (Objects.isNull(image)) {
+                log.debug("不支持的文件内容，创建文件缩略图失败{}", filename);
+            } else {
+                log.debug("为文件{}创建缩略图", filename);
                 for (int i = 0; i < levelScales.length; i++) {
                     createThumbnail(image, filename, i);
                 }
-            } catch (IOException e) {
-                log.error("创建文件缩略图时出错", e);
             }
+        } catch (IOException e) {
+            log.error("创建文件缩略图时出错", e);
         }
     }
 
