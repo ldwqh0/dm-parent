@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.Servlet;
+import java.util.Objects;
 
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnClass({Servlet.class, DispatcherServlet.class})
@@ -23,11 +24,15 @@ public class DmErrorMvcAutoConfiguration {
         return new DefaultErrorAttributes() {
             @Override
             protected String getMessage(WebRequest webRequest, Throwable error) {
-                String message = error.getMessage();
-                if (StringUtils.isEmpty(message)) {
+                if (Objects.isNull(error)) {
                     return super.getMessage(webRequest, error);
                 } else {
-                    return message;
+                    String message = error.getMessage();
+                    if (StringUtils.isEmpty(message)) {
+                        return super.getMessage(webRequest, error);
+                    } else {
+                        return message;
+                    }
                 }
             }
         };
