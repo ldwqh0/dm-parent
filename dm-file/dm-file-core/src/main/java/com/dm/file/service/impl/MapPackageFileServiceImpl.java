@@ -16,8 +16,7 @@ public class MapPackageFileServiceImpl implements PackageFileService {
     @Override
     @Transactional
     public PackageFileDto save(PackageFileDto request) {
-        String id = UUID.randomUUID().toString();
-        request.setId(id);
+        String id = request.getId();
         requests.put(id, request);
         return request;
     }

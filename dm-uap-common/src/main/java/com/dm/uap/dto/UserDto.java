@@ -1,5 +1,6 @@
 package com.dm.uap.dto;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
 import com.dm.uap.entity.Address;
@@ -7,6 +8,7 @@ import com.dm.uap.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -15,13 +17,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @JsonInclude(value = Include.NON_ABSENT)
 @JsonIgnoreProperties(allowSetters = true, value = {"password"})
 public class UserDto implements Serializable, IdentifiableDto<Long> {
+
 
     public interface Default {
     }
@@ -45,326 +46,325 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
      * 用户Id
      */
     @NotNull(groups = ReferenceBy.class)
-    private Long id;
+    private final Long id;
 
     /**
      * 工号
      */
     @Size(max = 50, groups = {Default.class})
-    private String no;
+    private final String no;
 
-    private String givenName;
+    private final String givenName;
 
-    private String familyName;
+    private final String familyName;
 
-    private String middleName;
+    private final String middleName;
 
-    private String profile;
+    private final String profile;
 
-    private String website;
+    private final String website;
 
-    private User.Gender gender;
+    private final User.Gender gender;
 
     /**
      * 用户名
      */
     @NotNull(groups = {New.class, Update.class})
     @Size(max = 50, groups = {Default.class})
-    private String username;
+    private final String username;
 
     /**
      * 用户全称
      */
     @NotNull(groups = {New.class, Update.class})
     @Size(max = 200, groups = {Default.class})
-    private String fullName;
+    private final String fullName;
 
     /**
      * 密码
      */
     @NotNull(groups = {New.class})
     @Size(min = 6, max = 100, groups = {Default.class})
-    private String password;
+    private final String password;
 
     /**
      * 用户是否被启用
      */
     @NotNull(groups = {New.class, Update.class})
-    private Boolean enabled = Boolean.FALSE;
+    private final Boolean enabled = Boolean.FALSE;
 
     /**
      * 用户email
      */
     @Email(groups = {Default.class})
     @Size(max = 100, groups = {Default.class})
-    private String email;
+    private final String email;
 
-    private boolean emailVerified = false;
+    private final boolean emailVerified;
 
     /**
      * 用户手机号
      */
     @Mobile(groups = {Default.class})
     @Size(max = 20, groups = {Default.class})
-    private String mobile;
+    private final String mobile;
 
-    private boolean phoneNumberVerified = false;
+    private final boolean phoneNumberVerified;
 
     /**
      * 用户描述信息
      */
     @Size(max = 2000, groups = {Default.class})
-    private String description;
+    private final String description;
 
     /**
      * 用户角色
      */
     @Valid
     @NotEmpty(groups = {New.class, Update.class})
-    private Set<UserRoleDto> roles;
+    private final Set<UserRoleDto> roles = new HashSet<>();
 
     /**
      * 景区名称
      */
     @Size(max = 200, groups = {Default.class})
-    private String scenicName;
+    private final String scenicName;
 
     /**
      * 区划代码
      */
     @Size(max = 20, groups = {Default.class})
-    private String regionCode;
+    private final String regionCode;
 
     /**
      * 用户的职务信息
      */
     @Valid
-    private List<UserPostDto> posts;
+    private final List<UserPostDto> posts = new ArrayList<>();
 
     /**
      * 出生日期
      */
-    private LocalDate birthDate;
+    private final LocalDate birthDate;
 
     /**
      * 用户头像
      */
-    private String profilePhoto;
+    private final String profilePhoto;
 
-    private String zoneinfo;
+    private final String zoneinfo;
 
-    private String local;
+    private final String local;
 
-    private Address address;
+    private final Address address;
+
+
+    public UserDto(@JsonProperty("id") Long id,
+                   @JsonProperty("no") String no,
+                   @JsonProperty("givenName") String givenName,
+                   @JsonProperty("familyName") String familyName,
+                   @JsonProperty("middleName") String middleName,
+                   @JsonProperty("profile") String profile,
+                   @JsonProperty("website") String website,
+                   @JsonProperty("gender") User.Gender gender,
+                   @JsonProperty("username") String username,
+                   @JsonProperty("fullName") String fullName,
+                   @JsonProperty("password") String password,
+                   @JsonProperty("email") String email,
+                   @JsonProperty("emailVerified") Boolean emailVerified,
+                   @JsonProperty("mobile") String mobile,
+                   @JsonProperty("phoneNumberVerified") Boolean phoneNumberVerified,
+                   @JsonProperty("description") String description,
+                   @JsonProperty("roles") Set<UserRoleDto> roles,
+                   @JsonProperty("scenicName") String scenicName,
+                   @JsonProperty("regionCode") String regionCode,
+                   @JsonProperty("posts") List<UserPostDto> posts,
+                   @JsonProperty("birthDate") LocalDate birthDate,
+                   @JsonProperty("profilePhoto") String profilePhoto,
+                   @JsonProperty("zoneinfo") String zoneinfo,
+                   @JsonProperty("local") String local,
+                   @JsonProperty("address") Address address) {
+        Address cloneAddress;
+        this.id = id;
+        this.no = no;
+        this.givenName = givenName;
+        this.familyName = familyName;
+        this.middleName = middleName;
+        this.profile = profile;
+        this.website = website;
+        this.gender = gender;
+        this.username = username;
+        this.fullName = fullName;
+        this.password = password;
+        this.email = email;
+        this.emailVerified = Boolean.TRUE.equals(emailVerified);
+        this.mobile = mobile;
+        this.phoneNumberVerified = Boolean.TRUE.equals(phoneNumberVerified);
+        this.description = description;
+        if (CollectionUtils.isNotEmpty(roles)) {
+            this.roles.addAll(roles);
+        }
+        this.scenicName = scenicName;
+        this.regionCode = regionCode;
+        if (CollectionUtils.isNotEmpty(posts)) {
+            this.posts.addAll(posts);
+        }
+        this.birthDate = birthDate;
+        this.profilePhoto = profilePhoto;
+        this.zoneinfo = zoneinfo;
+        this.local = local;
+        if (Objects.nonNull(address)) {
+            try {
+                cloneAddress = (Address) address.clone();
+            } catch (CloneNotSupportedException e) {
+                cloneAddress = null;
+                e.printStackTrace();
+            }
+        } else {
+            cloneAddress = null;
+        }
+        this.address = cloneAddress;
+    }
+
+    public UserDto(String username, String fullName, String password, Set<UserRoleDto> roles) {
+        this(null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            username,
+            fullName,
+            password,
+            null,
+            null,
+            null,
+            null,
+            null,
+            roles,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+    }
 
     @Override
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNo() {
         return no;
-    }
-
-    public void setNo(String no) {
-        this.no = no;
     }
 
     public String getGivenName() {
         return givenName;
     }
 
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
-
     public String getFamilyName() {
         return familyName;
-    }
-
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
     }
 
     public String getMiddleName() {
         return middleName;
     }
 
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
     public String getProfile() {
         return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
     }
 
     public String getWebsite() {
         return website;
     }
 
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
     public User.Gender getGender() {
         return gender;
-    }
-
-    public void setGender(User.Gender gender) {
-        this.gender = gender;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getFullName() {
         return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Boolean getEnabled() {
         return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public boolean isEmailVerified() {
         return emailVerified;
-    }
-
-    public void setEmailVerified(boolean emailVerified) {
-        this.emailVerified = emailVerified;
     }
 
     public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
     public boolean isPhoneNumberVerified() {
         return phoneNumberVerified;
-    }
-
-    public void setPhoneNumberVerified(boolean phoneNumberVerified) {
-        this.phoneNumberVerified = phoneNumberVerified;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Set<UserRoleDto> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<UserRoleDto> roles) {
-        this.roles = roles;
+        return Collections.unmodifiableSet(roles);
     }
 
     public String getScenicName() {
         return scenicName;
     }
 
-    public void setScenicName(String scenicName) {
-        this.scenicName = scenicName;
-    }
-
     public String getRegionCode() {
         return regionCode;
     }
 
-    public void setRegionCode(String regionCode) {
-        this.regionCode = regionCode;
-    }
-
     public List<UserPostDto> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<UserPostDto> posts) {
-        this.posts = posts;
+        return Collections.unmodifiableList(posts);
     }
 
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public String getProfilePhoto() {
         return profilePhoto;
-    }
-
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
     }
 
     public String getZoneinfo() {
         return zoneinfo;
     }
 
-    public void setZoneinfo(String zoneinfo) {
-        this.zoneinfo = zoneinfo;
-    }
-
     public String getLocal() {
         return local;
     }
 
-    public void setLocal(String local) {
-        this.local = local;
-    }
-
     public Address getAddress() {
-        return address;
+        try {
+            return (Address) address.clone();
+        } catch (CloneNotSupportedException | NullPointerException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
 
     @Override
     public boolean equals(Object o) {

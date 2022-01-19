@@ -94,7 +94,7 @@ public interface RoleService {
      * @param authorityDto 角色菜单授权信息
      * @return 更新菜单信息后的角色信息
      */
-    MenuAuthorityDto saveAuthority(Long roleId, MenuAuthorityDto authorityDto);
+    MenuAuthorityDto saveAuthority(Long roleId, Set<MenuDto> authorityDto);
 
     /**
      * 根据角色查询菜单项目

@@ -132,11 +132,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "AuthorityMenus", allEntries = true)
-    public MenuAuthorityDto saveAuthority(Long roleId, MenuAuthorityDto authorityDto) {
+    public MenuAuthorityDto saveAuthority(Long roleId, Set<MenuDto> menus) {
         Role authority;
         if (roleRepository.existsById(roleId)) {
             authority = roleRepository.getById(roleId);
-            Set<MenuDto> menus = authorityDto.getAuthorityMenus();
             Set<Menu> list = menus.stream().map(menuRepository::getByDto).collect(Collectors.toSet());
             authority.setMenus(list);
             return RoleConverter.toMenuAuthorityDto(roleRepository.save(authority));
@@ -167,7 +166,7 @@ public class RoleServiceImpl implements RoleService {
             // 如果root是空，不做过滤
             // 如果root不是空，则查找root的子孙代
             .filter(menu -> Objects.isNull(root) || (!Objects.equals(menu.getId(), root) && this.isOffspringOf(menu, root))) // 只需要是
-            .map(MenuConverter::toDto)
+            .map(it -> MenuConverter.toDto(it, null))
             .collect(Collectors.toSet());
     }
 

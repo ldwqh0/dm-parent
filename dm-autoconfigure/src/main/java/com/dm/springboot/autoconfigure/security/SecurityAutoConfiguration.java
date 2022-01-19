@@ -116,7 +116,7 @@ public class SecurityAutoConfiguration {
 
         private final ObjectMapper objectMapper;
 
-        SecurityConfiguration(ObjectMapper objectMapper) {
+        public SecurityConfiguration(ObjectMapper objectMapper) {
             this.objectMapper = objectMapper;
         }
 
@@ -124,9 +124,8 @@ public class SecurityAutoConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests().anyRequest().authenticated().and().formLogin();
             // 设置匿名用户的默认分组
-            UserDetailsDto ud = new UserDetailsDto();
             List<GrantedAuthority> authorities = Collections.singletonList(GrantedAuthorityDto.ROLE_ANONYMOUS);
-            ud.setGrantedAuthority(authorities);
+            UserDetailsDto ud = new UserDetailsDto("anonymousUser", authorities);
             http.anonymous().authorities(authorities).principal(ud);
             http.formLogin().successHandler(new LoginSuccessHandler(objectMapper)).failureHandler(new LoginFailureHandler(objectMapper));
             MediaTypeRequestMatcher mediaTypeRequestMatcher = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);

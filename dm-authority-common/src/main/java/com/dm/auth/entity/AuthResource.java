@@ -1,10 +1,12 @@
 package com.dm.auth.entity;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.common.entity.AbstractEntity;
 import com.dm.security.authentication.UriResource.MatchType;
 import org.springframework.http.HttpMethod;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -29,11 +31,9 @@ public class AuthResource extends AbstractEntity {
     private String name;
 
     @ElementCollection
-    @CollectionTable(name = "dm_resource_method_", joinColumns = {
-        @JoinColumn(name = "resource_id_")
-    }, foreignKey = @ForeignKey(name = "FK_dm_resource_method_dm_resource_id_"))
+    @CollectionTable(name = "dm_resource_method_", joinColumns = {@JoinColumn(name = "resource_id_")}, foreignKey = @ForeignKey(name = "FK_dm_resource_method_dm_resource_id_"))
     @Enumerated(EnumType.STRING)
-    private Set<HttpMethod> methods = new HashSet<>();
+    private final Set<HttpMethod> methods = new HashSet<>();
 
     /**
      * 资源匹配路径
@@ -53,16 +53,14 @@ public class AuthResource extends AbstractEntity {
      */
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "scope_")
-    @CollectionTable(name = "dm_resource_scope_", joinColumns = {
-        @JoinColumn(name = "resource_id_")
-    }, indexes = {
-        @Index(name = "IDX_dm_resource_scope_resource_", columnList = "resource_id_")
-    }, foreignKey = @ForeignKey(name = "FK_dm_resource_scope_dm_resource_id_"))
-    private Set<String> scope = new HashSet<>();
+    @CollectionTable(name = "dm_resource_scope_", joinColumns = {@JoinColumn(name = "resource_id_")}, indexes = {@Index(name = "IDX_dm_resource_scope_resource_", columnList = "resource_id_")}, foreignKey = @ForeignKey(name = "FK_dm_resource_scope_dm_resource_id_"))
+    private final Set<String> scope = new HashSet<>();
 
     public void setScope(Set<String> scope) {
         this.scope.clear();
-        this.scope.addAll(scope);
+        if (CollectionUtils.isNotEmpty(scope)) {
+            this.scope.addAll(scope);
+        }
     }
 
     /**
@@ -77,36 +75,28 @@ public class AuthResource extends AbstractEntity {
      */
 
     @ManyToMany
-    @JoinTable(name = "dm_resource_access_authority_", joinColumns = {
-        @JoinColumn(name = "resource_id_")
-    }, inverseJoinColumns = {
-        @JoinColumn(name = "role_id_")
-    }, foreignKey = @ForeignKey(name = "dm_resource_access_authority_dm_resource_id_"),
-        inverseForeignKey = @ForeignKey(name = "dm_resource_access_authority_dm_role_id_"))
-    private Set<Role> accessAuthorities = new HashSet<>();
+    @JoinTable(name = "dm_resource_access_authority_", joinColumns = {@JoinColumn(name = "resource_id_")}, inverseJoinColumns = {@JoinColumn(name = "role_id_")}, foreignKey = @ForeignKey(name = "dm_resource_access_authority_dm_resource_id_"), inverseForeignKey = @ForeignKey(name = "dm_resource_access_authority_dm_role_id_"))
+    private final Set<Role> accessAuthorities = new HashSet<>();
 
     public void setAccessAuthorities(Set<Role> accessAuthorities) {
         this.accessAuthorities.clear();
-        this.accessAuthorities.addAll(accessAuthorities);
+        if (CollectionUtils.isNotEmpty(accessAuthorities)) {
+            this.accessAuthorities.addAll(accessAuthorities);
+        }
     }
 
     /**
      * 拒绝访问角色信息
-     *
-     * @return
      */
     @ManyToMany
-    @JoinTable(name = "dm_resource_deny_authority_", joinColumns = {
-        @JoinColumn(name = "resource_id_")
-    }, inverseJoinColumns = {
-        @JoinColumn(name = "role_id_")
-    }, foreignKey = @ForeignKey(name = "dm_resource_deny_authority_dm_resource_id_"),
-        inverseForeignKey = @ForeignKey(name = "dm_resource_deny_authority_role_id_"))
-    private Set<Role> denyAuthorities = new HashSet<>();
+    @JoinTable(name = "dm_resource_deny_authority_", joinColumns = {@JoinColumn(name = "resource_id_")}, inverseJoinColumns = {@JoinColumn(name = "role_id_")}, foreignKey = @ForeignKey(name = "dm_resource_deny_authority_dm_resource_id_"), inverseForeignKey = @ForeignKey(name = "dm_resource_deny_authority_role_id_"))
+    private final Set<Role> denyAuthorities = new HashSet<>();
 
     public void setDenyAuthorities(Set<Role> denyAuthorities) {
         this.denyAuthorities.clear();
-        this.denyAuthorities.addAll(denyAuthorities);
+        if (CollectionUtils.isNotEmpty(denyAuthorities)) {
+            this.denyAuthorities.addAll(denyAuthorities);
+        }
     }
 
     public AuthResource() {
@@ -114,13 +104,13 @@ public class AuthResource extends AbstractEntity {
 
     public AuthResource(String name, Set<HttpMethod> methods, String matcher, MatchType matchType, Set<String> scope, String description, Set<Role> accessAuthorities, Set<Role> denyAuthorities) {
         this.name = name;
-        this.methods = methods;
+        setMethods(methods);
         this.matcher = matcher;
         this.matchType = matchType;
-        this.scope = scope;
+        setScope(scope);
         this.description = description;
-        this.accessAuthorities = accessAuthorities;
-        this.denyAuthorities = denyAuthorities;
+        setAccessAuthorities(accessAuthorities);
+        setDenyAuthorities(denyAuthorities);
     }
 
     public String getName() {
@@ -132,7 +122,7 @@ public class AuthResource extends AbstractEntity {
     }
 
     public Set<HttpMethod> getMethods() {
-        return methods;
+        return Collections.unmodifiableSet(methods);
     }
 
     public void setMethods(Set<HttpMethod> methods) {
@@ -169,11 +159,11 @@ public class AuthResource extends AbstractEntity {
     }
 
     public Set<Role> getAccessAuthorities() {
-        return accessAuthorities;
+        return Collections.unmodifiableSet(accessAuthorities);
     }
 
     public Set<Role> getDenyAuthorities() {
-        return denyAuthorities;
+        return Collections.unmodifiableSet(denyAuthorities);
     }
 
     @Override

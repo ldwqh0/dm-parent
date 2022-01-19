@@ -21,13 +21,24 @@ public final class MenuConverter {
             model.getOrder(),
             null,
             model.getOpenInNewWindow(),
-            0
+            null
         );
     }
 
-    public static MenuDto toDto(Menu model) {
-        MenuDto result = toSimpleDto(model);
-        model.getParent().map(MenuConverter::toSimpleDto).ifPresent(result::setParent);
-        return result;
+    public static MenuDto toDto(Menu model, Long childrenCount) {
+        return new MenuDto(
+            model.getId(),
+            model.getName(),
+            model.getTitle(),
+            model.isEnabled(),
+            model.getUrl(),
+            model.getIcon(),
+            model.getDescription(),
+            model.getType(),
+            model.getOrder(),
+            model.getParent().map(MenuConverter::toSimpleDto).orElse(null),
+            model.getOpenInNewWindow(),
+            childrenCount
+        );
     }
 }

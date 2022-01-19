@@ -39,23 +39,11 @@ public class UapAutoConfiguration implements InitializingBean {
 
         // 建立初始管理员账号
         if (!userService.exist()) {
-            UserDto user = new UserDto();
-            user.setUsername(username);
-            user.setFullName(fullName);
-            user.setPassword(password);
-            user.setEnabled(true);
-            user.setRoles(Collections.singleton(UserRoleDto.ROLE_ADMIN));
-            userService.save(user);
+            userService.save(new UserDto(username, fullName, password, Collections.singleton(UserRoleDto.ROLE_ADMIN)));
         }
         // 建立默认匿名账号
         if (!userService.userExistsByUsername("ANONYMOUS")) {
-            UserDto anonymous = new UserDto();
-            anonymous.setUsername("ANONYMOUS");
-            anonymous.setPassword("ANONYMOUS");
-            anonymous.setEnabled(true);
-            anonymous.setFullName("匿名用户");
-            anonymous.setRoles(Collections.singleton(UserRoleDto.ROLE_ANONYMOUS));
-            userService.save(anonymous);
+            userService.save(new UserDto("ANONYMOUS", "匿名用户", "ANONYMOUS", Collections.singleton(UserRoleDto.ROLE_ANONYMOUS)));
         }
     }
 

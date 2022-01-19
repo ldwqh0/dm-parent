@@ -37,7 +37,7 @@ public interface IdentifiableDtoRepository<T, ID extends Serializable> extends J
 
     default boolean existsAllById(@NotNull Collection<ID> ids) {
         if (CollectionUtils.isEmpty(ids)) {
-            // TODO默认返回值待商榷
+            // TODO 默认返回值待商榷
             return true;
         } else {
             return ids.stream().allMatch(this::existsById);

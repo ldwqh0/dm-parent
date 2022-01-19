@@ -1,16 +1,14 @@
 package com.dm.auth.dto;
 
 import com.dm.auth.entity.Menu.MenuType;
+import com.dm.collections.CollectionUtils;
 import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 菜单结构
@@ -23,58 +21,59 @@ public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
     /**
      * 菜单id
      */
-    private Long id;
+    private final Long id;
     /**
      * 菜单名称
      */
-    private String name;
+    private final String name;
     /**
      * 菜单标题
      */
-    private String title;
+    private final String title;
     /**
      * 菜单是否可用
      */
-    private Boolean enabled = Boolean.TRUE;
+    private final Boolean enabled;
     /**
      * 菜单地址
      */
-    private String url;
+    private final String url;
     /**
      * 菜单图标
      */
-    private String icon;
+    private final String icon;
     /**
      * 菜单描述信息
      */
-    private String description;
+    private final String description;
     /**
      * 菜单类型
      */
-    private MenuType type = MenuType.COMPONENT;
+    private final MenuType type;
 
     /**
      * 排序
      */
     @JsonIgnore
-    private Long order;
+    private final Long order;
 
     /**
      * 是否在新窗口中打开菜单
      */
-    private Boolean openInNewWindow = Boolean.FALSE;
+    private final Boolean openInNewWindow;
 
     @JsonIgnore
-    private Long parentId;
+    private final Long parentId;
 
     /**
      * 下级菜单列表
      */
-    private List<MenuTreeDto> children = new ArrayList<>();
+    private final List<MenuTreeDto> children = new ArrayList<>();
 
     public List<MenuTreeDto> getChildren() {
-        children.sort((v1, v2) -> (int) (Optional.of(v1).map(MenuTreeDto::getOrder).orElse(0L) - Optional.of(v2).map(MenuTreeDto::getOrder).orElse(0L)));
-        return children;
+        List<MenuTreeDto> result = new ArrayList<>(this.children);
+        result.sort((v1, v2) -> (int) (Optional.of(v1).map(MenuTreeDto::getOrder).orElse(0L) - Optional.of(v2).map(MenuTreeDto::getOrder).orElse(0L)));
+        return Collections.unmodifiableList(result);
     }
 
     public void addChild(MenuTreeDto item) {
@@ -85,10 +84,19 @@ public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
         return children.remove(item);
     }
 
-    public MenuTreeDto() {
-    }
 
-    public MenuTreeDto(Long id, String name, String title, Boolean enabled, String url, String icon, String description, MenuType type, Long order, Boolean openInNewWindow, Long parentId, List<MenuTreeDto> children) {
+    public MenuTreeDto(Long id,
+                       String name,
+                       String title,
+                       Boolean enabled,
+                       String url,
+                       String icon,
+                       String description,
+                       MenuType type,
+                       Long order,
+                       Boolean openInNewWindow,
+                       Long parentId,
+                       List<MenuTreeDto> children) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -100,7 +108,9 @@ public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
         this.order = order;
         this.openInNewWindow = openInNewWindow;
         this.parentId = parentId;
-        this.children = children;
+        if (CollectionUtils.isNotEmpty(children)) {
+            this.children.addAll(children);
+        }
     }
 
     @Override
@@ -108,92 +118,44 @@ public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Boolean getEnabled() {
         return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getIcon() {
         return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public MenuType getType() {
         return type;
-    }
-
-    public void setType(MenuType type) {
-        this.type = type;
     }
 
     public Long getOrder() {
         return order;
     }
 
-    public void setOrder(Long order) {
-        this.order = order;
-    }
-
     public Boolean getOpenInNewWindow() {
         return openInNewWindow;
     }
 
-    public void setOpenInNewWindow(Boolean openInNewWindow) {
-        this.openInNewWindow = openInNewWindow;
-    }
-
     public Long getParentId() {
         return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public void setChildren(List<MenuTreeDto> children) {
-        this.children = children;
     }
 
     @Override

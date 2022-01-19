@@ -10,6 +10,7 @@ import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.MenuService;
 import com.dm.collections.CollectionUtils;
 import com.dm.collections.Lists;
+import com.dm.common.dto.OrderDto;
 import com.dm.common.exception.DataValidateException;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -61,7 +62,7 @@ public class MenuServiceImpl implements MenuService {
         if (Objects.isNull(menu.getOrder())) {
             menuResult.setOrder(menu.getId());
         }
-        return MenuConverter.toDto(menuResult);
+        return MenuConverter.toDto(menuResult, menuRepository.childrenCount(menuResult));
     }
 
     @Override
@@ -95,13 +96,13 @@ public class MenuServiceImpl implements MenuService {
             .map(menuRepository::getById)
             .ifPresent(menu::setParent);
         menuRepository.save(menu);
-        return MenuConverter.toDto(menu);
+        return toDto(menu);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<MenuDto> findById(long id) {
-        return menuRepository.findById(id).map(MenuConverter::toDto);
+        return menuRepository.findById(id).map(this::toDto);
     }
 
     @Override
@@ -141,11 +142,7 @@ public class MenuServiceImpl implements MenuService {
                 .or(qMenu.description.containsIgnoreCase(key)));
         }
         return menuRepository.findAll(builder, pageable)
-            .map(menu -> {
-                MenuDto dto = MenuConverter.toDto(menu);
-                dto.setChildrenCount(menuRepository.childrenCount(menu));
-                return dto;
-            });
+            .map(this::toDto);
     }
 
     @Override
@@ -156,32 +153,21 @@ public class MenuServiceImpl implements MenuService {
         if (Objects.nonNull(source.getEnabled())) {
             menu.setEnabled(source.getEnabled());
         }
-        return MenuConverter.toDto(menu);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
-    public Menu moveUp(long id) {
-        return move(id, "up");
+        return toDto(menu);
     }
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
-    public Menu moveDown(long id) {
-        return move(id, "down");
-    }
-
-    private Menu move(long id, String pos) {
+    public MenuDto move(long id, OrderDto.Position pos) {
         Menu one = menuRepository.getById(id);
         Long order = one.getOrder();
         BooleanExpression expression = one.getParent()
             .map(qMenu.parent::eq)
             .orElseGet(qMenu.parent::isNull);
         Sort sort;
-        if ("down".equalsIgnoreCase(pos)) {
+        if (OrderDto.Position.DOWN.equals(pos)) {
             expression = expression.and(qMenu.order.gt(order));
             sort = Sort.by(Direction.ASC, "order");
         } else {
@@ -194,7 +180,7 @@ public class MenuServiceImpl implements MenuService {
             one.setOrder(that.getOrder());
             that.setOrder(order);
         }
-        return one;
+        return this.toDto(one);
     }
 
     /**
@@ -224,7 +210,7 @@ public class MenuServiceImpl implements MenuService {
     @Cacheable(cacheNames = "AuthorityMenus", key = "'type_'.concat(#p0)", sync = true)
     @Override
     public List<MenuDto> listAllByType(Menu.MenuType type) {
-        return Lists.transform(menuRepository.findByType(type), MenuConverter::toDto);
+        return Lists.transform(menuRepository.findByType(type), this::toDto);
     }
 
     @Override
@@ -246,7 +232,7 @@ public class MenuServiceImpl implements MenuService {
                     return true;
                 }
             })
-            .map(MenuConverter::toDto)
+            .map(this::toDto)
             .collect(Collectors.toList());
     }
 
@@ -286,6 +272,9 @@ public class MenuServiceImpl implements MenuService {
         children.forEach(child -> listChildren(container, child.getId(), sort));
     }
 
+    private MenuDto toDto(Menu menu) {
+        return MenuConverter.toDto(menu, menuRepository.childrenCount(menu));
+    }
 
     private Menu copyProperties(Menu model, MenuDto dto) {
         model.setName(dto.getName());

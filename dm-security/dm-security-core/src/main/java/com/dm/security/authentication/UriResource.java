@@ -67,14 +67,10 @@ public interface UriResource extends Serializable {
 class UriResourceImpl implements UriResource {
 
     private static final long serialVersionUID = 9029779605843604190L;
-    private String uri = "/**";
-    private MatchType type;
-    private HttpMethod method;
-    private Set<String> scopes;
-
-    public UriResourceImpl() {
-        super();
-    }
+    private final String uri;
+    private final MatchType type;
+    private final HttpMethod method;
+    private final Set<String> scopes;
 
     public UriResourceImpl(HttpMethod method, String path, MatchType type, Set<String> scopes) {
         super();
@@ -103,6 +99,4 @@ class UriResourceImpl implements UriResource {
     public MatchType getMatchType() {
         return type;
     }
-
-
 }

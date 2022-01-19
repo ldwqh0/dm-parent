@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,66 +23,119 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
     /**
      * 菜单id
      */
-    private Long id;
+    private final Long id;
     /**
      * 菜单名称
      */
-    private String name;
+    private final String name;
     /**
      * 菜单标题
      */
-    private String title;
+    private final String title;
     /**
      * 菜单是否可用
      */
-    private Boolean enabled = Boolean.TRUE;
+    private final Boolean enabled;
     /**
      * 菜单地址
      */
-    private String url;
+    private final String url;
     /**
      * 菜单图标
      */
-    private String icon;
+    private final String icon;
     /**
      * 菜单描述信息
      */
-    private String description;
+    private final String description;
     /**
      * 菜单类型
      */
-    private MenuType type = MenuType.COMPONENT;
+    private final MenuType type;
 
-    private Long order;
+    private final Long order;
     /**
      * 父菜单
      */
     @JsonIgnoreProperties(value = {"parent", "url", "description", "openInNewWindow"})
-    private MenuDto parent;
+    private final MenuDto parent;
 
     /**
      * 是否在新窗口中打开菜单
      */
-    private Boolean openInNewWindow = Boolean.FALSE;
+    private final Boolean openInNewWindow;
 
-    private long childrenCount = 0;
+    /**
+     * 子菜单数量
+     */
+    private final Long childrenCount;
 
-    public MenuDto() {
-    }
-
-    public MenuDto(Long id, String name, String title, Boolean enabled, String url, String icon, String description, MenuType type, Long order, MenuDto parent, Boolean openInNewWindow, long childrenCount) {
+    /**
+     * @param id              id
+     * @param name            菜单名称
+     * @param title           菜单标题
+     * @param enabled         菜单是否启用
+     * @param url             菜单url
+     * @param icon            菜单图标
+     * @param description     菜单描述
+     * @param type            菜单类型
+     * @param order           菜单排序
+     * @param parent          父级菜单
+     * @param openInNewWindow 是否在新窗口中打开菜单
+     * @param childrenCount   字菜单个数
+     */
+    public MenuDto(
+        @JsonProperty("id") Long id,
+        @JsonProperty("name") String name,
+        @JsonProperty("title") String title,
+        @JsonProperty("enabled") Boolean enabled,
+        @JsonProperty("url") String url,
+        @JsonProperty("icon") String icon,
+        @JsonProperty("description") String description,
+        @JsonProperty("type") MenuType type,
+        @JsonProperty("order") Long order,
+        @JsonProperty("parent") MenuDto parent,
+        @JsonProperty("openInNewWindow") Boolean openInNewWindow,
+        @JsonProperty("childrenCount") Long childrenCount) {
         this.id = id;
         this.name = name;
         this.title = title;
-        this.enabled = enabled;
+        if (Objects.isNull(enabled)) {
+            this.enabled = Boolean.TRUE;
+        } else {
+            this.enabled = enabled;
+        }
         this.url = url;
         this.icon = icon;
         this.description = description;
-        this.type = type;
+        if (Objects.isNull(type)) {
+            this.type = MenuType.COMPONENT;
+        } else {
+            this.type = type;
+        }
         this.order = order;
         this.parent = parent;
-        this.openInNewWindow = openInNewWindow;
+        if (Objects.isNull(openInNewWindow)) {
+            this.openInNewWindow = Boolean.FALSE;
+        } else {
+            this.openInNewWindow = openInNewWindow;
+        }
         this.childrenCount = childrenCount;
+    }
+
+    public MenuDto(String name, String title, String url) {
+        this(null,
+            name,
+            title,
+            Boolean.TRUE,
+            url,
+            null,
+            null,
+            MenuType.COMPONENT,
+            null,
+            null, Boolean.FALSE,
+            null
+        );
     }
 
     @Override
@@ -89,97 +143,53 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Boolean getEnabled() {
         return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getIcon() {
         return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public MenuType getType() {
         return type;
-    }
-
-    public void setType(MenuType type) {
-        this.type = type;
     }
 
     public Long getOrder() {
         return order;
     }
 
-    public void setOrder(Long order) {
-        this.order = order;
-    }
-
-    public void setParent(MenuDto parent) {
-        this.parent = parent;
-    }
-
     public Boolean getOpenInNewWindow() {
         return openInNewWindow;
     }
 
-    public void setOpenInNewWindow(Boolean openInNewWindow) {
-        this.openInNewWindow = openInNewWindow;
-    }
-
-    public long getChildrenCount() {
+    public Long getChildrenCount() {
         return childrenCount;
     }
 
-    public void setChildrenCount(long childrenCount) {
-        this.childrenCount = childrenCount;
-    }
-
     @JsonGetter
-    public boolean hasChildren() {
-        return childrenCount > 0;
+    public Boolean hasChildren() {
+        if (Objects.isNull(childrenCount)) {
+            return null;
+        } else {
+            return childrenCount > 0;
+        }
     }
 
     public Optional<MenuDto> getParent() {
@@ -191,7 +201,7 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MenuDto menuDto = (MenuDto) o;
-        return childrenCount == menuDto.childrenCount && Objects.equals(id, menuDto.id) && Objects.equals(name, menuDto.name) && Objects.equals(title, menuDto.title) && Objects.equals(enabled, menuDto.enabled) && Objects.equals(url, menuDto.url) && Objects.equals(icon, menuDto.icon) && Objects.equals(description, menuDto.description) && type == menuDto.type && Objects.equals(order, menuDto.order) && Objects.equals(parent, menuDto.parent) && Objects.equals(openInNewWindow, menuDto.openInNewWindow);
+        return Objects.equals(id, menuDto.id) && Objects.equals(name, menuDto.name) && Objects.equals(title, menuDto.title) && Objects.equals(enabled, menuDto.enabled) && Objects.equals(url, menuDto.url) && Objects.equals(icon, menuDto.icon) && Objects.equals(description, menuDto.description) && type == menuDto.type && Objects.equals(order, menuDto.order) && Objects.equals(parent, menuDto.parent) && Objects.equals(openInNewWindow, menuDto.openInNewWindow) && Objects.equals(childrenCount, menuDto.childrenCount);
     }
 
     @Override

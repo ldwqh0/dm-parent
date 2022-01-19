@@ -42,9 +42,9 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
 
     private ObjectMapper om = new ObjectMapper();
 
-    private final String verifyIdParameterName = "verifyId";
+    private static final String verifyIdParameterName = "verifyId";
 
-    private final String verifyCodeParameterName = "verifyCode";
+    private static final String verifyCodeParameterName = "verifyCode";
 
     @Autowired(required = false)
     public void setObjectMapper(ObjectMapper om) {

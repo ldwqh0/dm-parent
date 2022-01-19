@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @JsonInclude(value = Include.NON_EMPTY)
 public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
+    private static final long serialVersionUID = -4966481409754529111L;
 
     public interface New {
 
@@ -23,64 +24,54 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
 
     }
 
-    private static final long serialVersionUID = -4966481409754529111L;
 
     /**
      * 部门ID
      */
     @NotNull(groups = ReferenceBy.class)
-    private Long id;
+    private final Long id;
 
     /**
      * 完整名称
      */
     @NotNull(groups = {New.class})
-    private String fullName;
+    private final String fullName;
 
     /**
      * 短名称
      */
     @NotNull(groups = {New.class})
-    private String shortname;
+    private final String shortname;
 
     /**
      * 描述信息
      */
-    private String description;
+    private final String description;
 
     /**
      * 部门类型 ，分别是 ORGANS=机构,DEPARTMENT=部门,GROUP=分组
      */
     @NotNull(groups = {New.class})
-    private Types type;
-
-    public DepartmentDto() {
-        super();
-    }
+    private final Types type;
 
 
     /**
      * 子部门个数
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long childrenCount = 0;
+    private final Long childrenCount;
 
     /**
      * 用户数量
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long userCount = 0;
-
-    public DepartmentDto(Long id) {
-        super();
-        this.id = id;
-    }
+    private final Long userCount;
 
     /**
      * 上级部门信息
      */
     @JsonIgnoreProperties({"parent", "description", "parents"})
-    private DepartmentDto parent;
+    private final DepartmentDto parent;
 
     public Optional<DepartmentDto> getParent() {
         return Optional.ofNullable(parent);
@@ -89,7 +80,7 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     /**
      * 负责人
      */
-    private String director;
+    private final String director;
 
     public String getDirector() {
         return this.director;
@@ -98,47 +89,49 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     /**
      * logo, 部门的logo字符串表现方式，可能是文件的ID，URL路径，或者BASE64形式的字符串，具体由前端控制
      */
-    private String logo;
+    private final String logo;
+
+    public DepartmentDto(@JsonProperty("id") Long id,
+                         @JsonProperty("fullName") String fullName,
+                         @JsonProperty("shortname") String shortname,
+                         @JsonProperty("description") String description,
+                         @JsonProperty("type") Types type,
+                         @JsonProperty("parent") DepartmentDto parent,
+                         @JsonProperty("director") String director,
+                         @JsonProperty("logo") String logo,
+                         Long childrenCount,
+                         Long userCount) {
+        this.id = id;
+        this.fullName = fullName;
+        this.shortname = shortname;
+        this.description = description;
+        this.type = type;
+        this.childrenCount = childrenCount;
+        this.userCount = userCount;
+        this.parent = parent;
+        this.director = director;
+        this.logo = logo;
+    }
 
     @Override
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getFullName() {
         return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getShortname() {
         return shortname;
     }
 
-    public void setShortname(String shortname) {
-        this.shortname = shortname;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Types getType() {
         return type;
-    }
-
-    public void setType(Types type) {
-        this.type = type;
     }
 
     /**
@@ -153,32 +146,12 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
         return childrenCount;
     }
 
-    public void setChildrenCount(long childrenCount) {
-        this.childrenCount = childrenCount;
-    }
-
     public long getUserCount() {
         return userCount;
     }
 
-    public void setUserCount(long userCount) {
-        this.userCount = userCount;
-    }
-
-    public void setParent(DepartmentDto parent) {
-        this.parent = parent;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
     public String getLogo() {
         return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
     }
 
     @Override

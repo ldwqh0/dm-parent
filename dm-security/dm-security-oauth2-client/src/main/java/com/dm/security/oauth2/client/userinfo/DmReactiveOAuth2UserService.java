@@ -85,7 +85,8 @@ public class DmReactiveOAuth2UserService implements ReactiveOAuth2UserService<OA
 
             // 使用自定义的解码器解码
             return userAttributes.map(principalExtractor::extract)
-                .doOnSuccess(user -> user.putAttribute("accessToken", userRequest.getAccessToken()))
+                // TODO 待处理
+//                .doOnSuccess(user -> user.putAttribute("accessToken", userRequest.getAccessToken()))
                 .onErrorMap(error -> error instanceof IOException, throwable -> new AuthenticationServiceException("Unable to access the userInfoEndpoint " + userInfoUri, throwable))
                 .onErrorMap(error -> !(error instanceof AuthenticationServiceException), throwable -> {
                     OAuth2Error oauth2Error = new OAuth2Error(INVALID_USER_INFO_RESPONSE_ERROR_CODE,

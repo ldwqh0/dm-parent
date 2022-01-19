@@ -12,6 +12,8 @@ public class SimpleVerificationCodeGenerator implements VerificationCodeGenerato
         'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8',
         '9'};
 
+    private final Random random = new Random();
+
     public SimpleVerificationCodeGenerator() {
 
     }
@@ -23,7 +25,6 @@ public class SimpleVerificationCodeGenerator implements VerificationCodeGenerato
     @Override
     public VerificationCode generate(int length) {
         String id = UUID.randomUUID().toString();
-        Random random = new Random();
         int count = characters.length;
         char[] result = new char[length];
         for (int i = 0; i < length; i++) {

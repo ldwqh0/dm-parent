@@ -6,7 +6,7 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class Address implements Serializable {
+public class Address implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -1608137195031944938L;
     /**
@@ -120,5 +120,10 @@ public class Address implements Serializable {
 
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

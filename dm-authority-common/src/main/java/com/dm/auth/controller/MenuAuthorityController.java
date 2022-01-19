@@ -44,7 +44,7 @@ public class MenuAuthorityController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public MenuAuthorityDto save(@PathVariable("roleId") Long roleId,
                                  @RequestBody MenuAuthorityDto authorityDto) {
-        return roleService.saveAuthority(roleId, authorityDto);
+        return roleService.saveAuthority(roleId, authorityDto.getAuthorityMenus());
     }
 
     /**
@@ -117,18 +117,19 @@ public class MenuAuthorityController {
 
 
     private MenuTreeDto toTree(MenuDto menu) {
-        MenuTreeDto treeDto = new MenuTreeDto();
-        treeDto.setId(menu.getId());
-        menu.getParent().map(MenuDto::getId).ifPresent(treeDto::setParentId);
-        treeDto.setName(menu.getName());
-        treeDto.setDescription(menu.getDescription());
-        treeDto.setEnabled(menu.getEnabled());
-        treeDto.setIcon(menu.getIcon());
-        treeDto.setOpenInNewWindow(menu.getOpenInNewWindow());
-        treeDto.setOrder(menu.getOrder());
-        treeDto.setTitle(menu.getTitle());
-        treeDto.setType(menu.getType());
-        treeDto.setUrl(menu.getUrl());
-        return treeDto;
+        return new MenuTreeDto(
+            menu.getId(),
+            menu.getName(),
+            menu.getTitle(),
+            menu.getEnabled(),
+            menu.getUrl(),
+            menu.getIcon(),
+            menu.getDescription(),
+            menu.getType(),
+            menu.getOrder(),
+            menu.getOpenInNewWindow(),
+            menu.getParent().map(MenuDto::getId).orElse(null),
+            null
+        );
     }
 }

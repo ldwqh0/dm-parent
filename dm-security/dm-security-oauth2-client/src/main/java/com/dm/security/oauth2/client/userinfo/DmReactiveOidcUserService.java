@@ -67,7 +67,9 @@ public class DmReactiveOidcUserService implements ReactiveOAuth2UserService<Oidc
                     userdetails = copyProperties(new OidcUserDetailsDto(idToken, userinfo), userinfo);
                 }
                 Set<String> scopes = userRequest.getAccessToken().getScopes();
-                userdetails.setScopes(scopes);
+
+                // TODO 待处理
+                //                userdetails.setScopes(scopes);
                 return userdetails;
             });
     }
@@ -128,13 +130,13 @@ public class DmReactiveOidcUserService implements ReactiveOAuth2UserService<Oidc
                 .collect(Collectors.toList());
             // 给所有的已登录用户添加一个默认角色
             authorities.add(GrantedAuthorityDto.ROLE_AUTHENTICATED);
-            userdetails.setGrantedAuthority(authorities);
+            // TODO 待处理
+//            userdetails.setGrantedAuthority(authorities);
         }
-        userdetails.setAttributes(idToken.getClaims());
-        userdetails.setUsername(idToken.getPreferredUsername());
-        userdetails.setFullName(idToken.getFullName());
-        userdetails.setMobile(idToken.getPhoneNumber());
-        userdetails.setEmail(idToken.getEmail());
+//        userdetails.setAttributes(idToken.getClaims());
+//        userdetails.setFullName(idToken.getFullName());
+//        userdetails.setMobile(idToken.getPhoneNumber());
+//        userdetails.setEmail(idToken.getEmail());
         return userdetails;
     }
 

@@ -1,6 +1,8 @@
 package com.dm.uap.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,38 +23,28 @@ public class UserPostDto implements Serializable {
      */
     @Valid
     @NotNull(groups = {UserDto.Default.class})
-    private DepartmentDto department;
+    private final DepartmentDto department;
 
     /**
      * 用户在该部门所属的职务
      */
     @NotNull(groups = {UserDto.Default.class})
-    private String post;
+    private final String post;
 
-    public UserPostDto(DepartmentDto department, String post) {
-        super();
+    public UserPostDto(
+        @JsonProperty("department") DepartmentDto department,
+        @JsonProperty("post") String post) {
         this.department = department;
         this.post = post;
     }
 
-    public UserPostDto() {
-        super();
-    }
 
     public DepartmentDto getDepartment() {
         return department;
     }
 
-    public void setDepartment(DepartmentDto department) {
-        this.department = department;
-    }
-
     public String getPost() {
         return post;
-    }
-
-    public void setPost(String post) {
-        this.post = post;
     }
 
     @Override

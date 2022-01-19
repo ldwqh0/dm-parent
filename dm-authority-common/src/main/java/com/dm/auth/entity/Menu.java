@@ -5,10 +5,7 @@ import com.dm.common.entity.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 @Table(name = "dm_menu_", uniqueConstraints = {
@@ -206,7 +203,7 @@ public class Menu extends AbstractEntity {
     }
 
     public List<Menu> getChildren() {
-        return children;
+        return Collections.unmodifiableList(children);
     }
 
     @Override

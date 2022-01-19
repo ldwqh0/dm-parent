@@ -8,15 +8,15 @@ public final class FileInfoConverter {
     }
 
     public static FileInfoDto toDto(FileInfo model) {
-        FileInfoDto dto = new FileInfoDto();
-        dto.setId(model.getId());
-        dto.setFilename(model.getFilename());
-        model.getCreatedDate().ifPresent(dto::setCreateTime);
-        model.getCreatedBy().ifPresent(dto::setCreatedBy);
-        model.getLastModifiedBy().ifPresent(dto::setLastModifiedBy);
-        dto.setPath(model.getPath());
-        dto.setSize(model.getSize());
-        return dto;
+        return new FileInfoDto(
+            model.getId(),
+            model.getFilename(),
+            model.getPath(),
+            model.getSize(),
+            model.getCreatedBy().orElse(null),
+            model.getLastModifiedBy().orElse(null),
+            model.getCreatedDate().orElse(null)
+        );
     }
 
 }

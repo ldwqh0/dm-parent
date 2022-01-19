@@ -26,30 +26,15 @@ public final class RoleConverter {
     }
 
     public static GrantedAuthorityDto toGrantedAuthorityDto(Role role) {
-        GrantedAuthorityDto dto = new GrantedAuthorityDto();
-        dto.setId(role.getId());
-        dto.setAuthority(role.getGroup() + "_" + role.getName());
-        return dto;
+        return new GrantedAuthorityDto(role.getId(), role.getGroup() + "_" + role.getName());
     }
 
     public static RoleDto toDto(Role model) {
-        RoleDto dto = new RoleDto();
-        dto.setId(model.getId());
-        dto.setName(model.getName());
-        dto.setState(model.getState());
-        dto.setDescription(model.getDescription());
-        dto.setGroup(model.getGroup());
-        // 角色信息不包括用户信息
-        // dto.setUsers(userConverter.toDto(role.getUsers()));
-        return dto;
+        return new RoleDto(model.getId(), model.getName(), model.getGroup(), model.getDescription(), model.getState());
     }
 
     public static MenuAuthorityDto toMenuAuthorityDto(Role role) {
-        MenuAuthorityDto dto = new MenuAuthorityDto();
-        dto.setRoleName(role.getName());
-        dto.setRoleId(role.getId());
-        dto.setAuthorityMenus(Sets.transform(role.getMenus(), MenuConverter::toDto));
-        return dto;
+        return new MenuAuthorityDto(role.getId(), role.getName(), Sets.transform(role.getMenus(), it -> MenuConverter.toDto(it, null)));
     }
 
 }

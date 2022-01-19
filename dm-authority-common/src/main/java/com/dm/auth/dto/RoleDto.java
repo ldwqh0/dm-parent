@@ -4,6 +4,7 @@ import com.dm.auth.entity.Role.Status;
 import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -21,14 +22,17 @@ import java.util.Objects;
 public class RoleDto implements IdentifiableDto<Long>, Serializable {
     private static final long serialVersionUID = 4725729366179649819L;
 
-    public RoleDto() {
-    }
 
-    public RoleDto(Long id, String name, String group, String description) {
-        this.setId(id);
+    public RoleDto(@JsonProperty("id") Long id,
+                   @JsonProperty("name") String name,
+                   @JsonProperty("group") String group,
+                   @JsonProperty("description") String description,
+                   @JsonProperty("state") Status state) {
+        this.id = id;
         this.name = name;
         this.group = group;
         this.description = description;
+        this.state = state;
     }
 
     public interface ReferenceBy {
@@ -48,7 +52,7 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
      * 角色ID
      */
     @NotNull(groups = ReferenceBy.class)
-    private Long id;
+    private final Long id;
 
     /**
      * 角色名称
@@ -57,26 +61,26 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
      */
     @NotBlank(groups = {New.class, Update.class})
     @Size(max = 100, groups = {Default.class})
-    private String name;
+    private final String name;
 
     /**
      * 角色描述
      */
     @Size(max = 2000, groups = {Default.class})
-    private String description;
+    private final String description;
 
     /**
      * 角色状态
      */
     @NotNull(groups = {New.class, Update.class})
-    private Status state = Status.ENABLED;
+    private final Status state;
 
     /**
      * 角色所属组
      */
     @Valid
     @NotNull(groups = {New.class, Update.class})
-    private String group;
+    private final String group;
 
     /**
      * 角色全称
@@ -94,40 +98,20 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Status getState() {
         return state;
     }
 
-    public void setState(Status state) {
-        this.state = state;
-    }
-
     public String getGroup() {
         return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
     }
 
     @Override

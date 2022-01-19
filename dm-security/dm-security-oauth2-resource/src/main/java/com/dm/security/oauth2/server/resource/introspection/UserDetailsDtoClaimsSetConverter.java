@@ -41,19 +41,19 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
     @Override
     public OAuth2AuthenticatedPrincipal convert(Map<String, Object> map) {
         if (isActive(map)) {
-            OAuth2UserDetailsDto user = new OAuth2UserDetailsDto();
-            user.setAttributes(map);
-            user.putAttribute(ISSUED_AT, toInstant(map.get(ISSUED_AT)));
-            user.putAttribute(EXPIRES_AT, toInstant(map.get(EXPIRES_AT)));
-            user.putAttribute(NOT_BEFORE, toInstant(map.get(NOT_BEFORE)));
             TokenIntrospectionResponse response = new TokenIntrospectionResponse(map);
-            user.setUsername(response.getUsername());
+            Map<String, Object> attributes = new HashMap<>(map);
+            attributes.put(ISSUED_AT, toInstant(map.get(ISSUED_AT)));
+            attributes.put(EXPIRES_AT, toInstant(map.get(EXPIRES_AT)));
+            attributes.put(NOT_BEFORE, toInstant(map.get(NOT_BEFORE)));
             List<GrantedAuthority> authorities = new ArrayList<>();
+            Set<String> scopes;
             String scopeStr = response.getScope();
             if (StringUtils.isNotBlank(scopeStr)) {
-                Set<String> scopes = Arrays.stream(StringUtils.split(scopeStr)).collect(Collectors.toSet());
-                user.setScopes(scopes);
+                scopes = Arrays.stream(StringUtils.split(scopeStr)).collect(Collectors.toSet());
                 scopes.forEach(scope -> authorities.add(new SimpleGrantedAuthority(SCOPE_PREFIX + scope)));
+            } else {
+                scopes = Collections.emptySet();
             }
             Object authoritiesAttributes = response.get(authoritiesAttributeKey);
             if (authoritiesAttributes instanceof List) {
@@ -63,16 +63,24 @@ public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetCo
                     }
                 });
             }
+            Long userid = null;
             String subString = String.valueOf(response.getSubject());
             if (NumberUtils.isCreatable(subString)) {
-                user.setId(NumberUtils.createLong(subString));
+                userid = NumberUtils.createLong(subString);
             }
-            user.setEnabled(true);
-            user.setClientId(response.getClientId());
-            user.setGrantedAuthority(authorities);
-            // 设置用户的fullName
-            user.setFullName((String) response.getOrDefault("fullName", ""));
-            return user;
+            return new OAuth2UserDetailsDto(
+                response.getClientId(),
+                scopes,
+                userid,
+                response.getUsername(),
+                authorities,
+                (String) response.getOrDefault("fullName", ""),
+                null,
+                null,
+                null,
+                null,
+                attributes);
+
         } else {
             logger.trace("Did not validate token since it is inactive");
             throw new BadOpaqueTokenException("Provided token isn't active");

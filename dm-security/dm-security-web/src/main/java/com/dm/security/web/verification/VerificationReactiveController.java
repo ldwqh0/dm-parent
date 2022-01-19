@@ -48,7 +48,7 @@ public class VerificationReactiveController {
             try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
                 ImageIO.write(img, "png", os);
                 String imgData = Base64.getEncoder().encodeToString(os.toByteArray());
-                code.setImgData(imgData);
+                code = code.withImageData(imgData);
                 codeStorage.save(code);
                 return Mono.just(code);
             } catch (IOException e) {

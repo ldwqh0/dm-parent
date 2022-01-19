@@ -1,42 +1,43 @@
 package com.dm.uap.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class UpdatePasswordDto implements Serializable {
     private static final long serialVersionUID = -7352479163299106344L;
-    @NotBlank
-    private String oldPassword;
+
+    public UpdatePasswordDto(
+        @JsonProperty("oldPassword") String oldPassword,
+        @JsonProperty("password") String password,
+        @JsonProperty("repassword") String repassword) {
+        this.oldPassword = oldPassword;
+        this.password = password;
+        this.repassword = repassword;
+    }
 
     @NotBlank
-    private String password;
+    private final String oldPassword;
 
     @NotBlank
-    private String repassword;
+    private final String password;
+
+    @NotBlank
+    private final String repassword;
+
 
     public String getOldPassword() {
         return oldPassword;
-    }
-
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getRepassword() {
         return repassword;
-    }
-
-    public void setRepassword(String repassword) {
-        this.repassword = repassword;
     }
 
     @Override

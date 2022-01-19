@@ -17,38 +17,80 @@ import java.util.Collections;
 public class UserDetailsDto implements UserDetails {
     private static final long serialVersionUID = -4337846050031244208L;
 
-    private Long id;
+    private final Long id;
+
     @JsonIgnore
-    private String password;
-    private String username;
-    private boolean accountExpired;
-    private boolean credentialsExpired;
+    private final String password;
+
+    /**
+     * 用户名，这个字段的值不能被后续改变
+     */
+    private final String username;
+
+    private final boolean accountExpired;
+    private final boolean credentialsExpired;
+
     @JsonProperty(access = Access.WRITE_ONLY)
-    private boolean enabled;
-    private boolean locked;
-    private Collection<? extends GrantedAuthority> grantedAuthority;
-    private String fullName;
+    private final boolean enabled;
 
-    private String mobile;
+    private final boolean locked;
 
-    private String email;
+    private final Collection<? extends GrantedAuthority> grantedAuthority;
 
-    private String regionCode;
+    private final String fullName;
 
-    public void setRegionCode(String regionCode) {
+    private final String mobile;
+
+    private final String email;
+
+    private final String regionCode;
+
+    private final String scenicName;
+
+    /**
+     * @param id                 id
+     * @param username           用户名
+     * @param password           密码
+     * @param accountExpired     账号是否过期
+     * @param credentialsExpired 密码是否过期
+     * @param enabled            账号启用
+     * @param locked             账号锁定
+     * @param grantedAuthority   用户角色
+     * @param fullName           全名称
+     * @param mobile             电话
+     * @param email              邮箱
+     * @param regionCode         地域
+     * @param scenicName         景区名称
+     */
+
+    public UserDetailsDto(Long id, String username, String password, boolean accountExpired, boolean credentialsExpired, boolean enabled, boolean locked, Collection<? extends GrantedAuthority> grantedAuthority, String fullName, String mobile, String email, String regionCode, String scenicName) {
+        this.id = id;
+        this.password = password;
+        this.username = username;
+        this.accountExpired = accountExpired;
+        this.credentialsExpired = credentialsExpired;
+        this.enabled = enabled;
+        this.locked = locked;
+        if (CollectionUtils.isNotEmpty(grantedAuthority)) {
+            this.grantedAuthority = new ArrayList<>(grantedAuthority);
+        } else {
+            this.grantedAuthority = Collections.emptyList();
+        }
+        this.fullName = fullName;
+        this.mobile = mobile;
+        this.email = email;
         this.regionCode = regionCode;
+        this.scenicName = scenicName;
     }
 
-    private String scenicName;
+    public UserDetailsDto(String username, Collection<? extends GrantedAuthority> grantedAuthority) {
+        this(null, username, ",", false, false, false, false, grantedAuthority, null, null, null, null, null);
+    }
 
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return grantedAuthority;
-    }
-
-    public void setGrantedAuthority(Collection<? extends GrantedAuthority> grantedAuthority) {
-        this.grantedAuthority = grantedAuthority;
+        return Collections.unmodifiableCollection(grantedAuthority);
     }
 
     public Collection<GrantedAuthority> getRoles() {
@@ -57,7 +99,6 @@ public class UserDetailsDto implements UserDetails {
         } else {
             return Collections.emptyList();
         }
-
     }
 
     @Override
@@ -72,10 +113,6 @@ public class UserDetailsDto implements UserDetails {
 
     public String getMobile() {
         return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 
     @Override
@@ -101,40 +138,8 @@ public class UserDetailsDto implements UserDetails {
         return enabled;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setAccountExpired(boolean accountExpired) {
-        this.accountExpired = accountExpired;
-    }
-
-    public void setCredentialsExpired(boolean credentialsExpired) {
-        this.credentialsExpired = credentialsExpired;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getFullName() {
@@ -145,16 +150,8 @@ public class UserDetailsDto implements UserDetails {
         return scenicName;
     }
 
-    public void setScenicName(String scenicName) {
-        this.scenicName = scenicName;
-    }
-
     public String getRegionCode() {
         return regionCode;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getEmail() {

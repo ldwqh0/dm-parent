@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
+
 @JsonInclude(value = Include.NON_EMPTY)
 public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
 
@@ -19,42 +21,41 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
     /**
      * 文件ID
      */
-    private UUID id;
+    private final UUID id;
 
     /**
      * 文件原始名称
      */
-    private String filename;
+    private final String filename;
 
     /**
      * 文件保存路径
      */
     @JsonIgnore
-    private String path;
+    private final String path;
 
     /**
      * 文件长度
      */
-    private Long size;
+    private final Long size;
 
     /**
      * 创建人
      */
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Audit<Long, String> createdBy;
+    @JsonProperty(access = READ_ONLY)
+    private final Audit<Long, String> createdBy;
 
     /**
      * 最后修改人
      */
-    //TODO findbugs故障
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Audit<Long, String> lastModifiedBy;
+    @JsonProperty(access = READ_ONLY)
+    private final Audit<Long, String> lastModifiedBy;
 
     /**
      * 创建时间
      */
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private ZonedDateTime createTime;
+    @JsonProperty(access = READ_ONLY)
+    private final ZonedDateTime createTime;
 
 
     @Override
@@ -62,56 +63,49 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
         return id;
     }
 
-    @Override
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getFilename() {
         return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
     }
 
     public String getPath() {
         return path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public Long getSize() {
         return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
     }
 
     public Audit<Long, String> getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Audit<Long, String> createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public Audit<Long, String> getLastModifiedBy() {
         return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(Audit<Long, String> lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
     }
 
     public ZonedDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(ZonedDateTime createTime) {
+    public FileInfoDto(UUID id, String filename, String path, Long size, Audit<Long, String> createdBy, Audit<Long, String> lastModifiedBy, ZonedDateTime createTime) {
+        this.id = id;
+        this.filename = filename;
+        this.path = path;
+        this.size = size;
+        this.createdBy = createdBy;
+        this.lastModifiedBy = lastModifiedBy;
         this.createTime = createTime;
+    }
+
+    public FileInfoDto(String filename, Long size) {
+        this(
+            null,
+            filename,
+            null,
+            size,
+            null,
+            null,
+            null
+        );
     }
 }

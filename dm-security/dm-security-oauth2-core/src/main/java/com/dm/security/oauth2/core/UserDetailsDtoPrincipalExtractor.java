@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,22 +15,30 @@ public class UserDetailsDtoPrincipalExtractor implements PrincipalExtractor {
 
     @Override
     public OAuth2UserDetailsDto extract(Map<String, Object> map) {
-        OAuth2UserDetailsDto userDetailsDto = new OAuth2UserDetailsDto();
-        userDetailsDto.setId(Maps.getLong(map, StandardClaimNames.SUB));
-        userDetailsDto.setUsername(Maps.getString(map, StandardClaimNames.PREFERRED_USERNAME));
-        userDetailsDto.setFullName(Maps.getString(map, StandardClaimNames.NAME));
-        userDetailsDto.setRegionCode((String) map.get("regionCode"));
+        List<GrantedAuthority> authorities;
         if (Objects.nonNull(map.get("roles"))) {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> roles = (List<Map<String, Object>>) map.get("roles");
-            List<GrantedAuthority> authorities = roles.stream()
+            authorities = roles.stream()
                 .map(role -> role.get("authority").toString())
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-            userDetailsDto.setGrantedAuthority(authorities);
+        } else {
+            authorities = Collections.emptyList();
         }
-        userDetailsDto.setScenicName((String) map.get("scenicName"));
-        userDetailsDto.setAttributes(map);
+        // TODO clientId,scopes怎么处理
+        OAuth2UserDetailsDto userDetailsDto = new OAuth2UserDetailsDto(null,
+            null,
+            Maps.getLong(map, StandardClaimNames.SUB),
+            Maps.getString(map, StandardClaimNames.PREFERRED_USERNAME),
+            authorities,
+            Maps.getString(map, StandardClaimNames.NAME),
+            null,
+            null,
+            (String) map.get("regionCode"),
+            (String) map.get("scenicName"),
+            map
+        );
         return userDetailsDto;
     }
 

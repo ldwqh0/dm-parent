@@ -1,6 +1,5 @@
 package com.dm.springboot.autoconfigure.authority;
 
-import com.dm.auth.dto.MenuAuthorityDto;
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.dto.RoleDto;
@@ -9,6 +8,7 @@ import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Sets;
+import com.dm.security.authentication.UriResource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Import;
@@ -34,10 +34,7 @@ public class AuthAutoConfiguration implements InitializingBean {
 
     private Set<MenuDto> initMenus() {
         if (!menuService.exists()) {
-            MenuDto menuDto = new MenuDto();
-            menuDto.setName("index");
-            menuDto.setTitle("首页");
-            menuDto.setUrl("/");
+            MenuDto menuDto = new MenuDto("index", "首页", "/");
             return Collections.singleton(menuService.save(menuDto));
         } else {
             return Collections.emptySet();
@@ -57,37 +54,40 @@ public class AuthAutoConfiguration implements InitializingBean {
     }
 
     private ResourceDto initResource(String name, String matcher, String description, Set<RoleDto> roles) {
-        ResourceDto resource = new ResourceDto();
-        resource.setName(name);
-        resource.setMatcher(matcher);
-        resource.setDescription(description);
-        resource.setAccessAuthorities(roles);
+        ResourceDto resource = new ResourceDto(
+            null,
+            name,
+            null,
+            matcher,
+            description,
+            null,
+            UriResource.MatchType.ANT_PATH,
+            roles,
+            null
+        );
         return resourceService.save(resource);
     }
 
     private Set<RoleDto> initRoles(Set<MenuDto> menus) {
-        MenuAuthorityDto authorities = new MenuAuthorityDto();
-        authorities.setAuthorityMenus(menus);
-        // 增加默认管理员角色
-        // id=1
         return Sets.hashSet(
-                initRole(1L, "ROLE_AUTHENTICATED", "系统内置认证通过角色，所有已经登录的用户均为该角色", authorities),
-                initRole(2L, "ROLE_ANONYMOUS", "系统内置匿名角色", authorities),
-                initRole(3L, "ROLE_ADMIN", "系统内置管理员角色", authorities)
+            initRole(1L, "ROLE_AUTHENTICATED", "系统内置认证通过角色，所有已经登录的用户均为该角色", menus),
+            initRole(2L, "ROLE_ANONYMOUS", "系统内置匿名角色", menus),
+            initRole(3L, "ROLE_ADMIN", "系统内置管理员角色", menus)
         );
     }
 
-    private RoleDto initRole(Long roleId, String name, String description, MenuAuthorityDto authorities) {
+    private RoleDto initRole(Long roleId, String name, String description, Set<MenuDto> menus) {
         String group = "内置分组";
         String fullName = group + "_" + name;
         return roleService.findByFullName(fullName).orElseGet(() -> {
-            RoleDto role = new RoleDto();
-            role.setId(roleId);
-            role.setName(name);
-            role.setGroup(group);
-            role.setDescription(description);
-            role = roleService.saveWithId(role);
-            roleService.saveAuthority(role.getId(), authorities);
+            RoleDto role = roleService.saveWithId(new RoleDto(
+                roleId,
+                name,
+                group,
+                description,
+                Role.Status.ENABLED
+            ));
+            roleService.saveAuthority(role.getId(), menus);
             return role;
         });
     }
@@ -99,6 +99,6 @@ public class AuthAutoConfiguration implements InitializingBean {
         // 初始化角色信息
         Set<RoleDto> roles = initRoles(menus);
         // 初始化资源信息
-        Set<ResourceDto> resources = initResources(roles);
+        initResources(roles);
     }
 }

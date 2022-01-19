@@ -364,15 +364,15 @@ public class User extends AbstractEntity {
     }
 
     public Set<UserRole> getRoles() {
-        return roles;
+        return Collections.unmodifiableSet(roles);
     }
 
     public Map<Department, String> getPosts() {
-        return posts;
+        return Collections.unmodifiableMap(posts);
     }
 
     public Map<Department, Long> getOrders() {
-        return orders;
+        return Collections.unmodifiableMap(orders);
     }
 
     public String getRegionCode() {
@@ -384,7 +384,7 @@ public class User extends AbstractEntity {
     }
 
     public Map<String, String> getAttributes() {
-        return attributes;
+        return Collections.unmodifiableMap(attributes);
     }
 
     public LocalDate getBirthDate() {

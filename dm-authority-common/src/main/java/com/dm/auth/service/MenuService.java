@@ -2,6 +2,7 @@ package com.dm.auth.service;
 
 import com.dm.auth.dto.MenuDto;
 import com.dm.auth.entity.Menu;
+import com.dm.common.dto.OrderDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,9 +33,8 @@ public interface MenuService {
 
     MenuDto patch(long id, MenuDto menu);
 
-    Menu moveUp(long id);
 
-    Menu moveDown(long id);
+    MenuDto move(long id, OrderDto.Position pos);
 
     List<MenuDto> listAllByType(Menu.MenuType type);
 

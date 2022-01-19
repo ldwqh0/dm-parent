@@ -1,8 +1,10 @@
 package com.dm.security.authentication;
 
+import com.dm.collections.CollectionUtils;
 import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,14 +27,12 @@ public class ResourceAuthorityAttribute implements Serializable {
     /**
      * 允许访问角色信息
      */
-    private final Set<String> accessAuthorities;
+    private final Set<String> accessAuthorities = new HashSet<>();
 
     /**
      * 拒绝访问角色信息
-     *
-     * @return
      */
-    private final Set<String> denyAuthorities;
+    private final Set<String> denyAuthorities = new HashSet<>();
 
 
     public ResourceAuthorityAttribute(
@@ -40,21 +40,21 @@ public class ResourceAuthorityAttribute implements Serializable {
         Set<String> accessAuthorities,
         Set<String> denyAuthorities) {
         this.resource = resource;
-        this.accessAuthorities = accessAuthorities;
-        this.denyAuthorities = denyAuthorities;
+        if (CollectionUtils.isNotEmpty(accessAuthorities)) {
+            this.accessAuthorities.addAll(accessAuthorities);
+        }
+        if (CollectionUtils.isNotEmpty(denyAuthorities)) {
+            this.denyAuthorities.addAll(denyAuthorities);
+        }
     }
 
     public ResourceAuthorityAttribute(UriResource resource) {
-        super();
-        this.resource = resource;
-        this.accessAuthorities = new HashSet<>();
-        this.denyAuthorities = new HashSet<>();
+        this(resource, null, null);
     }
 
     /**
      * 获取该组资源的授权信息
      *
-     * @return
      */
     public UriResource getResource() {
         return resource;
@@ -63,34 +63,33 @@ public class ResourceAuthorityAttribute implements Serializable {
     /**
      * 拒绝访问的角色
      *
-     * @return
      */
     public Set<String> getDenyAuthorities() {
-        return this.denyAuthorities;
+        return Collections.unmodifiableSet(this.denyAuthorities);
     }
 
     /**
      * 允许访问的角色
      *
-     * @return
      */
     public Set<String> getAccessAuthorities() {
-        return this.accessAuthorities;
+        return Collections.unmodifiableSet(this.accessAuthorities);
     }
 
     /**
      * 添加一个允许访问的角色
      *
-     * @param authority
+     * @param authority 允许访问的角色
      */
     public void addAccessAuthority(String authority) {
         this.accessAuthorities.add(authority);
+        this.denyAuthorities.remove(authority);
     }
 
     /**
      * 添加一个阻止访问的角色
      *
-     * @param authority
+     * @param authority 禁止访问的角色
      */
     public void addDenyAuthority(String authority) {
         this.denyAuthorities.add(authority);

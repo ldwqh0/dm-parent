@@ -3,71 +3,68 @@ package com.dm.security.verification;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class VerificationCode {
+public class VerificationCode implements Serializable {
+
+    private static final long serialVersionUID = -6060058106901443139L;
 
     /**
      * 验证码默认的失效时常，单位是分钟
      */
     private static final int DEFAULT_INVALIDATE_TIME = 5;
 
-    private String id;
+    private final String id;
 
     @JsonProperty(access = Access.WRITE_ONLY)
-    private String code;
+    private final String code;
 
-    private ZonedDateTime invalidateTime;
-    private String imgData;
+    private final ZonedDateTime invalidateTime;
 
-    public VerificationCode(String id, String code, ZonedDateTime invalidateTime) {
-        super();
+    private final String imgData;
+
+    public VerificationCode(String id, String code, ZonedDateTime invalidateTime, String imgData) {
         this.id = id;
         this.code = code;
         this.invalidateTime = invalidateTime;
+        this.imgData = imgData;
+    }
+
+    public VerificationCode(String id,
+                            String code,
+                            ZonedDateTime invalidateTime) {
+        this(id, code, invalidateTime, null);
     }
 
     public VerificationCode(String id, String code) {
-        super();
-        this.id = id;
-        this.code = code;
-        this.invalidateTime = ZonedDateTime.now().plusMinutes(DEFAULT_INVALIDATE_TIME);
+        this(id, code, null);
     }
 
-    protected VerificationCode() {
-        super();
-    }
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public ZonedDateTime getInvalidateTime() {
         return invalidateTime;
-    }
-
-    public void setInvalidateTime(ZonedDateTime invalidateTime) {
-        this.invalidateTime = invalidateTime;
     }
 
     public String getImgData() {
         return imgData;
     }
 
-    public void setImgData(String imgData) {
-        this.imgData = imgData;
+    public VerificationCode withImageData(String imgData) {
+        return new VerificationCode(
+            this.id,
+            this.code,
+            this.invalidateTime,
+            imgData
+        );
     }
 
 }

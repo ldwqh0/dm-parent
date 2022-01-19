@@ -7,22 +7,21 @@ import org.springframework.security.core.GrantedAuthority;
 @JsonInclude(Include.NON_ABSENT)
 public class GrantedAuthorityDto implements GrantedAuthority {
     private static final long serialVersionUID = 4062924753193768577L;
-    private String authority;
-    private Long id;
+    private final Long id;
+    private final String authority;
 
-    public static final GrantedAuthorityDto ROLE_ADMIN = new GrantedAuthorityDto("内置分组_ROLE_ADMIN", 3L);
-    public static final GrantedAuthorityDto ROLE_AUTHENTICATED = new GrantedAuthorityDto("内置分组_ROLE_AUTHENTICATED", 1L);
-    public static final GrantedAuthorityDto ROLE_ANONYMOUS = new GrantedAuthorityDto("内置分组_ROLE_ANONYMOUS", 2L);
+    public static final GrantedAuthorityDto ROLE_ADMIN = new GrantedAuthorityDto(3L, "内置分组_ROLE_ADMIN");
+    public static final GrantedAuthorityDto ROLE_AUTHENTICATED = new GrantedAuthorityDto(1L, "内置分组_ROLE_AUTHENTICATED");
+    public static final GrantedAuthorityDto ROLE_ANONYMOUS = new GrantedAuthorityDto(2L, "内置分组_ROLE_ANONYMOUS");
 
 
-    public GrantedAuthorityDto(String authority, Long id) {
-        super();
+    public GrantedAuthorityDto(Long id, String authority) {
         this.authority = authority;
         this.id = id;
     }
 
     public GrantedAuthorityDto(String authority) {
-        this(authority, null);
+        this(null, authority);
     }
 
     public GrantedAuthorityDto() {
@@ -36,14 +35,6 @@ public class GrantedAuthorityDto implements GrantedAuthority {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setAuthority(String authority) {
-        this.authority = authority;
     }
 
     @Override

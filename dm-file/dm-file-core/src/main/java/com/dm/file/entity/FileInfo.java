@@ -13,7 +13,6 @@ import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,8 +30,7 @@ import java.util.UUID;
     @Index(name = "idx_dm_file_md5_", columnList = "md5_"),
     @Index(name = "idx_dm_file_filename_", columnList = "file_name_")
 })
-public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateTime>, Serializable {
-    private static final long serialVersionUID = -914974010332311193L;
+public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateTime> {
 
     @Id
     @GeneratedValue(generator = "ordered-uuid")

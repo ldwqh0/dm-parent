@@ -3,10 +3,11 @@ package com.dm.common.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
-public class CreateAudit implements Audit<Long, String> {
-
+public class CreateAudit implements Audit<Long, String>, Serializable {
+    private static final long serialVersionUID = -6472426570089325611L;
 
     /**
      * 创建人相关信息不能被修改

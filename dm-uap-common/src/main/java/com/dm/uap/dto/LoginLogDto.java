@@ -8,65 +8,49 @@ public class LoginLogDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private final Long id;
 
-    private String loginName;
+    private final String loginName;
 
-    private String ip;
+    private final String ip;
 
-    private String type;
+    private final String type;
 
-    private String result;
+    private final String result;
 
-    private ZonedDateTime time;
+    private final ZonedDateTime time;
 
+    public LoginLogDto(Long id, String loginName, String ip, String type, String result, ZonedDateTime time) {
+        this.id = id;
+        this.loginName = loginName;
+        this.ip = ip;
+        this.type = type;
+        this.result = result;
+        this.time = time;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getLoginName() {
         return loginName;
     }
 
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
-
     public String getIp() {
         return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getResult() {
         return result;
     }
 
-    public void setResult(String result) {
-        this.result = result;
-    }
-
     public ZonedDateTime getTime() {
         return time;
-    }
-
-    public void setTime(ZonedDateTime time) {
-        this.time = time;
     }
 
     @Override

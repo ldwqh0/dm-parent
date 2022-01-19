@@ -1,10 +1,14 @@
 package com.dm.auth.dto;
 
+import com.dm.collections.CollectionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,49 +23,45 @@ public class MenuAuthorityDto implements Serializable {
     /**
      * 角色Id
      */
-    private Long roleId;
+    private final Long roleId;
     /**
      * 角色名称
      */
-    private String roleName;
+    private final String roleName;
     /**
      * 角色可见的菜单列表
      */
     @JsonIgnoreProperties(value = {"parent"})
-    private Set<MenuDto> authorityMenus;
+    private final Set<MenuDto> authorityMenus = new HashSet<>();
 
-    public MenuAuthorityDto() {
-    }
-
-    public MenuAuthorityDto(Long roleId, String roleName, Set<MenuDto> authorityMenus) {
+    /**
+     * @param roleId         角色id
+     * @param roleName       角色名称
+     * @param authorityMenus 角色的授权菜单
+     */
+    public MenuAuthorityDto(
+        @JsonProperty("roleId") Long roleId,
+        @JsonProperty("roleName") String roleName,
+        @JsonProperty("authorityMenus") Set<MenuDto> authorityMenus) {
         this.roleId = roleId;
         this.roleName = roleName;
-        this.authorityMenus = authorityMenus;
+        if (CollectionUtils.isNotEmpty(authorityMenus)) {
+            this.authorityMenus.addAll(authorityMenus);
+        }
     }
 
     public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-
     public String getRoleName() {
         return roleName;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
     public Set<MenuDto> getAuthorityMenus() {
-        return authorityMenus;
+        return Collections.unmodifiableSet(authorityMenus);
     }
 
-    public void setAuthorityMenus(Set<MenuDto> authorityMenus) {
-        this.authorityMenus = authorityMenus;
-    }
 
     @Override
     public boolean equals(Object o) {

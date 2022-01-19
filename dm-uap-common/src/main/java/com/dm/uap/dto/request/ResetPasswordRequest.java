@@ -1,28 +1,30 @@
 package com.dm.uap.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class ResetPasswordRequest implements Serializable {
+    private static final long serialVersionUID = -4966481409754529111L;
 
-    private String password;
+    private final String password;
 
-    private String rePassword;
+    private final String rePassword;
+
+    public ResetPasswordRequest(
+        @JsonProperty("password") String password,
+        @JsonProperty("rePassword") String rePassword) {
+        this.password = password;
+        this.rePassword = rePassword;
+    }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getRePassword() {
         return rePassword;
-    }
-
-    public void setRePassword(String rePassword) {
-        this.rePassword = rePassword;
     }
 
     @Override

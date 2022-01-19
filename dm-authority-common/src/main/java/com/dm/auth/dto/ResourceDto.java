@@ -1,7 +1,9 @@
 package com.dm.auth.dto;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.common.dto.IdentifiableDto;
 import com.dm.security.authentication.UriResource.MatchType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpMethod;
 
 import java.io.Serializable;
@@ -16,62 +18,80 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     /**
      * 资源id
      */
-    private Long id;
+    private final Long id;
     /**
      * 资源名称
      */
-    private String name;
+    private final String name;
 
     /**
      * 该资源的方法
      */
-    private Set<HttpMethod> methods = new HashSet<>();
+    private final Set<HttpMethod> methods = new HashSet<>();
 
     /**
      * 资源匹配字符串
      */
-    private String matcher;
+    private final String matcher;
 
     /**
      * 资源描述
      */
-    private String description;
+    private final String description;
 
     /**
      * 资源Scope
      */
-    private Set<String> scope = new HashSet<>();
+    private final Set<String> scope = new HashSet<>();
 
     /**
      * 资源匹配方式
      */
-    private MatchType matchType = MatchType.ANT_PATH;
+    private final MatchType matchType;
 
     /**
      * 允许访问角色信息
      */
-    private Set<RoleDto> accessAuthorities = new HashSet<>();
+    private final Set<RoleDto> accessAuthorities = new HashSet<>();
 
     /**
      * 拒绝访问角色信息
-     *
-     * @return
      */
-    private Set<RoleDto> denyAuthorities = new HashSet<>();
+    private final Set<RoleDto> denyAuthorities = new HashSet<>();
 
-    public ResourceDto() {
-    }
 
-    public ResourceDto(Long id, String name, Set<HttpMethod> methods, String matcher, String description, Set<String> scope, MatchType matchType, Set<RoleDto> accessAuthorities, Set<RoleDto> denyAuthorities) {
+    public ResourceDto(
+        @JsonProperty("id") Long id,
+        @JsonProperty("name") String name,
+        @JsonProperty("methods") Set<HttpMethod> methods,
+        @JsonProperty("matcher") String matcher,
+        @JsonProperty("description") String description,
+        @JsonProperty("scope") Set<String> scope,
+        @JsonProperty("matchType") MatchType matchType,
+        @JsonProperty("accessAuthorities") Set<RoleDto> accessAuthorities,
+        @JsonProperty("denyAuthorities") Set<RoleDto> denyAuthorities
+    ) {
         this.id = id;
         this.name = name;
-        this.methods = methods;
+        if (CollectionUtils.isNotEmpty(methods)) {
+            this.methods.addAll(methods);
+        }
         this.matcher = matcher;
         this.description = description;
-        this.scope = scope;
-        this.matchType = matchType;
-        this.accessAuthorities = accessAuthorities;
-        this.denyAuthorities = denyAuthorities;
+        if (CollectionUtils.isNotEmpty(scope)) {
+            this.scope.addAll(scope);
+        }
+        if (Objects.isNull(matchType)) {
+            this.matchType = MatchType.ANT_PATH;
+        } else {
+            this.matchType = matchType;
+        }
+        if (CollectionUtils.isNotEmpty(accessAuthorities)) {
+            this.accessAuthorities.addAll(accessAuthorities);
+        }
+        if (CollectionUtils.isNotEmpty(denyAuthorities)) {
+            this.denyAuthorities.addAll(denyAuthorities);
+        }
     }
 
     @Override
@@ -79,72 +99,36 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Set<HttpMethod> getMethods() {
-        return methods;
-    }
-
-    public void setMethods(Set<HttpMethod> methods) {
-        this.methods = Collections.unmodifiableSet(new HashSet<>(methods));
+        return Collections.unmodifiableSet(methods);
     }
 
     public String getMatcher() {
         return matcher;
     }
 
-    public void setMatcher(String matcher) {
-        this.matcher = matcher;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Set<String> getScope() {
-        return scope;
-    }
-
-    public void setScope(Set<String> scope) {
-        this.scope = Collections.unmodifiableSet(new HashSet<>(scope));
+        return Collections.unmodifiableSet(scope);
     }
 
     public MatchType getMatchType() {
         return matchType;
     }
 
-    public void setMatchType(MatchType matchType) {
-        this.matchType = matchType;
-    }
-
     public Set<RoleDto> getAccessAuthorities() {
-        return accessAuthorities;
-    }
-
-    public void setAccessAuthorities(Set<RoleDto> accessAuthorities) {
-        this.accessAuthorities = Collections.unmodifiableSet(new HashSet<>(accessAuthorities));
+        return Collections.unmodifiableSet(accessAuthorities);
     }
 
     public Set<RoleDto> getDenyAuthorities() {
-        return denyAuthorities;
-    }
-
-    public void setDenyAuthorities(Set<RoleDto> denyAuthorities) {
-        this.denyAuthorities = Collections.unmodifiableSet(new HashSet<>(denyAuthorities));
+        return Collections.unmodifiableSet(denyAuthorities);
     }
 
     @Override

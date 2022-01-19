@@ -23,12 +23,7 @@ eclipse {
     }
 
     classpath {
-        println("before")
-        println(plusConfigurations)
         plusConfigurations.plus(configurations.compileOnly)
-        //plusConfigurations.plus(configurations.providedCompile)
-        println("after")
-        println(plusConfigurations)
     }
 }
 

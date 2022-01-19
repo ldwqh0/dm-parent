@@ -12,7 +12,6 @@ import com.dm.file.service.FileInfoService;
 import com.dm.file.service.FileStorageService;
 import com.dm.file.service.PackageFileService;
 import com.dm.file.service.ThumbnailService;
-import com.dm.file.util.DmFileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -99,12 +98,13 @@ public class FileController {
     @ResponseStatus(HttpStatus.CREATED)
     public FileInfoDto upload(@RequestParam("file") MultipartFile file) throws Exception {
         String originalFilename = file.getOriginalFilename();
-        FileInfoDto infoDto = new FileInfoDto();
-        if (StringUtils.isNotBlank(originalFilename)) {
-            infoDto.setFilename(DmFileUtils.getOriginalFilename(originalFilename));
+        if (StringUtils.isBlank(originalFilename)) {
+            originalFilename = "";
         }
-        infoDto.setSize(file.getSize());
-        FileInfo file_ = fileService.save(file, infoDto);
+        FileInfo file_ = fileService.save(file, new FileInfoDto(
+            originalFilename,
+            file.getSize()
+        ));
         thumbnailService.createThumbnail(file_.getPath());
         return FileInfoConverter.toDto(file_);
     }
@@ -177,9 +177,10 @@ public class FileController {
                 length += Files.size(filePath);
                 tempFiles[i] = filePath;
             }
-            FileInfoDto fileInfo = new FileInfoDto();
-            fileInfo.setFilename(filename);
-            fileInfo.setSize(length);
+            FileInfoDto fileInfo = new FileInfoDto(
+                filename,
+                length
+            );
             FileInfo _result = fileService.save(tempFiles, fileInfo);
             // 创建文件缩略图
             thumbnailService.createThumbnail(_result.getPath());

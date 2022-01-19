@@ -2,10 +2,12 @@ package com.dm.common.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
-public class ModifyAudit implements Audit<Long, String> {
+public class ModifyAudit implements Audit<Long, String>, Serializable {
 
+    private static final long serialVersionUID = -6472426570089325611L;
 
     @Column(name = "last_modified_user_id_")
     private Long userid;

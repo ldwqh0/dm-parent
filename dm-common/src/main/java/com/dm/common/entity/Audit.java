@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @author LiDong
  */
-public interface Audit<ID extends Serializable, NAME extends Serializable> {
+public interface Audit<ID extends Serializable, NAME extends Serializable> extends Serializable {
 
     /**
      * 用户ID

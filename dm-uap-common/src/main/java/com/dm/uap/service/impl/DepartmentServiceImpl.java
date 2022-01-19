@@ -41,13 +41,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department dep = departmentRepository.save(department);
         // 设置部门的顺序
         dep.setOrder(dep.getId());
-        return this.toListDto(dep);
+        return this.toDto(dep);
     }
 
 
     @Override
     public Optional<DepartmentDto> findById(Long id) {
-        return departmentRepository.findById(id).map(DepartmentConverter::toDto);
+        return departmentRepository.findById(id).map(this::toDto);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         // 重新设置新的配置和原始数据
         data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
         department.setDirector(data.getDirector());
-        return this.toListDto(departmentRepository.save(department));
+        return this.toDto(departmentRepository.save(department));
     }
 
     // 保存前对进行前置校验，避免节点递归
@@ -101,12 +101,12 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .or(qDepartment.description.containsIgnoreCase(key))
             );
         }
-        return departmentRepository.findAll(query, pageable).map(this::toListDto);
+        return departmentRepository.findAll(query, pageable).map(this::toDto);
     }
 
     @Override
     public List<DepartmentDto> findAll() {
-        return CollectionUtils.transform(departmentRepository.findAll(), this::toListDto);
+        return CollectionUtils.transform(departmentRepository.findAll(), this::toDto);
     }
 
     @Override
@@ -127,21 +127,15 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<DepartmentDto> listOffspring(Long parentId, Sort sort) {
         if (Objects.isNull(parentId)) {
-            return Lists.transform(departmentRepository.findAll(sort), this::toListDto);
+            return Lists.transform(departmentRepository.findAll(sort), this::toDto);
         } else {
             // todo 这里待处理，需要根据请
             return Collections.emptyList();
         }
     }
 
-    private DepartmentDto toListDto(Department department) {
-        DepartmentDto result = DepartmentConverter.toSimpleDto(department);
-        department.getParent().map(DepartmentConverter::toSimpleDto).ifPresent(result::setParent);
-        long childrenCount = departmentRepository.childrenCounts(department);
-        result.setChildrenCount(childrenCount);
-        long userCount = departmentRepository.userCounts(department);
-        result.setUserCount(userCount);
-        return result;
+    private DepartmentDto toDto(Department department) {
+        return DepartmentConverter.toDto(department, departmentRepository.childrenCounts(department), departmentRepository.userCounts(department));
     }
 
     private Department copyProperties(Department model, DepartmentDto dto) {

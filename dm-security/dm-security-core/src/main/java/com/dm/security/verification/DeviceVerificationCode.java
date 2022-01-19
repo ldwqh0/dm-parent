@@ -75,26 +75,6 @@ public class DeviceVerificationCode implements Serializable {
         return this.expireAt;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setExpireAt(ZonedDateTime expireAt) {
-        this.expireAt = expireAt;
-    }
-
-    public void setCreatedDate(ZonedDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;

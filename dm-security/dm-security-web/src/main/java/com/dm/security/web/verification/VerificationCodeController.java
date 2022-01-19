@@ -55,7 +55,7 @@ public class VerificationCodeController {
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             ImageIO.write(img, "png", os);
             String imgData = Base64.getEncoder().encodeToString(os.toByteArray());
-            code.setImgData(imgData);
+            code = code.withImageData(imgData);
             codeStorage.save(code);
             return code;
         }
@@ -70,7 +70,6 @@ public class VerificationCodeController {
     public ResponseEntity<InputStreamResource> generate2() throws IOException {
         // TODO 这里也不对
         VerificationCode code = validateCodeGenerator.generate(6);
-        code.setId(null);
         BufferedImage img = generateImage(code.getCode());
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             ImageIO.write(img, "png", os);

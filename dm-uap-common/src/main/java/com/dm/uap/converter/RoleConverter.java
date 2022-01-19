@@ -8,17 +8,14 @@ import org.springframework.security.core.GrantedAuthority;
 public final class RoleConverter {
 
     public static UserRoleDto toDto(UserRole model) {
-        UserRoleDto rd = new UserRoleDto();
-        rd.setId(model.getId());
-        rd.setName(model.getName());
-        rd.setGroup(model.getGroup());
-        return rd;
+        return new UserRoleDto(
+            model.getId(),
+            model.getGroup(),
+            model.getName()
+        );
     }
 
     public static GrantedAuthority toGrantedAuthority(UserRole model) {
-        return new GrantedAuthorityDto(
-            model.getGroup() + "_" + model.getName(),
-            model.getId()
-        );
+        return new GrantedAuthorityDto(model.getId(), model.getGroup() + "_" + model.getName());
     }
 }

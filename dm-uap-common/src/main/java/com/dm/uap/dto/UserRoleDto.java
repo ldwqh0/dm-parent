@@ -1,5 +1,7 @@
 package com.dm.uap.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,22 +14,22 @@ public class UserRoleDto implements Serializable {
     /**
      * 角色id
      */
-    private Long id;
+    private final Long id;
 
     /**
      * 角色组
      */
-    private String group;
+    private final String group;
 
     /**
      * 角色名称
      */
-    private String name;
+    private final String name;
 
-    public UserRoleDto() {
-    }
 
-    public UserRoleDto(Long id, String group, String name) {
+    public UserRoleDto(@JsonProperty("id") Long id,
+                       @JsonProperty("group") String group,
+                       @JsonProperty("name") String name) {
         this.id = id;
         this.group = group;
         this.name = name;
@@ -37,24 +39,12 @@ public class UserRoleDto implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getGroup() {
         return group;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
