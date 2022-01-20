@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Import;
 import java.util.Collections;
 import java.util.List;
 
+import static com.dm.collections.Lists.arrayList;
+
 @ConditionalOnBean(AutoCreateRoutingDataSource.class)
 @Import(MultiDataSourceBeanDefine.class)
 public class MultiDataSourceAutoConfiguration implements InitializingBean {
@@ -17,7 +19,7 @@ public class MultiDataSourceAutoConfiguration implements InitializingBean {
     private final List<DataSourceProvider> providers;
 
     public MultiDataSourceAutoConfiguration(List<DataSourceProvider> providers) {
-        this.providers = Collections.unmodifiableList(providers);
+        this.providers = arrayList(providers);
     }
 
     @Override

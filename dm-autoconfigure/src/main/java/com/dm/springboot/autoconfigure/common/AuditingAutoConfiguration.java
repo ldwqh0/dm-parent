@@ -1,6 +1,6 @@
 package com.dm.springboot.autoconfigure.common;
 
-import com.dm.common.entity.Audit;
+import com.dm.data.domain.Audit;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

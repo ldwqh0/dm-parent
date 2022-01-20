@@ -1,18 +1,17 @@
 package com.dm.datasource.entity;
 
-import com.dm.common.entity.AbstractEntity;
+import com.dm.data.domain.AbstractEntity;
 import com.dm.datasource.provider.DataSourceProperties.DbTypes;
 
 import javax.persistence.*;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.dm.collections.Maps.hashMap;
+
 @Entity
 @Table(name = "dm_datasource_")
 public class DmDataSource extends AbstractEntity {
-
-    public DmDataSource() {
-    }
 
     @Column(name = "name_", length = 50)
     private String name;
@@ -47,6 +46,9 @@ public class DmDataSource extends AbstractEntity {
     @Basic(fetch = FetchType.LAZY)
     private String remark;
 
+    public DmDataSource() {
+    }
+
     public DmDataSource(String name, String host, Integer port, DbTypes dbType, String username, String password, String database, Map<String, String> properties, String remark) {
         this.name = name;
         this.host = host;
@@ -55,7 +57,7 @@ public class DmDataSource extends AbstractEntity {
         this.username = username;
         this.password = password;
         this.database = database;
-        this.properties = properties;
+        this.properties = hashMap(properties);
         this.remark = remark;
     }
 
@@ -130,11 +132,11 @@ public class DmDataSource extends AbstractEntity {
     }
 
     public Map<String, String> getProperties() {
-        return properties;
+        return hashMap(properties);
     }
 
     public void setProperties(Map<String, String> properties) {
-        this.properties = properties;
+        this.properties = hashMap(properties);
     }
 
     public String getRemark() {

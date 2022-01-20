@@ -25,7 +25,7 @@ public class RegionRepositoryImpl {
         List<Region> result = new ArrayList<>();
         List<Region> tmp;
         query.select(qRegion).from(qRegion)
-            .where(qRegion.parentCode.code.eq(code));
+            .where(qRegion.parent.code.eq(code));
         tmp = query.fetch();
         while (CollectionUtils.isNotEmpty(tmp)) {
             result.addAll(tmp);
@@ -36,7 +36,7 @@ public class RegionRepositoryImpl {
 
     private List<Region> findAllChildren(List<Region> parents) {
         JPAQuery<Region> query = new JPAQuery<>(entityManager);
-        query.select(qRegion).from(qRegion).where(qRegion.parentCode.in(parents));
+        query.select(qRegion).from(qRegion).where(qRegion.parent.in(parents));
         return query.fetch();
     }
 }

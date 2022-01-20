@@ -176,7 +176,7 @@ public final class Maps {
         }
 
         public HashMap<K, V> build() {
-            return map;
+            return hashMap(map);
         }
     }
 }

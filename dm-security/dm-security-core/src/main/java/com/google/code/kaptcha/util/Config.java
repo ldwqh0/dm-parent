@@ -9,6 +9,7 @@ import com.google.code.kaptcha.text.TextProducer;
 import com.google.code.kaptcha.text.WordRenderer;
 import com.google.code.kaptcha.text.impl.DefaultTextCreator;
 import com.google.code.kaptcha.text.impl.DefaultWordRenderer;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.awt.*;
 import java.util.Properties;
@@ -32,7 +33,7 @@ public class Config {
      *
      */
     public Config(Properties properties) {
-        this.properties = properties;
+        this.properties = (Properties) properties.clone();
         this.helper = new ConfigHelper();
     }
 
@@ -249,6 +250,6 @@ public class Config {
      *
      */
     public Properties getProperties() {
-        return this.properties;
+        return ObjectUtils.clone(this.properties);
     }
 }

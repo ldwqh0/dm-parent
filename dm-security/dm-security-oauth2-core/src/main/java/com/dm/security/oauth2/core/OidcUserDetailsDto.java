@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT)
 public class OidcUserDetailsDto extends OAuth2UserDetailsDto implements OidcUser {
@@ -46,5 +47,17 @@ public class OidcUserDetailsDto extends OAuth2UserDetailsDto implements OidcUser
         return this.idToken;
     }
 
-    //TODO 重写equalse
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        OidcUserDetailsDto that = (OidcUserDetailsDto) o;
+        return Objects.equals(userinfo, that.userinfo) && Objects.equals(idToken, that.idToken);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), userinfo, idToken);
+    }
 }

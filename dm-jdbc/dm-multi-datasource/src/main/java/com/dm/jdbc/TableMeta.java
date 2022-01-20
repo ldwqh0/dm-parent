@@ -2,6 +2,8 @@ package com.dm.jdbc;
 
 import java.util.List;
 
+import static com.dm.collections.Lists.arrayList;
+
 public interface TableMeta {
 
     String getTableName();
@@ -37,7 +39,7 @@ public interface TableMeta {
 
         @Override
         public List<ColumnMeta> getColumns() {
-            return columns;
+            return arrayList(columns);
         }
 
         @Override

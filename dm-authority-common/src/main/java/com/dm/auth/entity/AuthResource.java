@@ -1,15 +1,16 @@
 package com.dm.auth.entity;
 
 import com.dm.collections.CollectionUtils;
-import com.dm.common.entity.AbstractEntity;
+import com.dm.data.domain.AbstractEntity;
 import com.dm.security.authentication.UriResource.MatchType;
 import org.springframework.http.HttpMethod;
 
 import javax.persistence.*;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import static com.dm.collections.Sets.hashSet;
 
 /**
  * 定义资源
@@ -122,7 +123,7 @@ public class AuthResource extends AbstractEntity {
     }
 
     public Set<HttpMethod> getMethods() {
-        return Collections.unmodifiableSet(methods);
+        return hashSet(methods);
     }
 
     public void setMethods(Set<HttpMethod> methods) {
@@ -147,7 +148,7 @@ public class AuthResource extends AbstractEntity {
     }
 
     public Set<String> getScope() {
-        return scope;
+        return hashSet(scope);
     }
 
     public String getDescription() {
@@ -159,11 +160,11 @@ public class AuthResource extends AbstractEntity {
     }
 
     public Set<Role> getAccessAuthorities() {
-        return Collections.unmodifiableSet(accessAuthorities);
+        return hashSet(accessAuthorities);
     }
 
     public Set<Role> getDenyAuthorities() {
-        return Collections.unmodifiableSet(denyAuthorities);
+        return hashSet(denyAuthorities);
     }
 
     @Override

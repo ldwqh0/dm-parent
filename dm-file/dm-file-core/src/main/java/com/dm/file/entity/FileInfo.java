@@ -1,8 +1,8 @@
 package com.dm.file.entity;
 
-import com.dm.common.entity.Audit;
-import com.dm.common.entity.CreateAudit;
-import com.dm.common.entity.ModifyAudit;
+import com.dm.data.domain.Audit;
+import com.dm.data.domain.CreateAudit;
+import com.dm.data.domain.ModifyAudit;
 import com.dm.file.listener.FileListener;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

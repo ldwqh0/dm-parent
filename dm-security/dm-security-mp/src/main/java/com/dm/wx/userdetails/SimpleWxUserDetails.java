@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+import static com.dm.collections.Lists.arrayList;
+
 public class SimpleWxUserDetails implements WxUserDetails, UserDetails {
 
     private static final long serialVersionUID = 874394269828106471L;
@@ -22,7 +24,7 @@ public class SimpleWxUserDetails implements WxUserDetails, UserDetails {
         this.openId = userinfo.getOpenId();
         this.wxMpUser = userinfo;
         this.unionId = userinfo.getUnionId();
-        this.authorities = authorities;
+        this.authorities = arrayList(authorities);
     }
 
     public WxMpUser getWxMpUser() {
@@ -42,7 +44,7 @@ public class SimpleWxUserDetails implements WxUserDetails, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return arrayList(authorities);
     }
 
     @Override

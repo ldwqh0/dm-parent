@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.dm.collections.Sets.hashSet;
+
 public class ResourceDto implements Serializable, IdentifiableDto<Long> {
 
     private static final long serialVersionUID = -847613336378865468L;
@@ -104,7 +106,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Set<HttpMethod> getMethods() {
-        return Collections.unmodifiableSet(methods);
+        return hashSet(methods);
     }
 
     public String getMatcher() {
@@ -116,7 +118,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Set<String> getScope() {
-        return Collections.unmodifiableSet(scope);
+        return hashSet(scope);
     }
 
     public MatchType getMatchType() {
@@ -124,11 +126,11 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Set<RoleDto> getAccessAuthorities() {
-        return Collections.unmodifiableSet(accessAuthorities);
+        return hashSet(accessAuthorities);
     }
 
     public Set<RoleDto> getDenyAuthorities() {
-        return Collections.unmodifiableSet(denyAuthorities);
+        return hashSet(denyAuthorities);
     }
 
     @Override

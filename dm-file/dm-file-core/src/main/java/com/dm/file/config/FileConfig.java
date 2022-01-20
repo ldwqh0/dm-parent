@@ -4,10 +4,12 @@ import com.dm.collections.Maps;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FileConfig {
+public class FileConfig implements Serializable, Cloneable {
+    private static final long serialVersionUID = 1926028204490014835L;
     private String path;
     private final Map<String, String> mime;
     private String tempPath;
@@ -262,10 +264,22 @@ public class FileConfig {
     }
 
     public void setMime(Map<String, String> mime) {
+        this.mime.clear();
         if (Maps.isNotEmpty(mime)) {
-            for (Map.Entry<String, String> entity : mime.entrySet()) {
-                this.mime.put(entity.getKey(), entity.getValue());
-            }
+            this.mime.putAll(mime);
         }
+    }
+
+    @Override
+    public FileConfig clone() {
+        FileConfig result = null;
+        try {
+            result = (FileConfig) super.clone();
+            result.mime.clear();
+            result.mime.putAll(this.mime);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

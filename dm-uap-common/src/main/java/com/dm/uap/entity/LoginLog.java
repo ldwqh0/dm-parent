@@ -1,6 +1,6 @@
 package com.dm.uap.entity;
 
-import com.dm.common.entity.AbstractEntity;
+import com.dm.data.domain.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

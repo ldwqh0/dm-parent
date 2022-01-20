@@ -48,7 +48,7 @@ public class RegionSyncServiceImpl implements RegionSyncService {
             Region region = new Region();
             region.setCode(element.child(0).text());
             region.setName(element.child(1).text());
-            region.setParentCode(parent);
+            region.setParent(parent);
             String href = element.select("a").attr("href");
             if (StringUtils.isNotBlank(href)) {
                 region.setHref(resolveHref(url, href));
@@ -61,7 +61,7 @@ public class RegionSyncServiceImpl implements RegionSyncService {
             region.setCode(element.child(0).text());
             region.setType(element.child(1).text());
             region.setName(element.child(2).text());
-            region.setParentCode(parent);
+            region.setParent(parent);
             region.setSynced(true);
             return region;
         }).collect(Collectors.toList());

@@ -1,6 +1,9 @@
 package com.dm.collections;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -21,10 +24,6 @@ public final class Lists {
         return new ArrayList<>();
     }
 
-    public static <E> ArrayList<E> arrayList(Collection<E> collection) {
-        return new ArrayList<>(collection);
-    }
-
     /**
      * 使用一系列元素创建一个新的 {@link ArrayList}
      *
@@ -35,56 +34,37 @@ public final class Lists {
     @SafeVarargs
     public static <E> ArrayList<E> arrayList(E... elements) {
         ArrayList<E> result = new ArrayList<>();
-        if (Objects.nonNull(elements)) {
+        if (ArrayUtils.isNotEmpty(elements)) {
             Collections.addAll(result, elements);
         }
         return result;
     }
 
-
-    /**
-     * 通过指定的collection构建新的{@link ArrayList}<br>
-     * 始终会返回一个{@link ArrayList}，无论给定的参数是否为空
-     *
-     * @param <E>         元素的类型
-     * @param collections 包含元素的原始集合
-     * @return 一个包含元素的ArrayList
-     */
-    public static <E> ArrayList<E> arrayList(Collection<E>... collections) {
-        ArrayList<E> result = new ArrayList<>();
-        for (Collection<E> collection : collections) {
-            if (CollectionUtils.isNotEmpty(collection)) {
-                result.addAll(collection);
-            }
+    public static <E> ArrayList<E> arrayList(Collection<E> collection) {
+        ArrayList<E> result = arrayList();
+        if (CollectionUtils.isNotEmpty(collection)) {
+            result.addAll(collection);
         }
         return result;
     }
+
 
     /**
      * 通过指定的Iterable构建新的{@link ArrayList}<br>
      * 始终会返回一个{@link ArrayList}，无论给定的参数是否为空
      *
-     * @param <E>       元素的类型
-     * @param iterables 所有元素
+     * @param <E>      元素的类型
+     * @param iterable 所有元素
      * @return 一个包含所有元素的ArrayList
      */
-    @SafeVarargs
-    public static <E> ArrayList<E> arrayList(Iterable<E>... iterables) {
+    public static <E> ArrayList<E> arrayList(Iterable<E> iterable) {
         ArrayList<E> result = new ArrayList<>();
-        for (Iterable<E> iterable : iterables) {
+        if (Iterables.isNotEmpty(iterable)) {
             iterable.forEach(result::add);
         }
         return result;
     }
 
-    @SafeVarargs
-    public static <E> ArrayList<E> arrayList(Collection<E> collection, E... elements) {
-        ArrayList<E> result = new ArrayList<>(collection);
-        if (Objects.nonNull(elements)) {
-            Collections.addAll(result, elements);
-        }
-        return result;
-    }
 
     /**
      * 将一个列表变换为另外一个列表

@@ -98,7 +98,7 @@ public class RegionServiceImpl implements RegionService {
         if (dto.getParent() != null) {
             Region regionParent = new Region();
             copyProperties(regionParent, dto.getParent());
-            model.setParentCode(regionParent);
+            model.setParent(regionParent);
         }
         return model;
     }

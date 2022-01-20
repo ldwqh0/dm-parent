@@ -1,7 +1,12 @@
 package com.dm.springboot.autoconfigure.uap;
 
+import com.dm.security.controller.CurrentUserController;
+import com.dm.security.controller.UserDetailsServiceImpl;
 import com.dm.springboot.autoconfigure.DmEntityScan;
-import com.dm.uap.controller.*;
+import com.dm.uap.controller.DepartmentController;
+import com.dm.uap.controller.LoginLogController;
+import com.dm.uap.controller.UserController;
+import com.dm.uap.controller.UserRoleController;
 import com.dm.uap.repository.DepartmentRepository;
 import com.dm.uap.repository.LoginLogRepository;
 import com.dm.uap.repository.UserRepository;
@@ -14,6 +19,7 @@ import com.dm.uap.service.impl.DepartmentServiceImpl;
 import com.dm.uap.service.impl.LoginLogServiceImpl;
 import com.dm.uap.service.impl.UserRoleServiceImpl;
 import com.dm.uap.service.impl.UserServiceImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
@@ -87,17 +93,7 @@ public class UapBeanDefineConfiguration {
         );
     }
 
-    @Bean
-    @ConditionalOnMissingBean(UserDetailsService.class)
-    public UserDetailsService userDetailsService(UserService userService) {
-        return (UserDetailsService) userService;
-    }
 
-    @Bean
-    @ConditionalOnMissingBean(CurrentUserController.class)
-    public CurrentUserController currentUserController(UserService userService) {
-        return new CurrentUserController(userService);
-    }
 
     @Bean
     public DepartmentController departmentController(DepartmentService departmentService) {
@@ -117,5 +113,20 @@ public class UapBeanDefineConfiguration {
     @Bean
     public UserRoleController userRoleController(UserRoleService userService) {
         return new UserRoleController(userService);
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean(UserDetailsService.class)
+    @ConditionalOnClass(org.springframework.security.core.userdetails.UserDetailsService.class)
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return new UserDetailsServiceImpl(userRepository);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CurrentUserController.class)
+    @ConditionalOnClass(org.springframework.security.core.AuthenticatedPrincipal.class)
+    public CurrentUserController currentUserController(UserService userService) {
+        return new CurrentUserController(userService);
     }
 }

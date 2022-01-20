@@ -8,6 +8,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.*;
 
+import static com.dm.collections.Maps.hashMap;
+import static com.dm.collections.Sets.hashSet;
+
 public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
 
     private static final long serialVersionUID = 1260336499852489771L;
@@ -32,7 +35,7 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
         Map<String, Object> attributes) {
         super(id, username, null, false, false, false, false, grantedAuthority, fullName, mobile, email, regionCode, scenicName);
         this.clientId = clientId;
-        this.scopes = scopes;
+        this.scopes = hashSet(scopes);
         if (Maps.isNotEmpty(attributes)) {
             this.attributes.putAll(attributes);
         }
@@ -48,23 +51,11 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
     @Override
     @JsonIgnore
     public Map<String, Object> getAttributes() {
-        return Collections.unmodifiableMap(this.attributes);
+        return hashMap(this.attributes);
     }
 
-//    public void putAttributes(Map<String, Object> attributes) {
-//        this.attributes.putAll(attributes);
-//    }
-//
-//    public void putAttribute(String key, Object value) {
-//        if (Objects.isNull(value)) {
-//            this.attributes.remove(key);
-//        } else {
-//            this.attributes.put(key, value);
-//        }
-//    }
-
     public Set<String> getScopes() {
-        return Collections.unmodifiableSet(scopes);
+        return hashSet(scopes);
     }
 
     public String getClientId() {
@@ -72,23 +63,16 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + Objects.hash(attributes, clientId, scopes);
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        OAuth2UserDetailsDto that = (OAuth2UserDetailsDto) o;
+        return Objects.equals(attributes, that.attributes) && Objects.equals(scopes, that.scopes) && Objects.equals(clientId, that.clientId);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!super.equals(obj))
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        OAuth2UserDetailsDto other = (OAuth2UserDetailsDto) obj;
-        return Objects.equals(attributes, other.attributes) && Objects.equals(clientId, other.clientId)
-            && Objects.equals(scopes, other.scopes);
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), attributes, scopes, clientId);
     }
 }

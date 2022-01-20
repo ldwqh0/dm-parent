@@ -1,4 +1,4 @@
-package com.dm.uap.controller;
+package com.dm.security.controller;
 
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;

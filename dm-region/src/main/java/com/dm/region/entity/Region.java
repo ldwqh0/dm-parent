@@ -2,6 +2,7 @@ package com.dm.region.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Optional;
 
 @Entity
 @Table(name = "dm_region_")
@@ -20,10 +21,10 @@ public class Region implements Serializable {
         this.name = name;
     }
 
-    public Region(String code, String name, Region parentCode) {
+    public Region(String code, String name, Region parent) {
         this.code = code;
         this.name = name;
-        this.parentCode = parentCode;
+        this.parent = parent;
     }
 
     /**
@@ -44,7 +45,7 @@ public class Region implements Serializable {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_code_", foreignKey = @ForeignKey(name = "FK_dm_code_parent_"))
-    private Region parentCode;
+    private Region parent;
 
     @Column(name = "longitude_")
     private Double longitude;
@@ -77,12 +78,12 @@ public class Region implements Serializable {
         this.name = name;
     }
 
-    public Region getParentCode() {
-        return parentCode;
+    public Optional<Region> getParent() {
+        return Optional.ofNullable(parent);
     }
 
-    public void setParentCode(Region parentCode) {
-        this.parentCode = parentCode;
+    public void setParent(Region parent) {
+        this.parent = parent;
     }
 
     public Double getLongitude() {

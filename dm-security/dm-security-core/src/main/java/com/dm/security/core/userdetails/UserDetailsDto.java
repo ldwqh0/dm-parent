@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import static com.dm.collections.Lists.arrayList;
+
 @JsonInclude(Include.NON_ABSENT)
 public class UserDetailsDto implements UserDetails {
     private static final long serialVersionUID = -4337846050031244208L;
@@ -90,14 +92,14 @@ public class UserDetailsDto implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.unmodifiableCollection(grantedAuthority);
+        return arrayList(grantedAuthority);
     }
 
     public Collection<GrantedAuthority> getRoles() {
         if (CollectionUtils.isNotEmpty(grantedAuthority)) {
             return new ArrayList<>(grantedAuthority);
         } else {
-            return Collections.emptyList();
+            return arrayList();
         }
     }
 

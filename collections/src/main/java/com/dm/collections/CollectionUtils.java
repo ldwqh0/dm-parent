@@ -16,8 +16,7 @@ public final class CollectionUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static <I, O, IC extends Collection<I>, OC extends Collection<O>> OC transform(IC input,
-                                                                                          Function<I, O> converter) {
+    public static <I, O, IC extends Collection<I>, OC extends Collection<O>> OC transform(IC input, Function<I, O> converter) {
         if (input instanceof Set) {
             Set<I> si = (Set<I>) input;
             return (OC) Sets.transform(si, converter);
@@ -81,5 +80,19 @@ public final class CollectionUtils {
             }
         }
         return true;
+    }
+
+    public static <T extends Collection<? super E>, E> T addAll(T target, Collection<E> input) {
+        if (Objects.nonNull(input)) {
+            target.addAll(input);
+        }
+        return target;
+    }
+
+    public static <T extends Collection<? super E>, E> T add(T target, E... elements) {
+        if (ArrayUtils.isNotEmpty(elements)) {
+            Collections.addAll(target, elements);
+        }
+        return target;
     }
 }

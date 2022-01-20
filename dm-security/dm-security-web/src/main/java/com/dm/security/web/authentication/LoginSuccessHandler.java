@@ -9,6 +9,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import static com.dm.security.web.RequestUtils.isJsonRequest;
@@ -44,7 +46,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
         } else {
             // TODO 重定向策略需要补充
             if (StringUtils.isNotBlank(redirect)) {
-                response.sendRedirect(redirect);
+                response.sendRedirect(URLEncoder.encode(redirect, StandardCharsets.UTF_8));
             } else {
                 response.sendRedirect("/");
             }

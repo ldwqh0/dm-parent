@@ -1,4 +1,4 @@
-package com.dm.common.orm.jpa.hibernate;
+package com.dm.data.jpa.hibernate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.model.naming.Identifier;

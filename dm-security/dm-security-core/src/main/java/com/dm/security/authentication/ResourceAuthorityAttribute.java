@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.dm.collections.Sets.hashSet;
+
 /**
  * 一组资源授权配置，包括资源的匹配器，资源的scope，一个${@link Authentication}以及该组合是否可以通过
  *
@@ -65,7 +67,7 @@ public class ResourceAuthorityAttribute implements Serializable {
      *
      */
     public Set<String> getDenyAuthorities() {
-        return Collections.unmodifiableSet(this.denyAuthorities);
+        return hashSet(this.denyAuthorities);
     }
 
     /**
@@ -73,7 +75,7 @@ public class ResourceAuthorityAttribute implements Serializable {
      *
      */
     public Set<String> getAccessAuthorities() {
-        return Collections.unmodifiableSet(this.accessAuthorities);
+        return hashSet(this.accessAuthorities);
     }
 
     /**

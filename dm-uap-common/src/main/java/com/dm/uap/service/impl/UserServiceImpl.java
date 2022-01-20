@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
@@ -59,28 +59,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public boolean exist() {
         return userRepository.findMaxId().isPresent();
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "users", sync = true, key = "#username.toLowerCase()")
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return Optional.ofNullable(username)
-            .filter(StringUtils::isNotEmpty)
-            .flatMap(userRepository::findOneByUsernameIgnoreCase)
-            .map(UserConverter::toUserDetails)
-            .orElseThrow(() -> new UsernameNotFoundException(username));
-    }
-
-    @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "users", sync = true, key = "'M@_' + #result.mobile.toLowerCase()", condition = "#result.mobile!=null")
-    public org.springframework.security.core.userdetails.UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
-        return Optional.ofNullable(mobile)
-            .filter(StringUtils::isNotEmpty)
-            .flatMap(userRepository::findByMobileIgnoreCase)
-            .map(UserConverter::toUserDetails)
-            .orElseThrow(() -> new UsernameNotFoundException(mobile));
-    }
-
 
     @Override
     @Transactional

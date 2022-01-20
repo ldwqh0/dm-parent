@@ -1,7 +1,7 @@
 package com.dm.file.dto;
 
 import com.dm.common.dto.IdentifiableDto;
-import com.dm.common.entity.Audit;
+import com.dm.data.domain.Audit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

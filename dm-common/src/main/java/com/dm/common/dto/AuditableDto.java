@@ -1,6 +1,6 @@
 package com.dm.common.dto;
 
-import com.dm.common.entity.Audit;
+import com.dm.data.domain.Audit;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;

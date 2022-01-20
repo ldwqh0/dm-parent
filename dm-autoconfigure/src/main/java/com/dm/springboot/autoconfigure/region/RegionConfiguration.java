@@ -1,6 +1,7 @@
 package com.dm.springboot.autoconfigure.region;
 
 import com.dm.collections.CollectionUtils;
+import com.dm.collections.Lists;
 import com.dm.region.dto.RegionDto;
 import com.dm.region.entity.Region;
 import com.dm.region.service.RegionService;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @ConditionalOnClass(Region.class)
 @Import(RegionBeanDefineConfiguration.class)
@@ -47,20 +47,17 @@ public class RegionConfiguration implements InitializingBean {
                 CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, elementType);
                 List<Map<String, Object>> result = objectMapper.readValue(iStream, collectionType);
                 if (CollectionUtils.isNotEmpty(result)) {
-                    List<RegionDto> regions = result.stream().map(r -> {
-                        RegionDto region = new RegionDto();
-                        region.setName((String) r.get("name"));
-                        region.setCode((String) r.get("code"));
-                        region.setLatitude(Double.valueOf(String.valueOf(r.get("lat"))));
-                        region.setLongitude(Double.valueOf(String.valueOf(r.get("lng"))));
-                        String parentCode = (String) r.get("parent");
-                        if (StringUtils.isNotBlank(parentCode)) {
-                            RegionDto parent = new RegionDto();
-                            parent.setCode(parentCode);
-                            region.setParent(parent);
-                        }
-                        return region;
-                    }).collect(Collectors.toList());
+                    List<RegionDto> regions = Lists.transform(result, it -> {
+                        String parentCode = (String) it.get("parent");
+                        RegionDto parent = StringUtils.isBlank(parentCode) ? null : new RegionDto(parentCode);
+                        return new RegionDto(
+                            (String) it.get("code"),
+                            (String) it.get("name"),
+                            Double.valueOf(String.valueOf(it.get("lat"))),
+                            Double.valueOf(String.valueOf(it.get("lng"))),
+                            parent
+                        );
+                    });
                     regionService.save(regions);
                 }
             } catch (IOException e) {

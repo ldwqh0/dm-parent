@@ -1,6 +1,6 @@
 package com.dm.file.repository;
 
-import com.dm.common.repository.IdentifiableDtoRepository;
+import com.dm.data.repository.IdentifiableDtoRepository;
 import com.dm.file.entity.FileInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,7 +1,7 @@
 package com.dm.auth.repository;
 
 import com.dm.auth.entity.Menu;
-import com.dm.common.repository.IdentifiableDtoRepository;
+import com.dm.data.repository.IdentifiableDtoRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,11 +1,14 @@
 package com.dm.auth.entity;
 
-import com.dm.common.entity.AbstractEntity;
+import com.dm.collections.CollectionUtils;
+import com.dm.data.domain.AbstractEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import static com.dm.collections.Sets.hashSet;
 
 @Entity
 @Table(name = "dm_role_", uniqueConstraints = {
@@ -99,12 +102,12 @@ public class Role extends AbstractEntity {
     }
 
     public Set<Menu> getMenus() {
-        return menus;
+        return hashSet(menus);
     }
 
     public void setMenus(Set<Menu> menus) {
         this.menus.clear();
-        this.menus.addAll(menus);
+        CollectionUtils.addAll(this.menus, menus);
     }
 
     @Override

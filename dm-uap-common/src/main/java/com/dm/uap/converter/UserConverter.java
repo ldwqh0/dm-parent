@@ -2,12 +2,10 @@ package com.dm.uap.converter;
 
 import com.dm.collections.Maps;
 import com.dm.collections.Sets;
-import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.uap.dto.UserDto;
 import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
@@ -85,16 +83,5 @@ public final class UserConverter {
         );
     }
 
-    public static <T extends User> UserDetails toUserDetails(T user) {
-        return new UserDetailsDto(user.getId(), user.getUsername(),
-            user.getPassword(),
-            user.isAccountExpired(), user.isCredentialsExpired(),
-            user.isEnabled(), false,
-            Sets.transform(user.getRoles(), RoleConverter::toGrantedAuthority),
-            user.getFullName(),
-            user.getMobile(),
-            user.getEmail(),
-            user.getRegionCode(),
-            user.getScenicName());
-    }
+
 }

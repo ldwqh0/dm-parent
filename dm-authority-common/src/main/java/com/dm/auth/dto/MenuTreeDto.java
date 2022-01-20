@@ -8,7 +8,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 菜单结构
@@ -73,7 +76,7 @@ public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
     public List<MenuTreeDto> getChildren() {
         List<MenuTreeDto> result = new ArrayList<>(this.children);
         result.sort((v1, v2) -> (int) (Optional.of(v1).map(MenuTreeDto::getOrder).orElse(0L) - Optional.of(v2).map(MenuTreeDto::getOrder).orElse(0L)));
-        return Collections.unmodifiableList(result);
+        return result;
     }
 
     public void addChild(MenuTreeDto item) {

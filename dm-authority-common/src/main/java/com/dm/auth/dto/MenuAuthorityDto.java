@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.dm.collections.Sets.hashSet;
+
 /**
  * 菜单授权信息
  *
@@ -59,7 +61,7 @@ public class MenuAuthorityDto implements Serializable {
     }
 
     public Set<MenuDto> getAuthorityMenus() {
-        return Collections.unmodifiableSet(authorityMenus);
+        return hashSet(authorityMenus);
     }
 
 

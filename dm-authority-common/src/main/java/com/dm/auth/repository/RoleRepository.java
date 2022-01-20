@@ -3,7 +3,7 @@ package com.dm.auth.repository;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.Role;
 import com.dm.auth.entity.Role.Status;
-import com.dm.common.repository.IdentifiableDtoRepository;
+import com.dm.data.repository.IdentifiableDtoRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;

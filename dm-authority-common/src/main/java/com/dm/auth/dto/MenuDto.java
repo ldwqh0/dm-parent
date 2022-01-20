@@ -183,6 +183,12 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
         return childrenCount;
     }
 
+    /**
+     * 是否有子菜单存在<br>
+     * 在dto中，可能存在没有填充childrenCount的情况，这其实是一种未知状态，所以也返回未知状态
+     *
+     * @return 返回为空代表未进行自带数量计算
+     */
     @JsonGetter
     public Boolean hasChildren() {
         if (Objects.isNull(childrenCount)) {

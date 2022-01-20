@@ -24,7 +24,7 @@ public class JavaCvThumbnailServiceImpl extends DefaultThumbnailServiceImpl impl
 
     private final FileConfig config;
 
-    private String[] videoExts = new String[]{"mp4", "avi", "mov"};
+    private final String[] videoExts = new String[]{"mp4", "avi", "mov"};
 
     public JavaCvThumbnailServiceImpl(FileStorageService fileStorageService, FileConfig fileConfig) {
         super(fileStorageService);

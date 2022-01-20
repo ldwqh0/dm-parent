@@ -28,7 +28,7 @@ public final class DataSourceProperties implements Serializable {
     private final String key;
 
     public Map<String, String> getAdditionalProperties() {
-        return additionalProperties;
+        return hashMap(additionalProperties);
     }
 
     public enum DbTypes {
@@ -69,7 +69,7 @@ public final class DataSourceProperties implements Serializable {
         this.username = username;
         this.password = password;
         this.database = database;
-        this.additionalProperties = Collections.unmodifiableMap(hashMap(additionalProperties));
+        this.additionalProperties = hashMap(additionalProperties);
         this.key = createStringKey();
     }
 

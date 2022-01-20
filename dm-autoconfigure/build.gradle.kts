@@ -2,18 +2,18 @@ plugins {
     id("com.dm.java-conventions")
 }
 dependencies {
-    implementation("org.springframework:spring-beans")
     implementation("org.apache.commons:commons-lang3")
     implementation(project(":collections"))
+
     compileOnly("org.springframework.boot:spring-boot-autoconfigure")
+    compileOnly("org.springframework:spring-beans")
     compileOnly("org.springframework.data:spring-data-jpa")
-    implementation("org.springframework:spring-webmvc")
-    implementation("org.springframework:spring-webflux")
+    compileOnly("org.springframework:spring-webmvc")
+    compileOnly("org.springframework:spring-webflux")
     compileOnly("jakarta.persistence:jakarta.persistence-api")
     compileOnly("javax.cache:cache-api")
     compileOnly("com.querydsl:querydsl-jpa")
     compileOnly("com.fasterxml.jackson.core:jackson-databind")
-
     compileOnly("org.springframework.security:spring-security-config")
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-resource-server

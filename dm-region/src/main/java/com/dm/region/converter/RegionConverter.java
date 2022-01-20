@@ -6,7 +6,6 @@ import com.dm.region.entity.Region;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public final class RegionConverter {
 
@@ -18,21 +17,28 @@ public final class RegionConverter {
         Region current = region;
         while (Objects.nonNull(current)) {
             result.add(0, current.getCode());
-            current = current.getParentCode();
+            current = current.getParent().orElse(null);
         }
         return result;
     }
 
     public static RegionDto toDto(Region model) {
-        return Optional.ofNullable(model).map(input -> {
-            RegionDto dto = new RegionDto();
-            dto.setCode(model.getCode());
-            dto.setName(model.getName());
-            Region parentCode = model.getParentCode();
-            dto.setLatitude(model.getLatitude());
-            dto.setLongitude(model.getLongitude());
-            dto.setParent(toDto(parentCode));
-            return dto;
-        }).orElse(null);
+        return new RegionDto(
+            model.getCode(),
+            model.getName(),
+            model.getLongitude(),
+            model.getLatitude(),
+            model.getParent().map(RegionConverter::toSimpleDto).orElse(null)
+        );
+    }
+
+    private static RegionDto toSimpleDto(Region model) {
+        return Objects.isNull(model) ? null : new RegionDto(
+            model.getCode(),
+            model.getName(),
+            model.getLongitude(),
+            model.getLatitude(),
+            null
+        );
     }
 }

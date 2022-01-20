@@ -10,15 +10,13 @@ public final class ConnectionUtils {
     }
 
     public static CheckResult checkState(String url, String driverClass, String username, String password) {
-        try (Connection cnn_ = createConnection(url, driverClass, username, password);
-             Statement statement = cnn_.createStatement()) {
+        try (Connection cnn_ = createConnection(url, driverClass, username, password)) {
             // 尝试打开和关闭一次连接，以便确认连接的正确性
+            Statement statement = cnn_.createStatement();
             statement.close();
             return CheckResult.success();
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-            return CheckResult.failure(e);
-        } catch (ClassNotFoundException e) {
             return CheckResult.failure(e);
         }
     }

@@ -308,6 +308,7 @@ public class FileController {
                                 StreamUtils.copy(input, zipOutputStream);
                             } catch (Exception e) {
                                 log.error("文件打包下载时发生错误", e);
+                                throw e;
                             }
                         }
                     }

@@ -1,6 +1,9 @@
 package com.dm.collections;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,41 +18,27 @@ public final class Sets {
         return new HashSet<>();
     }
 
-    @SuppressWarnings("unchecked")
-    public static <E> HashSet<E> hashSet(E... e) {
-        return new HashSet<>(Arrays.asList(e));
-    }
-
-    public static <E> HashSet<E> hashSet(Collection<E> collection) {
-        return new HashSet<>(collection);
-    }
-
     @SafeVarargs
-    public static <E> HashSet<E> hasSet(Iterable<E>... iterables) {
-        HashSet<E> result = new HashSet<>();
-        for (Iterable<E> iterable : iterables) {
+    public static <E> HashSet<E> hashSet(E... e) {
+        return CollectionUtils.add(new HashSet<>(), e);
+    }
+
+    public static <T> HashSet<T> hashSet(Collection<T> origin) {
+        HashSet<T> result = hashSet();
+        if (CollectionUtils.isNotEmpty(origin)) {
+            result.addAll(origin);
+        }
+        return result;
+    }
+
+    public static <E> HashSet<E> hasSet(Iterable<E> iterable) {
+        HashSet<E> result = hashSet();
+        if (Iterables.isNotEmpty(iterable)) {
             iterable.forEach(result::add);
         }
         return result;
     }
 
-    @SafeVarargs
-    public static <E> HashSet<E> hashSet(Collection<E>... collections) {
-        HashSet<E> result = new HashSet<>();
-        for (Collection<E> collection : collections) {
-            result.addAll(collection);
-        }
-        return result;
-    }
-
-    @SafeVarargs
-    public static <T> Set<T> hashSet(Collection<T> origin, T... e) {
-        HashSet<T> result = new HashSet<>(origin);
-        if (Objects.nonNull(e)) {
-            Collections.addAll(result, e);
-        }
-        return result;
-    }
 
     public static <I, O> Set<O> transform(Set<I> fromSet, Function<? super I, ? extends O> converter) {
         if (fromSet == null) {
@@ -60,6 +49,4 @@ public final class Sets {
             return fromSet.stream().map(converter).collect(Collectors.toSet());
         }
     }
-
-
 }

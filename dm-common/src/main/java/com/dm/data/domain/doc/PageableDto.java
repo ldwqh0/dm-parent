@@ -1,10 +1,9 @@
 package com.dm.data.domain.doc;
 
-import java.io.Serializable;
-/*
- * 这个仅仅用于smart-doc的类型替换，没有任何实际用途
- */
+import org.apache.commons.lang3.NotImplementedException;
 
+import java.io.Serializable;
+// 这个仅仅用于smart-doc的类型替换，没有任何实际用途
 /**
  * 分页请求
  */
@@ -43,10 +42,10 @@ public class PageableDto implements Serializable {
     }
 
     public String[] getSort() {
-        return sort;
+        throw new NotImplementedException();
     }
 
     public void setSort(String[] sort) {
-        this.sort = sort;
+        throw new NotImplementedException();
     }
 }

@@ -19,6 +19,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
+import static com.dm.collections.Lists.arrayList;
+import static com.dm.collections.Sets.hashSet;
+
 @JsonInclude(value = Include.NON_ABSENT)
 @JsonIgnoreProperties(allowSetters = true, value = {"password"})
 public class UserDto implements Serializable, IdentifiableDto<Long> {
@@ -214,16 +217,10 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
         this.zoneinfo = zoneinfo;
         this.local = local;
         if (Objects.nonNull(address)) {
-            try {
-                cloneAddress = (Address) address.clone();
-            } catch (CloneNotSupportedException e) {
-                cloneAddress = null;
-                e.printStackTrace();
-            }
+            this.address = address.clone();
         } else {
-            cloneAddress = null;
+            this.address = null;
         }
-        this.address = cloneAddress;
     }
 
     public UserDto(String username, String fullName, String password, Set<UserRoleDto> roles) {
@@ -325,7 +322,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Set<UserRoleDto> getRoles() {
-        return Collections.unmodifiableSet(roles);
+        return hashSet(roles);
     }
 
     public String getScenicName() {
@@ -337,7 +334,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public List<UserPostDto> getPosts() {
-        return Collections.unmodifiableList(posts);
+        return arrayList(posts);
     }
 
     public LocalDate getBirthDate() {
@@ -357,12 +354,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Address getAddress() {
-        try {
-            return (Address) address.clone();
-        } catch (CloneNotSupportedException | NullPointerException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return Objects.isNull(address) ? null : address.clone();
     }
 
 

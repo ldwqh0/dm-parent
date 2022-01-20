@@ -1,6 +1,7 @@
 package com.dm.uap.entity;
 
-import com.dm.common.entity.AbstractEntity;
+import com.dm.data.domain.AbstractEntity;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -8,6 +9,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
+
+import static com.dm.collections.Maps.hashMap;
+import static com.dm.collections.Sets.hashSet;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -356,23 +360,23 @@ public class User extends AbstractEntity {
     }
 
     public Address getAddress() {
-        return address;
+        return ObjectUtils.clone(address);
     }
 
     public void setAddress(Address address) {
-        this.address = address;
+        this.address = ObjectUtils.clone(address);
     }
 
     public Set<UserRole> getRoles() {
-        return Collections.unmodifiableSet(roles);
+        return hashSet(roles);
     }
 
     public Map<Department, String> getPosts() {
-        return Collections.unmodifiableMap(posts);
+        return hashMap(posts);
     }
 
     public Map<Department, Long> getOrders() {
-        return Collections.unmodifiableMap(orders);
+        return hashMap(orders);
     }
 
     public String getRegionCode() {
@@ -384,7 +388,7 @@ public class User extends AbstractEntity {
     }
 
     public Map<String, String> getAttributes() {
-        return Collections.unmodifiableMap(attributes);
+        return hashMap(attributes);
     }
 
     public LocalDate getBirthDate() {
