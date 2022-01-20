@@ -5,7 +5,7 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class ModifyAudit implements Audit<Long, String>, Serializable {
+public class ModifyAudit implements Audit<Long, String>, Serializable, Cloneable {
 
     private static final long serialVersionUID = -6472426570089325611L;
 
@@ -36,5 +36,14 @@ public class ModifyAudit implements Audit<Long, String>, Serializable {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public ModifyAudit clone() {
+        try {
+            return (ModifyAudit) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
