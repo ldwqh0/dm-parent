@@ -2,6 +2,9 @@ group = "com.dm"
 version = V.V.project
 
 repositories {
+    maven {
+        url = uri("https://maven.aliyun.com/repository/public/")
+    }
     mavenLocal()
     mavenCentral()
 }
@@ -46,8 +49,8 @@ dependencyManagement {
 
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     withSourcesJar()
 }
 
@@ -80,4 +83,7 @@ publishing {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

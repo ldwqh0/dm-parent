@@ -8,7 +8,6 @@ project(":dm-file-spring-boot-starter").projectDir = file("dm-file/dm-file-sprin
 include("dm-autoconfigure")
 include("dm-authority-common")
 
-
 include("dm-security-core")
 project(":dm-security-core").projectDir = file("dm-security/dm-security-core")
 include("dm-security-web")
