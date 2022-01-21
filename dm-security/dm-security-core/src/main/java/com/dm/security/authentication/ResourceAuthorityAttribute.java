@@ -4,11 +4,10 @@ import com.dm.collections.CollectionUtils;
 import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.dm.collections.Sets.hashSet;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * 一组资源授权配置，包括资源的匹配器，资源的scope，一个${@link Authentication}以及该组合是否可以通过
@@ -67,7 +66,7 @@ public class ResourceAuthorityAttribute implements Serializable {
      *
      */
     public Set<String> getDenyAuthorities() {
-        return hashSet(this.denyAuthorities);
+        return unmodifiableSet(this.denyAuthorities);
     }
 
     /**
@@ -75,7 +74,7 @@ public class ResourceAuthorityAttribute implements Serializable {
      *
      */
     public Set<String> getAccessAuthorities() {
-        return hashSet(this.accessAuthorities);
+        return unmodifiableSet(this.accessAuthorities);
     }
 
     /**

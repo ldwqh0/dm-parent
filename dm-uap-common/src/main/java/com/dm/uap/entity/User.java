@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static com.dm.collections.Maps.hashMap;
-import static com.dm.collections.Sets.hashSet;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -368,15 +368,15 @@ public class User extends AbstractEntity {
     }
 
     public Set<UserRole> getRoles() {
-        return hashSet(roles);
+        return unmodifiableSet(roles);
     }
 
     public Map<Department, String> getPosts() {
-        return hashMap(posts);
+        return unmodifiableMap(posts);
     }
 
     public Map<Department, Long> getOrders() {
-        return hashMap(orders);
+        return unmodifiableMap(orders);
     }
 
     public String getRegionCode() {
@@ -388,7 +388,7 @@ public class User extends AbstractEntity {
     }
 
     public Map<String, String> getAttributes() {
-        return hashMap(attributes);
+        return unmodifiableMap(attributes);
     }
 
     public LocalDate getBirthDate() {

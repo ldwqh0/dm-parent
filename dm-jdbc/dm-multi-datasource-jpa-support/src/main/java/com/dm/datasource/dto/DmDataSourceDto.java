@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.dm.collections.Maps.hashMap;
+import static java.util.Collections.unmodifiableMap;
 
 public class DmDataSourceDto implements Serializable {
 
@@ -94,7 +95,7 @@ public class DmDataSourceDto implements Serializable {
     }
 
     public Map<String, String> getProperties() {
-        return hashMap(properties);
+        return unmodifiableMap(properties);
     }
 
     @Override

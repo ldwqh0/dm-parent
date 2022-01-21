@@ -1,18 +1,16 @@
 package com.dm.auth.dto;
 
-import com.dm.collections.CollectionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import static com.dm.collections.Sets.hashSet;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * 菜单授权信息
@@ -34,7 +32,7 @@ public class MenuAuthorityDto implements Serializable {
      * 角色可见的菜单列表
      */
     @JsonIgnoreProperties(value = {"parent"})
-    private final Set<MenuDto> authorityMenus = new HashSet<>();
+    private final Set<MenuDto> authorityMenus;
 
     /**
      * @param roleId         角色id
@@ -47,9 +45,7 @@ public class MenuAuthorityDto implements Serializable {
         @JsonProperty("authorityMenus") Set<MenuDto> authorityMenus) {
         this.roleId = roleId;
         this.roleName = roleName;
-        if (CollectionUtils.isNotEmpty(authorityMenus)) {
-            this.authorityMenus.addAll(authorityMenus);
-        }
+        this.authorityMenus = hashSet(authorityMenus);
     }
 
     public Long getRoleId() {
@@ -61,7 +57,7 @@ public class MenuAuthorityDto implements Serializable {
     }
 
     public Set<MenuDto> getAuthorityMenus() {
-        return hashSet(authorityMenus);
+        return unmodifiableSet(authorityMenus);
     }
 
 

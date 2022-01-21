@@ -12,6 +12,7 @@ import java.util.Objects;
 
 import static com.dm.collections.Lists.arrayList;
 import static com.dm.collections.Maps.hashMap;
+import static java.util.Collections.unmodifiableMap;
 
 public final class DataSourceProperties implements Serializable {
 
@@ -28,7 +29,7 @@ public final class DataSourceProperties implements Serializable {
     private final String key;
 
     public Map<String, String> getAdditionalProperties() {
-        return hashMap(additionalProperties);
+        return unmodifiableMap(additionalProperties);
     }
 
     public enum DbTypes {

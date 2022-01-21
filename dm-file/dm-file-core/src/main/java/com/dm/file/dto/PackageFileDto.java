@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.*;
 
-import static com.dm.collections.Lists.arrayList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * 打包下载文件的文件信息
@@ -43,7 +43,7 @@ public class PackageFileDto implements Serializable {
     }
 
     public List<UUID> getFiles() {
-        return arrayList(files);
+        return unmodifiableList(files);
     }
 
     public PackageFileDto(

@@ -2,7 +2,7 @@ package com.dm.jdbc;
 
 import java.util.List;
 
-import static com.dm.collections.Lists.arrayList;
+import static java.util.Collections.unmodifiableList;
 
 public interface TableMeta {
 
@@ -39,7 +39,7 @@ public interface TableMeta {
 
         @Override
         public List<ColumnMeta> getColumns() {
-            return arrayList(columns);
+            return unmodifiableList(columns);
         }
 
         @Override

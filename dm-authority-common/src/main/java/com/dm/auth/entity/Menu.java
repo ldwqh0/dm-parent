@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.dm.collections.Lists.arrayList;
+import static java.util.Collections.unmodifiableList;
 
 @Entity
 @Table(name = "dm_menu_", uniqueConstraints = {
@@ -208,7 +208,7 @@ public class Menu extends AbstractEntity {
     }
 
     public List<Menu> getChildren() {
-        return arrayList(children);
+        return unmodifiableList(children);
     }
 
     @Override

@@ -1,21 +1,25 @@
 package com.dm.security.oauth2.core;
 
-import com.dm.collections.Maps;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import static com.dm.collections.Maps.hashMap;
 import static com.dm.collections.Sets.hashSet;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 
 public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
 
     private static final long serialVersionUID = 1260336499852489771L;
 
-    private final Map<String, Object> attributes = new HashMap<>();
+    private final Map<String, Object> attributes;
 
     private final Set<String> scopes;
 
@@ -36,9 +40,7 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
         super(id, username, null, false, false, false, false, grantedAuthority, fullName, mobile, email, regionCode, scenicName);
         this.clientId = clientId;
         this.scopes = hashSet(scopes);
-        if (Maps.isNotEmpty(attributes)) {
-            this.attributes.putAll(attributes);
-        }
+        this.attributes = hashMap(attributes);
     }
 
     @Override
@@ -51,11 +53,11 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
     @Override
     @JsonIgnore
     public Map<String, Object> getAttributes() {
-        return hashMap(this.attributes);
+        return unmodifiableMap(this.attributes);
     }
 
     public Set<String> getScopes() {
-        return hashSet(scopes);
+        return unmodifiableSet(scopes);
     }
 
     public String getClientId() {

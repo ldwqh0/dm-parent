@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.dm.collections.Maps.hashMap;
+import static java.util.Collections.unmodifiableMap;
 
 @Entity
 @Table(name = "dm_datasource_")
@@ -132,7 +133,7 @@ public class DmDataSource extends AbstractEntity {
     }
 
     public Map<String, String> getProperties() {
-        return hashMap(properties);
+        return unmodifiableMap(properties);
     }
 
     public void setProperties(Map<String, String> properties) {

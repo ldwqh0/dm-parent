@@ -7,7 +7,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Import;
 
-import java.util.Collections;
 import java.util.List;
 
 import static com.dm.collections.Lists.arrayList;

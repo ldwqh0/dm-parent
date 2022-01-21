@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.dm.collections.Sets.hashSet;
+import static java.util.Collections.unmodifiableSet;
 
 @Entity
 @Table(name = "dm_role_", uniqueConstraints = {
@@ -102,7 +102,7 @@ public class Role extends AbstractEntity {
     }
 
     public Set<Menu> getMenus() {
-        return hashSet(menus);
+        return unmodifiableSet(menus);
     }
 
     public void setMenus(Set<Menu> menus) {

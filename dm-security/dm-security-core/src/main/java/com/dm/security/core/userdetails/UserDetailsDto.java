@@ -1,6 +1,5 @@
 package com.dm.security.core.userdetails;
 
-import com.dm.collections.CollectionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -9,11 +8,10 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import static com.dm.collections.Lists.arrayList;
+import static java.util.Collections.unmodifiableCollection;
 
 @JsonInclude(Include.NON_ABSENT)
 public class UserDetailsDto implements UserDetails {
@@ -73,11 +71,7 @@ public class UserDetailsDto implements UserDetails {
         this.credentialsExpired = credentialsExpired;
         this.enabled = enabled;
         this.locked = locked;
-        if (CollectionUtils.isNotEmpty(grantedAuthority)) {
-            this.grantedAuthority = new ArrayList<>(grantedAuthority);
-        } else {
-            this.grantedAuthority = Collections.emptyList();
-        }
+        this.grantedAuthority = arrayList(grantedAuthority);
         this.fullName = fullName;
         this.mobile = mobile;
         this.email = email;
@@ -92,15 +86,11 @@ public class UserDetailsDto implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return arrayList(grantedAuthority);
+        return unmodifiableCollection(grantedAuthority);
     }
 
     public Collection<GrantedAuthority> getRoles() {
-        if (CollectionUtils.isNotEmpty(grantedAuthority)) {
-            return new ArrayList<>(grantedAuthority);
-        } else {
-            return arrayList();
-        }
+        return unmodifiableCollection(grantedAuthority);
     }
 
     @Override

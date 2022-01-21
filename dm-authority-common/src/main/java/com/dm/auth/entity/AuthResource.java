@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.dm.collections.Sets.hashSet;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * 定义资源
@@ -123,7 +123,7 @@ public class AuthResource extends AbstractEntity {
     }
 
     public Set<HttpMethod> getMethods() {
-        return hashSet(methods);
+        return unmodifiableSet(methods);
     }
 
     public void setMethods(Set<HttpMethod> methods) {
@@ -148,7 +148,7 @@ public class AuthResource extends AbstractEntity {
     }
 
     public Set<String> getScope() {
-        return hashSet(scope);
+        return unmodifiableSet(scope);
     }
 
     public String getDescription() {
@@ -160,11 +160,11 @@ public class AuthResource extends AbstractEntity {
     }
 
     public Set<Role> getAccessAuthorities() {
-        return hashSet(accessAuthorities);
+        return unmodifiableSet(accessAuthorities);
     }
 
     public Set<Role> getDenyAuthorities() {
-        return hashSet(denyAuthorities);
+        return unmodifiableSet(denyAuthorities);
     }
 
     @Override

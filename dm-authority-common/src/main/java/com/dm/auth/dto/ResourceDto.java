@@ -7,12 +7,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpMethod;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.dm.collections.Sets.hashSet;
+import static java.util.Collections.unmodifiableSet;
 
 public class ResourceDto implements Serializable, IdentifiableDto<Long> {
 
@@ -106,7 +105,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Set<HttpMethod> getMethods() {
-        return hashSet(methods);
+        return unmodifiableSet(methods);
     }
 
     public String getMatcher() {
@@ -118,7 +117,7 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Set<String> getScope() {
-        return hashSet(scope);
+        return unmodifiableSet(scope);
     }
 
     public MatchType getMatchType() {
@@ -126,11 +125,11 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Set<RoleDto> getAccessAuthorities() {
-        return hashSet(accessAuthorities);
+        return unmodifiableSet(accessAuthorities);
     }
 
     public Set<RoleDto> getDenyAuthorities() {
-        return hashSet(denyAuthorities);
+        return unmodifiableSet(denyAuthorities);
     }
 
     @Override

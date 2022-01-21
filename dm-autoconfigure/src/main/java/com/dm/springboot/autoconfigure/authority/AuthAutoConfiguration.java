@@ -7,7 +7,6 @@ import com.dm.auth.entity.Role;
 import com.dm.auth.service.MenuService;
 import com.dm.auth.service.ResourceService;
 import com.dm.auth.service.RoleService;
-import com.dm.collections.Sets;
 import com.dm.security.authentication.UriResource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -15,6 +14,8 @@ import org.springframework.context.annotation.Import;
 
 import java.util.Collections;
 import java.util.Set;
+
+import static com.dm.collections.Sets.hashSet;
 
 @ConditionalOnClass({Role.class})
 @Import({AuthBeanDefineConfiguration.class, AuthJCacheConfiguration.class})
@@ -43,10 +44,10 @@ public class AuthAutoConfiguration implements InitializingBean {
 
     private Set<ResourceDto> initResources(Set<RoleDto> roles) {
         if (!resourceService.exist()) {
-            return Sets.hashSet(
-                    initResource("default", "/**", "默认资源类型", roles),
-                    initResource("用户可见菜单", "/p/menuAuthorities/current**/**", "当前用户可见菜单", roles),
-                    initResource("当前用户信息", "/p/authorities/current", "当前用户信息", roles)
+            return hashSet(
+                initResource("default", "/**", "默认资源类型", roles),
+                initResource("用户可见菜单", "/p/menuAuthorities/current**/**", "当前用户可见菜单", roles),
+                initResource("当前用户信息", "/p/authorities/current", "当前用户信息", roles)
             );
         } else {
             return Collections.emptySet();
@@ -69,7 +70,7 @@ public class AuthAutoConfiguration implements InitializingBean {
     }
 
     private Set<RoleDto> initRoles(Set<MenuDto> menus) {
-        return Sets.hashSet(
+        return hashSet(
             initRole(1L, "ROLE_AUTHENTICATED", "系统内置认证通过角色，所有已经登录的用户均为该角色", menus),
             initRole(2L, "ROLE_ANONYMOUS", "系统内置匿名角色", menus),
             initRole(3L, "ROLE_ADMIN", "系统内置管理员角色", menus)

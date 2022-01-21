@@ -19,8 +19,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
-import static com.dm.collections.Lists.arrayList;
-import static com.dm.collections.Sets.hashSet;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 
 @JsonInclude(value = Include.NON_ABSENT)
 @JsonIgnoreProperties(allowSetters = true, value = {"password"})
@@ -322,7 +322,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public Set<UserRoleDto> getRoles() {
-        return hashSet(roles);
+        return unmodifiableSet(roles);
     }
 
     public String getScenicName() {
@@ -334,7 +334,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     }
 
     public List<UserPostDto> getPosts() {
-        return arrayList(posts);
+        return unmodifiableList(posts);
     }
 
     public LocalDate getBirthDate() {

@@ -5,6 +5,8 @@ import com.dm.collections.Lists;
 import java.sql.*;
 import java.util.List;
 
+import static com.dm.collections.Lists.arrayList;
+
 public final class ConnectionUtils {
     private ConnectionUtils() {
     }
@@ -22,7 +24,7 @@ public final class ConnectionUtils {
     }
 
     public static List<TableMeta> listTables(Connection connection) throws SQLException {
-        List<TableMeta> tableList = Lists.arrayList();
+        List<TableMeta> tableList = arrayList();
         DatabaseMetaData metaData = connection.getMetaData();
         ResultSet metaResult = metaData.getTables(connection.getCatalog(), null, null,
             new String[]{"TABLE"});
