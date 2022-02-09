@@ -35,7 +35,7 @@ public class FileConfiguration {
     }
 
     @Bean
-    public FileInfoService fileInfoService(@Autowired FileInfoRepository fileInfoRepository,
+    public FileInfoService fileInfoService(FileInfoRepository fileInfoRepository,
                                            FileStorageService fileStorageService) {
         return new FileServiceImpl(
             fileStorageService,

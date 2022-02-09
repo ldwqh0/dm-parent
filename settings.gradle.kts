@@ -42,3 +42,21 @@ include("dm-multi-datasource-jpa-support")
 project(":dm-multi-datasource-jpa-support").projectDir = file("dm-jdbc/dm-multi-datasource-jpa-support")
 include("dm-region")
 include("dm-uap-common")
+
+include(":dm-notification-api")
+project(":dm-notification-api").projectDir = file("dm-notification/dm-notification-api")
+
+include(":dm-notification-client")
+project(":dm-notification-client").projectDir = file("dm-notification/dm-notification-client")
+
+include(":dm-notification-server")
+project(":dm-notification-server").projectDir = file("dm-notification/dm-notification-server")
+
+include(":dm-todo-task-api")
+project(":dm-todo-task-api").projectDir = file("dm-todo-task/dm-todo-task-api")
+
+include(":dm-todo-task-client")
+project(":dm-todo-task-client").projectDir = file("dm-todo-task/dm-todo-task-client")
+
+include(":dm-todo-task-server")
+project(":dm-todo-task-server").projectDir = file("dm-todo-task/dm-todo-task-server")

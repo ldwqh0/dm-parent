@@ -35,5 +35,6 @@ dependencies {
     compileOnly(project(":dm-uap-common"))
     compileOnly(project(":dm-security-oauth2-resource"))
     compileOnly(project(":dm-security-oauth2-client"))
-
+    compileOnly(project(":dm-notification-server"))
+    compileOnly(project(":dm-todo-task-server"))
 }

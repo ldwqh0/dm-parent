@@ -8,6 +8,8 @@ com.dm.springboot.autoconfigure.data.SpringDataReactiveAutoConfiguration,\
 com.dm.springboot.autoconfigure.data.DmSpringDataWebConfiguration,\
 com.dm.springboot.autoconfigure.dingtalk.DingTalkConfiguration,\
 com.dm.springboot.autoconfigure.file.FileConfiguration,\
+com.dm.springboot.autoconfigure.notification.DmNotificationConfiguration,\
+com.dm.springboot.autoconfigure.todo.DmTotoTaskConfiguration,\
 com.dm.springboot.autoconfigure.common.QueryDslConfiguration,\
 com.dm.springboot.autoconfigure.wx.WxConfiguration,\
 com.dm.springboot.autoconfigure.jdbc.MultiDataSourceAutoConfiguration,\
