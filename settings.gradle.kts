@@ -1,4 +1,4 @@
-rootProject.name = "dm"
+rootProject.name = "dm-parent"
 include("collections")
 include("dm-common")
 include("dm-file-core")
