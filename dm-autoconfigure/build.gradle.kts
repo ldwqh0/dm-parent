@@ -38,3 +38,8 @@ dependencies {
     compileOnly(project(":dm-notification-server"))
     compileOnly(project(":dm-todo-task-server"))
 }
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "dm.autoconfigure")
+    }
+}

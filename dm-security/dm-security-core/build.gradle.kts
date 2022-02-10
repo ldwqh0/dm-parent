@@ -12,3 +12,8 @@ dependencies {
     implementation(project(":collections"))
 
 }
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "dm.security.core")
+    }
+}

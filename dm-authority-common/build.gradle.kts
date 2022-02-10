@@ -19,6 +19,9 @@ dependencies {
     annotationProcessor("com.querydsl:querydsl-apt:${V.V.queryDsl}:jpa")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
-
-
+}
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "dm.authority.common")
+    }
 }

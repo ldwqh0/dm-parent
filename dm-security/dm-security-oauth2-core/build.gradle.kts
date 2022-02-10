@@ -12,3 +12,8 @@ dependencies {
     compileOnly("org.springframework:spring-webflux")
     implementation("com.fasterxml.jackson.core:jackson-annotations")
 }
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "dm.security.oauth2.core")
+    }
+}

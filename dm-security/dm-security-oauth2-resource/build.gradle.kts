@@ -15,3 +15,8 @@ dependencies {
     compileOnly("org.springframework:spring-webflux")
 
 }
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "dm.security.oauth2.resource")
+    }
+}
