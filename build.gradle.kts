@@ -40,10 +40,6 @@ dependencies {
     }
 }
 
-configurations.all {
-    exclude("org.springframework.boot", "spring-boot-starter-tomcat")
-}
-
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["javaPlatform"])
