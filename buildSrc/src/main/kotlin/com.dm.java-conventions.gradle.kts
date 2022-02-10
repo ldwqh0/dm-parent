@@ -41,6 +41,7 @@ dependencyManagement {
             dependency("com.querydsl:querydsl-jpa:${V.V.queryDsl}")
             dependency("org.jsoup:jsoup:${V.V.jsoup}")
             dependency("com.github.binarywang:weixin-java-mp:${V.V.weixin_java_mp}")
+            dependency("com.nimbusds:oauth2-oidc-sdk:${V.V.nimbusds}")
         }
     }
 }
