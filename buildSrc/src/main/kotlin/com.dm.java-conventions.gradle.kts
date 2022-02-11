@@ -1,10 +1,8 @@
 group = "com.dm"
-version = V.V.project
+version = Configuration.Versions.project
 
 repositories {
-    maven {
-        url = uri("https://maven.aliyun.com/repository/public/")
-    }
+    maven("https://maven.aliyun.com/repository/public/")
     mavenCentral()
 }
 
@@ -32,16 +30,16 @@ eclipse {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:${V.V.springBoot}")
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${V.V.springCloud}")
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${Configuration.Versions.springBoot}")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${Configuration.Versions.springCloud}")
     }
     dependencies {
         dependencies {
-            dependency("commons-io:commons-io:${V.V.commons_io}")
-            dependency("com.querydsl:querydsl-jpa:${V.V.queryDsl}")
-            dependency("org.jsoup:jsoup:${V.V.jsoup}")
-            dependency("com.github.binarywang:weixin-java-mp:${V.V.weixin_java_mp}")
-            dependency("com.nimbusds:oauth2-oidc-sdk:${V.V.nimbusds}")
+            dependency("commons-io:commons-io:${Configuration.Versions.commons_io}")
+            dependency("com.querydsl:querydsl-jpa:${Configuration.Versions.queryDsl}")
+            dependency("org.jsoup:jsoup:${Configuration.Versions.jsoup}")
+            dependency("com.github.binarywang:weixin-java-mp:${Configuration.Versions.weixin_java_mp}")
+            dependency("com.nimbusds:oauth2-oidc-sdk:${Configuration.Versions.nimbusds}")
         }
     }
 }
@@ -68,13 +66,13 @@ publishing {
     }
     repositories {
         maven {
-            val releasesRepoUrl = "http://demo.yzhxh.com:8081/nexus/repository/maven-releases/"
-            val snapshotsRepoUrl = "http://demo.yzhxh.com:8081/nexus/repository/maven-snapshots/"
+            val releasesRepoUrl = Configuration.Publish.releasesRepoUrl
+            val snapshotsRepoUrl = Configuration.Publish.snapshotsRepoUrl
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
             isAllowInsecureProtocol = true
             credentials {
-                username = "lidong"
-                password = "lidong"
+                username = Configuration.Publish.username
+                password = Configuration.Publish.password
             }
         }
         mavenLocal()

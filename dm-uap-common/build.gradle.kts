@@ -14,7 +14,7 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api")
 
 
-    annotationProcessor("com.querydsl:querydsl-apt:${V.V.queryDsl}:jpa")
+    annotationProcessor("com.querydsl:querydsl-apt:${Configuration.Versions.queryDsl}:jpa")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 

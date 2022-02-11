@@ -1,5 +1,5 @@
 group = "com.dm"
-version = V.V.project
+version = Configuration.Versions.project
 plugins {
     `java-platform`
     `maven-publish`
@@ -8,8 +8,8 @@ javaPlatform {
     allowDependencies()
 }
 dependencies {
-    api(platform("org.springframework.cloud:spring-cloud-dependencies:${V.V.springCloud}"))
-    api(platform("org.springframework.boot:spring-boot-dependencies:${V.V.springBoot}"))
+    api(platform("org.springframework.cloud:spring-cloud-dependencies:${Configuration.Versions.springCloud}"))
+    api(platform("org.springframework.boot:spring-boot-dependencies:${Configuration.Versions.springBoot}"))
     constraints {
         api(project(":dm-common"))
         api(project(":collections"))
@@ -46,13 +46,13 @@ publishing {
     }
     repositories {
         maven {
-            val releasesRepoUrl = "http://demo.yzhxh.com:8081/nexus/repository/maven-releases/"
-            val snapshotsRepoUrl = "http://demo.yzhxh.com:8081/nexus/repository/maven-snapshots/"
+            val releasesRepoUrl = Configuration.Publish.releasesRepoUrl
+            val snapshotsRepoUrl = Configuration.Publish.snapshotsRepoUrl
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
             isAllowInsecureProtocol = true
             credentials {
-                username = "lidong"
-                password = "lidong"
+                username = Configuration.Publish.username
+                password = Configuration.Publish.password
             }
         }
         mavenLocal()

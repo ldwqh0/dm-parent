@@ -37,7 +37,7 @@ public class OAuth2UserDetailsDto extends UserDetailsDto implements OAuth2User {
         String regionCode,
         String scenicName,
         Map<String, Object> attributes) {
-        super(id, username, null, false, false, false, false, grantedAuthority, fullName, mobile, email, regionCode, scenicName);
+        super(id, username, null, false, false, true, false, grantedAuthority, fullName, mobile, email, regionCode, scenicName);
         this.clientId = clientId;
         this.scopes = hashSet(scopes);
         this.attributes = hashMap(attributes);

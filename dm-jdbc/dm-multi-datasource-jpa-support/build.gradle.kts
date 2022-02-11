@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":collections"))
     api(project(":dm-multi-datasource"))
 
-    annotationProcessor("com.querydsl:querydsl-apt:${V.V.queryDsl}:jpa")
+    annotationProcessor("com.querydsl:querydsl-apt:${Configuration.Versions.queryDsl}:jpa")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 

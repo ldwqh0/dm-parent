@@ -63,9 +63,7 @@ project(":dm-todo-task-server").projectDir = file("dm-todo-task/dm-todo-task-ser
 
 pluginManagement {
     repositories {
-        maven {
-            url = uri("https://maven.aliyun.com/repository/gradle-plugin")
-        }
+        maven("https://maven.aliyun.com/repository/gradle-plugin")
         gradlePluginPortal()
     }
 }
