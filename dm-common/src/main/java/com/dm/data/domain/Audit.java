@@ -28,7 +28,7 @@ public interface Audit<ID extends Serializable, NAME extends Serializable> exten
         return new SimpleAuditImpl<>(userid, username);
     }
 
-    static <ID extends Serializable, NAME extends Serializable> Audit<ID, NAME> of(Audit<ID, NAME> audit) {
+    static <ID extends Serializable, NAME extends Serializable> Audit<ID, NAME> from(Audit<ID, NAME> audit) {
         return new SimpleAuditImpl<>(audit.getUserid(), audit.getUsername());
     }
 

@@ -4,30 +4,31 @@ import com.dm.data.domain.Audit;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 public interface AuditableDto<UID extends Serializable, UNAME extends Serializable> extends Serializable {
 
     /**
      * 创建人
      */
-    Audit<UID, UNAME> getCreateBy();
+    Optional<Audit<UID, UNAME>> getCreatedBy();
 
 
     /**
      * 创建人
      */
-    Audit<UID, UNAME> getLastModifiedBy();
+    Optional<Audit<UID, UNAME>> getLastModifiedBy();
 
 
     /**
      * 创建时间
      */
-    ZonedDateTime getCreatedTime();
+    Optional<ZonedDateTime> getCreatedTime();
 
 
     /**
      * 最后修改时间
      */
-    ZonedDateTime getLastModifiedTime();
+    Optional<ZonedDateTime> getLastModifiedTime();
 
 }
