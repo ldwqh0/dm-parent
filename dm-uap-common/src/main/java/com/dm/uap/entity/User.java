@@ -198,7 +198,6 @@ public class User extends AbstractEntity {
         female
     }
 
-
     public String getUsername() {
         return username;
     }
@@ -422,7 +421,6 @@ public class User extends AbstractEntity {
     public void setLastModifiedTime(ZonedDateTime lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
-
 
     @Override
     public boolean equals(Object o) {

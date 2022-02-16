@@ -49,7 +49,6 @@ public class SecurityAutoConfiguration {
         return new CurrentAuthorityController();
     }
 
-
     @Bean
     @ConditionalOnClass(value = {
         Mono.class,
@@ -77,7 +76,6 @@ public class SecurityAutoConfiguration {
             );
         }
     }
-
 
     @Configuration
     @ConditionalOnClass({ReactiveAuthenticationManager.class})
@@ -125,7 +123,7 @@ public class SecurityAutoConfiguration {
             http.authorizeRequests().anyRequest().authenticated().and().formLogin();
             // 设置匿名用户的默认分组
             List<GrantedAuthority> authorities = Collections.singletonList(GrantedAuthorityDto.ROLE_ANONYMOUS);
-            UserDetailsDto ud = new UserDetailsDto("anonymousUser", authorities);
+            UserDetailsDto ud = UserDetailsDto.builder().username("anonymousUser").grantedAuthority(authorities).build();
             http.anonymous().authorities(authorities).principal(ud);
             http.formLogin().successHandler(new LoginSuccessHandler(objectMapper)).failureHandler(new LoginFailureHandler(objectMapper));
             MediaTypeRequestMatcher mediaTypeRequestMatcher = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);

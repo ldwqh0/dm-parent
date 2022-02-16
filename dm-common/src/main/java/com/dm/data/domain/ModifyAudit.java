@@ -27,7 +27,6 @@ public class ModifyAudit implements Audit<Long, String>, Serializable, Cloneable
         this(audit.getUserid(), audit.getUsername());
     }
 
-
     @Override
     public Long getUserid() {
         return userid;

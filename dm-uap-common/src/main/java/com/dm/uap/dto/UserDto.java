@@ -7,8 +7,6 @@ import com.dm.uap.entity.Address;
 import com.dm.uap.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -19,13 +17,13 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 
-@JsonInclude(value = Include.NON_ABSENT)
+@JsonInclude(NON_ABSENT)
 @JsonIgnoreProperties(allowSetters = true, value = {"password"})
 public class UserDto implements Serializable, IdentifiableDto<Long> {
-
 
     public interface Default {
     }
@@ -94,7 +92,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
      * 用户是否被启用
      */
     @NotNull(groups = {New.class, Update.class})
-    private final Boolean enabled = Boolean.FALSE;
+    private final boolean enabled;
 
     /**
      * 用户email
@@ -161,33 +159,32 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
 
     private final Address address;
 
-
-    public UserDto(@JsonProperty("id") Long id,
-                   @JsonProperty("no") String no,
-                   @JsonProperty("givenName") String givenName,
-                   @JsonProperty("familyName") String familyName,
-                   @JsonProperty("middleName") String middleName,
-                   @JsonProperty("profile") String profile,
-                   @JsonProperty("website") String website,
-                   @JsonProperty("gender") User.Gender gender,
-                   @JsonProperty("username") String username,
-                   @JsonProperty("fullName") String fullName,
-                   @JsonProperty("password") String password,
-                   @JsonProperty("email") String email,
-                   @JsonProperty("emailVerified") Boolean emailVerified,
-                   @JsonProperty("mobile") String mobile,
-                   @JsonProperty("phoneNumberVerified") Boolean phoneNumberVerified,
-                   @JsonProperty("description") String description,
-                   @JsonProperty("roles") Set<UserRoleDto> roles,
-                   @JsonProperty("scenicName") String scenicName,
-                   @JsonProperty("regionCode") String regionCode,
-                   @JsonProperty("posts") List<UserPostDto> posts,
-                   @JsonProperty("birthDate") LocalDate birthDate,
-                   @JsonProperty("profilePhoto") String profilePhoto,
-                   @JsonProperty("zoneinfo") String zoneinfo,
-                   @JsonProperty("local") String local,
-                   @JsonProperty("address") Address address) {
-        Address cloneAddress;
+    private UserDto(Long id,
+                    String no,
+                    String givenName,
+                    String familyName,
+                    String middleName,
+                    String profile,
+                    String website,
+                    User.Gender gender,
+                    String username,
+                    String fullName,
+                    String password,
+                    Boolean enabled,
+                    String email,
+                    Boolean emailVerified,
+                    String mobile,
+                    Boolean phoneNumberVerified,
+                    String description,
+                    Set<UserRoleDto> roles,
+                    String scenicName,
+                    String regionCode,
+                    List<UserPostDto> posts,
+                    LocalDate birthDate,
+                    String profilePhoto,
+                    String zoneinfo,
+                    String local,
+                    Address address) {
         this.id = id;
         this.no = no;
         this.givenName = givenName;
@@ -199,6 +196,7 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
         this.username = username;
         this.fullName = fullName;
         this.password = password;
+        this.enabled = Boolean.TRUE.equals(enabled);
         this.email = email;
         this.emailVerified = Boolean.TRUE.equals(emailVerified);
         this.mobile = mobile;
@@ -221,35 +219,6 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
         } else {
             this.address = null;
         }
-    }
-
-    public UserDto(String username, String fullName, String password, Set<UserRoleDto> roles) {
-        this(null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            username,
-            fullName,
-            password,
-            null,
-            null,
-            null,
-            null,
-            null,
-            roles,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
     }
 
     @Override
@@ -357,7 +326,6 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
         return Objects.isNull(address) ? null : address.clone();
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -369,6 +337,180 @@ public class UserDto implements Serializable, IdentifiableDto<Long> {
     @Override
     public int hashCode() {
         return Objects.hash(id, no, givenName, familyName, middleName, profile, website, gender, username, fullName, password, enabled, email, emailVerified, mobile, phoneNumberVerified, description, roles, scenicName, regionCode, posts, birthDate, profilePhoto, zoneinfo, local, address);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String no;
+        private String givenName;
+        private String familyName;
+        private String middleName;
+        private String profile;
+        private String website;
+        private User.Gender gender;
+        private String username;
+        private String fullName;
+        private String password;
+        private Boolean enabled = Boolean.FALSE;
+        private String email;
+        private Boolean emailVerified;
+        private String mobile;
+        private Boolean phoneNumberVerified;
+        private String description;
+        private Set<UserRoleDto> roles = new HashSet<>();
+        private String scenicName;
+        private String regionCode;
+        private List<UserPostDto> posts = new ArrayList<>();
+        private LocalDate birthDate;
+        private String profilePhoto;
+        private String zoneinfo;
+        private String local;
+        private Address address;
+
+        private Builder() {
+        }
+
+        public static Builder anUserDto() {
+            return new Builder();
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder no(String no) {
+            this.no = no;
+            return this;
+        }
+
+        public Builder givenName(String givenName) {
+            this.givenName = givenName;
+            return this;
+        }
+
+        public Builder familyName(String familyName) {
+            this.familyName = familyName;
+            return this;
+        }
+
+        public Builder middleName(String middleName) {
+            this.middleName = middleName;
+            return this;
+        }
+
+        public Builder profile(String profile) {
+            this.profile = profile;
+            return this;
+        }
+
+        public Builder website(String website) {
+            this.website = website;
+            return this;
+        }
+
+        public Builder gender(User.Gender gender) {
+            this.gender = gender;
+            return this;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder fullName(String fullName) {
+            this.fullName = fullName;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder enabled(Boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder emailVerified(boolean emailVerified) {
+            this.emailVerified = emailVerified;
+            return this;
+        }
+
+        public Builder mobile(String mobile) {
+            this.mobile = mobile;
+            return this;
+        }
+
+        public Builder phoneNumberVerified(boolean phoneNumberVerified) {
+            this.phoneNumberVerified = phoneNumberVerified;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder roles(Set<UserRoleDto> roles) {
+            this.roles = roles;
+            return this;
+        }
+
+        public Builder scenicName(String scenicName) {
+            this.scenicName = scenicName;
+            return this;
+        }
+
+        public Builder regionCode(String regionCode) {
+            this.regionCode = regionCode;
+            return this;
+        }
+
+        public Builder posts(List<UserPostDto> posts) {
+            this.posts = posts;
+            return this;
+        }
+
+        public Builder birthDate(LocalDate birthDate) {
+            this.birthDate = birthDate;
+            return this;
+        }
+
+        public Builder profilePhoto(String profilePhoto) {
+            this.profilePhoto = profilePhoto;
+            return this;
+        }
+
+        public Builder zoneinfo(String zoneinfo) {
+            this.zoneinfo = zoneinfo;
+            return this;
+        }
+
+        public Builder local(String local) {
+            this.local = local;
+            return this;
+        }
+
+        public Builder address(Address address) {
+            this.address = address;
+            return this;
+        }
+
+        public UserDto build() {
+            return new UserDto(id, no, givenName, familyName, middleName, profile, website, gender, username, fullName, password, enabled, email, emailVerified, mobile, phoneNumberVerified, description, roles, scenicName, regionCode, posts, birthDate, profilePhoto, zoneinfo, local, address);
+        }
     }
 }
 

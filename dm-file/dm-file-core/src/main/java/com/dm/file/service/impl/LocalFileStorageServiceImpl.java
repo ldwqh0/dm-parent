@@ -20,7 +20,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-
 public class LocalFileStorageServiceImpl implements FileStorageService {
 
     private static final Logger log = LoggerFactory.getLogger(LocalFileStorageServiceImpl.class);

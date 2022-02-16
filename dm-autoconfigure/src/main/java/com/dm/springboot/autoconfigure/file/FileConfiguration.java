@@ -14,7 +14,6 @@ import com.dm.file.service.impl.FileServiceImpl;
 import com.dm.file.service.impl.LocalFileStorageServiceImpl;
 import com.dm.file.service.impl.MapPackageFileServiceImpl;
 import com.dm.springboot.autoconfigure.DmEntityScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -58,13 +57,11 @@ public class FileConfiguration {
         );
     }
 
-
     @Bean
     @ConfigurationProperties(prefix = "dm.fileserver")
     public FileConfig fileConfig() {
         return new FileConfig();
     }
-
 
     @Bean
     public FileListener fileListener(FileStorageService fileStorageService,

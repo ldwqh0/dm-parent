@@ -7,11 +7,38 @@ import com.dm.uap.dto.UserPostDto;
 import com.dm.uap.entity.Department;
 import com.dm.uap.entity.User;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public final class UserConverter {
     private UserConverter() {
+    }
+
+    private static UserDto.Builder newBuilder(User model) {
+        return UserDto.builder()
+            .id(model.getId())
+            .no(model.getNo())
+            .givenName(model.getGivenName())
+            .familyName(model.getFamilyName())
+            .middleName(model.getMiddleName())
+            .profile(model.getProfile())
+            .website(model.getWebsite())
+            .gender(model.getGender())
+            .username(model.getUsername())
+            .fullName(model.getFullName())
+            .email(model.getEmail())
+            .emailVerified(model.isEmailVerified())
+            .mobile(model.getMobile())
+            .phoneNumberVerified(model.isPhoneNumberVerified())
+            .scenicName(model.getScenicName())
+            .regionCode(model.getRegionCode())
+            .birthDate(model.getBirthDate())
+            .profilePhoto(model.getProfilePhoto())
+            .zoneinfo(model.getZoneinfo())
+            .local(model.getLocal())
+            .address(model.getAddress());
     }
 
     public static UserDto toDto(User model) {
@@ -21,67 +48,17 @@ public final class UserConverter {
             if (Maps.isNotEmpty(_posts)) {
                 _posts.forEach((key, value) -> posts.add(new UserPostDto(DepartmentConverter.toSimpleDto(key), value)));
             }
+            return newBuilder(user)
+                .description(user.getDescription())
+                .posts(posts)
+                .roles(Sets.transform(user.getRoles(), RoleConverter::toDto))
+                .build();
 
-            return
-                new UserDto(
-                    model.getId(),
-                    model.getNo(),
-                    model.getGivenName(),
-                    model.getFamilyName(),
-                    model.getMiddleName(),
-                    model.getProfile(),
-                    model.getWebsite(),
-                    model.getGender(),
-                    model.getUsername(),
-                    model.getFullName(),
-                    null,
-                    model.getEmail(),
-                    model.isEmailVerified(),
-                    model.getMobile(),
-                    model.isPhoneNumberVerified(),
-                    user.getDescription(),
-                    Sets.transform(user.getRoles(), RoleConverter::toDto),
-                    model.getScenicName(),
-                    model.getRegionCode(),
-                    posts,
-                    model.getBirthDate(),
-                    model.getProfilePhoto(),
-                    model.getZoneinfo(),
-                    model.getLocal(),
-                    model.getAddress()
-                );
         }).orElse(null);
     }
 
     public static UserDto toSimpleDto(User model) {
-        return new UserDto(
-            model.getId(),
-            model.getNo(),
-            model.getGivenName(),
-            model.getFamilyName(),
-            model.getMiddleName(),
-            model.getProfile(),
-            model.getWebsite(),
-            model.getGender(),
-            model.getUsername(),
-            model.getFullName(),
-            null,
-            model.getEmail(),
-            model.isEmailVerified(),
-            model.getMobile(),
-            model.isPhoneNumberVerified(),
-            "",
-            Collections.emptySet(),
-            model.getScenicName(),
-            model.getRegionCode(),
-            Collections.emptyList(),
-            model.getBirthDate(),
-            model.getProfilePhoto(),
-            model.getZoneinfo(),
-            model.getLocal(),
-            model.getAddress()
-        );
+        return newBuilder(model).build();
     }
-
 
 }

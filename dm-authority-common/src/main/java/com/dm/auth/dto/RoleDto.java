@@ -2,8 +2,8 @@ package com.dm.auth.dto;
 
 import com.dm.auth.entity.Role.Status;
 import com.dm.common.dto.IdentifiableDto;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.Valid;
@@ -13,16 +13,18 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
+
 /**
  * 角色数据结构
  *
  * @author LiDong
  */
-@JsonInclude(value = Include.NON_EMPTY)
+@JsonInclude(NON_EMPTY)
 public class RoleDto implements IdentifiableDto<Long>, Serializable {
     private static final long serialVersionUID = 4725729366179649819L;
 
-
+    @JsonCreator
     public RoleDto(@JsonProperty("id") Long id,
                    @JsonProperty("name") String name,
                    @JsonProperty("group") String group,
@@ -91,7 +93,6 @@ public class RoleDto implements IdentifiableDto<Long>, Serializable {
     public String getFullName() {
         return group + "_" + name;
     }
-
 
     @Override
     public Long getId() {

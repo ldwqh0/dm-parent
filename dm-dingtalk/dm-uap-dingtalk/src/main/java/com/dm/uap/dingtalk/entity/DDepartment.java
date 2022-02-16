@@ -51,7 +51,6 @@ public class DDepartment extends CorpLongEntity {
     @Column(name = "deleted_")
     private Boolean deleted = false;
 
-
     public DDepartment(String corpId, Long id) {
         super(corpId, id);
     }

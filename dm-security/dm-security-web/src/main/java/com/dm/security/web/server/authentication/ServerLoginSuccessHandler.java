@@ -22,7 +22,6 @@ import java.util.Collections;
 
 public class ServerLoginSuccessHandler extends RedirectServerAuthenticationSuccessHandler {
 
-
     private Jackson2JsonEncoder jsonEncoder;
 
     private final ServerWebExchangeMatcher mediaMatcher;

@@ -5,7 +5,6 @@ import com.dm.collections.CollectionUtils;
 import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,12 +12,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
+
 /**
  * 菜单结构
  *
  * @author LiDong
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(NON_EMPTY)
 public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
     private static final long serialVersionUID = 7184771144233410172L;
     /**
@@ -87,19 +88,18 @@ public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
         return children.remove(item);
     }
 
-
-    public MenuTreeDto(Long id,
-                       String name,
-                       String title,
-                       Boolean enabled,
-                       String url,
-                       String icon,
-                       String description,
-                       MenuType type,
-                       Long order,
-                       Boolean openInNewWindow,
-                       Long parentId,
-                       List<MenuTreeDto> children) {
+    private MenuTreeDto(Long id,
+                        String name,
+                        String title,
+                        Boolean enabled,
+                        String url,
+                        String icon,
+                        String description,
+                        MenuType type,
+                        Long order,
+                        Boolean openInNewWindow,
+                        Long parentId,
+                        List<MenuTreeDto> children) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -190,5 +190,91 @@ public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
             ", parentId=" + parentId +
             ", children=" + children +
             '}';
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String name;
+        private String title;
+        private Boolean enabled;
+        private String url;
+        private String icon;
+        private String description;
+        private MenuType type;
+        private Long order;
+        private Boolean openInNewWindow;
+        private Long parentId;
+        private List<MenuTreeDto> children = new ArrayList<>();
+
+        private Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder enabled(Boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder icon(String icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder type(MenuType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder order(Long order) {
+            this.order = order;
+            return this;
+        }
+
+        public Builder openInNewWindow(Boolean openInNewWindow) {
+            this.openInNewWindow = openInNewWindow;
+            return this;
+        }
+
+        public Builder parentId(Long parentId) {
+            this.parentId = parentId;
+            return this;
+        }
+
+        public Builder children(List<MenuTreeDto> children) {
+            this.children = children;
+            return this;
+        }
+
+        public MenuTreeDto build() {
+            return new MenuTreeDto(id, name, title, enabled, url, icon, description, type, order, openInNewWindow, parentId, children);
+        }
     }
 }

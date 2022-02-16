@@ -1,13 +1,12 @@
 package com.dm.uap.dto;
 
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
-
 
 /**
  * 表示用户的职务信息
@@ -31,13 +30,12 @@ public class UserPostDto implements Serializable {
     @NotNull(groups = {UserDto.Default.class})
     private final String post;
 
-    public UserPostDto(
-        @JsonProperty("department") DepartmentDto department,
-        @JsonProperty("post") String post) {
+    @JsonCreator
+    public UserPostDto(@JsonProperty("department") DepartmentDto department,
+                       @JsonProperty("post") String post) {
         this.department = department;
         this.post = post;
     }
-
 
     public DepartmentDto getDepartment() {
         return department;

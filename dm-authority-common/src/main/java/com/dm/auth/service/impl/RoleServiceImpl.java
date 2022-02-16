@@ -47,13 +47,11 @@ public class RoleServiceImpl implements RoleService {
         HttpMethod.OPTIONS,
     };
 
-
     public RoleServiceImpl(RoleRepository roleRepository, MenuRepository menuRepository, EntityManager entityManager) {
         this.roleRepository = roleRepository;
         this.menuRepository = menuRepository;
         this.entityManager = entityManager;
     }
-
 
     @Override
     public boolean exist() {
@@ -257,11 +255,9 @@ class PrimaryRole {
     @Column(name = "group_", length = 100, nullable = false)
     private String group;
 
-
     @Column(name = "state_", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     private Status state = Status.ENABLED;
-
 
     @Column(name = "description_", length = 2000)
     private String description;

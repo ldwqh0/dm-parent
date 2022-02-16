@@ -100,7 +100,6 @@ public class UserRole {
         return Objects.equals(id, userRole.id) && Objects.equals(group, userRole.group) && Objects.equals(name, userRole.name);
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(id, group, name);

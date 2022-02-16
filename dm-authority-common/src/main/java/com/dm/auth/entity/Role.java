@@ -18,7 +18,6 @@ import static java.util.Collections.unmodifiableSet;
 })
 public class Role extends AbstractEntity {
 
-
     public enum Status {
         /**
          * 标识角色已启用

@@ -31,7 +31,6 @@ public class JavaCvThumbnailServiceImpl extends DefaultThumbnailServiceImpl impl
         this.config = fileConfig;
     }
 
-
     @Override
     public void createThumbnail(String filename) throws IOException {
         String fileExt = FilenameUtils.getExtension(filename);
@@ -70,7 +69,6 @@ public class JavaCvThumbnailServiceImpl extends DefaultThumbnailServiceImpl impl
             super.createThumbnail(filename);
         }
     }
-
 
     private String getPath(String filename, String... path) {
         String director = FilenameUtils.concat(config.getPath(), StringUtils.join(path, File.separator));

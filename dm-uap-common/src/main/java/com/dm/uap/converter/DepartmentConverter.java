@@ -8,36 +8,30 @@ public final class DepartmentConverter {
     private DepartmentConverter() {
     }
 
-    public static DepartmentDto toSimpleDto(Department model) {
-        return new DepartmentDto(
-            model.getId(),
-            model.getFullName(),
-            model.getShortName(),
-            model.getDescription(),
-            model.getType(),
-            model.getParent().map(DepartmentConverter::toSimpleDto).orElse(null),
-            model.getDirector(),
-            model.getLogo(),
-            null, null
-        );
+    private static DepartmentDto.Builder newBuilder(Department model) {
+        return DepartmentDto.builder()
+            .id(model.getId())
+            .fullName(model.getFullName())
+            .shortname(model.getShortName())
+            .description(model.getDescription())
+            .type(model.getType())
+            .parent(model.getParent().map(DepartmentConverter::toSimpleDto).orElse(null))
+            .director(model.getDirector())
+            .logo(model.getLogo());
     }
 
+    public static DepartmentDto toSimpleDto(Department model) {
+        return newBuilder(model).build();
+
+    }
 
     /**
      * 返回
      */
     public static DepartmentDto toDto(Department model, Long childrenCount, Long userCount) {
-        return new DepartmentDto(
-            model.getId(),
-            model.getFullName(),
-            model.getShortName(),
-            model.getDescription(),
-            model.getType(),
-            model.getParent().map(DepartmentConverter::toSimpleDto).orElse(null),
-            model.getDirector(),
-            model.getLogo(),
-            childrenCount,
-            userCount
-        );
+        return newBuilder(model)
+            .childrenCount(childrenCount)
+            .userCount(userCount)
+            .build();
     }
 }

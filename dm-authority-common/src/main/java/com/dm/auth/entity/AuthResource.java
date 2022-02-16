@@ -70,7 +70,6 @@ public class AuthResource extends AbstractEntity {
     @Column(name = "description_", length = 800)
     private String description;
 
-
     /**
      * 允许访问角色信息
      */

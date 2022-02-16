@@ -1,6 +1,5 @@
 package com.dm.data.domain;
 
-
 import java.io.Serializable;
 
 /**

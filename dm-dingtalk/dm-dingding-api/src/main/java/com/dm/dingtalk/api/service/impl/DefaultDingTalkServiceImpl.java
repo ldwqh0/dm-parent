@@ -18,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-
 public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(DefaultDingTalkServiceImpl.class);
 

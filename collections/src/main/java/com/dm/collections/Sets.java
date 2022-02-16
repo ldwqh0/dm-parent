@@ -39,7 +39,6 @@ public final class Sets {
         return result;
     }
 
-
     public static <I, O> Set<O> transform(Set<I> fromSet, Function<? super I, ? extends O> converter) {
         if (fromSet == null) {
             return null;

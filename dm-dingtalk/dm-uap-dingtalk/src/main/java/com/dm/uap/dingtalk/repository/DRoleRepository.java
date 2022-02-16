@@ -33,7 +33,6 @@ public interface DRoleRepository extends JpaRepository<DRole, CorpLongId>, Query
         return getById(new CorpLongId(corpId, id));
     }
 
-
     default boolean existsById(String corpId, Long id) {
         return existsById(new CorpLongId(corpId, id));
     }

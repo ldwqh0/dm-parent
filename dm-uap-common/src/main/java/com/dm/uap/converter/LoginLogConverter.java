@@ -9,14 +9,13 @@ public final class LoginLogConverter {
     }
 
     public static LoginLogDto toDto(LoginLog model) {
-        return new LoginLogDto(
-            model.getId(),
-            model.getLoginName(),
-            model.getIp(),
-            model.getType(),
-            model.getResult(),
-            model.getTime()
-        );
+        return LoginLogDto.builder()
+            .id(model.getId())
+            .loginName(model.getLoginName())
+            .ip(model.getIp())
+            .type(model.getType())
+            .result(model.getResult())
+            .time(model.getTime()).build();
     }
 
 }

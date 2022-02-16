@@ -37,7 +37,6 @@ public class SimpleWxUserDetails implements WxUserDetails, UserDetails {
         return this.openId;
     }
 
-
     @Override
     public String getUnionId() {
         return this.unionId;

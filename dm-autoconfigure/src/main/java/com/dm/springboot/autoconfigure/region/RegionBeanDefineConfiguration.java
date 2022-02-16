@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 @DmEntityScan({"com.dm.region"})
 public class RegionBeanDefineConfiguration {
 
-
     @Bean
     public RegionRepository regionRepository(EntityManager em) {
         return new JpaRepositoryFactory(em).getRepository(RegionRepository.class, new RegionRepositoryImpl(em));

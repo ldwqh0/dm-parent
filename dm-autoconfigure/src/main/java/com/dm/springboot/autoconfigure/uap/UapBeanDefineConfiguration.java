@@ -52,13 +52,11 @@ public class UapBeanDefineConfiguration {
         return new JpaRepositoryFactory(em).getRepository(UserRoleRepository.class);
     }
 
-
     @Bean
     @ConditionalOnMissingBean(PasswordEncoder.class)
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     @ConditionalOnMissingBean(DepartmentService.class)
@@ -78,7 +76,6 @@ public class UapBeanDefineConfiguration {
         return new UserRoleServiceImpl(userRoleRepository);
     }
 
-
     @Bean
     @ConditionalOnMissingBean(UserService.class)
     public UserServiceImpl userServiceImp(UserRepository userRepository,
@@ -92,8 +89,6 @@ public class UapBeanDefineConfiguration {
             userRoleRepository
         );
     }
-
-
 
     @Bean
     public DepartmentController departmentController(DepartmentService departmentService) {
@@ -114,7 +109,6 @@ public class UapBeanDefineConfiguration {
     public UserRoleController userRoleController(UserRoleService userService) {
         return new UserRoleController(userService);
     }
-
 
     @Bean
     @ConditionalOnMissingBean(UserDetailsService.class)

@@ -20,7 +20,7 @@ public class LoginLogDto implements Serializable {
 
     private final ZonedDateTime time;
 
-    public LoginLogDto(Long id, String loginName, String ip, String type, String result, ZonedDateTime time) {
+    private LoginLogDto(Long id, String loginName, String ip, String type, String result, ZonedDateTime time) {
         this.id = id;
         this.loginName = loginName;
         this.ip = ip;
@@ -64,5 +64,55 @@ public class LoginLogDto implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, loginName, ip, type, result, time);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String loginName;
+        private String ip;
+        private String type;
+        private String result;
+        private ZonedDateTime time;
+
+        private Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder loginName(String loginName) {
+            this.loginName = loginName;
+            return this;
+        }
+
+        public Builder ip(String ip) {
+            this.ip = ip;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder result(String result) {
+            this.result = result;
+            return this;
+        }
+
+        public Builder time(ZonedDateTime time) {
+            this.time = time;
+            return this;
+        }
+
+        public LoginLogDto build() {
+            return new LoginLogDto(id, loginName, ip, type, result, time);
+        }
     }
 }

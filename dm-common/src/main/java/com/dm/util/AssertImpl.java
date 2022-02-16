@@ -14,7 +14,6 @@ class AssertImpl<T> implements Assert<T> {
         this.predicate = predicate;
     }
 
-
     @Override
     public boolean test() {
         return predicate.test(value);
@@ -53,7 +52,6 @@ class AssertImpl<T> implements Assert<T> {
     public Assert<T> and(Assert<T> tAssert) {
         return new AssertImpl<>(value, v -> test() && tAssert.test());
     }
-
 
     @Override
     public Assert<T> or(Predicate<T> predicate) {

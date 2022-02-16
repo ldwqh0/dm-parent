@@ -41,7 +41,6 @@ public class VerificationCode implements Serializable {
         this(id, code, null);
     }
 
-
     public String getId() {
         return id;
     }

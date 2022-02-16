@@ -104,7 +104,6 @@ public final class Maps {
         return result;
     }
 
-
     /**
      * 将一组可迭代的值转换为map,不同于hashMap方法,它使用Stream api,并且返回的类型不是hashmap
      *

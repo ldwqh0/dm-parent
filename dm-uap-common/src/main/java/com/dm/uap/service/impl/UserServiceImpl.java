@@ -23,13 +23,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -241,7 +237,6 @@ public class UserServiceImpl implements UserService {
         return UserConverter.toDto(userRepository.save(originUser));
     }
 
-
     private void validationUser(UserDto user, Long... exclude) {
         String mobile = user.getMobile();
         String email = user.getEmail();
@@ -253,7 +248,6 @@ public class UserServiceImpl implements UserService {
             Assert.from(email, v -> !userExistsByEmail(v, exclude)).orElseThrow(() -> new DataValidateException("邮箱已经被占用"));
         }
     }
-
 
     private User copyProperties(User user, UserDto userDto) {
         if (Objects.nonNull(user) && Objects.nonNull(userDto)) {

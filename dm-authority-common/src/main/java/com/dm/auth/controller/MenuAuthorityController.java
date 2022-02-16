@@ -31,7 +31,6 @@ public class MenuAuthorityController {
         this.roleService = roleService;
     }
 
-
     /**
      * 保存一个角色的菜单权限配置
      *
@@ -115,21 +114,19 @@ public class MenuAuthorityController {
         }
     }
 
-
     private MenuTreeDto toTree(MenuDto menu) {
-        return new MenuTreeDto(
-            menu.getId(),
-            menu.getName(),
-            menu.getTitle(),
-            menu.getEnabled(),
-            menu.getUrl(),
-            menu.getIcon(),
-            menu.getDescription(),
-            menu.getType(),
-            menu.getOrder(),
-            menu.getOpenInNewWindow(),
-            menu.getParent().map(MenuDto::getId).orElse(null),
-            null
-        );
+        return MenuTreeDto.builder()
+            .id(menu.getId())
+            .name(menu.getName())
+            .title(menu.getTitle())
+            .enabled(menu.getEnabled())
+            .url(menu.getUrl())
+            .icon(menu.getIcon())
+            .description(menu.getDescription())
+            .type(menu.getType())
+            .order(menu.getOrder())
+            .openInNewWindow(menu.getOpenInNewWindow())
+            .parentId(menu.getParent().map(MenuDto::getId).orElse(null))
+            .build();
     }
 }

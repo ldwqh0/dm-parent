@@ -1,6 +1,5 @@
 package com.dm.uap.service;
 
-
 import com.dm.uap.dto.UserRoleDto;
 
 public interface UserRoleService {

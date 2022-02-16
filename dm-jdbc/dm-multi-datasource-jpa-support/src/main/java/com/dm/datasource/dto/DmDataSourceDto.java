@@ -1,20 +1,23 @@
 package com.dm.datasource.dto;
 
+import com.dm.collections.Sets;
 import com.dm.datasource.provider.DataSourceProperties.DbTypes;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
-import static com.dm.collections.Maps.hashMap;
-import static java.util.Collections.unmodifiableMap;
+import static com.dm.collections.Sets.hashSet;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+import static java.util.Collections.unmodifiableSet;
 
 public class DmDataSourceDto implements Serializable {
 
     private static final long serialVersionUID = -4257537751443196323L;
-
+    @JsonProperty(access = READ_ONLY)
     private final Long id;
     private final String name;
     private final DbTypes dbType;
@@ -22,25 +25,24 @@ public class DmDataSourceDto implements Serializable {
     private final Integer port;
     private final String username;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = WRITE_ONLY)
     private final String password;
     private final String database;
     private final Long version;
     private final String remark;
-    private final Map<String, String> properties;
+    private final Set<Property> properties;
 
-    @JsonCreator
-    public DmDataSourceDto(@JsonProperty("id") Long id,
-                           @JsonProperty("name") String name,
-                           @JsonProperty("") DbTypes dbType,
-                           @JsonProperty("dbType") String host,
-                           @JsonProperty("port") Integer port,
-                           @JsonProperty("username") String username,
-                           @JsonProperty("password") String password,
-                           @JsonProperty("database") String database,
-                           @JsonProperty("version") Long version,
-                           @JsonProperty("remark") String remark,
-                           @JsonProperty("properties") Map<String, String> properties) {
+    private DmDataSourceDto(Long id,
+                            String name,
+                            DbTypes dbType,
+                            String host,
+                            Integer port,
+                            String username,
+                            String password,
+                            String database,
+                            Long version,
+                            String remark,
+                            Set<Property> properties) {
         this.id = id;
         this.name = name;
         this.dbType = dbType;
@@ -51,7 +53,7 @@ public class DmDataSourceDto implements Serializable {
         this.database = database;
         this.version = version;
         this.remark = remark;
-        this.properties = hashMap(properties);
+        this.properties = hashSet(properties);
     }
 
     public Long getId() {
@@ -94,8 +96,8 @@ public class DmDataSourceDto implements Serializable {
         return remark;
     }
 
-    public Map<String, String> getProperties() {
-        return unmodifiableMap(properties);
+    public Set<Property> getProperties() {
+        return unmodifiableSet(properties);
     }
 
     @Override
@@ -126,5 +128,90 @@ public class DmDataSourceDto implements Serializable {
             ", remark='" + remark + '\'' +
             ", properties=" + properties +
             '}';
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String name;
+        private DbTypes dbType;
+        private String host;
+        private Integer port;
+        private String username;
+        private String password;
+        private String database;
+        private Long version;
+        private String remark;
+        private Set<Property> properties;
+
+        private Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder dbType(DbTypes dbType) {
+            this.dbType = dbType;
+            return this;
+        }
+
+        public Builder host(String host) {
+            this.host = host;
+            return this;
+        }
+
+        public Builder port(Integer port) {
+            this.port = port;
+            return this;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder database(String database) {
+            this.database = database;
+            return this;
+        }
+
+        public Builder version(Long version) {
+            this.version = version;
+            return this;
+        }
+
+        public Builder remark(String remark) {
+            this.remark = remark;
+            return this;
+        }
+
+        public Builder properties(Map<String, String> properties) {
+            this.properties = Sets.transform(properties.entrySet(), it -> new Property(it.getKey(), it.getValue()));
+            return this;
+        }
+
+        public Builder properties(Set<Property> properties) {
+            this.properties = properties;
+            return this;
+        }
+
+        public DmDataSourceDto build() {
+            return new DmDataSourceDto(id, name, dbType, host, port, username, password, database, version, remark, properties);
+        }
     }
 }

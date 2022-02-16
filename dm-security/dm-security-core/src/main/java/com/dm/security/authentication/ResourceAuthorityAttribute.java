@@ -24,7 +24,6 @@ public class ResourceAuthorityAttribute implements Serializable {
      */
     private final UriResource resource;
 
-
     /**
      * 允许访问角色信息
      */
@@ -34,7 +33,6 @@ public class ResourceAuthorityAttribute implements Serializable {
      * 拒绝访问角色信息
      */
     private final Set<String> denyAuthorities = new HashSet<>();
-
 
     public ResourceAuthorityAttribute(
         UriResource resource,

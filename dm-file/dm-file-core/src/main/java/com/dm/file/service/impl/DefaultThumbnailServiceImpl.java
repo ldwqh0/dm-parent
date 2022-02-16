@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
-
 public class DefaultThumbnailServiceImpl implements ThumbnailService {
     private static final Logger log = LoggerFactory.getLogger(DefaultThumbnailServiceImpl.class);
 

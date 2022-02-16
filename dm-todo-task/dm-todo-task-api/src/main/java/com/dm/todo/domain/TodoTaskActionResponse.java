@@ -1,5 +1,8 @@
 package com.dm.todo.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
@@ -27,10 +30,11 @@ public class TodoTaskActionResponse implements Serializable {
      */
     private final ZonedDateTime createdTime;
 
-    public TodoTaskActionResponse(Long taskId,
-                                  String content,
-                                  boolean completed,
-                                  ZonedDateTime createdTime) {
+    @JsonCreator
+    public TodoTaskActionResponse(@JsonProperty("taskId") Long taskId,
+                                  @JsonProperty("content") String content,
+                                  @JsonProperty(value = "completed", defaultValue = "false") boolean completed,
+                                  @JsonProperty("createdTime") ZonedDateTime createdTime) {
         this.taskId = taskId;
         this.content = content;
         this.completed = completed;

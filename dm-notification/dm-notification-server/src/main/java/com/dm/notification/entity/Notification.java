@@ -23,7 +23,6 @@ public class Notification extends AbstractEntity {
     @Column(name = "title_", length = 200, nullable = false)
     public String title;
 
-
     /**
      * 通知内容
      */

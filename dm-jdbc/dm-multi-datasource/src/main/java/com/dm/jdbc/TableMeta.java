@@ -12,7 +12,6 @@ public interface TableMeta {
 
     List<ColumnMeta> getColumns();
 
-
     static TableMeta of(String tableName, String type, List<ColumnMeta> columns) {
         TableMetaImpl data = new TableMetaImpl();
         data.setTableName(tableName);
@@ -59,7 +58,6 @@ public interface TableMeta {
             this.type = type;
         }
     }
-
 
 }
 

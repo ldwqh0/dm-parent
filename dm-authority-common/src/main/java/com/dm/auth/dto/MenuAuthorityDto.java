@@ -1,8 +1,8 @@
 package com.dm.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import static com.dm.collections.Sets.hashSet;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -17,7 +18,7 @@ import static java.util.Collections.unmodifiableSet;
  *
  * @author LiDong
  */
-@JsonInclude(Include.NON_ABSENT)
+@JsonInclude(NON_ABSENT)
 public class MenuAuthorityDto implements Serializable {
     private static final long serialVersionUID = 4813613447760388284L;
     /**
@@ -39,10 +40,10 @@ public class MenuAuthorityDto implements Serializable {
      * @param roleName       角色名称
      * @param authorityMenus 角色的授权菜单
      */
-    public MenuAuthorityDto(
-        @JsonProperty("roleId") Long roleId,
-        @JsonProperty("roleName") String roleName,
-        @JsonProperty("authorityMenus") Set<MenuDto> authorityMenus) {
+    @JsonCreator
+    public MenuAuthorityDto(@JsonProperty("roleId") Long roleId,
+                            @JsonProperty("roleName") String roleName,
+                            @JsonProperty("authorityMenus") Set<MenuDto> authorityMenus) {
         this.roleId = roleId;
         this.roleName = roleName;
         this.authorityMenus = hashSet(authorityMenus);
@@ -59,7 +60,6 @@ public class MenuAuthorityDto implements Serializable {
     public Set<MenuDto> getAuthorityMenus() {
         return unmodifiableSet(authorityMenus);
     }
-
 
     @Override
     public boolean equals(Object o) {

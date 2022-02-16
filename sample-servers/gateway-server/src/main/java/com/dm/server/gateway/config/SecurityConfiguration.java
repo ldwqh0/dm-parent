@@ -1,6 +1,5 @@
 package com.dm.server.gateway.config;
 
-
 import com.dm.security.core.userdetails.UserDetailsDto;
 import com.dm.security.oauth2.authorization.ServerHttpOauth2RequestReactiveAuthorizationManager;
 import com.dm.security.oauth2.client.web.server.DmServerOAuth2AuthorizationRequestResolver;

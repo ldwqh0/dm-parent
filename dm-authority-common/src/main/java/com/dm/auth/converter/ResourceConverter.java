@@ -9,32 +9,25 @@ public final class ResourceConverter {
     private ResourceConverter() {
     }
 
-    public static ResourceDto toSimpleDto(AuthResource model) {
-        return new ResourceDto(
-            model.getId(),
-            model.getName(),
-            model.getMethods(),
-            model.getMatcher(),
-            model.getDescription(),
-            null,
-            model.getMatchType(),
-            null,
-            null
-        );
+    private static ResourceDto.Builder newBuilder(AuthResource model) {
+        return ResourceDto.builder()
+            .id(model.getId())
+            .name(model.getName())
+            .methods(model.getMethods())
+            .matcher(model.getMatcher())
+            .description(model.getDescription())
+            .matchType(model.getMatchType());
     }
 
+    public static ResourceDto toSimpleDto(AuthResource model) {
+        return newBuilder(model).build();
+    }
 
     public static ResourceDto toDto(AuthResource model) {
-        return new ResourceDto(
-            model.getId(),
-            model.getName(),
-            model.getMethods(),
-            model.getMatcher(),
-            model.getDescription(),
-            model.getScope(),
-            model.getMatchType(),
-            Sets.transform(model.getAccessAuthorities(), RoleConverter::toDto),
-            Sets.transform(model.getDenyAuthorities(), RoleConverter::toDto)
-        );
+        return newBuilder(model)
+            .scope(model.getScope())
+            .accessAuthorities(Sets.transform(model.getAccessAuthorities(), RoleConverter::toDto))
+            .denyAuthorities(Sets.transform(model.getDenyAuthorities(), RoleConverter::toDto))
+            .build();
     }
 }

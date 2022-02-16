@@ -2,7 +2,6 @@ package com.dm.security.core.userdetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,9 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 import static com.dm.collections.Lists.arrayList;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
 import static java.util.Collections.unmodifiableCollection;
 
-@JsonInclude(Include.NON_ABSENT)
+@JsonInclude(NON_ABSENT)
 public class UserDetailsDto implements UserDetails {
     private static final long serialVersionUID = -4337846050031244208L;
 
@@ -63,7 +63,7 @@ public class UserDetailsDto implements UserDetails {
      * @param scenicName         景区名称
      */
 
-    public UserDetailsDto(Long id, String username, String password, boolean accountExpired, boolean credentialsExpired, boolean enabled, boolean locked, Collection<? extends GrantedAuthority> grantedAuthority, String fullName, String mobile, String email, String regionCode, String scenicName) {
+    protected UserDetailsDto(Long id, String username, String password, boolean accountExpired, boolean credentialsExpired, boolean enabled, boolean locked, Collection<? extends GrantedAuthority> grantedAuthority, String fullName, String mobile, String email, String regionCode, String scenicName) {
         this.id = id;
         this.password = password;
         this.username = username;
@@ -79,9 +79,9 @@ public class UserDetailsDto implements UserDetails {
         this.scenicName = scenicName;
     }
 
-    public UserDetailsDto(String username, Collection<? extends GrantedAuthority> grantedAuthority) {
-        this(null, username, ",", false, false, false, false, grantedAuthority, null, null, null, null, null);
-    }
+//    public UserDetailsDto(String username, Collection<? extends GrantedAuthority> grantedAuthority) {
+//        this(null, username, ",", false, false, false, false, grantedAuthority, null, null, null, null, null);
+//    }
 
     @Override
     @JsonIgnore
@@ -170,5 +170,97 @@ public class UserDetailsDto implements UserDetails {
         if (id == null) {
             return other.id == null;
         } else return id.equals(other.id);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String password;
+        private String username;
+        private boolean accountExpired = false;
+        private boolean credentialsExpired = false;
+        private boolean enabled = false;
+        private boolean locked = false;
+        private Collection<? extends GrantedAuthority> grantedAuthority;
+        private String fullName;
+        private String mobile;
+        private String email;
+        private String regionCode;
+        private String scenicName;
+
+        private Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder accountExpired(boolean accountExpired) {
+            this.accountExpired = accountExpired;
+            return this;
+        }
+
+        public Builder credentialsExpired(boolean credentialsExpired) {
+            this.credentialsExpired = credentialsExpired;
+            return this;
+        }
+
+        public Builder enabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public Builder locked(boolean locked) {
+            this.locked = locked;
+            return this;
+        }
+
+        public Builder grantedAuthority(Collection<? extends GrantedAuthority> grantedAuthority) {
+            this.grantedAuthority = grantedAuthority;
+            return this;
+        }
+
+        public Builder fullName(String fullName) {
+            this.fullName = fullName;
+            return this;
+        }
+
+        public Builder mobile(String mobile) {
+            this.mobile = mobile;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder regionCode(String regionCode) {
+            this.regionCode = regionCode;
+            return this;
+        }
+
+        public Builder scenicName(String scenicName) {
+            this.scenicName = scenicName;
+            return this;
+        }
+
+        public UserDetailsDto build() {
+            return new UserDetailsDto(id, username, password, accountExpired, credentialsExpired, enabled, locked, grantedAuthority, fullName, mobile, email, regionCode, scenicName);
+        }
     }
 }

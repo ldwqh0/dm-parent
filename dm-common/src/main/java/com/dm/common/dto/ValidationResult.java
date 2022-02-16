@@ -2,17 +2,22 @@ package com.dm.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 
 @JsonInclude(value = Include.NON_EMPTY)
 public class ValidationResult implements Serializable {
 
     private static final long serialVersionUID = 579492257630348981L;
 
+    @JsonProperty(access = READ_ONLY)
     private final boolean success;
 
+    @JsonProperty(access = READ_ONLY)
     private final String message;
 
     public String getMessage() {

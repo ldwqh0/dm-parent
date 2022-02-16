@@ -22,7 +22,6 @@ import com.dm.uap.dingtalk.repository.DRoleGroupRepository;
 import com.dm.uap.dingtalk.repository.DRoleRepository;
 import com.dm.uap.dingtalk.service.DRoleGroupService;
 
-
 import static java.lang.Boolean.*;
 
 @Service

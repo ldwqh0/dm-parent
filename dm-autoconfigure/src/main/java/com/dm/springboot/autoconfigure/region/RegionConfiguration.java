@@ -66,5 +66,4 @@ public class RegionConfiguration implements InitializingBean {
         }
     }
 
-
 }

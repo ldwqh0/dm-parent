@@ -18,7 +18,6 @@ import com.dm.uap.dingtalk.repository.DDepartmentRepository;
 import com.dm.uap.dingtalk.service.DDepartmentService;
 import com.dm.uap.repository.DepartmentRepository;
 
-
 import static java.lang.Boolean.*;
 
 @Service

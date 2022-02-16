@@ -5,19 +5,18 @@ import com.dm.common.dto.IdentifiableDto;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
 /**
  * 菜单结构
  *
  * @author LiDong
  */
-@JsonInclude(Include.NON_ABSENT)
+@JsonInclude(NON_ABSENT)
 public class MenuDto implements Serializable, IdentifiableDto<Long> {
     private static final long serialVersionUID = 7184771144233410172L;
     /**
@@ -57,7 +56,7 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
     /**
      * 父菜单
      */
-    @JsonIgnoreProperties(value = {"parent", "url", "description", "openInNewWindow"})
+    @JsonIgnoreProperties({"parent", "url", "description", "openInNewWindow"})
     private final MenuDto parent;
 
     /**
@@ -84,19 +83,18 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
      * @param openInNewWindow 是否在新窗口中打开菜单
      * @param childrenCount   字菜单个数
      */
-    public MenuDto(
-        @JsonProperty("id") Long id,
-        @JsonProperty("name") String name,
-        @JsonProperty("title") String title,
-        @JsonProperty("enabled") Boolean enabled,
-        @JsonProperty("url") String url,
-        @JsonProperty("icon") String icon,
-        @JsonProperty("description") String description,
-        @JsonProperty("type") MenuType type,
-        @JsonProperty("order") Long order,
-        @JsonProperty("parent") MenuDto parent,
-        @JsonProperty("openInNewWindow") Boolean openInNewWindow,
-        @JsonProperty("childrenCount") Long childrenCount) {
+    private MenuDto(Long id,
+                    String name,
+                    String title,
+                    Boolean enabled,
+                    String url,
+                    String icon,
+                    String description,
+                    MenuType type,
+                    Long order,
+                    MenuDto parent,
+                    Boolean openInNewWindow,
+                    Long childrenCount) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -115,27 +113,12 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
         }
         this.order = order;
         this.parent = parent;
-        if (Objects.isNull(openInNewWindow)) {
-            this.openInNewWindow = Boolean.FALSE;
-        } else {
-            this.openInNewWindow = openInNewWindow;
-        }
+        this.openInNewWindow = Boolean.TRUE.equals(openInNewWindow);
         this.childrenCount = childrenCount;
     }
 
-    public MenuDto(String name, String title, String url) {
-        this(null,
-            name,
-            title,
-            Boolean.TRUE,
-            url,
-            null,
-            null,
-            MenuType.COMPONENT,
-            null,
-            null, Boolean.FALSE,
-            null
-        );
+    private MenuDto() {
+        this(null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     @Override
@@ -213,5 +196,91 @@ public class MenuDto implements Serializable, IdentifiableDto<Long> {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, title, enabled, url, icon, description, type, order, parent, openInNewWindow, childrenCount);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String name;
+        private String title;
+        private Boolean enabled;
+        private String url;
+        private String icon;
+        private String description;
+        private MenuType type;
+        private Long order;
+        private MenuDto parent;
+        private Boolean openInNewWindow;
+        private Long childrenCount;
+
+        private Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder enabled(Boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder icon(String icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder type(MenuType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder order(Long order) {
+            this.order = order;
+            return this;
+        }
+
+        public Builder parent(MenuDto parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        public Builder openInNewWindow(boolean openInNewWindow) {
+            this.openInNewWindow = openInNewWindow;
+            return this;
+        }
+
+        public Builder childrenCount(Long childrenCount) {
+            this.childrenCount = childrenCount;
+            return this;
+        }
+
+        public MenuDto build() {
+            return new MenuDto(id, name, title, enabled, url, icon, description, type, order, parent, openInNewWindow, childrenCount);
+        }
     }
 }

@@ -48,7 +48,6 @@ public final class Lists {
         return result;
     }
 
-
     /**
      * 通过指定的Iterable构建新的{@link ArrayList}<br>
      * 始终会返回一个{@link ArrayList}，无论给定的参数是否为空
@@ -64,7 +63,6 @@ public final class Lists {
         }
         return result;
     }
-
 
     /**
      * 将一个列表变换为另外一个列表

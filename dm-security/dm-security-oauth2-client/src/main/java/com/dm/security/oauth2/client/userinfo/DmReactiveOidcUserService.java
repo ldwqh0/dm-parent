@@ -92,7 +92,6 @@ public class DmReactiveOidcUserService implements ReactiveOAuth2UserService<Oidc
         }
     }
 
-
     /**
      * 判断是否需要重新获取用户信息， 代码来自org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequestUtils
      *

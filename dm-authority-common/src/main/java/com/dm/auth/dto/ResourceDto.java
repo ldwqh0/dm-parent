@@ -60,8 +60,11 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
      */
     private final Set<RoleDto> denyAuthorities = new HashSet<>();
 
+    private ResourceDto() {
+        this(null, null, null, null, null, null, null, null, null);
+    }
 
-    public ResourceDto(
+    private ResourceDto(
         @JsonProperty("id") Long id,
         @JsonProperty("name") String name,
         @JsonProperty("methods") Set<HttpMethod> methods,
@@ -145,6 +148,10 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
         return Objects.hash(id, name, methods, matcher, description, scope, matchType, accessAuthorities, denyAuthorities);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return "ResourceDto{" +
@@ -158,5 +165,69 @@ public class ResourceDto implements Serializable, IdentifiableDto<Long> {
             ", accessAuthorities=" + accessAuthorities +
             ", denyAuthorities=" + denyAuthorities +
             '}';
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String name;
+        private Set<HttpMethod> methods = new HashSet<>();
+        private String matcher;
+        private String description;
+        private Set<String> scope = new HashSet<>();
+        private MatchType matchType;
+        private Set<RoleDto> accessAuthorities = new HashSet<>();
+        private Set<RoleDto> denyAuthorities = new HashSet<>();
+
+        private Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder methods(Set<HttpMethod> methods) {
+            this.methods = methods;
+            return this;
+        }
+
+        public Builder matcher(String matcher) {
+            this.matcher = matcher;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder scope(Set<String> scope) {
+            this.scope = scope;
+            return this;
+        }
+
+        public Builder matchType(MatchType matchType) {
+            this.matchType = matchType;
+            return this;
+        }
+
+        public Builder accessAuthorities(Set<RoleDto> accessAuthorities) {
+            this.accessAuthorities = accessAuthorities;
+            return this;
+        }
+
+        public Builder denyAuthorities(Set<RoleDto> denyAuthorities) {
+            this.denyAuthorities = denyAuthorities;
+            return this;
+        }
+
+        public ResourceDto build() {
+            return new ResourceDto(id, name, methods, matcher, description, scope, matchType, accessAuthorities, denyAuthorities);
+        }
     }
 }

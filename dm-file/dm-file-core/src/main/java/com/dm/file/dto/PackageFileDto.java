@@ -1,11 +1,16 @@
 package com.dm.file.dto;
 
 import com.dm.collections.CollectionUtils;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -16,6 +21,7 @@ public class PackageFileDto implements Serializable {
     /**
      * 打包下载的id,这个在请求的时候自动创建
      */
+    @JsonProperty(access = READ_ONLY)
     private final String id;
     /**
      * 压缩包类型
@@ -46,16 +52,11 @@ public class PackageFileDto implements Serializable {
         return unmodifiableList(files);
     }
 
-    public PackageFileDto(
-        @JsonProperty("id") String id,
-        @JsonProperty("type") String type,
-        @JsonProperty("filename") String filename,
-        @JsonProperty("files") List<UUID> files) {
-        if (Objects.isNull(id)) {
-            this.id = UUID.randomUUID().toString();
-        } else {
-            this.id = id;
-        }
+    @JsonCreator
+    public PackageFileDto(@JsonProperty("type") String type,
+                          @JsonProperty("filename") String filename,
+                          @JsonProperty("files") List<UUID> files) {
+        this.id = UUID.randomUUID().toString();
         this.type = type;
         this.filename = filename;
         if (CollectionUtils.isNotEmpty(files)) {

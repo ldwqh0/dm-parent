@@ -95,7 +95,7 @@ public class Menu extends AbstractEntity {
      * 是否在新窗口种打开链接
      */
     @Column(name = "open_in_new_window_", nullable = false)
-    private Boolean openInNewWindow = Boolean.FALSE;
+    private boolean openInNewWindow = false;
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final List<Menu> children = new ArrayList<>();
@@ -121,7 +121,6 @@ public class Menu extends AbstractEntity {
         this.title = title;
         this.url = url;
     }
-
 
     public Menu() {
 
@@ -199,7 +198,7 @@ public class Menu extends AbstractEntity {
         this.type = type;
     }
 
-    public Boolean getOpenInNewWindow() {
+    public boolean isOpenInNewWindow() {
         return openInNewWindow;
     }
 

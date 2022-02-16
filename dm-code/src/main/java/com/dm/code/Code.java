@@ -10,7 +10,6 @@ public class Code {
     public Code() {
     }
 
-
     public Code(CodeType type, String code) {
         this.type = type;
         this.code = code;
@@ -23,7 +22,6 @@ public class Code {
     @Id
     @Column(name = "code_")
     private String code;
-
 
     public CodeType getType() {
         return type;

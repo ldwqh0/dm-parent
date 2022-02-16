@@ -1,6 +1,5 @@
 package com.dm.file.util;
 
-
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotNull;
@@ -25,7 +24,6 @@ public class DmFileUtils {
         }
         return "";
     }
-
 
     /**
      * 连接多个文件为一个文件

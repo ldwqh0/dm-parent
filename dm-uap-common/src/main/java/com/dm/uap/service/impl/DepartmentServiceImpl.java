@@ -44,7 +44,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         return this.toDto(dep);
     }
 
-
     @Override
     public Optional<DepartmentDto> findById(Long id) {
         return departmentRepository.findById(id).map(this::toDto);

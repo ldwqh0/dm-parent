@@ -30,7 +30,6 @@ public class UserRoleServiceImpl implements UserRoleService {
         userRoleRepository.deleteById(id);
     }
 
-
     private UserRole copyProperties(UserRole model, UserRoleDto dto) {
         model.setId(dto.getId());
         model.setName(dto.getName());

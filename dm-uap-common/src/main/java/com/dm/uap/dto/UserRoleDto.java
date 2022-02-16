@@ -1,5 +1,6 @@
 package com.dm.uap.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
@@ -26,7 +27,7 @@ public class UserRoleDto implements Serializable {
      */
     private final String name;
 
-
+    @JsonCreator
     public UserRoleDto(@JsonProperty("id") Long id,
                        @JsonProperty("group") String group,
                        @JsonProperty("name") String name) {

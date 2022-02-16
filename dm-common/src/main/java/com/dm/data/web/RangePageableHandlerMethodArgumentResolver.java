@@ -51,7 +51,6 @@ public class RangePageableHandlerMethodArgumentResolver extends PageableHandlerM
         return RangePageable.class.equals(parameter.getParameterType());
     }
 
-
     @Override
     public RangePageable<?> resolveArgument(MethodParameter methodParameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String page = webRequest.getParameter(getParameterNameToUse(getPageParameterName(), methodParameter));

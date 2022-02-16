@@ -21,7 +21,6 @@ public class LoginLogController {
         this.loginLogService = loginLogService;
     }
 
-
     /**
      * 查询登录请求列表
      *

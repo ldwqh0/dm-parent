@@ -101,10 +101,7 @@ public class FileController {
         if (StringUtils.isBlank(originalFilename)) {
             originalFilename = "";
         }
-        FileInfo file_ = fileService.save(file, new FileInfoDto(
-            originalFilename,
-            file.getSize()
-        ));
+        FileInfo file_ = fileService.save(file, FileInfoDto.builder().filename(originalFilename).size(file.getSize()).build());
         thumbnailService.createThumbnail(file_.getPath());
         return FileInfoConverter.toDto(file_);
     }
@@ -177,10 +174,10 @@ public class FileController {
                 length += Files.size(filePath);
                 tempFiles[i] = filePath;
             }
-            FileInfoDto fileInfo = new FileInfoDto(
-                filename,
-                length
-            );
+            ;
+            FileInfoDto fileInfo = FileInfoDto.builder()
+                .filename(filename)
+                .size(length).build();
             FileInfo _result = fileService.save(tempFiles, fileInfo);
             // 创建文件缩略图
             thumbnailService.createThumbnail(_result.getPath());

@@ -11,7 +11,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
 public class DingTalkAuthcodeAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     public DingTalkAuthcodeAuthenticationProcessingFilter() {

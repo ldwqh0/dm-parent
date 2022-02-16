@@ -1,8 +1,10 @@
 package com.dm.datasource.service.impl;
 
+import com.dm.collections.Maps;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.datasource.converter.DmDataSourceConverter;
 import com.dm.datasource.dto.DmDataSourceDto;
+import com.dm.datasource.dto.Property;
 import com.dm.datasource.entity.DmDataSource;
 import com.dm.datasource.entity.QDmDataSource;
 import com.dm.datasource.mulit.DataSourceHolder;
@@ -102,7 +104,6 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
         }
     }
 
-
     private DmDataSource copyProperties(DmDataSource model, DmDataSourceDto source) {
         model.setName(source.getName());
         model.setDatabase(source.getDatabase());
@@ -110,7 +111,7 @@ public class DmDataSourceServiceImpl implements DmDataSourceService {
         model.setHost(source.getHost());
         model.setPassword(source.getPassword());
         model.setPort(source.getPort());
-        model.setProperties(source.getProperties());
+        model.setProperties(Maps.map(source.getProperties(), Property::getKey, Property::getValue));
         model.setRemark(source.getRemark());
         model.setUsername(source.getUsername());
         return model;

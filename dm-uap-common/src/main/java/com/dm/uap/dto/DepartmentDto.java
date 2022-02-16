@@ -4,7 +4,6 @@ import com.dm.common.dto.IdentifiableDto;
 import com.dm.uap.entity.Department.Types;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
@@ -12,7 +11,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
-@JsonInclude(value = Include.NON_EMPTY)
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
+
+@JsonInclude(NON_EMPTY)
 public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     private static final long serialVersionUID = -4966481409754529111L;
 
@@ -23,7 +24,6 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     public interface ReferenceBy {
 
     }
-
 
     /**
      * 部门ID
@@ -53,7 +53,6 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
      */
     @NotNull(groups = {New.class})
     private final Types type;
-
 
     /**
      * 子部门个数
@@ -91,16 +90,16 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
      */
     private final String logo;
 
-    public DepartmentDto(@JsonProperty("id") Long id,
-                         @JsonProperty("fullName") String fullName,
-                         @JsonProperty("shortname") String shortname,
-                         @JsonProperty("description") String description,
-                         @JsonProperty("type") Types type,
-                         @JsonProperty("parent") DepartmentDto parent,
-                         @JsonProperty("director") String director,
-                         @JsonProperty("logo") String logo,
-                         Long childrenCount,
-                         Long userCount) {
+    private DepartmentDto(Long id,
+                          String fullName,
+                          String shortname,
+                          String description,
+                          Types type,
+                          DepartmentDto parent,
+                          String director,
+                          String logo,
+                          Long childrenCount,
+                          Long userCount) {
         this.id = id;
         this.fullName = fullName;
         this.shortname = shortname;
@@ -165,5 +164,83 @@ public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, fullName, shortname, description, type, childrenCount, userCount, parent, director, logo);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String fullName;
+        private String shortname;
+        private String description;
+        private Types type;
+        private Long childrenCount;
+        private Long userCount;
+        private DepartmentDto parent;
+        private String director;
+        private String logo;
+
+        private Builder() {
+        }
+
+        public static Builder aDepartmentDto() {
+            return new Builder();
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder fullName(String fullName) {
+            this.fullName = fullName;
+            return this;
+        }
+
+        public Builder shortname(String shortname) {
+            this.shortname = shortname;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder type(Types type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder childrenCount(Long childrenCount) {
+            this.childrenCount = childrenCount;
+            return this;
+        }
+
+        public Builder userCount(Long userCount) {
+            this.userCount = userCount;
+            return this;
+        }
+
+        public Builder parent(DepartmentDto parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        public Builder director(String director) {
+            this.director = director;
+            return this;
+        }
+
+        public Builder logo(String logo) {
+            this.logo = logo;
+            return this;
+        }
+
+        public DepartmentDto build() {
+            return new DepartmentDto(id, fullName, shortname, description, type, parent, director, logo, childrenCount, userCount);
+        }
     }
 }

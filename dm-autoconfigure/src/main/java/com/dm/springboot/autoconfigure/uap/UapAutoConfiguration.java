@@ -39,11 +39,25 @@ public class UapAutoConfiguration implements InitializingBean {
 
         // 建立初始管理员账号
         if (!userService.exist()) {
-            userService.save(new UserDto(username, fullName, password, Collections.singleton(UserRoleDto.ROLE_ADMIN)));
+//            UserDto(String username, String fullName, String password, Set<UserRoleDto> roles)
+            UserDto admin = UserDto.builder()
+                .username(username)
+                .fullName(fullName)
+                .password(password)
+                .roles(Collections.singleton(UserRoleDto.ROLE_ADMIN))
+                .build();
+
+            userService.save(admin);
         }
         // 建立默认匿名账号
         if (!userService.userExistsByUsername("ANONYMOUS")) {
-            userService.save(new UserDto("ANONYMOUS", "匿名用户", "ANONYMOUS", Collections.singleton(UserRoleDto.ROLE_ANONYMOUS)));
+            UserDto anonymous = UserDto.builder()
+                .username("ANONYMOUS")
+                .fullName("匿名用户")
+                .password("N/A")
+                .roles(Collections.singleton(UserRoleDto.ROLE_ANONYMOUS))
+                .build();
+            userService.save(anonymous);
         }
     }
 
@@ -55,7 +69,6 @@ public class UapAutoConfiguration implements InitializingBean {
         // 初始化用户
         initUser();
     }
-
 
     @ConditionalOnClass(CacheManager.class)
     static class UapJCacheConfiguration {

@@ -1,6 +1,5 @@
 package com.dm.collections.test;
 
-
 import com.dm.collections.CollectionUtils;
 import org.junit.jupiter.api.Test;
 

@@ -1,5 +1,8 @@
 package com.dm.notification.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
@@ -27,7 +30,12 @@ public class NotificationResponse implements Serializable {
      * @param content     通知内容
      * @param createdTime 通知创建时间
      */
-    public NotificationResponse(Long id, Long userid, String title, String content, ZonedDateTime createdTime) {
+    @JsonCreator
+    public NotificationResponse(@JsonProperty("id") Long id,
+                                @JsonProperty("userid") Long userid,
+                                @JsonProperty("title") String title,
+                                @JsonProperty("content") String content,
+                                @JsonProperty("createdTime") ZonedDateTime createdTime) {
         this.id = id;
         this.userid = userid;
         this.title = title;

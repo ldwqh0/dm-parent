@@ -20,13 +20,11 @@ public class LoginLogServiceImpl implements LoginLogService {
 
     private final LoginLogRepository loginLogRepository;
 
-
     private final QLoginLog qLoginLog = QLoginLog.loginLog;
 
     public LoginLogServiceImpl(LoginLogRepository loginLogRepository) {
         this.loginLogRepository = loginLogRepository;
     }
-
 
     @Override
     @Transactional
@@ -52,7 +50,6 @@ public class LoginLogServiceImpl implements LoginLogService {
         }
         return loginLogRepository.findAll(query, pageable).map(LoginLogConverter::toDto);
     }
-
 
     private LoginLog copyProperties(LoginLog dest, LoginLogDto source) {
         dest.setIp(source.getIp());

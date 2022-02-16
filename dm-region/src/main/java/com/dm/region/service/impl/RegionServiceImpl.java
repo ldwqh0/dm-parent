@@ -89,7 +89,6 @@ public class RegionServiceImpl implements RegionService {
         return regionRepository.findByHrefNotNullAndSyncedIsFalse();
     }
 
-
     private Region copyProperties(Region model, RegionDto dto) {
         model.setCode(dto.getCode());
         model.setName(dto.getName());

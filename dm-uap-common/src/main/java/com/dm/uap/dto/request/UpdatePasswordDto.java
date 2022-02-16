@@ -1,5 +1,6 @@
 package com.dm.uap.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
@@ -9,10 +10,10 @@ import java.util.Objects;
 public class UpdatePasswordDto implements Serializable {
     private static final long serialVersionUID = -7352479163299106344L;
 
-    public UpdatePasswordDto(
-        @JsonProperty("oldPassword") String oldPassword,
-        @JsonProperty("password") String password,
-        @JsonProperty("repassword") String repassword) {
+    @JsonCreator
+    public UpdatePasswordDto(@JsonProperty("oldPassword") String oldPassword,
+                             @JsonProperty("password") String password,
+                             @JsonProperty("repassword") String repassword) {
         this.oldPassword = oldPassword;
         this.password = password;
         this.repassword = repassword;
@@ -26,7 +27,6 @@ public class UpdatePasswordDto implements Serializable {
 
     @NotBlank
     private final String repassword;
-
 
     public String getOldPassword() {
         return oldPassword;

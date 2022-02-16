@@ -35,7 +35,9 @@ public class AuthAutoConfiguration implements InitializingBean {
 
     private Set<MenuDto> initMenus() {
         if (!menuService.exists()) {
-            MenuDto menuDto = new MenuDto("index", "首页", "/");
+            MenuDto menuDto = MenuDto.builder().name("index")
+                .title("首页")
+                .url("/").build();
             return Collections.singleton(menuService.save(menuDto));
         } else {
             return Collections.emptySet();
@@ -55,17 +57,13 @@ public class AuthAutoConfiguration implements InitializingBean {
     }
 
     private ResourceDto initResource(String name, String matcher, String description, Set<RoleDto> roles) {
-        ResourceDto resource = new ResourceDto(
-            null,
-            name,
-            null,
-            matcher,
-            description,
-            null,
-            UriResource.MatchType.ANT_PATH,
-            roles,
-            null
-        );
+        ResourceDto resource = ResourceDto.builder()
+            .name(name)
+            .matcher(matcher)
+            .description(description)
+            .matchType(UriResource.MatchType.ANT_PATH)
+            .accessAuthorities(roles)
+            .build();
         return resourceService.save(resource);
     }
 

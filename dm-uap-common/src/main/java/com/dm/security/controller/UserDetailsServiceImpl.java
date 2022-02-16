@@ -44,15 +44,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserDetails toUserDetails(User user) {
-        return new UserDetailsDto(user.getId(), user.getUsername(),
-            user.getPassword(),
-            user.isAccountExpired(), user.isCredentialsExpired(),
-            user.isEnabled(), false,
-            Sets.transform(user.getRoles(), userRole -> new GrantedAuthorityDto(userRole.getId(), userRole.getGroup() + "_" + userRole.getName())),
-            user.getFullName(),
-            user.getMobile(),
-            user.getEmail(),
-            user.getRegionCode(),
-            user.getScenicName());
+        return UserDetailsDto.builder()
+            .id(user.getId())
+            .username(user.getUsername())
+            .password(user.getPassword())
+            .accountExpired(user.isAccountExpired())
+            .credentialsExpired(user.isCredentialsExpired())
+            .enabled(user.isEnabled())
+            .locked(false)
+            .grantedAuthority(Sets.transform(user.getRoles(), userRole -> new GrantedAuthorityDto(userRole.getId(), userRole.getGroup() + "_" + userRole.getName())))
+            .fullName(user.getFullName())
+            .mobile(user.getMobile())
+            .email(user.getEmail())
+            .regionCode(user.getRegionCode())
+            .scenicName(user.getScenicName())
+            .build();
     }
 }

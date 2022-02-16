@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 import static org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionClaimNames.*;
 
-
 public class UserDetailsDtoClaimsSetConverter implements IntrospectorClaimsSetConverter {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsDtoClaimsSetConverter.class);

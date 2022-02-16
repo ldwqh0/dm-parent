@@ -60,7 +60,6 @@ public class ServerHttpOauth2RequestReactiveAuthorizationManager extends ServerH
         });
     }
 
-
     // 判断资源的scope是否和授权的Scope一致
     private boolean containsScope(OAuth2AuthorizedClient client, ResourceAuthorityAttribute attribute) {
         OAuth2AccessToken accessToken = client.getAccessToken();

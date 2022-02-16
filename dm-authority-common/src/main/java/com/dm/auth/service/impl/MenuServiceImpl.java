@@ -83,7 +83,6 @@ public class MenuServiceImpl implements MenuService {
         }
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
@@ -155,7 +154,6 @@ public class MenuServiceImpl implements MenuService {
         }
         return toDto(menu);
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)

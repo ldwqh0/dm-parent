@@ -49,7 +49,6 @@ public class AuthBeanDefineConfiguration {
         return new MenuServiceImpl(menuRepository, roleRepository);
     }
 
-
     @Bean
     public ScopeController scopeController(ResourceService resourceService) {
         return new ScopeController(resourceService);

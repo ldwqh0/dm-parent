@@ -30,7 +30,6 @@ public class ResourceController {
         this.resourceService = resourceService;
     }
 
-
     /**
      * 保存资源信息
      *
@@ -120,6 +119,5 @@ public class ResourceController {
             return ValidationResult.success();
         }
     }
-
 
 }

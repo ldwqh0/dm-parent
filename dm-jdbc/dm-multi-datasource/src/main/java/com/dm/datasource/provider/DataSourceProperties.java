@@ -78,26 +78,21 @@ public final class DataSourceProperties implements Serializable {
         return dbType;
     }
 
-
     public String getHost() {
         return host;
     }
-
 
     public Integer getPort() {
         return port;
     }
 
-
     public String getUsername() {
         return username;
     }
 
-
     public String getPassword() {
         return password;
     }
-
 
     public String getDatabase() {
         return database;

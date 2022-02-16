@@ -8,7 +8,7 @@ dependencies {
     implementation("jakarta.persistence:jakarta.persistence-api")
     implementation("com.querydsl:querydsl-jpa")
     implementation(project(":collections"))
-    implementation(project(":dm-common"))
+    api(project(":dm-common"))
 
     implementation("com.fasterxml.jackson.core:jackson-annotations")
     implementation("jakarta.validation:jakarta.validation-api")

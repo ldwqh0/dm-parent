@@ -33,7 +33,6 @@ public interface MenuService {
 
     MenuDto patch(long id, MenuDto menu);
 
-
     MenuDto move(long id, OrderDto.Position pos);
 
     List<MenuDto> listAllByType(Menu.MenuType type);

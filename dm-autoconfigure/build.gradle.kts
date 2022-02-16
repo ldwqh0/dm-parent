@@ -37,6 +37,7 @@ dependencies {
     compileOnly(project(":dm-security-oauth2-client"))
     compileOnly(project(":dm-notification-server"))
     compileOnly(project(":dm-todo-task-server"))
+    compileOnly(project(":dm-dingding-api"))
 }
 tasks.jar {
     manifest {

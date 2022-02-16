@@ -92,7 +92,6 @@ public class UserController {
         }
     }
 
-
     /**
      * 更新用户信息
      *
@@ -145,7 +144,6 @@ public class UserController {
         Pageable pageable) {
         return userService.search(department, role, roleGroup, keyword, pageable);
     }
-
 
     /**
      * 校验用户名是否被使用

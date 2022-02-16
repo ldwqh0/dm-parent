@@ -8,37 +8,27 @@ public final class MenuConverter {
     private MenuConverter() {
     }
 
+    private static MenuDto.Builder newBuilder(Menu model) {
+        return MenuDto.builder()
+            .id(model.getId())
+            .name(model.getName())
+            .title(model.getTitle())
+            .enabled(model.isEnabled())
+            .url(model.getUrl())
+            .icon(model.getIcon())
+            .description(model.getDescription())
+            .type(model.getType())
+            .order(model.getOrder())
+            .openInNewWindow(model.isOpenInNewWindow());
+    }
+
     private static MenuDto toSimpleDto(Menu model) {
-        return new MenuDto(
-            model.getId(),
-            model.getName(),
-            model.getTitle(),
-            model.isEnabled(),
-            model.getUrl(),
-            model.getIcon(),
-            model.getDescription(),
-            model.getType(),
-            model.getOrder(),
-            null,
-            model.getOpenInNewWindow(),
-            null
-        );
+        return newBuilder(model).build();
     }
 
     public static MenuDto toDto(Menu model, Long childrenCount) {
-        return new MenuDto(
-            model.getId(),
-            model.getName(),
-            model.getTitle(),
-            model.isEnabled(),
-            model.getUrl(),
-            model.getIcon(),
-            model.getDescription(),
-            model.getType(),
-            model.getOrder(),
-            model.getParent().map(MenuConverter::toSimpleDto).orElse(null),
-            model.getOpenInNewWindow(),
-            childrenCount
-        );
+        return newBuilder(model)
+            .childrenCount(childrenCount)
+            .build();
     }
 }

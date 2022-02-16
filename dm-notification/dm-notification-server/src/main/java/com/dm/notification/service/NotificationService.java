@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 public interface NotificationService {
 
-
     /**
      * 向单个用户发送通知消息
      *

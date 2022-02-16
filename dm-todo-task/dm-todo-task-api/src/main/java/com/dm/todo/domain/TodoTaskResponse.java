@@ -1,6 +1,7 @@
 package com.dm.todo.domain;
 
 import com.dm.collections.CollectionUtils;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -60,7 +61,6 @@ public class TodoTaskResponse implements Serializable {
     @JsonProperty(access = READ_ONLY)
     private final ZonedDateTime completedTime;
 
-
     /**
      * 待办事项回调的URL
      */
@@ -82,16 +82,17 @@ public class TodoTaskResponse implements Serializable {
      * @param pcUrl         待办pc端的地址
      * @param completedTime 完成时间
      */
-    public TodoTaskResponse(Long id,
-                            Long userid,
-                            String title,
-                            ZonedDateTime createdTime,
-                            String sourceName,
-                            String bizId,
-                            Set<Attribute> attributes,
-                            String url,
-                            String pcUrl,
-                            ZonedDateTime completedTime) {
+    @JsonCreator
+    public TodoTaskResponse(@JsonProperty("id") Long id,
+                            @JsonProperty("userid") Long userid,
+                            @JsonProperty("title") String title,
+                            @JsonProperty("createdTime") ZonedDateTime createdTime,
+                            @JsonProperty("sourceName") String sourceName,
+                            @JsonProperty("bizId") String bizId,
+                            @JsonProperty("attributes") Set<Attribute> attributes,
+                            @JsonProperty("url") String url,
+                            @JsonProperty("pcUrl") String pcUrl,
+                            @JsonProperty("completedTime") ZonedDateTime completedTime) {
         this.id = id;
         this.userid = userid;
         this.title = title;

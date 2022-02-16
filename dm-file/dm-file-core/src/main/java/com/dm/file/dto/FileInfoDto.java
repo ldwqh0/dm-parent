@@ -4,16 +4,17 @@ import com.dm.common.dto.IdentifiableDto;
 import com.dm.data.domain.Audit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 
-@JsonInclude(value = Include.NON_EMPTY)
+@JsonInclude(NON_EMPTY)
 public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
 
     private static final long serialVersionUID = -6472426570089325611L;
@@ -37,6 +38,7 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
     /**
      * 文件长度
      */
+    @JsonProperty(access = READ_ONLY)
     private final Long size;
 
     /**
@@ -57,7 +59,6 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
     @JsonProperty(access = READ_ONLY)
     private final ZonedDateTime createTime;
 
-
     @Override
     public UUID getId() {
         return id;
@@ -75,8 +76,8 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
         return size;
     }
 
-    public Audit<Long, String> getCreatedBy() {
-        return createdBy;
+    public Optional<Audit<Long, String>> getCreatedBy() {
+        return Optional.ofNullable(createdBy);
     }
 
     public Audit<Long, String> getLastModifiedBy() {
@@ -87,7 +88,11 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
         return createTime;
     }
 
-    public FileInfoDto(UUID id, String filename, String path, Long size, Audit<Long, String> createdBy, Audit<Long, String> lastModifiedBy, ZonedDateTime createTime) {
+    private FileInfoDto() {
+        this(null, null, null, null, null, null, null);
+    }
+
+    private FileInfoDto(UUID id, String filename, String path, Long size, Audit<Long, String> createdBy, Audit<Long, String> lastModifiedBy, ZonedDateTime createTime) {
         this.id = id;
         this.filename = filename;
         this.path = path;
@@ -97,15 +102,63 @@ public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
         this.createTime = createTime;
     }
 
-    public FileInfoDto(String filename, Long size) {
-        this(
-            null,
-            filename,
-            null,
-            size,
-            null,
-            null,
-            null
-        );
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private UUID id;
+        private String filename;
+        private String path;
+        private Long size;
+        private Audit<Long, String> createdBy;
+        private Audit<Long, String> lastModifiedBy;
+        private ZonedDateTime createTime;
+
+        private Builder() {
+        }
+
+        public static Builder aFileInfoDto() {
+            return new Builder();
+        }
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder filename(String filename) {
+            this.filename = filename;
+            return this;
+        }
+
+        public Builder path(String path) {
+            this.path = path;
+            return this;
+        }
+
+        public Builder size(Long size) {
+            this.size = size;
+            return this;
+        }
+
+        public Builder createdBy(Audit<Long, String> createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
+        public Builder lastModifiedBy(Audit<Long, String> lastModifiedBy) {
+            this.lastModifiedBy = lastModifiedBy;
+            return this;
+        }
+
+        public Builder createTime(ZonedDateTime createTime) {
+            this.createTime = createTime;
+            return this;
+        }
+
+        public FileInfoDto build() {
+            return new FileInfoDto(id, filename, path, size, createdBy, lastModifiedBy, createTime);
+        }
     }
 }

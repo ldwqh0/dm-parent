@@ -4,14 +4,15 @@ import com.dm.common.validation.groups.ReferenceGroup;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Objects;
 
-@JsonInclude(Include.NON_EMPTY)
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
+
+@JsonInclude(NON_EMPTY)
 public class RegionDto implements Serializable {
 
     private static final long serialVersionUID = -8378328574545247274L;
@@ -44,9 +45,12 @@ public class RegionDto implements Serializable {
     @JsonIgnoreProperties("parent")
     private final RegionDto parent;
 
-
     @JsonCreator
-    public RegionDto(@JsonProperty("code") String code, @JsonProperty("name") String name, @JsonProperty("longitude") Double longitude, @JsonProperty("latitude") Double latitude, @JsonProperty("parent") RegionDto parent) {
+    public RegionDto(@JsonProperty("code") String code,
+                     @JsonProperty("name") String name,
+                     @JsonProperty("longitude") Double longitude,
+                     @JsonProperty("latitude") Double latitude,
+                     @JsonProperty("parent") RegionDto parent) {
         this.code = code;
         this.name = name;
         this.longitude = longitude;

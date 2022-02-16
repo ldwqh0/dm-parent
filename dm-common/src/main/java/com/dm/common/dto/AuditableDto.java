@@ -13,18 +13,15 @@ public interface AuditableDto<UID extends Serializable, UNAME extends Serializab
      */
     Optional<Audit<UID, UNAME>> getCreatedBy();
 
-
     /**
      * 创建人
      */
     Optional<Audit<UID, UNAME>> getLastModifiedBy();
 
-
     /**
      * 创建时间
      */
     Optional<ZonedDateTime> getCreatedTime();
-
 
     /**
      * 最后修改时间

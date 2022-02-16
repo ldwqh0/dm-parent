@@ -29,7 +29,6 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-
     /**
      * 新增部门
      *

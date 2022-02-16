@@ -25,7 +25,6 @@ public interface ResourceRepository extends JpaRepository<AuthResource, Long>, Q
      */
     List<AuthResource> findByMatcherAndMatchType(String matcher, UriResource.MatchType type);
 
-
     List<AuthResource> findByMatcherAndMatchTypeAndIdNotIn(String matcher, UriResource.MatchType type, Collection<Long> excludes);
 
     /**
@@ -35,7 +34,6 @@ public interface ResourceRepository extends JpaRepository<AuthResource, Long>, Q
      */
     @Query("select distinct scope from AuthResource ar join ar.scope scope")
     List<String> listScopes();
-
 
     @Query("select max(ar.id) from AuthResource ar")
     Optional<Long> findMaxId();

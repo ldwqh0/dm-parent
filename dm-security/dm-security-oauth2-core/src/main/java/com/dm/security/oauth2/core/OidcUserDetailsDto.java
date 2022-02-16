@@ -10,7 +10,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
-@JsonInclude(value = JsonInclude.Include.NON_ABSENT)
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
+
+@JsonInclude(NON_ABSENT)
 public class OidcUserDetailsDto extends OAuth2UserDetailsDto implements OidcUser {
 
     private static final long serialVersionUID = 8549068884661769277L;
@@ -19,7 +21,6 @@ public class OidcUserDetailsDto extends OAuth2UserDetailsDto implements OidcUser
     private final OidcIdToken idToken;
 
     public OidcUserDetailsDto(OidcIdToken idToken, OidcUserInfo userInfo) {
-//        userInfo.get
         super(null, null, null, userInfo.getPreferredUsername(), null, userInfo.getFullName(), userInfo.getPhoneNumber(), userInfo.getEmail(), null, null, Collections.emptyMap());
         this.userinfo = userInfo;
         this.idToken = idToken;
@@ -36,7 +37,7 @@ public class OidcUserDetailsDto extends OAuth2UserDetailsDto implements OidcUser
     }
 
     @Override
-    @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_ABSENT)
+    @JsonInclude(value = NON_ABSENT, content = NON_ABSENT)
     public OidcUserInfo getUserInfo() {
         return this.userinfo;
     }

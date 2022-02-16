@@ -82,7 +82,6 @@ public class FileServiceImpl implements FileInfoService {
         return fileInfoRepository.findAllById(files);
     }
 
-
     private FileInfo copyProperties(FileInfo dest, FileInfoDto src) {
         dest.setFilename(src.getFilename());
         dest.setPath(src.getPath());

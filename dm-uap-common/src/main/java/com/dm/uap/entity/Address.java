@@ -1,6 +1,5 @@
 package com.dm.uap.entity;
 
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -56,7 +55,6 @@ public class Address implements Serializable, Cloneable {
      */
     @Column(name = "latitude_")
     private Double latitude;
-
 
     public String getFormatted() {
         return formatted;

@@ -11,7 +11,6 @@ import java.io.Serializable;
 public class NotificationRequest implements Serializable {
     private static final long serialVersionUID = -6397347690838364837L;
 
-
     /**
      * 通知用户
      */

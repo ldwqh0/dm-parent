@@ -115,7 +115,6 @@ public class MenuController {
         return menuService.search(parentId, enabled, keyword, pageable);
     }
 
-
     /**
      * 获取某个菜单的子菜单树
      *

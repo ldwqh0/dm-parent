@@ -13,7 +13,6 @@ public class RegionRepositoryImpl {
 
     private final EntityManager entityManager;
 
-
     private final QRegion qRegion = QRegion.region;
 
     public RegionRepositoryImpl(EntityManager em) {

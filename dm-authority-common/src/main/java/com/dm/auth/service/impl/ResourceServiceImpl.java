@@ -40,7 +40,6 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         this.roleRepository = roleRepository;
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityAttributes"}, allEntries = true)
