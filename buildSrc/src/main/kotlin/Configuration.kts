@@ -10,8 +10,8 @@ object Versions {
 }
 
 object Publish {
-    const val releasesRepoUrl = "http://demo.yzhxh.com:8081/nexus/repository/maven-releases/"
-    const val snapshotsRepoUrl = "http://demo.yzhxh.com:8081/nexus/repository/maven-snapshots/"
-    const val username = "lidong"
-    const val password = "lidong"
+    const val releasesRepoUrl = "https://packages.aliyun.com/maven/repository/2124183-release-zS40pt"
+    const val snapshotsRepoUrl = "https://packages.aliyun.com/maven/repository/2124183-snapshot-jg10er"
+    const val username = "5f213c551d62073ceeb332b2"
+    const val password = "NC=d3W)28)]W"
 }
