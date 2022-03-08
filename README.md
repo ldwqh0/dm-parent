@@ -10,6 +10,7 @@
 
 2.3.0
 
+* 升级到gradle 7.4
 * 项目改为Gradle构建
 * 全面升级为jdk 11
 * 升级Spring boot 为2.6.3

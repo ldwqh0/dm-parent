@@ -65,17 +65,17 @@ publishing {
         }
     }
     repositories {
+        // 发布到自己的maven私有仓库
         maven {
-            val releasesRepoUrl = Configuration.Publish.releasesRepoUrl
-            val snapshotsRepoUrl = Configuration.Publish.snapshotsRepoUrl
+            val releasesRepoUrl = "https://packages.aliyun.com/maven/repository/2124183-release-zS40pt"
+            val snapshotsRepoUrl = "https://packages.aliyun.com/maven/repository/2124183-snapshot-jg10er"
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
             isAllowInsecureProtocol = true
             credentials {
-                username = Configuration.Publish.username
-                password = Configuration.Publish.password
+                username = "5f213c551d62073ceeb332b2"
+                password = "NC=d3W)28)]W"
             }
         }
-        mavenLocal()
     }
 }
 

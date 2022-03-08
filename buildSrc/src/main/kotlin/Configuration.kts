@@ -8,10 +8,3 @@ object Versions {
     const val weixin_java_mp = "4.2.0"
     const val nimbusds = "9.19"
 }
-
-object Publish {
-    const val releasesRepoUrl = "https://packages.aliyun.com/maven/repository/2124183-release-zS40pt"
-    const val snapshotsRepoUrl = "https://packages.aliyun.com/maven/repository/2124183-snapshot-jg10er"
-    const val username = "5f213c551d62073ceeb332b2"
-    const val password = "NC=d3W)28)]W"
-}
