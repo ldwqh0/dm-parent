@@ -55,6 +55,5 @@ publishing {
                 password = "NC=d3W)28)]W"
             }
         }
-        mavenLocal()
     }
 }
