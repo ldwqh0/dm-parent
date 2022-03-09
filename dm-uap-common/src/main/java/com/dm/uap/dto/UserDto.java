@@ -1,8 +1,8 @@
 package com.dm.uap.dto;
 
 import com.dm.collections.CollectionUtils;
-import com.dm.common.dto.IdentifiableDto;
 import com.dm.common.validation.constraints.Mobile;
+import com.dm.data.domain.Identifiable;
 import com.dm.uap.entity.Address;
 import com.dm.uap.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,7 +23,7 @@ import static java.util.Collections.unmodifiableSet;
 
 @JsonInclude(NON_ABSENT)
 @JsonIgnoreProperties(allowSetters = true, value = {"password"})
-public class UserDto implements Serializable, IdentifiableDto<Long> {
+public class UserDto implements Serializable, Identifiable<Long> {
 
     public interface Default {
     }

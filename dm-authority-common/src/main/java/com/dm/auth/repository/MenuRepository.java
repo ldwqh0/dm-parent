@@ -1,7 +1,7 @@
 package com.dm.auth.repository;
 
 import com.dm.auth.entity.Menu;
-import com.dm.data.repository.IdentifiableDtoRepository;
+import com.dm.data.domain.Identifiable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MenuRepository
-    extends JpaRepository<Menu, Long>, QuerydslPredicateExecutor<Menu>, IdentifiableDtoRepository<Menu, Long> {
+    extends JpaRepository<Menu, Long>, QuerydslPredicateExecutor<Menu> {
 
     List<Menu> findByType(Menu.MenuType type);
 
@@ -26,4 +26,8 @@ public interface MenuRepository
 
     @Query("select max(m.id) from Menu m")
     Optional<Long> findMaxId();
+
+    default Menu getByDto(Identifiable<Long> identifiable) {
+        return getById(identifiable.getId());
+    }
 }

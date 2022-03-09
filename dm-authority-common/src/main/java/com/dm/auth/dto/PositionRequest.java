@@ -1,4 +1,4 @@
-package com.dm.common.dto;
+package com.dm.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -12,8 +12,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
  *
  * @author LiDong
  */
-@JsonInclude( NON_ABSENT)
-public class OrderDto implements Serializable {
+@JsonInclude(NON_ABSENT)
+public class PositionRequest implements Serializable {
 
     private static final long serialVersionUID = -4893753356546615887L;
 
@@ -36,8 +36,8 @@ public class OrderDto implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderDto orderDto = (OrderDto) o;
-        return position == orderDto.position;
+        PositionRequest that = (PositionRequest) o;
+        return position == that.position;
     }
 
     @Override
@@ -45,11 +45,11 @@ public class OrderDto implements Serializable {
         return Objects.hash(position);
     }
 
-    public OrderDto() {
+    public PositionRequest() {
         this(Position.UP);
     }
 
-    public OrderDto(Position position) {
+    public PositionRequest(Position position) {
         this.position = position;
     }
 }

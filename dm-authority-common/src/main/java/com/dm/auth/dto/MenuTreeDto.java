@@ -2,7 +2,7 @@ package com.dm.auth.dto;
 
 import com.dm.auth.entity.Menu.MenuType;
 import com.dm.collections.CollectionUtils;
-import com.dm.common.dto.IdentifiableDto;
+import com.dm.data.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -20,7 +20,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
  * @author LiDong
  */
 @JsonInclude(NON_EMPTY)
-public class MenuTreeDto implements Serializable, IdentifiableDto<Long> {
+public class MenuTreeDto implements Serializable, Identifiable<Long> {
     private static final long serialVersionUID = 7184771144233410172L;
     /**
      * 菜单id

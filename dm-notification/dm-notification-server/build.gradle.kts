@@ -4,6 +4,7 @@ plugins {
 dependencies {
     implementation(project(":collections"))
     implementation(project(":dm-common"))
+    implementation(project(":dm-data"))
     implementation(project(":dm-notification-api"))
     implementation("org.springframework:spring-web")
     implementation("org.springframework.security:spring-security-core")

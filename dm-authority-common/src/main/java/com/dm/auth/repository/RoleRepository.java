@@ -3,7 +3,8 @@ package com.dm.auth.repository;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.Role;
 import com.dm.auth.entity.Role.Status;
-import com.dm.data.repository.IdentifiableDtoRepository;
+import com.dm.data.domain.Identifiable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface RoleRepository extends IdentifiableDtoRepository<Role, Long>, QuerydslPredicateExecutor<Role> {
+public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredicateExecutor<Role> {
 
     List<Role> findByState(Status enabled);
 
@@ -29,4 +30,8 @@ public interface RoleRepository extends IdentifiableDtoRepository<Role, Long>, Q
 
     @Query("select max(r.id) from Role r")
     Optional<Long> findMaxId();
+
+    default Role getByDto(Identifiable<Long> identifiable) {
+        return getById(identifiable.getId());
+    }
 }

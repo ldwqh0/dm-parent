@@ -1,13 +1,13 @@
 package com.dm.file.repository;
 
-import com.dm.data.repository.IdentifiableDtoRepository;
 import com.dm.file.entity.FileInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface FileInfoRepository extends JpaRepository<FileInfo, UUID>, IdentifiableDtoRepository<FileInfo, UUID> {
+public interface FileInfoRepository extends JpaRepository<FileInfo, UUID>, QuerydslPredicateExecutor<FileInfo> {
 
     /**
      * 根据文件名，sha256和md5获取文件信息

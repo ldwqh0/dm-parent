@@ -1,7 +1,7 @@
 package com.dm.auth.dto;
 
 import com.dm.auth.entity.Role.Status;
-import com.dm.common.dto.IdentifiableDto;
+import com.dm.data.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,7 +21,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
  * @author LiDong
  */
 @JsonInclude(NON_EMPTY)
-public class RoleDto implements IdentifiableDto<Long>, Serializable {
+public class RoleDto implements Identifiable<Long>, Serializable {
     private static final long serialVersionUID = 4725729366179649819L;
 
     @JsonCreator

@@ -4,7 +4,7 @@ import com.dm.auth.converter.RoleConverter;
 import com.dm.auth.dto.RoleDto;
 import com.dm.auth.service.RoleService;
 import com.dm.collections.Lists;
-import com.dm.common.dto.ValidationResult;
+import com.dm.common.validation.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import org.springframework.data.domain.Page;

@@ -1,9 +1,9 @@
 package com.dm.auth.controller;
 
 import com.dm.auth.dto.MenuDto;
+import com.dm.auth.dto.PositionRequest;
 import com.dm.auth.service.MenuService;
-import com.dm.common.dto.OrderDto;
-import com.dm.common.dto.ValidationResult;
+import com.dm.common.validation.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import org.springframework.data.domain.Page;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.dm.common.dto.OrderDto.Position.DOWN;
-import static com.dm.common.dto.OrderDto.Position.UP;
+import static com.dm.auth.dto.PositionRequest.Position.DOWN;
+import static com.dm.auth.dto.PositionRequest.Position.UP;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -138,7 +138,7 @@ public class MenuController {
      * @return 移动后的菜单值
      */
     @PutMapping("{id}/order")
-    public MenuDto order(@PathVariable("id") Long id, @RequestBody OrderDto order) {
+    public MenuDto order(@PathVariable("id") Long id, @RequestBody PositionRequest order) {
         if (UP.equals(order.getPosition())) {
             return menuService.move(id, UP);
         } else if (DOWN.equals(order.getPosition())) {

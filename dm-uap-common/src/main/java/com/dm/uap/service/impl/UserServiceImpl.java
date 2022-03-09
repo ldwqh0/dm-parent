@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
     private void addPostsAndRoles(User model, UserDto dto) {
         List<UserPostDto> posts = dto.getPosts();
         if (CollectionUtils.isNotEmpty(posts)) {
-            Map<Department, String> posts_ = Maps.map(posts, it -> departmentRepository.getByDto(it.getDepartment()), UserPostDto::getPost);
+            Map<Department, String> posts_ = Maps.map(posts, it -> departmentRepository.getById(it.getDepartment().getId()), UserPostDto::getPost);
             model.setPosts(posts_);
         } else {
             model.setPosts(Collections.emptyMap());

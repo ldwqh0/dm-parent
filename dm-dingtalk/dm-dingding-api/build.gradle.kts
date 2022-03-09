@@ -8,6 +8,9 @@ dependencies {
     implementation("org.springframework:spring-web")
     implementation("commons-codec:commons-codec")
     implementation(project(":collections"))
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 tasks.jar {
     manifest {

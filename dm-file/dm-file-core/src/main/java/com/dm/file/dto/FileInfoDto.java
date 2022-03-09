@@ -1,7 +1,7 @@
 package com.dm.file.dto;
 
-import com.dm.common.dto.IdentifiableDto;
 import com.dm.data.domain.Audit;
+import com.dm.data.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,7 +15,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 
 @JsonInclude(NON_EMPTY)
-public class FileInfoDto implements IdentifiableDto<UUID>, Serializable {
+public class FileInfoDto implements Identifiable<UUID>, Serializable {
 
     private static final long serialVersionUID = -6472426570089325611L;
 

@@ -36,7 +36,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional(rollbackFor = Throwable.class)
     public DepartmentDto save(DepartmentDto data) {
         Department department = copyProperties(new Department(), data);
-        data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
+        data.getParent()
+            .map(DepartmentDto::getId)
+            .map(departmentRepository::getById)
+            .ifPresent(department::setParent);
         department.setDirector(data.getDirector());
         Department dep = departmentRepository.save(department);
         // 设置部门的顺序
@@ -58,7 +61,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         department.setParent(null);
         department.setDirector(null);
         // 重新设置新的配置和原始数据
-        data.getParent().map(departmentRepository::getByDto).ifPresent(department::setParent);
+        data.getParent()
+            .map(DepartmentDto::getId)
+            .map(departmentRepository::getById).ifPresent(department::setParent);
         department.setDirector(data.getDirector());
         return this.toDto(departmentRepository.save(department));
     }

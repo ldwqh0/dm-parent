@@ -3,6 +3,7 @@ plugins {
 }
 dependencies {
     implementation(project(":dm-common"))
+    implementation(project(":dm-data"))
     implementation(project(":dm-todo-task-api"))
     implementation("org.apache.commons:commons-lang3")
     implementation("org.springframework:spring-web")

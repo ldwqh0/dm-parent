@@ -2,7 +2,7 @@ package com.dm.auth.controller;
 
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.service.ResourceService;
-import com.dm.common.dto.ValidationResult;
+import com.dm.common.validation.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.security.authentication.UriResource;

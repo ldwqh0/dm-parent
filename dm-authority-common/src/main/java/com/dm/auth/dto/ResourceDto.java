@@ -1,7 +1,7 @@
 package com.dm.auth.dto;
 
 import com.dm.collections.CollectionUtils;
-import com.dm.common.dto.IdentifiableDto;
+import com.dm.data.domain.Identifiable;
 import com.dm.security.authentication.UriResource.MatchType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpMethod;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
 
-public class ResourceDto implements Serializable, IdentifiableDto<Long> {
+public class ResourceDto implements Serializable, Identifiable<Long> {
 
     private static final long serialVersionUID = -847613336378865468L;
     /**

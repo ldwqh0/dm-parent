@@ -9,6 +9,7 @@ dependencies {
     implementation("com.querydsl:querydsl-jpa")
     implementation(project(":collections"))
     api(project(":dm-common"))
+    api(project(":dm-data"))
 
     implementation("com.fasterxml.jackson.core:jackson-annotations")
     implementation("jakarta.validation:jakarta.validation-api")

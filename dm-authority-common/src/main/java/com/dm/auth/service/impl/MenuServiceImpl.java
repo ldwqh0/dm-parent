@@ -2,6 +2,7 @@ package com.dm.auth.service.impl;
 
 import com.dm.auth.converter.MenuConverter;
 import com.dm.auth.dto.MenuDto;
+import com.dm.auth.dto.PositionRequest;
 import com.dm.auth.entity.Menu;
 import com.dm.auth.entity.QMenu;
 import com.dm.auth.entity.Role;
@@ -10,7 +11,6 @@ import com.dm.auth.repository.RoleRepository;
 import com.dm.auth.service.MenuService;
 import com.dm.collections.CollectionUtils;
 import com.dm.collections.Lists;
-import com.dm.common.dto.OrderDto;
 import com.dm.common.exception.DataValidateException;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -158,14 +158,14 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
-    public MenuDto move(long id, OrderDto.Position pos) {
+    public MenuDto move(long id, PositionRequest.Position pos) {
         Menu one = menuRepository.getById(id);
         Long order = one.getOrder();
         BooleanExpression expression = one.getParent()
             .map(qMenu.parent::eq)
             .orElseGet(qMenu.parent::isNull);
         Sort sort;
-        if (OrderDto.Position.DOWN.equals(pos)) {
+        if (PositionRequest.Position.DOWN.equals(pos)) {
             expression = expression.and(qMenu.order.gt(order));
             sort = Sort.by(Direction.ASC, "order");
         } else {

@@ -1,4 +1,4 @@
-package com.dm.data.jpa.hibernate;
+package com.dm.hibernate.boot.model.naming;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.model.naming.Identifier;
@@ -8,11 +8,11 @@ import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
 import java.util.Locale;
 
 /**
- * 自定义的物理名称生成器，为表和字段的末尾添加下划线，如果表名是以下划线结尾的,不在末尾添加下划线
- * <br>
- * 如果不是以下划线结尾的，会在表名末尾添加下划线
+ * 一个命名策略，用于将驼峰表名称转换为下划线分割的名称，并且全部转换为小写字母，并且在表名称之后一定添加一个下划线（避免和关键字冲突）。
+ *
+ * @see PhysicalNamingStrategy
  */
-public class DmPhysicalNamingStrategy implements PhysicalNamingStrategy {
+public class CamelCaseToUnderscoresAndUnderscoreSuffixNamingStrategy implements PhysicalNamingStrategy {
     @Override
     public Identifier toPhysicalCatalogName(Identifier name, JdbcEnvironment jdbcEnvironment) {
         return apply(name, jdbcEnvironment);

@@ -1,12 +1,10 @@
-package com.dm.common.dto;
-
-import com.dm.data.domain.Audit;
+package com.dm.data.domain;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-public interface AuditableDto<UID extends Serializable, UNAME extends Serializable> extends Serializable {
+public interface Auditable<UID extends Serializable, UNAME extends Serializable> extends Serializable {
 
     /**
      * 创建人

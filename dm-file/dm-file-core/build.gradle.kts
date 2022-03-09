@@ -19,6 +19,7 @@ dependencies {
 
     implementation(project(":collections"))
     implementation(project(":dm-common"))
+    implementation(project(":dm-data"))
 
     annotationProcessor("com.querydsl:querydsl-apt:${Configuration.Versions.queryDsl}:jpa")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")

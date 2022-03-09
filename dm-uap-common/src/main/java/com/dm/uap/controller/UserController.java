@@ -1,6 +1,6 @@
 package com.dm.uap.controller;
 
-import com.dm.common.dto.ValidationResult;
+import com.dm.common.validation.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
 import com.dm.uap.dto.DepartmentDto;

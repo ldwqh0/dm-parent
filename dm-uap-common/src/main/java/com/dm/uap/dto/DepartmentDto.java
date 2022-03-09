@@ -1,6 +1,6 @@
 package com.dm.uap.dto;
 
-import com.dm.common.dto.IdentifiableDto;
+import com.dm.data.domain.Identifiable;
 import com.dm.uap.entity.Department.Types;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 @JsonInclude(NON_EMPTY)
-public class DepartmentDto implements IdentifiableDto<Long>, Serializable {
+public class DepartmentDto implements Identifiable<Long>, Serializable {
     private static final long serialVersionUID = -4966481409754529111L;
 
     public interface New {

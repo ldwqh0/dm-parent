@@ -14,6 +14,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-annotations")
     implementation(project(":collections"))
     implementation(project(":dm-common"))
+    implementation(project(":dm-data"))
     implementation(project(":dm-security-core"))
 
     annotationProcessor("com.querydsl:querydsl-apt:${Configuration.Versions.queryDsl}:jpa")

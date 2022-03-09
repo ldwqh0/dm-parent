@@ -1,6 +1,9 @@
 rootProject.name = "dm-parent"
+// 集合类库
 include("collections")
+//
 include("dm-common")
+include("dm-data")
 include("dm-file-core")
 project(":dm-file-core").projectDir = file("dm-file/dm-file-core")
 include("dm-file-stream")
@@ -63,6 +66,11 @@ project(":dm-todo-task-client").projectDir = file("dm-todo-task/dm-todo-task-cli
 
 include(":dm-todo-task-server")
 project(":dm-todo-task-server").projectDir = file("dm-todo-task/dm-todo-task-server")
+
+/**
+ * hibernate 扩展
+ */
+include(":dm-hibernate-ext")
 
 pluginManagement {
     repositories {
