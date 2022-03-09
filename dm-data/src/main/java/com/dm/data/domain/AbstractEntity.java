@@ -5,11 +5,13 @@ import org.springframework.data.domain.Persistable;
 import javax.persistence.*;
 import java.util.Objects;
 
+import static javax.persistence.GenerationType.TABLE;
+
 @MappedSuperclass
 public abstract class AbstractEntity implements Persistable<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGenerator")
+    @GeneratedValue(strategy = TABLE, generator = "tableGenerator")
     @TableGenerator(name = "tableGenerator", pkColumnName = "table_name_", table = "auto_pk_support_", valueColumnName = "next_id_")
     @Column(name = "id_", updatable = false)
     private Long id;
