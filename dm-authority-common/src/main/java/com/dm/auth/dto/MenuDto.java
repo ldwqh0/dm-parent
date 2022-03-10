@@ -11,6 +11,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
+import static java.lang.Boolean.TRUE;
+
 /**
  * 菜单结构
  *
@@ -34,7 +36,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
     /**
      * 菜单是否可用
      */
-    private final Boolean enabled;
+    private final boolean enabled;
     /**
      * 菜单地址
      */
@@ -62,7 +64,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
     /**
      * 是否在新窗口中打开菜单
      */
-    private final Boolean openInNewWindow;
+    private final boolean openInNewWindow;
 
     /**
      * 子菜单数量
@@ -98,11 +100,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         this.id = id;
         this.name = name;
         this.title = title;
-        if (Objects.isNull(enabled)) {
-            this.enabled = Boolean.TRUE;
-        } else {
-            this.enabled = enabled;
-        }
+        this.enabled=TRUE.equals(enabled);
         this.url = url;
         this.icon = icon;
         this.description = description;
@@ -113,7 +111,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         }
         this.order = order;
         this.parent = parent;
-        this.openInNewWindow = Boolean.TRUE.equals(openInNewWindow);
+        this.openInNewWindow = TRUE.equals(openInNewWindow);
         this.childrenCount = childrenCount;
     }
 
@@ -134,7 +132,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         return title;
     }
 
-    public Boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
@@ -158,7 +156,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         return order;
     }
 
-    public Boolean getOpenInNewWindow() {
+    public boolean isOpenInNewWindow() {
         return openInNewWindow;
     }
 

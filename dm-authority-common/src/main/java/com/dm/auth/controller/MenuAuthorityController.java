@@ -87,9 +87,9 @@ public class MenuAuthorityController {
     /**
      * 获取当前用户可用菜单项目，返回树形结构
      *
-     * @param user
-     * @param parentId
-     * @return
+     * @param user     当前用户的认证信息
+     * @param parentId 父菜单
+     * @ignoreParams user
      */
     @GetMapping(value = "current", params = {"type=tree"})
     public List<MenuTreeDto> systemMenuTree(Authentication user,
@@ -119,13 +119,13 @@ public class MenuAuthorityController {
             .id(menu.getId())
             .name(menu.getName())
             .title(menu.getTitle())
-            .enabled(menu.getEnabled())
+            .enabled(menu.isEnabled())
             .url(menu.getUrl())
             .icon(menu.getIcon())
             .description(menu.getDescription())
             .type(menu.getType())
             .order(menu.getOrder())
-            .openInNewWindow(menu.getOpenInNewWindow())
+            .openInNewWindow(menu.isOpenInNewWindow())
             .parentId(menu.getParent().map(MenuDto::getId).orElse(null))
             .build();
     }

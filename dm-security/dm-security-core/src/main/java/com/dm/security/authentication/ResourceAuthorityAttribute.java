@@ -39,12 +39,8 @@ public class ResourceAuthorityAttribute implements Serializable {
         Set<String> accessAuthorities,
         Set<String> denyAuthorities) {
         this.resource = resource;
-        if (CollectionUtils.isNotEmpty(accessAuthorities)) {
-            this.accessAuthorities.addAll(accessAuthorities);
-        }
-        if (CollectionUtils.isNotEmpty(denyAuthorities)) {
-            this.denyAuthorities.addAll(denyAuthorities);
-        }
+        CollectionUtils.addAll(this.accessAuthorities, accessAuthorities);
+        CollectionUtils.addAll(this.denyAuthorities, denyAuthorities);
     }
 
     public ResourceAuthorityAttribute(UriResource resource) {
@@ -53,7 +49,6 @@ public class ResourceAuthorityAttribute implements Serializable {
 
     /**
      * 获取该组资源的授权信息
-     *
      */
     public UriResource getResource() {
         return resource;
@@ -61,7 +56,6 @@ public class ResourceAuthorityAttribute implements Serializable {
 
     /**
      * 拒绝访问的角色
-     *
      */
     public Set<String> getDenyAuthorities() {
         return unmodifiableSet(this.denyAuthorities);
@@ -69,7 +63,6 @@ public class ResourceAuthorityAttribute implements Serializable {
 
     /**
      * 允许访问的角色
-     *
      */
     public Set<String> getAccessAuthorities() {
         return unmodifiableSet(this.accessAuthorities);

@@ -149,9 +149,7 @@ public class MenuServiceImpl implements MenuService {
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public MenuDto patch(long id, MenuDto source) {
         Menu menu = menuRepository.getById(id);
-        if (Objects.nonNull(source.getEnabled())) {
-            menu.setEnabled(source.getEnabled());
-        }
+        menu.setEnabled(source.isEnabled());
         return toDto(menu);
     }
 
@@ -266,7 +264,7 @@ public class MenuServiceImpl implements MenuService {
      */
     private void listChildren(List<Menu> container, Long parentId, Sort sort) {
         List<Menu> children = menuRepository.findByParentId(parentId, sort);
-        container.addAll(children);
+        CollectionUtils.addAll(container,children);
         children.forEach(child -> listChildren(container, child.getId(), sort));
     }
 
@@ -277,13 +275,13 @@ public class MenuServiceImpl implements MenuService {
     private Menu copyProperties(Menu model, MenuDto dto) {
         model.setName(dto.getName());
         model.setTitle(dto.getTitle());
-        model.setEnabled(dto.getEnabled());
+        model.setEnabled(dto.isEnabled());
         model.setUrl(dto.getUrl());
         model.setIcon(dto.getIcon());
         model.setDescription(dto.getDescription());
         model.setType(dto.getType());
         model.setOrder(dto.getOrder());
-        model.setOpenInNewWindow(dto.getOpenInNewWindow());
+        model.setOpenInNewWindow(dto.isOpenInNewWindow());
         return model;
     }
 }

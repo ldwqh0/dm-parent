@@ -59,9 +59,7 @@ public class AuthResource extends AbstractEntity {
 
     public void setScope(Set<String> scope) {
         this.scope.clear();
-        if (CollectionUtils.isNotEmpty(scope)) {
-            this.scope.addAll(scope);
-        }
+        CollectionUtils.addAll(this.scope, scope);
     }
 
     /**
@@ -80,9 +78,7 @@ public class AuthResource extends AbstractEntity {
 
     public void setAccessAuthorities(Set<Role> accessAuthorities) {
         this.accessAuthorities.clear();
-        if (CollectionUtils.isNotEmpty(accessAuthorities)) {
-            this.accessAuthorities.addAll(accessAuthorities);
-        }
+        CollectionUtils.addAll(this.accessAuthorities, accessAuthorities);
     }
 
     /**
@@ -94,9 +90,7 @@ public class AuthResource extends AbstractEntity {
 
     public void setDenyAuthorities(Set<Role> denyAuthorities) {
         this.denyAuthorities.clear();
-        if (CollectionUtils.isNotEmpty(denyAuthorities)) {
-            this.denyAuthorities.addAll(denyAuthorities);
-        }
+        CollectionUtils.addAll(this.denyAuthorities, denyAuthorities);
     }
 
     public AuthResource() {
@@ -127,7 +121,7 @@ public class AuthResource extends AbstractEntity {
 
     public void setMethods(Set<HttpMethod> methods) {
         this.methods.clear();
-        this.methods.addAll(methods);
+        CollectionUtils.addAll(this.methods, methods);
     }
 
     public String getMatcher() {

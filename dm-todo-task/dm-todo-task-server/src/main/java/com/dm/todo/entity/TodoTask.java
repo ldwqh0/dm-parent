@@ -113,9 +113,7 @@ public class TodoTask extends AbstractEntity {
 
     public void setAttributes(Set<Attribute> attributes) {
         this.attributes.clear();
-        if (CollectionUtils.isNotEmpty(attributes)) {
-            this.attributes.addAll(attributes);
-        }
+        CollectionUtils.addAll(this.attributes,attributes);
     }
 
     public Set<Attribute> getAttributes() {
@@ -148,9 +146,7 @@ public class TodoTask extends AbstractEntity {
 
     private void setActions(List<TodoTaskAction> actions) {
         this.actions.clear();
-        if (CollectionUtils.isNotEmpty(actions)) {
-            this.actions.addAll(actions);
-        }
+        CollectionUtils.addAll(this.actions,actions);
     }
 
     public List<TodoTaskAction> getActions() {

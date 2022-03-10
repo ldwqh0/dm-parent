@@ -27,7 +27,7 @@ public class RegionRepositoryImpl {
             .where(qRegion.parent.code.eq(code));
         tmp = query.fetch();
         while (CollectionUtils.isNotEmpty(tmp)) {
-            result.addAll(tmp);
+            CollectionUtils.addAll(result, tmp);
             tmp = findAllChildren(tmp);
         }
         return result;

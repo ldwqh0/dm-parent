@@ -37,7 +37,7 @@ public class MenuTreeDto implements Serializable, Identifiable<Long> {
     /**
      * 菜单是否可用
      */
-    private final Boolean enabled;
+    private final boolean enabled;
     /**
      * 菜单地址
      */
@@ -64,7 +64,7 @@ public class MenuTreeDto implements Serializable, Identifiable<Long> {
     /**
      * 是否在新窗口中打开菜单
      */
-    private final Boolean openInNewWindow;
+    private final boolean openInNewWindow;
 
     @JsonIgnore
     private final Long parentId;
@@ -111,9 +111,7 @@ public class MenuTreeDto implements Serializable, Identifiable<Long> {
         this.order = order;
         this.openInNewWindow = openInNewWindow;
         this.parentId = parentId;
-        if (CollectionUtils.isNotEmpty(children)) {
-            this.children.addAll(children);
-        }
+        CollectionUtils.addAll(this.children,children);
     }
 
     @Override
@@ -129,7 +127,7 @@ public class MenuTreeDto implements Serializable, Identifiable<Long> {
         return title;
     }
 
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
@@ -153,7 +151,7 @@ public class MenuTreeDto implements Serializable, Identifiable<Long> {
         return order;
     }
 
-    public Boolean getOpenInNewWindow() {
+    public boolean isOpenInNewWindow() {
         return openInNewWindow;
     }
 

@@ -1,5 +1,6 @@
 package com.dm.uap.entity;
 
+import com.dm.collections.CollectionUtils;
 import com.dm.data.domain.AbstractEntity;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -114,7 +115,7 @@ public class User extends AbstractEntity {
 
     public void setRoles(Set<UserRole> roles) {
         this.roles.clear();
-        this.roles.addAll(roles);
+        CollectionUtils.addAll(this.roles, roles);
     }
 
     /**

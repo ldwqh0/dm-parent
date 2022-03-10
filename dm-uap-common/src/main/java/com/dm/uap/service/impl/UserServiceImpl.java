@@ -215,9 +215,7 @@ public class UserServiceImpl implements UserService {
     })
     public UserDto patch(long id, UserDto user) {
         User originUser = userRepository.getById(id);
-        if (Objects.nonNull(user.getEnabled())) {
-            originUser.setEnabled(user.getEnabled());
-        }
+        originUser.setEnabled(user.isEnabled());
         return UserConverter.toDto(userRepository.save(originUser));
     }
 
@@ -251,7 +249,7 @@ public class UserServiceImpl implements UserService {
 
     private User copyProperties(User user, UserDto userDto) {
         if (Objects.nonNull(user) && Objects.nonNull(userDto)) {
-            user.setEnabled(userDto.getEnabled());
+            user.setEnabled(userDto.isEnabled());
             user.setUsername(userDto.getUsername());
             user.setFullName(userDto.getFullName());
             user.setProfilePhoto(userDto.getProfilePhoto());

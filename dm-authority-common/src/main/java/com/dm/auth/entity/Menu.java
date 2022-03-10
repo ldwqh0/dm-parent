@@ -104,7 +104,7 @@ public class Menu extends AbstractEntity {
         this.children.clear();
         if (CollectionUtils.isNotEmpty(children)) {
             children.forEach(child -> child.setParent(this));
-            this.children.addAll(children);
+            CollectionUtils.addAll(this.children, children);
         }
     }
 
@@ -202,7 +202,7 @@ public class Menu extends AbstractEntity {
         return openInNewWindow;
     }
 
-    public void setOpenInNewWindow(Boolean openInNewWindow) {
+    public void setOpenInNewWindow(boolean openInNewWindow) {
         this.openInNewWindow = openInNewWindow;
     }
 

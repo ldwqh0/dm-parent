@@ -1,5 +1,6 @@
 package com.dm.dingtalk.api.request;
 
+import com.dm.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -31,11 +32,11 @@ public class OapiRoleAddrolesforempsRequest implements Serializable {
     }
 
     public void addRole(Long roleId) {
-        this.roles.add(roleId);
+        CollectionUtils.add(this.roles, roleId);
     }
 
     public void addRoles(Collection<Long> roles) {
-        this.roles.addAll(roles);
+        CollectionUtils.addAll(this.roles, roles);
     }
 
     public void addUser(String user) {

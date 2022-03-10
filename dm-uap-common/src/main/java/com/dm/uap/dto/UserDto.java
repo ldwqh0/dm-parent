@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 
@@ -196,20 +197,16 @@ public class UserDto implements Serializable, Identifiable<Long> {
         this.username = username;
         this.fullName = fullName;
         this.password = password;
-        this.enabled = Boolean.TRUE.equals(enabled);
+        this.enabled = TRUE.equals(enabled);
         this.email = email;
-        this.emailVerified = Boolean.TRUE.equals(emailVerified);
+        this.emailVerified = TRUE.equals(emailVerified);
         this.mobile = mobile;
-        this.phoneNumberVerified = Boolean.TRUE.equals(phoneNumberVerified);
+        this.phoneNumberVerified = TRUE.equals(phoneNumberVerified);
         this.description = description;
-        if (CollectionUtils.isNotEmpty(roles)) {
-            this.roles.addAll(roles);
-        }
+        CollectionUtils.addAll(this.roles, roles);
         this.scenicName = scenicName;
         this.regionCode = regionCode;
-        if (CollectionUtils.isNotEmpty(posts)) {
-            this.posts.addAll(posts);
-        }
+        CollectionUtils.addAll(this.posts,posts);
         this.birthDate = birthDate;
         this.profilePhoto = profilePhoto;
         this.zoneinfo = zoneinfo;
@@ -266,7 +263,7 @@ public class UserDto implements Serializable, Identifiable<Long> {
         return password;
     }
 
-    public Boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

@@ -99,9 +99,7 @@ public class TodoTaskResponse implements Serializable {
         this.createdTime = createdTime;
         this.sourceName = sourceName;
         this.bizId = bizId;
-        if (CollectionUtils.isNotEmpty(attributes)) {
-            this.attributes.addAll(attributes);
-        }
+        CollectionUtils.addAll(this.attributes, attributes);
         this.completedTime = completedTime;
         this.url = url;
         this.pcUrl = pcUrl;

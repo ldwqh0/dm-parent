@@ -77,25 +77,17 @@ public class ResourceDto implements Serializable, Identifiable<Long> {
     ) {
         this.id = id;
         this.name = name;
-        if (CollectionUtils.isNotEmpty(methods)) {
-            this.methods.addAll(methods);
-        }
+        CollectionUtils.addAll(this.methods, methods);
         this.matcher = matcher;
         this.description = description;
-        if (CollectionUtils.isNotEmpty(scope)) {
-            this.scope.addAll(scope);
-        }
+        CollectionUtils.addAll(this.scope, scope);
         if (Objects.isNull(matchType)) {
             this.matchType = MatchType.ANT_PATH;
         } else {
             this.matchType = matchType;
         }
-        if (CollectionUtils.isNotEmpty(accessAuthorities)) {
-            this.accessAuthorities.addAll(accessAuthorities);
-        }
-        if (CollectionUtils.isNotEmpty(denyAuthorities)) {
-            this.denyAuthorities.addAll(denyAuthorities);
-        }
+        CollectionUtils.addAll(this.accessAuthorities, accessAuthorities);
+        CollectionUtils.addAll(this.denyAuthorities, denyAuthorities);
     }
 
     @Override

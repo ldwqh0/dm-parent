@@ -11,8 +11,9 @@ dependencies {
     api(platform("org.springframework.cloud:spring-cloud-dependencies:${Configuration.Versions.springCloud}"))
     api(platform("org.springframework.boot:spring-boot-dependencies:${Configuration.Versions.springBoot}"))
     constraints {
-        api(project(":dm-common"))
         api(project(":collections"))
+        api(project(":dm-common"))
+        api(project(":dm-data"))
         api(project(":dm-file-core"))
         api(project(":dm-file-stream"))
         api(project(":dm-file-spring-boot-starter"))
