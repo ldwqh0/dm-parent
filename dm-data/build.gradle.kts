@@ -6,8 +6,8 @@ plugins {
 dependencies {
     implementation("org.apache.commons:commons-lang3")
     implementation(project(":collections"))
-    implementation("org.springframework.data:spring-data-commons")
-    implementation("jakarta.persistence:jakarta.persistence-api")
+    compileOnly("org.springframework.data:spring-data-commons")
+    compileOnly("jakarta.persistence:jakarta.persistence-api")
 
     compileOnly("org.springframework.data:spring-data-jpa")
     compileOnly("org.springframework:spring-web")
