@@ -533,7 +533,7 @@ public class FileController {
     }
 
     private String generateAttachmentFilename(String userAgent, String filename) throws UnsupportedEncodingException {
-        return "attachment; filename=" + generateFilename(userAgent, filename) + "; filename*=utf-8''" + URLEncoder.encode(filename, "UTF-8");
+        return "attachment; filename=\"" + generateFilename(userAgent, filename) + "\"; filename*=utf-8''" + URLEncoder.encode(filename, "UTF-8");
     }
 
     private String generateFilename(String userAgent, String filename) throws UnsupportedEncodingException {
