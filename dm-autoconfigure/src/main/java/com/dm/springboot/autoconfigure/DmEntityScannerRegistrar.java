@@ -1,8 +1,6 @@
 package com.dm.springboot.autoconfigure;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.boot.autoconfigure.domain.EntityScanPackages;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -21,9 +19,7 @@ public class DmEntityScannerRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        List<String> basePackages = AutoConfigurationPackages.get((BeanFactory) registry);
-        List<String> packages = new ArrayList<>(basePackages);
-        packages.addAll(getPackagesToScan(importingClassMetadata));
+        List<String> packages = new ArrayList<>(getPackagesToScan(importingClassMetadata));
         EntityScanPackages.register(registry, packages);
     }
 

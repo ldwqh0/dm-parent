@@ -1,11 +1,5 @@
 package com.dm.springboot.autoconfigure.security;
 
-import com.dm.security.core.userdetails.GrantedAuthorityDto;
-import com.dm.security.core.userdetails.UserDetailsDto;
-import com.dm.security.web.authentication.LoginFailureHandler;
-import com.dm.security.web.authentication.LoginSuccessHandler;
-import com.dm.security.web.controller.CurrentAuthorityController;
-import com.dm.security.web.controller.CurrentReactiveController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
@@ -23,40 +17,37 @@ import org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserSer
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
-import reactor.core.publisher.Mono;
 
-import javax.servlet.Servlet;
 import java.util.Collections;
 import java.util.List;
 
 @Import({
-    SecurityAutoConfiguration.SecurityConfiguration.class,
+    SecurityAutoConfiguration.WebMvcSecurityConfigurerAdapter.class,
     SecurityAutoConfiguration.DmOAuth2ResourceServerAutoConfiguration.class,
-    SecurityAutoConfiguration.ReactiveSecurityConfiguration.class
+    SecurityAutoConfiguration.ReactiveSecurityConfiguration.class,
+    SecurityAutoConfiguration.CurrentAuthorityControllerAutoConfiguration.class
 })
 public class SecurityAutoConfiguration {
 
+    @Configuration
     @ConditionalOnClass(value = {
-        Servlet.class,
-        UserDetailsDto.class,
-        CurrentAuthorityController.class
+        com.dm.security.core.userdetails.UserDetailsDto.class,
+        com.dm.security.web.controller.CurrentAuthorityController.class
     })
-    @Bean
-    public CurrentAuthorityController currentAuthorityController() {
-        return new CurrentAuthorityController();
-    }
+    static class CurrentAuthorityControllerAutoConfiguration {
+        @Bean
+        @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+        public com.dm.security.web.controller.CurrentAuthorityController currentAuthorityController() {
+            return new com.dm.security.web.controller.CurrentAuthorityController();
+        }
 
-    @Bean
-    @ConditionalOnClass(value = {
-        Mono.class,
-        UserDetailsDto.class,
-        CurrentReactiveController.class
-    })
-    public CurrentReactiveController currentUserReactiveController() {
-        return new CurrentReactiveController();
+        @Bean
+        @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
+        public com.dm.security.web.controller.CurrentReactiveController currentUserReactiveController() {
+            return new com.dm.security.web.controller.CurrentReactiveController();
+        }
     }
 
     @Configuration
@@ -84,6 +75,7 @@ public class SecurityAutoConfiguration {
         "org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter"
     })
     @ConditionalOnMissingClass({"javax.servlet.Servlet"})
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     static class ReactiveSecurityConfiguration {
 
         // TODO 这个需要处理,用于单机使用reactive,方法还没有实现
@@ -107,14 +99,18 @@ public class SecurityAutoConfiguration {
         }
     }
 
+    /**
+     * 启动默认的安全配置，这个配置覆盖Spring Security的默认配置
+     */
     @Configuration
-    @ConditionalOnClass({Servlet.class, WebSecurityConfigurerAdapter.class})
-    @ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class, SecurityWebFilterChain.class})
-    static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @ConditionalOnClass(WebSecurityConfigurerAdapter.class)
+    @ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class})
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    static class WebMvcSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         private final ObjectMapper objectMapper;
 
-        public SecurityConfiguration(ObjectMapper objectMapper) {
+        public WebMvcSecurityConfigurerAdapter(ObjectMapper objectMapper) {
             this.objectMapper = objectMapper;
         }
 
@@ -122,10 +118,10 @@ public class SecurityAutoConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests().anyRequest().authenticated().and().formLogin();
             // 设置匿名用户的默认分组
-            List<GrantedAuthority> authorities = Collections.singletonList(GrantedAuthorityDto.ROLE_ANONYMOUS);
-            UserDetailsDto ud = UserDetailsDto.builder().username("anonymousUser").grantedAuthority(authorities).build();
+            List<GrantedAuthority> authorities = Collections.singletonList(com.dm.security.core.userdetails.GrantedAuthorityDto.ROLE_ANONYMOUS);
+            com.dm.security.core.userdetails.UserDetailsDto ud = com.dm.security.core.userdetails.UserDetailsDto.builder().username("anonymousUser").grantedAuthority(authorities).build();
             http.anonymous().authorities(authorities).principal(ud);
-            http.formLogin().successHandler(new LoginSuccessHandler(objectMapper)).failureHandler(new LoginFailureHandler(objectMapper));
+            http.formLogin().successHandler(new com.dm.security.web.authentication.LoginSuccessHandler(objectMapper)).failureHandler(new com.dm.security.web.authentication.LoginFailureHandler(objectMapper));
             MediaTypeRequestMatcher mediaTypeRequestMatcher = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
             mediaTypeRequestMatcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
             http.exceptionHandling().defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), mediaTypeRequestMatcher);
