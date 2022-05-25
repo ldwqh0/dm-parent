@@ -103,7 +103,7 @@ public class SecurityAutoConfiguration {
      * 启动默认的安全配置，这个配置覆盖Spring Security的默认配置
      */
     @Configuration
-    @ConditionalOnClass(WebSecurityConfigurerAdapter.class)
+    @ConditionalOnClass(value = {WebSecurityConfigurerAdapter.class, com.dm.security.core.userdetails.UserDetailsDto.class})
     @ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class})
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     static class WebMvcSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
