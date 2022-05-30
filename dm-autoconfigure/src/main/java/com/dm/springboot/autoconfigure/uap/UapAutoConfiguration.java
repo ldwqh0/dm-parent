@@ -44,6 +44,7 @@ public class UapAutoConfiguration implements InitializingBean {
                 .username(username)
                 .fullName(fullName)
                 .password(password)
+                .enabled(true)
                 .roles(Collections.singleton(UserRoleDto.ROLE_ADMIN))
                 .build();
 
@@ -55,6 +56,7 @@ public class UapAutoConfiguration implements InitializingBean {
                 .username("ANONYMOUS")
                 .fullName("匿名用户")
                 .password("N/A")
+                .enabled(true)
                 .roles(Collections.singleton(UserRoleDto.ROLE_ANONYMOUS))
                 .build();
             userService.save(anonymous);

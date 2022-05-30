@@ -22,11 +22,8 @@ public class DmEntityScannerRegistrar implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         BeanFactory beanFactory = (BeanFactory) registry;
-        List<String> existPackages = EntityScanPackages.get(beanFactory).getPackageNames();
-        if (existPackages.isEmpty() && AutoConfigurationPackages.has(beanFactory)) {
-            existPackages = AutoConfigurationPackages.get(beanFactory);
-        }
-        List<String> packages = new ArrayList<>(existPackages);
+        List<String> entityScanPackages = AutoConfigurationPackages.get(beanFactory);
+        List<String> packages = new LinkedList<>(entityScanPackages);
         packages.addAll(getPackagesToScan(importingClassMetadata));
         EntityScanPackages.register(registry, packages);
     }

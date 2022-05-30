@@ -1,5 +1,7 @@
 package com.dm.springboot.autoconfigure;
 
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
 
@@ -8,6 +10,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@AutoConfigureBefore(JpaBaseConfiguration.class)
 @Import(DmEntityScannerRegistrar.class)
 public @interface DmEntityScan {
 
