@@ -27,7 +27,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler, Initia
     }
 
     public LoginFailureHandler() {
-        this(new ObjectMapper());
+        this(AuthenticationObjectMapperFactory.getObjectMapper());
     }
 
     public LoginFailureHandler(ObjectMapper objectMapper) {

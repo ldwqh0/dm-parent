@@ -20,7 +20,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
     private ObjectMapper objectMapper;
 
     public LoginSuccessHandler() {
-        this(new ObjectMapper());
+        this(AuthenticationObjectMapperFactory.getObjectMapper());
     }
 
     public void setObjectMapper(ObjectMapper objectMapper) {
