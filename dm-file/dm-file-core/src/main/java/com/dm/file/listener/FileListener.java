@@ -4,7 +4,6 @@ import com.dm.file.config.FileConfig;
 import com.dm.file.controller.FileController;
 import com.dm.file.entity.FileInfo;
 import com.dm.file.service.FileStorageService;
-import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,7 @@ public class FileListener {
     }
 
     public void setFileConfig(FileConfig fileConfig) {
-        this.fileConfig = ObjectUtils.clone(fileConfig);
+        this.fileConfig = fileConfig;
     }
 
     /**

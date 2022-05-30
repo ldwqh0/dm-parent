@@ -6,11 +6,10 @@ import java.util.Objects;
 
 public class AuthenticationObjectMapperFactory {
     private static volatile ObjectMapper objectMapper;
-    private static final Object lock = new Object();
 
     public static ObjectMapper getObjectMapper() {
         if (Objects.isNull(objectMapper)) {
-            synchronized (lock) {
+            synchronized (AuthenticationObjectMapperFactory.class) {
                 if (Objects.isNull(objectMapper)) {
                     objectMapper = new ObjectMapper();
                 }

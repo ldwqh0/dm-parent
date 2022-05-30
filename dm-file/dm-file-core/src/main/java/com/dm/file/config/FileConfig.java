@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FileConfig implements Serializable, Cloneable {
+public class FileConfig implements Serializable {
     private static final long serialVersionUID = 1926028204490014835L;
     private String path;
     private final Map<String, String> mime;
@@ -270,16 +270,4 @@ public class FileConfig implements Serializable, Cloneable {
         }
     }
 
-    @Override
-    public FileConfig clone() {
-        FileConfig result = null;
-        try {
-            result = (FileConfig) super.clone();
-            result.mime.clear();
-            result.mime.putAll(this.mime);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
 }
