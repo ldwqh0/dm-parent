@@ -11,10 +11,6 @@ import java.util.Objects;
 public abstract class RequestUtils {
     private static volatile MediaTypeRequestMatcher matcher;
 
-    static {
-        matcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
-    }
-
     /**
      * 判断一个请求是否要求JSON的响应
      *
