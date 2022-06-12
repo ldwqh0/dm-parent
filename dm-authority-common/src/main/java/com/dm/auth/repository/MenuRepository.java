@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,7 @@ public interface MenuRepository
     List<Menu> findByParentId(Long parentId, Sort sort);
 
     @Query("select count(m) from Menu m where m.parent=:parent")
-    long childrenCount(Menu parent);
+    long childrenCount(@Param("parent") Menu parent);
 
     boolean existsByName(String name);
 
