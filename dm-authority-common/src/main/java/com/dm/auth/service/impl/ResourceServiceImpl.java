@@ -172,8 +172,6 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         authResource.setMatchType(dto.getMatchType());
         authResource.setScope(dto.getScope());
         authResource.setMethods(dto.getMethods());
-        authResource.getDenyAuthorities().clear();
-        authResource.getAccessAuthorities().clear();
         authResource.setAccessAuthorities(Sets.transform(dto.getAccessAuthorities(), roleRepository::getByDto));
         authResource.setDenyAuthorities(Sets.transform(dto.getDenyAuthorities(), roleRepository::getByDto));
         return authResource;

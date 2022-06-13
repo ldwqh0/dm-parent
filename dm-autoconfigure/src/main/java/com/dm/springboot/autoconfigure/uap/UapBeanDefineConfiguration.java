@@ -1,7 +1,6 @@
 package com.dm.springboot.autoconfigure.uap;
 
 import com.dm.security.controller.CurrentUserController;
-import com.dm.security.controller.UserDetailsServiceImpl;
 import com.dm.springboot.autoconfigure.DmEntityScan;
 import com.dm.uap.controller.DepartmentController;
 import com.dm.uap.controller.LoginLogController;
@@ -15,10 +14,7 @@ import com.dm.uap.service.DepartmentService;
 import com.dm.uap.service.LoginLogService;
 import com.dm.uap.service.UserRoleService;
 import com.dm.uap.service.UserService;
-import com.dm.uap.service.impl.DepartmentServiceImpl;
-import com.dm.uap.service.impl.LoginLogServiceImpl;
-import com.dm.uap.service.impl.UserRoleServiceImpl;
-import com.dm.uap.service.impl.UserServiceImpl;
+import com.dm.uap.service.impl.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

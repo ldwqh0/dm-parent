@@ -157,8 +157,9 @@ public class RoleServiceImpl implements RoleService {
         Set<Menu> menus = roleRepository.findByGroupAndName(groupRole[0], groupRole[1]).map(Role::getMenus).orElseGet(Collections::emptySet);
         // 递归添加所有父级菜单
         menus.forEach(menu -> addParent(menu, parents));
-        menus.addAll(parents);
-        return menus.stream()
+        Set<Menu> result = new HashSet<>(menus);
+        result.addAll(parents);
+        return result.stream()
             // 只查找启用的项目
             .filter(this::isEnabled)
             // 如果root是空，不做过滤

@@ -1,4 +1,4 @@
-package com.dm.security.controller;
+package com.dm.uap.service.impl;
 
 import com.dm.collections.Sets;
 import com.dm.security.core.userdetails.GrantedAuthorityDto;
