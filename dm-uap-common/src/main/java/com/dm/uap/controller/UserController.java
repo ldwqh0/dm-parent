@@ -10,7 +10,6 @@ import com.dm.uap.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,7 +50,6 @@ public class UserController {
      * @return 保存后的用户信息
      */
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public UserDto save(@RequestBody @Validated({UserDto.New.class, DepartmentDto.ReferenceBy.class}) UserDto userDto) {
         return userService.save(userDto);
@@ -63,7 +61,6 @@ public class UserController {
      * @param id 要删除的用户的ID
      */
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable("id") @Min(value = 3, message = "不能删除内置用户") Long id) {
         userService.delete(id);
@@ -77,7 +74,6 @@ public class UserController {
      * @return 更新密码后的用户
      */
     @PatchMapping(value = {"{id}/password"})
-    @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public UserDto resetPassword(
         @PathVariable("id") Long id,
@@ -100,7 +96,6 @@ public class UserController {
      * @return 更新后的用户信息
      */
     @PutMapping("{id}")
-    @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     public UserDto update(@PathVariable("id") long id,
                           @Validated({UserDto.Update.class, DepartmentDto.ReferenceBy.class}) @RequestBody UserDto userDto) {
@@ -119,7 +114,7 @@ public class UserController {
      * @apiNote 暂时只支持修改用户的禁用信息, 其他的暂时不做修改
      */
     @PatchMapping("{id}")
-    @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
+//    @PreAuthorize("hasAnyAuthority('内置分组_ROLE_ADMIN')")
     public UserDto patchUpdate(@PathVariable("id") @Min(value = 3, message = "不能修改系统内置匿名用户") long id,
                                @Validated({UserDto.Patch.class, DepartmentDto.ReferenceBy.class}) @RequestBody UserDto user) {
         return userService.patch(id, user);

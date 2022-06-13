@@ -25,6 +25,7 @@ dependencies {
 
     compileOnly(project(":dm-file-core"))
     compileOnly(project(":dm-common"))
+    compileOnly(project(":dm-data"))
     compileOnly(project(":dm-security-core"))
     compileOnly(project(":dm-authority-common"))
     compileOnly(project(":dm-multi-datasource"))

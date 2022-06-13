@@ -1,6 +1,5 @@
 package com.dm.springboot.autoconfigure.uap;
 
-import com.dm.security.controller.CurrentUserController;
 import com.dm.springboot.autoconfigure.DmEntityScan;
 import com.dm.uap.controller.DepartmentController;
 import com.dm.uap.controller.LoginLogController;
@@ -10,6 +9,8 @@ import com.dm.uap.repository.DepartmentRepository;
 import com.dm.uap.repository.LoginLogRepository;
 import com.dm.uap.repository.UserRepository;
 import com.dm.uap.repository.UserRoleRepository;
+import com.dm.uap.security.controller.CurrentUserController;
+import com.dm.uap.security.service.impl.UserDetailsServiceImpl;
 import com.dm.uap.service.DepartmentService;
 import com.dm.uap.service.LoginLogService;
 import com.dm.uap.service.UserRoleService;
