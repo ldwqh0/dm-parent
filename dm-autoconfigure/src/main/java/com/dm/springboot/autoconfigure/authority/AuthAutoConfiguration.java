@@ -37,7 +37,9 @@ public class AuthAutoConfiguration implements InitializingBean {
         if (!menuService.exists()) {
             MenuDto menuDto = MenuDto.builder().name("index")
                 .title("首页")
-                .url("/").build();
+                .enabled(true)
+                .url("/")
+                .build();
             return Collections.singleton(menuService.save(menuDto));
         } else {
             return Collections.emptySet();
