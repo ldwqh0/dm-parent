@@ -6,14 +6,18 @@ import com.dm.security.authentication.ResourceAuthorityService;
 import com.dm.security.authentication.UriResource;
 import com.dm.security.authentication.UriResource.MatchType;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -21,11 +25,11 @@ import java.util.stream.Collectors;
  *
  * @author ldwqh0@outlook.com
  */
-public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionMaker {
+public class RequestAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
 
     private final ResourceAuthorityService authorityService;
 
-    public DefaultAuthorizationDecisionMaker(ResourceAuthorityService authorityService) {
+    public RequestAuthorizationManager(ResourceAuthorityService authorityService) {
         this.authorityService = authorityService;
     }
 
@@ -33,7 +37,9 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
      * 检测某个对象是否具有访问指定资源的权限
      */
     @Override
-    public boolean check(Authentication authentication, HttpServletRequest request) {
+    public AuthorizationDecision check(Supplier<Authentication> authenticationSupplier, RequestAuthorizationContext context) {
+        HttpServletRequest request = context.getRequest();
+        Authentication authentication = authenticationSupplier.get();
         // 获取所有的授权对象
         Collection<ResourceAuthorityAttribute> attributes = authorityService.listAll();
         // 获取要检查的授权的角色
@@ -52,7 +58,7 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
             if (CollectionUtils.isNotEmpty(currentAuthorities)
                 && CollectionUtils.isNotEmpty(attribute.getDenyAuthorities())
                 && CollectionUtils.containsAny(currentAuthorities, attribute.getDenyAuthorities())) {
-                return false;
+                return new AuthorizationDecision(false);
             }
 
             // 匿名用户的可访问权限包含在显示的权限配置中
@@ -64,7 +70,7 @@ public class DefaultAuthorizationDecisionMaker implements AuthorizationDecisionM
                 }
             }
         }
-        return grantCount > 0;
+        return new AuthorizationDecision(grantCount > 0);
     }
 
     // 判断某个请求是否符合匹配指定资源
