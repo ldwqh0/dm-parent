@@ -1,8 +1,7 @@
 package com.dm.file.entity;
 
-import com.dm.data.domain.Audit;
-import com.dm.data.domain.CreateAudit;
-import com.dm.data.domain.ModifyAudit;
+import com.dm.data.domain.Auditor;
+import com.dm.data.domain.SimpleAuditor;
 import com.dm.file.listener.FileListener;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -30,7 +29,7 @@ import java.util.UUID;
     @Index(name = "idx_dm_file_md5_", columnList = "md5_"),
     @Index(name = "idx_dm_file_filename_", columnList = "file_name_")
 })
-public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateTime> {
+public class FileInfo implements Auditable<Auditor<Long, String>, UUID, ZonedDateTime> {
 
     @Id
     @GeneratedValue(generator = "ordered-uuid")
@@ -42,14 +41,23 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
     private UUID id;
 
     @Embedded
-    private CreateAudit createdBy;
+    @AttributeOverrides({
+        @AttributeOverride(name = "userid", column = @Column(name = "created_user_id_")),
+        @AttributeOverride(name = "username", column = @Column(name = "created_user_name_"))
+    })
+    private SimpleAuditor<Long, String> createdBy;
 
     @Column(name = "created_date_")
     @CreatedDate
+
     private ZonedDateTime createdDate = ZonedDateTime.now();
 
     @Embedded
-    private ModifyAudit lastModifiedBy;
+    @AttributeOverrides({
+        @AttributeOverride(name = "userid", column = @Column(name = "last_modified_user_id_")),
+        @AttributeOverride(name = "username", column = @Column(name = "last_modified_user_name_"))
+    })
+    private SimpleAuditor<Long, String> lastModifiedBy;
 
     @Column(name = "last_modified_date_")
     @LastModifiedDate
@@ -86,23 +94,23 @@ public class FileInfo implements Auditable<Audit<Long, String>, UUID, ZonedDateT
     private Long size;
 
     @Override
-    public Optional<Audit<Long, String>> getCreatedBy() {
+    public Optional<Auditor<Long, String>> getCreatedBy() {
         return Optional.ofNullable(this.createdBy);
     }
 
     @Override
-    public Optional<Audit<Long, String>> getLastModifiedBy() {
+    public Optional<Auditor<Long, String>> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
     @Override
-    public void setLastModifiedBy(Audit<Long, String> lastModifiedBy) {
-        this.lastModifiedBy = new ModifyAudit(lastModifiedBy);
+    public void setLastModifiedBy(Auditor<Long, String> lastModifiedBy) {
+        this.lastModifiedBy = new SimpleAuditor<>(lastModifiedBy.getUserid(), lastModifiedBy.getUsername());
     }
 
     @Override
-    public void setCreatedBy(Audit<Long, String> createBy) {
-        this.createdBy = new CreateAudit(createBy);
+    public void setCreatedBy(Auditor<Long, String> createBy) {
+        this.createdBy = new SimpleAuditor<>(createBy.getUserid(), createBy.getUsername());
     }
 
     @Override

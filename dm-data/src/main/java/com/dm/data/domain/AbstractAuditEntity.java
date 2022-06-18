@@ -3,25 +3,30 @@ package com.dm.data.domain;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AbstractAuditEntity extends AbstractEntity implements Auditable<Audit<Long, String>, Long, ZonedDateTime> {
+public class AbstractAuditEntity extends AbstractEntity implements Auditable<Auditor<Long, String>, Long, ZonedDateTime> {
 
     /**
      * 增加几个JSON忽略属性，主要在于不使用DTO的时候，
      */
     @Embedded
-    private CreateAudit createdBy;
+    @AttributeOverrides({
+        @AttributeOverride(name = "userid", column = @Column(name = "created_user_id_")),
+        @AttributeOverride(name = "username", column = @Column(name = "created_user_name_"))
+    })
+    private SimpleAuditor<Long, String> createdBy;
 
     @Embedded
-    private ModifyAudit lastModifiedBy;
+    @AttributeOverrides({
+        @AttributeOverride(name = "userid", column = @Column(name = "last_modified_user_id_")),
+        @AttributeOverride(name = "username", column = @Column(name = "last_modified_user_name_"))
+    })
+    private SimpleAuditor<Long, String> lastModifiedBy;
 
     /**
      * 创建时间 <br>
@@ -34,13 +39,13 @@ public class AbstractAuditEntity extends AbstractEntity implements Auditable<Aud
     private ZonedDateTime lastModifiedTime;
 
     @Override
-    public Optional<Audit<Long, String>> getCreatedBy() {
+    public Optional<Auditor<Long, String>> getCreatedBy() {
         return Optional.ofNullable(createdBy);
     }
 
     @Override
-    public void setCreatedBy(Audit<Long, String> createdBy) {
-        this.createdBy = new CreateAudit(createdBy);
+    public void setCreatedBy(Auditor<Long, String> createdBy) {
+        this.createdBy = new SimpleAuditor<>(createdBy.getUserid(), createdBy.getUsername());
     }
 
     @Override
@@ -54,13 +59,13 @@ public class AbstractAuditEntity extends AbstractEntity implements Auditable<Aud
     }
 
     @Override
-    public Optional<Audit<Long, String>> getLastModifiedBy() {
+    public Optional<Auditor<Long, String>> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
     @Override
-    public void setLastModifiedBy(Audit<Long, String> lastModifiedBy) {
-        this.lastModifiedBy = new ModifyAudit(lastModifiedBy);
+    public void setLastModifiedBy(Auditor<Long, String> lastModifiedBy) {
+        this.lastModifiedBy = new SimpleAuditor<>(lastModifiedBy.getUserid(), lastModifiedBy.getUsername());
     }
 
     @Override

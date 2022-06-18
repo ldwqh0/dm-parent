@@ -1,6 +1,6 @@
 package com.dm.springboot.autoconfigure.common;
 
-import com.dm.data.domain.Audit;
+import com.dm.data.domain.Auditor;
 import com.dm.security.core.userdetails.UserDetailsDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -25,11 +25,11 @@ public class AuditingAutoConfiguration {
     @Bean
     @ConditionalOnClass({AuditorAware.class, UserDetailsDto.class})
     @ConditionalOnMissingBean(AuditorAware.class)
-    public AuditorAware<Audit<?, ?>> auditorAware() {
+    public AuditorAware<Auditor<?, ?>> auditorAware() {
         return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
             .map(Authentication::getPrincipal)
             .filter(it -> it instanceof UserDetailsDto)
             .map(it -> (UserDetailsDto) it)
-            .map(it -> Audit.of(it.getId(), StringUtils.getIfBlank(it.getFullName(), it::getUsername)));
+            .map(it -> Auditor.of(it.getId(), StringUtils.getIfBlank(it.getFullName(), it::getUsername)));
     }
 }

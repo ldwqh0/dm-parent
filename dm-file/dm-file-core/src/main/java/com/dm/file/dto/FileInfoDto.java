@@ -1,6 +1,6 @@
 package com.dm.file.dto;
 
-import com.dm.data.domain.Audit;
+import com.dm.data.domain.Auditor;
 import com.dm.data.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -45,13 +45,13 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
      * 创建人
      */
     @JsonProperty(access = READ_ONLY)
-    private final Audit<Long, String> createdBy;
+    private final Auditor<Long, String> createdBy;
 
     /**
      * 最后修改人
      */
     @JsonProperty(access = READ_ONLY)
-    private final Audit<Long, String> lastModifiedBy;
+    private final Auditor<Long, String> lastModifiedBy;
 
     /**
      * 创建时间
@@ -76,11 +76,11 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
         return size;
     }
 
-    public Optional<Audit<Long, String>> getCreatedBy() {
+    public Optional<Auditor<Long, String>> getCreatedBy() {
         return Optional.ofNullable(createdBy);
     }
 
-    public Audit<Long, String> getLastModifiedBy() {
+    public Auditor<Long, String> getLastModifiedBy() {
         return lastModifiedBy;
     }
 
@@ -92,7 +92,7 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
         this(null, null, null, null, null, null, null);
     }
 
-    private FileInfoDto(UUID id, String filename, String path, Long size, Audit<Long, String> createdBy, Audit<Long, String> lastModifiedBy, ZonedDateTime createTime) {
+    private FileInfoDto(UUID id, String filename, String path, Long size, Auditor<Long, String> createdBy, Auditor<Long, String> lastModifiedBy, ZonedDateTime createTime) {
         this.id = id;
         this.filename = filename;
         this.path = path;
@@ -111,8 +111,8 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
         private String filename;
         private String path;
         private Long size;
-        private Audit<Long, String> createdBy;
-        private Audit<Long, String> lastModifiedBy;
+        private Auditor<Long, String> createdBy;
+        private Auditor<Long, String> lastModifiedBy;
         private ZonedDateTime createTime;
 
         private Builder() {
@@ -142,12 +142,12 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
             return this;
         }
 
-        public Builder createdBy(Audit<Long, String> createdBy) {
+        public Builder createdBy(Auditor<Long, String> createdBy) {
             this.createdBy = createdBy;
             return this;
         }
 
-        public Builder lastModifiedBy(Audit<Long, String> lastModifiedBy) {
+        public Builder lastModifiedBy(Auditor<Long, String> lastModifiedBy) {
             this.lastModifiedBy = lastModifiedBy;
             return this;
         }
