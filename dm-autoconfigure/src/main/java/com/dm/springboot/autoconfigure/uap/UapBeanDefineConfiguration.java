@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityManager;
@@ -48,13 +49,6 @@ public class UapBeanDefineConfiguration {
     public UserRoleRepository userRoleRepository(EntityManager em) {
         return new JpaRepositoryFactory(em).getRepository(UserRoleRepository.class);
     }
-
-    @Bean
-    @ConditionalOnMissingBean(PasswordEncoder.class)
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     @ConditionalOnMissingBean(DepartmentService.class)
     public DepartmentService departmentService(DepartmentRepository departmentRepository) {
