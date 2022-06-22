@@ -70,12 +70,10 @@ public class UapBeanDefineConfiguration {
     @Bean
     @ConditionalOnMissingBean(UserService.class)
     public UserServiceImpl userServiceImp(UserRepository userRepository,
-                                          PasswordEncoder passwordEncoder,
                                           DepartmentRepository departmentRepository,
                                           UserRoleRepository userRoleRepository) {
         return new UserServiceImpl(
             userRepository,
-            passwordEncoder,
             departmentRepository,
             userRoleRepository
         );

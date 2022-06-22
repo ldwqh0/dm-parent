@@ -26,6 +26,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     private final DepartmentRepository departmentRepository;
 
@@ -44,9 +45,8 @@ public class UserServiceImpl implements UserService {
 
     private final QUser qUser = QUser.user;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, DepartmentRepository departmentRepository, UserRoleRepository userRoleRepository) {
+    public UserServiceImpl(UserRepository userRepository, DepartmentRepository departmentRepository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.departmentRepository = departmentRepository;
         this.userRoleRepository = userRoleRepository;
     }
