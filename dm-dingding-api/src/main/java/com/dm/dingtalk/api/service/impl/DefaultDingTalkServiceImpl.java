@@ -1,11 +1,15 @@
 package com.dm.dingtalk.api.service.impl;
 
-import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
+import com.dm.dingtalk.api.exception.DDepartmentNotFoundException;
+import com.dm.dingtalk.api.model.DingClientConfig;
+import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
+import com.dm.dingtalk.api.request.OapiUserCreateRequest;
+import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
+import com.dm.dingtalk.api.response.*;
+import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
+import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
+import com.dm.dingtalk.api.service.DingTalkService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -13,26 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import com.dm.dingtalk.api.response.OapiRoleAddrolesforempsResponse;
-import com.dm.dingtalk.api.model.DingClientConfig;
-import com.dm.dingtalk.api.request.OapiRoleAddrolesforempsRequest;
-import com.dm.dingtalk.api.request.OapiUserCreateRequest;
-import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
-import com.dm.dingtalk.api.response.AccessTokenResponse;
-import com.dm.dingtalk.api.response.OapiDepartmentListResponse;
-import com.dm.dingtalk.api.response.OapiRoleListResponse;
-import com.dm.dingtalk.api.response.TaobaoResponse;
-import com.dm.dingtalk.api.response.OapiDepartmentListResponse.Department;
-import com.dm.dingtalk.api.response.OapiRoleListResponse.OpenRoleGroup;
-import com.dm.dingtalk.api.response.OapiUserCreateResponse;
-import com.dm.dingtalk.api.response.OapiUserDeleteResponse;
-import com.dm.dingtalk.api.response.OapiUserGetDeptMemberResponse;
-import com.dm.dingtalk.api.response.OapiUserGetResponse;
-import com.dm.dingtalk.api.response.OapiUserGetuserinfoResponse;
-import com.dm.dingtalk.api.response.OapiUserUpdateResponse;
-import com.dm.dingtalk.api.service.DingTalkService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class DefaultDingTalkServiceImpl implements DingTalkService, InitializingBean {
@@ -44,7 +33,6 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     /**
      * 已经存在的token,不要再代码中直接使用该token <br>
      * 请使用 getAccessToken 方法获取可用的token
-     * 
      */
     private volatile AccessTokenResponse existToken;
 
@@ -64,7 +52,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
     /**
      * 获取可用的accessToken
-     * 
+     *
      * @return
      */
     @Override
@@ -87,7 +75,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
     /**
      * 从服务器获取AccessToken
-     * 
+     *
      * @return
      */
     private AccessTokenResponse getAccessTokenFromServer() {
@@ -209,8 +197,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
 
     /**
      * 校验响应是否正确
-     * 
-     * 
+     *
      * @param response
      */
     private void checkResponse(TaobaoResponse response) {
@@ -218,7 +205,11 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
             throw new RuntimeException("the response is null");
         } else if (!response.isSuccess()) {
             log.error("响应校验错误，{}", response.getErrmsg());
-            throw new RuntimeException(response.getErrmsg());
+            if ("部门不存在".equals(response.getErrmsg())) {
+                throw new DDepartmentNotFoundException("部门不存在");
+            } else {
+                throw new RuntimeException(response.getErrmsg());
+            }
         }
 
     }

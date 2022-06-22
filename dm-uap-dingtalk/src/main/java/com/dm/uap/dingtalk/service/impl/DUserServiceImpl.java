@@ -1,23 +1,6 @@
 package com.dm.uap.dingtalk.service.impl;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.dm.dingtalk.api.exception.DDepartmentNotFoundException;
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.OapiUserCreateResponse;
@@ -39,8 +22,17 @@ import com.dm.uap.entity.Department;
 import com.dm.uap.entity.Role;
 import com.dm.uap.entity.User;
 import com.dm.uap.repository.UserRepository;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -105,9 +97,8 @@ public class DUserServiceImpl implements DUserService {
      * 保存用户信息到钉钉, <br >
      * 保存前根据userid判断是否在钉钉中已经存在相关用户, <br>
      * 以便区别是新增还是修改
-     * 
+     *
      * @param dUser
-     * 
      * @return 创建成功之后的DUser对象，主要是更新创建的userid
      */
     private DUser saveToDingTalk(DUser dUser) {
@@ -126,7 +117,7 @@ public class DUserServiceImpl implements DUserService {
 
     /**
      * 将钉钉用户信息同步到系统uap
-     * 
+     *
      * @param dUsers
      * @return
      */
@@ -186,7 +177,7 @@ public class DUserServiceImpl implements DUserService {
 
     /**
      * 从服务器拉取钉钉用户信息，并将信息保存到本地
-     * 
+     *
      * @return
      */
     private List<DUser> fetch() {
@@ -201,7 +192,13 @@ public class DUserServiceImpl implements DUserService {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    return dingTalkService.fetchUsers(departmentId);
+                    try {
+                        return dingTalkService.fetchUsers(departmentId);
+                    } catch (DDepartmentNotFoundException e) {
+                        OapiUserGetDeptMemberResponse emptyResponse = new OapiUserGetDeptMemberResponse();
+                        emptyResponse.setUserIds(Collections.emptyList());
+                        return emptyResponse;
+                    }
                 })// 从钉钉服务器上拉取所有部门的用户信息
                 .map(OapiUserGetDeptMemberResponse::getUserIds)
                 .flatMap(List::stream)// 获取所有的用户列表
@@ -229,7 +226,7 @@ public class DUserServiceImpl implements DUserService {
 
     /**
      * 将从服务上获取到的用户信息，映射到本地数据模型
-     * 
+     *
      * @param dUser
      * @param rsp
      * @return
@@ -282,7 +279,7 @@ public class DUserServiceImpl implements DUserService {
 
     /**
      * 解析用户是否领导信息的字符串，钉钉的接口返回的不是正常的json字符串，而是一个类似js对象的字符串，不能使用json引擎正常解析
-     * 
+     *
      * @param v 表示用户是否部门领导的字符串 ，格式如 "{1:false,2:true}"
      *          的形式的形式，数组是部门的id,true表示是部门领导，false表示不是部门领导
      * @return
@@ -307,7 +304,7 @@ public class DUserServiceImpl implements DUserService {
 
     /**
      * 解析用户排序信息字符串 {@link parseLeaderMap}
-     * 
+     *
      * @param str
      * @return
      * @see
@@ -332,7 +329,7 @@ public class DUserServiceImpl implements DUserService {
 
     /**
      * 新增用户信息到钉钉
-     * 
+     *
      * @param dUser
      * @return
      */
@@ -348,7 +345,7 @@ public class DUserServiceImpl implements DUserService {
 
     /**
      * 更新用信息到钉钉服务器
-     * 
+     *
      * @param dUser
      * @return
      */
