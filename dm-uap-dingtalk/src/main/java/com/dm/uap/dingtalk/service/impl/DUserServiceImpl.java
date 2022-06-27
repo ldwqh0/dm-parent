@@ -144,9 +144,7 @@ public class DUserServiceImpl implements DUserService {
         Map<DDepartment, Long> _orders = dUser.getOrderInDepts();
         if (MapUtils.isNotEmpty(_orders)) {
             Map<Department, Long> orders = new HashMap<>();
-            _orders.entrySet().forEach(e -> {
-                orders.put(e.getKey().getDepartment(), e.getValue());
-            });
+            _orders.forEach((key, value) -> orders.put(key.getDepartment(), value));
             user.setOrders(orders);
         }
 

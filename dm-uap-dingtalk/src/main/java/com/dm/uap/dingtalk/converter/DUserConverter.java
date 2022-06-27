@@ -1,21 +1,20 @@
 package com.dm.uap.dingtalk.converter;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Component;
-
 import com.dm.dingtalk.api.request.OapiUserCreateRequest;
 import com.dm.dingtalk.api.request.OapiUserUpdateRequest;
 import com.dm.dingtalk.api.response.OapiUserGetResponse;
 import com.dm.uap.dingtalk.entity.DDepartment;
 import com.dm.uap.dingtalk.entity.DUser;
 import com.dm.uap.entity.User;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Component;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class DUserConverter {
@@ -52,13 +51,10 @@ public class DUserConverter {
         user.setCredentialsExpired(Boolean.FALSE);
         user.setDescription(dUser.getRemark());
         user.setEmail(dUser.getEmail());
-        if (user.isNew()) {
-            user.setEnabled(Boolean.TRUE);
-        }
+        user.setEnabled(user.isNew());
+        user.setEnabled(Boolean.TRUE);
         // 如果钉钉用户被标记为删除，则禁用用户
-        if (Boolean.TRUE.equals(dUser.getDeleted())) {
-            user.setEnabled(false);
-        }
+        user.setEnabled(Boolean.FALSE.equals(dUser.getDeleted()));
         user.setFullname(dUser.getName());
         user.setLocked(Boolean.FALSE);
         user.setMobile(dUser.getMobile());

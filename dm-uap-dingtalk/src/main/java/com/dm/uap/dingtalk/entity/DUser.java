@@ -94,7 +94,7 @@ public class DUser implements Serializable {
 
     public void setDepartments(Set<DDepartment> departments) {
         this.departments.clear();
-        if (CollectionUtils.isEmpty(departments)) {
+        if (CollectionUtils.isNotEmpty(departments)) {
             this.departments.addAll(departments);
         }
     }
