@@ -122,10 +122,10 @@ public class DUserServiceImpl implements DUserService {
      * @return
      */
     private void syncToUap(List<DUser> dUsers) {
-        log.info("开始同步用户信息到UAP");
+        log.info("开始同步用户信息到UAP,共[{}]条记录", dUsers.size());
         List<User> users = dUsers.stream().map(this::toUser).collect(Collectors.toList());
-        userRepository.saveAll(users);
-        log.info("同步用户信息到UAP完成");
+        users = userRepository.saveAll(users);
+        log.info("同步用户信息到UAP完成,成功合并[{}]条记录", users.size());
     }
 
     private User toUser(DUser dUser) {
@@ -188,7 +188,7 @@ public class DUserServiceImpl implements DUserService {
                 .map(departmentId -> {
                     try {
                         // 每次进程进来的时候，延迟30毫秒
-                        Thread.sleep(30); // 因为钉钉对同时并发的请求数量有限制
+                        Thread.sleep(50); // 因为钉钉对同时并发的请求数量有限制
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -203,7 +203,10 @@ public class DUserServiceImpl implements DUserService {
                 .map(OapiUserGetDeptMemberResponse::getUserIds)
                 .flatMap(List::stream)// 获取所有的用户列表
                 .collect(Collectors.toSet());
-        dUserRepository.setDeletedByUseridNotIn(userIds);
+        // 将不在列表中的用户标记为删除
+        dUserRepository.setDeletedByUseridNotIn(userIds, true);
+        // 将在列表中的用户标记为未删除
+        dUserRepository.setDeletedByUseridIn(userIds, false);
         List<Long> deleteUsers = dUserRepository.findUserIdsByDUserDeleted(true);
         if (CollectionUtils.isNotEmpty(deleteUsers)) {
             userRepository.batchSetEnabled(deleteUsers, false);
@@ -212,12 +215,14 @@ public class DUserServiceImpl implements DUserService {
                 // 将从服务器上抓取的数据，复制到本地数据库中
                 .map(userid -> {
                     try {
+                        Thread.sleep(30);
                         return dingTalkService.fetchUserById(userid);
                     } catch (Exception e) {
+                        log.error("获取用户信息时发生错误,用户id=[{}]", userid, e);
                         return null;
                     }
                 })
-                .filter(item -> !Objects.isNull(item))
+                .filter(Objects::nonNull)
                 .map(item -> copyProperties(new DUser(item.getUserid()), item))
                 .collect(Collectors.toList());
         // 保存所有用户信息
