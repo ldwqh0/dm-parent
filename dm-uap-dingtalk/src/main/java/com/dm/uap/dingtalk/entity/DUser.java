@@ -1,5 +1,12 @@
 package com.dm.uap.dingtalk.entity;
 
+import com.dm.uap.entity.User;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -8,32 +15,12 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyJoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.dm.uap.entity.User;
-
-import lombok.Getter;
-import lombok.Setter;
-
 import static javax.persistence.CascadeType.*;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "dd_user_", indexes = { @Index(columnList = "deleted_", name = "idx_dd_user_deleted_") })
+@Table(name = "dd_user_", indexes = {@Index(columnList = "deleted_", name = "idx_dd_user_deleted_")})
 public class DUser implements Serializable {
 
     private static final long serialVersionUID = -6763998745823230765L;
@@ -103,7 +90,14 @@ public class DUser implements Serializable {
     }, inverseJoinColumns = {
             @JoinColumn(name = "dd_department_id_")
     })
-    private Set<DDepartment> departments;
+    private Set<DDepartment> departments = new HashSet<>();
+
+    public void setDepartments(Set<DDepartment> departments) {
+        this.departments.clear();
+        if (CollectionUtils.isEmpty(departments)) {
+            this.departments.addAll(departments);
+        }
+    }
 
     @Column(name = "position_")
     private String position;
@@ -131,7 +125,7 @@ public class DUser implements Serializable {
     })
     private Set<DRole> roles;
 
-    @OneToOne(cascade = { MERGE, PERSIST, REFRESH, DETACH })
+    @OneToOne(cascade = {MERGE, PERSIST, REFRESH, DETACH})
     @JoinColumn(name = "dm_user_id_")
     private User user;
 

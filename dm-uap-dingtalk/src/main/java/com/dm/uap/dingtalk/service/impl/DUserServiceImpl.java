@@ -65,8 +65,8 @@ public class DUserServiceImpl implements DUserService {
     /**
      * 采用批处理同步的模式
      */
-    @Transactional
     @Override
+    @Transactional
     public void syncToUap() {
         dDepartmentService.syncToUap();
         dRoleGroupService.syncToUap();
@@ -188,7 +188,7 @@ public class DUserServiceImpl implements DUserService {
                 .map(departmentId -> {
                     try {
                         // 每次进程进来的时候，延迟30毫秒
-                        Thread.sleep(50); // 因为钉钉对同时并发的请求数量有限制
+                        Thread.sleep(30); // 因为钉钉对同时并发的请求数量有限制
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
