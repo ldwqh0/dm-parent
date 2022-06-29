@@ -1,7 +1,7 @@
 package com.dm.security.web.verification;
 
 import com.dm.collections.CollectionUtils;
-import com.dm.security.verification.DeviceVerificationCodeStorage;
+import com.dm.security.verification.DeviceVerificationCodeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -36,9 +36,9 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
     private String verifyCodeKeyParameterName = "email";
 
-    private DeviceVerificationCodeStorage storage = null;
+    private DeviceVerificationCodeService codeService = null;
 
-    private final ObjectMapper om = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void requestMatcher(RequestMatcher requestMatcher) {
         this.requestMatchers.add(requestMatcher);
@@ -56,8 +56,8 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
         this.verifyIdParameterName = verifyIdParameterName;
     }
 
-    public void setStorage(DeviceVerificationCodeStorage storage) {
-        this.storage = storage;
+    public void setCodeService(DeviceVerificationCodeService codeService) {
+        this.codeService = codeService;
     }
 
     @Override
@@ -72,8 +72,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
             if (StringUtils.isNotBlank(verifyId) &&
                 StringUtils.isNotBlank(key) &&
                 StringUtils.isNotBlank(verifyCode) &&
-                validate(verifyId, key, verifyCode)) {
-                storage.remove(verifyId);
+                codeService.validate(verifyId, key, verifyCode)) {
                 String requestKey = "DeviceVerificationCode.key";
                 request.setAttribute(requestKey, key);
                 chain.doFilter(req, res);
@@ -87,7 +86,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
                 response.setStatus(403);
                 response.setContentType("application/json;charset=UTF-8");
                 // 给出错误的提示信息
-                response.getWriter().println(om.writeValueAsString(result));
+                response.getWriter().println(objectMapper.writeValueAsString(result));
             }
         } else {
             chain.doFilter(req, res);
@@ -104,17 +103,4 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
         }
         return false;
     }
-
-    private boolean validate(final String id, final String key, final String code) {
-        return storage.findById(id)
-            .map(i -> {
-                ZonedDateTime expireAt = i.getExpireAt();
-                String savedKey = i.getKey();
-                String savedCode = i.getCode();
-                return ZonedDateTime.now().isBefore(expireAt)
-                    && StringUtils.equals(key, savedKey)
-                    && StringUtils.equalsIgnoreCase(code, savedCode);
-            }).orElse(false);
-    }
-
 }

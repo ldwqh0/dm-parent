@@ -23,3 +23,8 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
 }
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "dm.region")
+    }
+}

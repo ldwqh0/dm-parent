@@ -40,6 +40,8 @@ dependencyManagement {
             dependency("org.jsoup:jsoup:${Configuration.Versions.jsoup}")
             dependency("com.github.binarywang:weixin-java-mp:${Configuration.Versions.weixin_java_mp}")
             dependency("com.nimbusds:oauth2-oidc-sdk:${Configuration.Versions.nimbusds}")
+            dependency("com.google.guava:guava:${Configuration.Versions.guava}")
+
         }
     }
 }

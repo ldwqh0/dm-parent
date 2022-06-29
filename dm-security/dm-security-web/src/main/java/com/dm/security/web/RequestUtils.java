@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 public abstract class RequestUtils {
-    private static volatile MediaTypeRequestMatcher matcher;
+    private static volatile MediaTypeRequestMatcher jsonRequestMatcher;
 
     /**
      * 判断一个请求是否要求JSON的响应
@@ -22,14 +22,14 @@ public abstract class RequestUtils {
     }
 
     private static RequestMatcher getRequestMatcher() {
-        if (Objects.isNull(matcher)) {
+        if (Objects.isNull(jsonRequestMatcher)) {
             synchronized (RequestUtils.class) {
-                if (Objects.isNull(matcher)) {
-                    matcher = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
-                    matcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
+                if (Objects.isNull(jsonRequestMatcher)) {
+                    jsonRequestMatcher = new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
+                    jsonRequestMatcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
                 }
             }
         }
-        return matcher;
+        return jsonRequestMatcher;
     }
 }

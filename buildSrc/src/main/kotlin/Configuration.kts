@@ -7,4 +7,5 @@ object Versions {
     const val jsoup = "1.15.1"
     const val weixin_java_mp = "4.3.0"
     const val nimbusds = "9.19"
+    const val guava = "31.1-jre"
 }

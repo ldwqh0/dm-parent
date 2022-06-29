@@ -14,3 +14,8 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 
 }
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "dm.security.web")
+    }
+}

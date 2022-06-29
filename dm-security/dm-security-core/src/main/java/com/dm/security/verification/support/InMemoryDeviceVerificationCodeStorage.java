@@ -18,7 +18,7 @@ public class InMemoryDeviceVerificationCodeStorage implements DeviceVerification
     private final Map<String, Set<DeviceVerificationCode>> keyMap = new ConcurrentHashMap<>();
 
     @Override
-    public synchronized DeviceVerificationCode save(DeviceVerificationCode code) {
+    public DeviceVerificationCode save(DeviceVerificationCode code) {
         String id = code.getId();
         String key = code.getKey();
         idKeyMap.put(id, code);
@@ -32,7 +32,7 @@ public class InMemoryDeviceVerificationCodeStorage implements DeviceVerification
     }
 
     @Override
-    public synchronized void remove(String verifyId) {
+    public void remove(String verifyId) {
         DeviceVerificationCode code = idKeyMap.remove(verifyId);
         if (Objects.nonNull(code)) {
             String key = code.getKey();
@@ -55,7 +55,7 @@ public class InMemoryDeviceVerificationCodeStorage implements DeviceVerification
         DeviceVerificationCode c = null;
         if (CollectionUtils.isNotEmpty(codes)) {
             for (DeviceVerificationCode code : codes) {
-                ZonedDateTime currentDate = code.getCreatedDate();
+                ZonedDateTime currentDate = code.getCreatedTime();
                 if (Objects.isNull(max) || currentDate.isAfter(max)) {
                     max = currentDate;
                     c = code;

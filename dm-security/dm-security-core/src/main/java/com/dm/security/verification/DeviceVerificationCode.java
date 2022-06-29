@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 /**
  * 第三方工具验证码实体
@@ -14,22 +16,25 @@ public class DeviceVerificationCode implements Serializable {
 
     private static final long serialVersionUID = -6060058106901443139L;
 
-    private String id;
+    private final String id;
 
-    private String key;
+    private final String key;
 
-    private String code;
+    private final String code;
 
-    private ZonedDateTime createdDate = ZonedDateTime.now();
+    private final ZonedDateTime createdTime = ZonedDateTime.now();
 
-    private ZonedDateTime expireAt;
+    private final ZonedDateTime expireAt;
 
-    public DeviceVerificationCode() {
-        super();
+    public DeviceVerificationCode(String key, String code) {
+        this(UUID.randomUUID().toString(), key, code);
+    }
+
+    public DeviceVerificationCode(String id, String key, String code) {
+        this(id, key, code, ZonedDateTime.now().plus(5, ChronoUnit.MINUTES));
     }
 
     public DeviceVerificationCode(String id, String key, String code, ZonedDateTime expireAt) {
-        super();
         this.id = id;
         this.key = key;
         this.code = code;
@@ -64,8 +69,8 @@ public class DeviceVerificationCode implements Serializable {
     /**
      * 验证码生成时间
      */
-    public ZonedDateTime getCreatedDate() {
-        return this.createdDate;
+    public ZonedDateTime getCreatedTime() {
+        return this.createdTime;
     }
 
     /**
@@ -80,7 +85,7 @@ public class DeviceVerificationCode implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((code == null) ? 0 : code.hashCode());
-        result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
+        result = prime * result + createdTime.hashCode();
         result = prime * result + ((expireAt == null) ? 0 : expireAt.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((key == null) ? 0 : key.hashCode());
@@ -101,10 +106,7 @@ public class DeviceVerificationCode implements Serializable {
                 return false;
         } else if (!code.equals(other.code))
             return false;
-        if (createdDate == null) {
-            if (other.createdDate != null)
-                return false;
-        } else if (!createdDate.equals(other.createdDate))
+        if (!createdTime.equals(other.createdTime))
             return false;
         if (expireAt == null) {
             if (other.expireAt != null)

@@ -23,3 +23,8 @@ dependencies {
     compileOnly("org.springframework.security:spring-security-core")
     compileOnly(project(":dm-security-core"))
 }
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "dm.uap.common")
+    }
+}

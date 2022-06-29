@@ -3,6 +3,7 @@ plugins {
 }
 dependencies {
 
+    implementation("com.google.guava:guava")
     implementation("org.springframework.security:spring-security-core")
     implementation("org.springframework.security:spring-security-web")
     // 这个依赖是给验证码用的

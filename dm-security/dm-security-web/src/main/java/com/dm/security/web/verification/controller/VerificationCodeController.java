@@ -1,4 +1,4 @@
-package com.dm.security.web.verification;
+package com.dm.security.web.verification.controller;
 
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeGenerator;
