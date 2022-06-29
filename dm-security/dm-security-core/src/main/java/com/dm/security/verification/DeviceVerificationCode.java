@@ -123,4 +123,14 @@ public class DeviceVerificationCode implements Serializable {
         } else return key.equals(other.key);
     }
 
+    @Override
+    public String toString() {
+        return "DeviceVerificationCode{" +
+            "id='" + id + '\'' +
+            ", key='" + key + '\'' +
+            ", code='" + code + '\'' +
+            ", createdTime=" + createdTime +
+            ", expireAt=" + expireAt +
+            '}';
+    }
 }
