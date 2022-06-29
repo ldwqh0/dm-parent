@@ -3,12 +3,12 @@ package com.dm.security.web.verification;
 import com.dm.collections.CollectionUtils;
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeStorage;
+import com.dm.security.web.authentication.AuthenticationObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -25,10 +25,9 @@ public class VerificationCodeFilter extends GenericFilterBean {
 
     private final List<RequestMatcher> requestMatchers = new ArrayList<>();
 
-    @Autowired
     private VerificationCodeStorage storage = null;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = AuthenticationObjectMapperFactory.getObjectMapper();
 
     private String verifyIdParameterName = "verifyId";
 
@@ -51,6 +50,7 @@ public class VerificationCodeFilter extends GenericFilterBean {
         this.objectMapper = objectMapper;
     }
 
+    @Autowired
     public void setStorage(VerificationCodeStorage storage) {
         this.storage = storage;
     }
@@ -99,15 +99,6 @@ public class VerificationCodeFilter extends GenericFilterBean {
             }
         }
         return false;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws ServletException {
-        super.afterPropertiesSet();
-        Assert.notNull(storage, "the storage can not be null");
-        if (Objects.isNull(objectMapper)) {
-            this.objectMapper = new ObjectMapper();
-        }
     }
 
     private boolean validate(String verifyId, String verifyCode) {

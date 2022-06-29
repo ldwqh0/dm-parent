@@ -12,6 +12,7 @@ public class AuthenticationObjectMapperFactory {
             synchronized (AuthenticationObjectMapperFactory.class) {
                 if (Objects.isNull(objectMapper)) {
                     objectMapper = new ObjectMapper();
+                    objectMapper.findAndRegisterModules();
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.dm.security.web.verification;
 
 import com.dm.collections.CollectionUtils;
 import com.dm.security.verification.DeviceVerificationCodeStorage;
+import com.dm.security.web.authentication.AuthenticationObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -43,11 +44,11 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
 
     private DeviceVerificationCodeStorage storage;
 
-    private ObjectMapper om = new ObjectMapper();
+    private ObjectMapper objectMapper = AuthenticationObjectMapperFactory.getObjectMapper();
 
     @Autowired(required = false)
-    public void setObjectMapper(ObjectMapper om) {
-        this.om = om;
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     public void requestMatcher(ServerWebExchangeMatcher matcher) {
@@ -105,7 +106,7 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
         result.put("timestamp", ZonedDateTime.now());
         try {
             // TODO 这里不对
-            return Mono.just(response.bufferFactory().wrap(om.writeValueAsBytes(result)));
+            return Mono.just(response.bufferFactory().wrap(objectMapper.writeValueAsBytes(result)));
         } catch (JsonProcessingException e) {
             return Mono.error(e);
         }
@@ -168,8 +169,8 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
     @Override
     public void afterPropertiesSet() {
         Assert.notNull(storage, "this storage can not be null");
-        if (Objects.isNull(om)) {
-            om = new ObjectMapper();
+        if (Objects.isNull(objectMapper)) {
+            objectMapper = new ObjectMapper();
         }
     }
 }

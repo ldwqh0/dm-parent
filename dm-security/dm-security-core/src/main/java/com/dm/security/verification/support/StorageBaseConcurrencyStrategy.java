@@ -24,7 +24,7 @@ public class StorageBaseConcurrencyStrategy implements ConcurrencyStrategy {
         String deviceKey = device.getDeviceKey();
         synchronized (keyInterner.intern(deviceKey)) {
             codeStorage.findTopByKeyOrderByCreatedDateDesc(deviceKey)
-                .filter(it -> it.getCreatedTime().plus(1, ChronoUnit.MINUTES).isBefore(ZonedDateTime.now()))
+                .filter(it -> it.getCreatedTime().plus(1, ChronoUnit.MINUTES).isAfter(ZonedDateTime.now()))
                 .ifPresent(it -> {
                     throw new ConcurrencyException();
                 });

@@ -2,6 +2,7 @@ package com.dm.security.web.verification;
 
 import com.dm.collections.CollectionUtils;
 import com.dm.security.verification.DeviceVerificationCodeService;
+import com.dm.security.web.authentication.AuthenticationObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
     private DeviceVerificationCodeService codeService = null;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = AuthenticationObjectMapperFactory.getObjectMapper();
 
     public void requestMatcher(RequestMatcher requestMatcher) {
         this.requestMatchers.add(requestMatcher);
@@ -54,6 +55,10 @@ public class DeviceVerificationCodeFilter extends GenericFilterBean {
 
     public void setVerifyIdParameterName(String verifyIdParameterName) {
         this.verifyIdParameterName = verifyIdParameterName;
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     public void setCodeService(DeviceVerificationCodeService codeService) {

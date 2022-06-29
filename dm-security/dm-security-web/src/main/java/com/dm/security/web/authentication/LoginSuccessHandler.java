@@ -2,7 +2,6 @@ package com.dm.security.web.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -15,7 +14,7 @@ import java.util.Objects;
 
 import static com.dm.security.web.RequestUtils.isJsonRequest;
 
-public class LoginSuccessHandler implements AuthenticationSuccessHandler, InitializingBean {
+public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private ObjectMapper objectMapper;
 
@@ -53,10 +52,4 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler, Initia
         }
     }
 
-    @Override
-    public void afterPropertiesSet() {
-        if (Objects.isNull(objectMapper)) {
-            objectMapper = new ObjectMapper();
-        }
-    }
 }

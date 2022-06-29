@@ -1,7 +1,6 @@
 package com.dm.security.web.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -13,11 +12,10 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.dm.security.web.RequestUtils.isJsonRequest;
 
-public class LoginFailureHandler implements AuthenticationFailureHandler, InitializingBean {
+public class LoginFailureHandler implements AuthenticationFailureHandler {
 
     private ObjectMapper objectMapper;
 
@@ -51,12 +49,4 @@ public class LoginFailureHandler implements AuthenticationFailureHandler, Initia
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }
-
-    @Override
-    public void afterPropertiesSet() {
-        if (Objects.isNull(objectMapper)) {
-            objectMapper = new ObjectMapper();
-        }
-    }
-
 }

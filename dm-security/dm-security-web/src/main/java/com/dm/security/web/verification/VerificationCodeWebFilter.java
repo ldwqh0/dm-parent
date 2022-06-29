@@ -3,10 +3,10 @@ package com.dm.security.web.verification;
 import com.dm.collections.CollectionUtils;
 import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeStorage;
+import com.dm.security.web.authentication.AuthenticationObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
-import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -31,7 +30,7 @@ import java.util.*;
  *
  * @author LiDong
  */
-public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
+public class VerificationCodeWebFilter implements WebFilter {
 
     /**
      * 指定哪些请求需要进行验证码过滤
@@ -40,15 +39,15 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
 
     private VerificationCodeStorage storage = null;
 
-    private ObjectMapper om = new ObjectMapper();
+    private ObjectMapper objectMapper = AuthenticationObjectMapperFactory.getObjectMapper();
 
     private static final String verifyIdParameterName = "verifyId";
 
     private static final String verifyCodeParameterName = "verifyCode";
 
     @Autowired(required = false)
-    public void setObjectMapper(ObjectMapper om) {
-        this.om = om;
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     @Autowired
@@ -123,7 +122,7 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
             byte[] bf;
             try {
                 // TODO 这里不对
-                bf = om.writeValueAsBytes(result);
+                bf = objectMapper.writeValueAsBytes(result);
                 return Mono.just(response.bufferFactory().wrap(bf));
             } catch (JsonProcessingException e) {
                 return Mono.error(e);
@@ -132,11 +131,4 @@ public class VerificationCodeWebFilter implements WebFilter, InitializingBean {
         });
     }
 
-    @Override
-    public void afterPropertiesSet() {
-        Assert.notNull(storage, "the storage can not be null");
-        if (Objects.isNull(om)) {
-            this.om = new ObjectMapper();
-        }
-    }
 }
