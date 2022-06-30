@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
  */
 public class DefaultDeviceVerificationCodeService implements DeviceVerificationCodeService {
 
-    private static final Logger log = LoggerFactory.getLogger(DeviceVerificationCodeService.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultDeviceVerificationCodeService.class);
     private final DeviceVerificationCodeStorage codeStorage;
 
     private final ConcurrencyStrategy concurrencyStrategy;
@@ -41,7 +41,7 @@ public class DefaultDeviceVerificationCodeService implements DeviceVerificationC
     public boolean validate(String verifyId, String key, String verifyCode) {
         boolean result = codeStorage.findById(verifyId)
             .map(savedItem -> ZonedDateTime.now().isBefore(savedItem.getExpireAt())
-                && StringUtils.equals(key, savedItem.getCode())
+                && StringUtils.equals(key, savedItem.getKey())
                 && StringUtils.equalsIgnoreCase(verifyCode, savedItem.getCode()))
             .orElse(false);
         codeStorage.remove(verifyId);

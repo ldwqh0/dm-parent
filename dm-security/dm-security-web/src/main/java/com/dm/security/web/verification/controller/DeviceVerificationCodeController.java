@@ -1,6 +1,7 @@
 package com.dm.security.web.verification.controller;
 
 import com.dm.security.verification.DeviceVerificationCode;
+import com.dm.security.verification.DeviceVerificationCodeSender;
 import com.dm.security.verification.DeviceVerificationCodeService;
 import com.dm.security.web.verification.request.DeviceVerificationCodeRequest;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +15,11 @@ public class DeviceVerificationCodeController {
 
     private final DeviceVerificationCodeService codeService;
 
-    public DeviceVerificationCodeController(DeviceVerificationCodeService codeService) {
+    private final DeviceVerificationCodeSender codeSender;
+
+    public DeviceVerificationCodeController(DeviceVerificationCodeService codeService, DeviceVerificationCodeSender codeSender) {
         this.codeService = codeService;
+        this.codeSender = codeSender;
     }
 
     /**
@@ -25,7 +29,9 @@ public class DeviceVerificationCodeController {
      */
     @PostMapping
     public DeviceVerificationCode newCode(@RequestBody DeviceVerificationCodeRequest request) {
-        return codeService.create(request);
+        DeviceVerificationCode code = codeService.create(request);
+        codeSender.send(code);
+        return code;
     }
 
 }
