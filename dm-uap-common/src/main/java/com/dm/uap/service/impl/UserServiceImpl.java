@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     private final DepartmentRepository departmentRepository;
 
@@ -45,10 +45,15 @@ public class UserServiceImpl implements UserService {
 
     private final QUser qUser = QUser.user;
 
-    public UserServiceImpl(UserRepository userRepository, DepartmentRepository departmentRepository, UserRoleRepository userRoleRepository) {
+    public UserServiceImpl(UserRepository userRepository, DepartmentRepository departmentRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.departmentRepository = departmentRepository;
         this.userRoleRepository = userRoleRepository;
+    }
+
+    public UserServiceImpl(UserRepository userRepository, DepartmentRepository departmentRepository, UserRoleRepository userRoleRepository) {
+        this(userRepository, departmentRepository, userRoleRepository, PasswordEncoderFactories.createDelegatingPasswordEncoder());
     }
 
     @Override

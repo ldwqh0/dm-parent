@@ -22,7 +22,6 @@ public class AutoCreateRoutingDataSource extends AbstractRoutingDataSource imple
 
     private DataSourceBuilder dataSourceBuilder = new HikariDataSourceBuilder();
 
-    //    @Autowired(required = false)
     public void setDataSourceBuilder(DataSourceBuilder dataSourceBuilder) {
         this.dataSourceBuilder = dataSourceBuilder;
     }

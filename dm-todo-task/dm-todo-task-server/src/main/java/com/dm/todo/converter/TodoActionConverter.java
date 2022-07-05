@@ -10,10 +10,10 @@ public class TodoActionConverter {
 
     public static TodoTaskActionResponse toDto(Long taskId, TodoTaskAction action) {
         return new TodoTaskActionResponse(
-                taskId,
-                action.getContent(),
-                action.isCompleted(),
-                action.getCreatedTime()
+            taskId,
+            action.getContent(),
+            action.isCompleted(),
+            action.getCreatedTime()
         );
     }
 }

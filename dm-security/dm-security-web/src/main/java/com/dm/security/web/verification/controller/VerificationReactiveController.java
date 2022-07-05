@@ -4,7 +4,6 @@ import com.dm.security.verification.VerificationCode;
 import com.dm.security.verification.VerificationCodeGenerator;
 import com.dm.security.verification.VerificationCodeStorage;
 import com.google.code.kaptcha.Producer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,19 +22,20 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 @RequestMapping("verificationCode")
 public class VerificationReactiveController {
 
-    @Autowired
-    private Producer producer;
+    private final Producer producer;
 
-    @Autowired
-    private VerificationCodeGenerator validateCodeGenerator;
+    private final VerificationCodeGenerator validateCodeGenerator;
 
-    @Autowired
-    private VerificationCodeStorage codeStorage;
+    private final VerificationCodeStorage codeStorage;
+
+    public VerificationReactiveController(Producer producer, VerificationCodeGenerator validateCodeGenerator, VerificationCodeStorage codeStorage) {
+        this.producer = producer;
+        this.validateCodeGenerator = validateCodeGenerator;
+        this.codeStorage = codeStorage;
+    }
 
     /**
      * 生成验证码，将验证码数据以Base64格式输出
-     *
-     * @return
      */
     @GetMapping(produces = {
         TEXT_PLAIN_VALUE,

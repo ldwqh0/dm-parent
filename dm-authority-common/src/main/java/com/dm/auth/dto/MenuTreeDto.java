@@ -111,7 +111,7 @@ public class MenuTreeDto implements Serializable, Identifiable<Long> {
         this.order = order;
         this.openInNewWindow = openInNewWindow;
         this.parentId = parentId;
-        CollectionUtils.addAll(this.children,children);
+        CollectionUtils.addAll(this.children, children);
     }
 
     @Override

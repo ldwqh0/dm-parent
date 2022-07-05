@@ -7,7 +7,6 @@ import com.dm.security.web.authentication.AuthenticationObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,22 +36,21 @@ public class VerificationCodeWebFilter implements WebFilter {
      */
     private final List<ServerWebExchangeMatcher> requestMatchers = new LinkedList<>();
 
-    private VerificationCodeStorage storage = null;
+    private final VerificationCodeStorage storage;
 
-    private ObjectMapper objectMapper = AuthenticationObjectMapperFactory.getObjectMapper();
+    private final ObjectMapper objectMapper;
 
     private static final String verifyIdParameterName = "verifyId";
 
     private static final String verifyCodeParameterName = "verifyCode";
 
-    @Autowired(required = false)
-    public void setObjectMapper(ObjectMapper objectMapper) {
+    public VerificationCodeWebFilter(VerificationCodeStorage storage, ObjectMapper objectMapper) {
+        this.storage = storage;
         this.objectMapper = objectMapper;
     }
 
-    @Autowired
-    public void setVerificationCodeStorage(VerificationCodeStorage storage) {
-        this.storage = storage;
+    public VerificationCodeWebFilter(VerificationCodeStorage storage) {
+        this(storage, AuthenticationObjectMapperFactory.getObjectMapper());
     }
 
     public void requestMatcher(ServerWebExchangeMatcher requestMatcher) {

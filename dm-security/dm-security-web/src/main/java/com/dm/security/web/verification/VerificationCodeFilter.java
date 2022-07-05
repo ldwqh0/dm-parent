@@ -6,7 +6,6 @@ import com.dm.security.verification.VerificationCodeStorage;
 import com.dm.security.web.authentication.AuthenticationObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.GenericFilterBean;
@@ -25,13 +24,22 @@ public class VerificationCodeFilter extends GenericFilterBean {
 
     private final List<RequestMatcher> requestMatchers = new ArrayList<>();
 
-    private VerificationCodeStorage storage = null;
+    private final VerificationCodeStorage storage;
 
-    private ObjectMapper objectMapper = AuthenticationObjectMapperFactory.getObjectMapper();
+    private final ObjectMapper objectMapper;
 
     private String verifyIdParameterName = "verifyId";
 
     private String verifyCodeParameterName = "verifyCode";
+
+    public VerificationCodeFilter(VerificationCodeStorage storage, ObjectMapper objectMapper) {
+        this.storage = storage;
+        this.objectMapper = objectMapper;
+    }
+
+    public VerificationCodeFilter(VerificationCodeStorage storage) {
+        this(storage, AuthenticationObjectMapperFactory.getObjectMapper());
+    }
 
     public void requestMatcher(RequestMatcher requestMatcher) {
         this.requestMatchers.add(requestMatcher);
@@ -43,16 +51,6 @@ public class VerificationCodeFilter extends GenericFilterBean {
 
     public void setVerifyIdParameterName(String verifyIdParameterName) {
         this.verifyIdParameterName = verifyIdParameterName;
-    }
-
-    @Autowired(required = false)
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
-    @Autowired
-    public void setStorage(VerificationCodeStorage storage) {
-        this.storage = storage;
     }
 
     @Override

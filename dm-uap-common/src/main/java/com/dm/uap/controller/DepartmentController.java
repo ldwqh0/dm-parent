@@ -1,7 +1,7 @@
 package com.dm.uap.controller;
 
-import com.dm.common.validation.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
+import com.dm.common.validation.ValidationResult;
 import com.dm.uap.dto.DepartmentDto;
 import com.dm.uap.service.DepartmentService;
 import org.springframework.data.domain.Page;

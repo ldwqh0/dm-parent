@@ -2,9 +2,9 @@ package com.dm.auth.controller;
 
 import com.dm.auth.dto.ResourceDto;
 import com.dm.auth.service.ResourceService;
-import com.dm.common.validation.ValidationResult;
 import com.dm.common.exception.DataNotExistException;
 import com.dm.common.exception.DataValidateException;
+import com.dm.common.validation.ValidationResult;
 import com.dm.security.authentication.UriResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,7 +81,7 @@ public class ResourceController {
     @GetMapping("{id}")
     public ResourceDto get(@PathVariable("id") Long id) {
         return resourceService.findById(id)
-                .orElseThrow(DataNotExistException::new);
+            .orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -93,8 +93,8 @@ public class ResourceController {
      */
     @GetMapping(params = {"page"})
     public Page<ResourceDto> search(
-            @PageableDefault Pageable pageable,
-            @RequestParam(value = "keyword", required = false) String keyword) {
+        @PageableDefault Pageable pageable,
+        @RequestParam(value = "keyword", required = false) String keyword) {
         return resourceService.search(keyword, pageable);
     }
 
@@ -109,10 +109,10 @@ public class ResourceController {
      */
     @RequestMapping("validation")
     public ValidationResult validate(
-            @RequestParam("matcher") String matcher,
-            @RequestParam("matchType") UriResource.MatchType matchType,
-            @RequestParam(value = "methods", required = false) Set<HttpMethod> methods,
-            @RequestParam(value = "exclude", required = false) Long exclude) {
+        @RequestParam("matcher") String matcher,
+        @RequestParam("matchType") UriResource.MatchType matchType,
+        @RequestParam(value = "methods", required = false) Set<HttpMethod> methods,
+        @RequestParam(value = "exclude", required = false) Long exclude) {
         if (resourceService.exist(matcher, matchType, methods, exclude)) {
             return ValidationResult.failure("指定资源配置已经存在");
         } else {

@@ -2,8 +2,8 @@ package com.dm.notification.controller;
 
 import com.dm.data.domain.RangePage;
 import com.dm.data.domain.RangePageable;
-import com.dm.notification.domain.NotificationResponse;
 import com.dm.notification.domain.NotificationRequest;
+import com.dm.notification.domain.NotificationResponse;
 import com.dm.notification.service.NotificationService;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;

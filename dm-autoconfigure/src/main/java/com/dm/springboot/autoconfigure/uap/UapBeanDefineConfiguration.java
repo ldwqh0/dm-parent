@@ -15,13 +15,15 @@ import com.dm.uap.service.DepartmentService;
 import com.dm.uap.service.LoginLogService;
 import com.dm.uap.service.UserRoleService;
 import com.dm.uap.service.UserService;
-import com.dm.uap.service.impl.*;
+import com.dm.uap.service.impl.DepartmentServiceImpl;
+import com.dm.uap.service.impl.LoginLogServiceImpl;
+import com.dm.uap.service.impl.UserRoleServiceImpl;
+import com.dm.uap.service.impl.UserServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -49,6 +51,7 @@ public class UapBeanDefineConfiguration {
     public UserRoleRepository userRoleRepository(EntityManager em) {
         return new JpaRepositoryFactory(em).getRepository(UserRoleRepository.class);
     }
+
     @Bean
     @ConditionalOnMissingBean(DepartmentService.class)
     public DepartmentService departmentService(DepartmentRepository departmentRepository) {
@@ -68,14 +71,22 @@ public class UapBeanDefineConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(UserService.class)
     public UserServiceImpl userServiceImp(UserRepository userRepository,
                                           DepartmentRepository departmentRepository,
-                                          UserRoleRepository userRoleRepository) {
+                                          UserRoleRepository userRoleRepository,
+                                          PasswordEncoder passwordEncoder) {
         return new UserServiceImpl(
             userRepository,
             departmentRepository,
-            userRoleRepository
+            userRoleRepository,
+            passwordEncoder
         );
     }
 
@@ -97,6 +108,7 @@ public class UapBeanDefineConfiguration {
     @Bean
     public UserRoleController userRoleController(UserRoleService userService) {
         return new UserRoleController(userService);
+
     }
 
     @Bean

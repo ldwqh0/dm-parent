@@ -2,6 +2,7 @@ package com.dm.springboot.autoconfigure.jdbc;
 
 import com.dm.datasource.controller.DmDataSourceController;
 import com.dm.datasource.entity.DmDataSource;
+import com.dm.datasource.mulit.DataSourceHolder;
 import com.dm.datasource.repository.DmDataSourceRepository;
 import com.dm.datasource.service.DmDataSourceService;
 import com.dm.datasource.service.impl.DmDataSourceServiceImpl;
@@ -27,7 +28,7 @@ public class MultiDataSourceJpaSupportAutoConfiguration {
     }
 
     @Bean
-    public DmDataSourceService dmDataSourceService(DmDataSourceRepository dmDataSourceRepository) {
-        return new DmDataSourceServiceImpl(dmDataSourceRepository);
+    public DmDataSourceService dmDataSourceService(DmDataSourceRepository dmDataSourceRepository, DataSourceHolder dataSourceHolder) {
+        return new DmDataSourceServiceImpl(dmDataSourceRepository, dataSourceHolder);
     }
 }

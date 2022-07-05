@@ -6,15 +6,12 @@ import com.dm.security.web.authentication.AuthenticationObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
-import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -24,7 +21,10 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 设备验证过滤器<br>
@@ -32,7 +32,7 @@ import java.util.*;
  *
  * @author LiDong
  */
-public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingBean {
+public class DeviceVerificationCodeWebFilter implements WebFilter {
 
     private final List<ServerWebExchangeMatcher> requestMatchers = new ArrayList<>();
 
@@ -42,22 +42,21 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
 
     private String verifyCodeKeyParameterName = "email";
 
-    private DeviceVerificationCodeStorage storage;
+    private final DeviceVerificationCodeStorage storage;
 
-    private ObjectMapper objectMapper = AuthenticationObjectMapperFactory.getObjectMapper();
+    private final ObjectMapper objectMapper;
 
-    @Autowired(required = false)
-    public void setObjectMapper(ObjectMapper objectMapper) {
+    public DeviceVerificationCodeWebFilter(DeviceVerificationCodeStorage storage, ObjectMapper objectMapper) {
+        this.storage = storage;
         this.objectMapper = objectMapper;
+    }
+
+    public DeviceVerificationCodeWebFilter(DeviceVerificationCodeStorage storage) {
+        this(storage, AuthenticationObjectMapperFactory.getObjectMapper());
     }
 
     public void requestMatcher(ServerWebExchangeMatcher matcher) {
         this.requestMatchers.add(matcher);
-    }
-
-    @Autowired
-    public void setDeviceVerificationCodeStorage(DeviceVerificationCodeStorage storage) {
-        this.storage = storage;
     }
 
     public void setVerifyIdParameterName(String verifyIdParameterName) {
@@ -163,14 +162,6 @@ public class DeviceVerificationCodeWebFilter implements WebFilter, InitializingB
             return values.get(0);
         } else {
             return null;
-        }
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        Assert.notNull(storage, "this storage can not be null");
-        if (Objects.isNull(objectMapper)) {
-            objectMapper = new ObjectMapper();
         }
     }
 }

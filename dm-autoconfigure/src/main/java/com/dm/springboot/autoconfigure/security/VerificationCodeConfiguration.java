@@ -35,16 +35,16 @@ public class VerificationCodeConfiguration {
     @Bean
     @ConditionalOnClass(name = {"javax.servlet.Servlet"})
     @ConditionalOnMissingBean(type = {"org.springframework.web.reactive.DispatcherHandler"})
-    public VerificationCodeController verificationCodeController() {
-        return new VerificationCodeController();
+    public VerificationCodeController verificationCodeController(Producer producer, VerificationCodeGenerator validateCodeGenerator, VerificationCodeStorage codeStorage) {
+        return new VerificationCodeController(producer, validateCodeGenerator, codeStorage);
     }
 
     @Bean
     @ConditionalOnMissingBean({VerificationCodeController.class})
     @ConditionalOnClass(name = {"org.reactivestreams.Publisher",
         "org.springframework.web.reactive.DispatcherHandler"})
-    public VerificationReactiveController verificationReactiveController() {
-        return new VerificationReactiveController();
+    public VerificationReactiveController verificationReactiveController(Producer producer, VerificationCodeGenerator validateCodeGenerator, VerificationCodeStorage codeStorage) {
+        return new VerificationReactiveController(producer, validateCodeGenerator, codeStorage);
     }
 
     /**

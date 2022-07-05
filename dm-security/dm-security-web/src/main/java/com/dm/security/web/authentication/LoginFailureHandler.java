@@ -1,7 +1,6 @@
 package com.dm.security.web.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -17,12 +16,7 @@ import static com.dm.security.web.RequestUtils.isJsonRequest;
 
 public class LoginFailureHandler implements AuthenticationFailureHandler {
 
-    private ObjectMapper objectMapper;
-
-    @Autowired(required = false)
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    private final ObjectMapper objectMapper;
 
     public LoginFailureHandler() {
         this(AuthenticationObjectMapperFactory.getObjectMapper());

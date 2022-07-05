@@ -1,7 +1,7 @@
 package com.dm.security.web.server.authentication;
 
+import com.dm.security.web.authentication.AuthenticationObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
@@ -22,19 +22,19 @@ import java.util.Collections;
 
 public class ServerLoginSuccessHandler extends RedirectServerAuthenticationSuccessHandler {
 
-    private Jackson2JsonEncoder jsonEncoder;
+    private final Jackson2JsonEncoder jsonEncoder;
 
     private final ServerWebExchangeMatcher mediaMatcher;
 
-    public ServerLoginSuccessHandler() {
+    public ServerLoginSuccessHandler(ObjectMapper objectMapper) {
         MediaTypeServerWebExchangeMatcher matcher = new MediaTypeServerWebExchangeMatcher(MediaType.APPLICATION_JSON);
         matcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
         this.mediaMatcher = matcher;
+        this.jsonEncoder = new Jackson2JsonEncoder(objectMapper);
     }
 
-    @Autowired
-    public void setJsonEncoder(ObjectMapper objectMapper) {
-        this.jsonEncoder = new Jackson2JsonEncoder(objectMapper);
+    public ServerLoginSuccessHandler() {
+        this(AuthenticationObjectMapperFactory.getObjectMapper());
     }
 
     @Override

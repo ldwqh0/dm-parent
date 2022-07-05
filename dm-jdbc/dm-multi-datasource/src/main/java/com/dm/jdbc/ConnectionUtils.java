@@ -1,7 +1,5 @@
 package com.dm.jdbc;
 
-import com.dm.collections.Lists;
-
 import java.sql.*;
 import java.util.List;
 

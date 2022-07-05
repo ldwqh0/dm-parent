@@ -206,7 +206,7 @@ public class UserDto implements Serializable, Identifiable<Long> {
         CollectionUtils.addAll(this.roles, roles);
         this.scenicName = scenicName;
         this.regionCode = regionCode;
-        CollectionUtils.addAll(this.posts,posts);
+        CollectionUtils.addAll(this.posts, posts);
         this.birthDate = birthDate;
         this.profilePhoto = profilePhoto;
         this.zoneinfo = zoneinfo;

@@ -264,7 +264,7 @@ public class MenuServiceImpl implements MenuService {
      */
     private void listChildren(List<Menu> container, Long parentId, Sort sort) {
         List<Menu> children = menuRepository.findByParentId(parentId, sort);
-        CollectionUtils.addAll(container,children);
+        CollectionUtils.addAll(container, children);
         children.forEach(child -> listChildren(container, child.getId(), sort));
     }
 

@@ -73,8 +73,8 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         BooleanBuilder query = new BooleanBuilder();
         if (StringUtils.isNotBlank(keyword)) {
             query.or(qResource.name.containsIgnoreCase(keyword))
-                    .or(qResource.description.containsIgnoreCase(keyword))
-                    .or(qResource.matcher.containsIgnoreCase(keyword));
+                .or(qResource.description.containsIgnoreCase(keyword))
+                .or(qResource.matcher.containsIgnoreCase(keyword));
         }
         return resourceRepository.findAll(query, pageable).map(ResourceConverter::toSimpleDto);
     }
@@ -90,8 +90,8 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
     @Cacheable(cacheNames = "AuthorityAttributes", key = "'all_resource'", sync = true)
     public Collection<ResourceAuthorityAttribute> listAll() {
         return resourceRepository.findAll().stream()
-                .flatMap(this::toResourceAuthorityAttribute)
-                .collect(Collectors.toList());
+            .flatMap(this::toResourceAuthorityAttribute)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -149,19 +149,19 @@ public class ResourceServiceImpl implements ResourceService, ResourceAuthoritySe
         Stream<ResourceAuthorityAttribute> attributes;
         if (CollectionUtils.isEmpty(methods)) {
             attributes = Stream.of(UriResource.of(resource.getMatcher(), resource.getMatchType(), resource.getScope()))
-                    .map(ResourceAuthorityAttribute::new);
+                .map(ResourceAuthorityAttribute::new);
         } else {
             attributes = resource.getMethods().stream()
-                    .map(method -> UriResource.of(method, resource.getMatcher(), resource.getMatchType(), resource.getScope()))
-                    .map(ResourceAuthorityAttribute::new);
+                .map(method -> UriResource.of(method, resource.getMatcher(), resource.getMatchType(), resource.getScope()))
+                .map(ResourceAuthorityAttribute::new);
         }
         return attributes.peek(attribute -> {
             resource.getAccessAuthorities()
-                    .stream().map(Role::getFullName)
-                    .forEach(attribute::addAccessAuthority);
+                .stream().map(Role::getFullName)
+                .forEach(attribute::addAccessAuthority);
             resource.getDenyAuthorities()
-                    .stream().map(Role::getFullName)
-                    .forEach(attribute::addDenyAuthority);
+                .stream().map(Role::getFullName)
+                .forEach(attribute::addDenyAuthority);
         });
     }
 

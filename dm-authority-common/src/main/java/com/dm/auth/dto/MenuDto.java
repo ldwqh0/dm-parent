@@ -100,7 +100,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         this.id = id;
         this.name = name;
         this.title = title;
-        this.enabled=TRUE.equals(enabled);
+        this.enabled = TRUE.equals(enabled);
         this.url = url;
         this.icon = icon;
         this.description = description;

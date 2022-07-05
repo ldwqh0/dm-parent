@@ -1,7 +1,5 @@
 package com.dm.springboot.autoconfigure.security;
 
-import com.dm.security.verification.DeviceVerificationCodeStorage;
-import com.dm.security.verification.support.InMemoryDeviceVerificationCodeStorage;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -19,6 +17,5 @@ import java.lang.annotation.Target;
 @Configuration
 @Import({DeviceVerificationCodeConfiguration.class})
 public @interface EnableDeviceVerificationCode {
-
 
 }
