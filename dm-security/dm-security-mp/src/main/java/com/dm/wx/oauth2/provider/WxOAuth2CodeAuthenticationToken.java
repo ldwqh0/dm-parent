@@ -10,14 +10,15 @@ import java.util.Collection;
  *
  * @author LiDong
  */
-public class WxOAuth2CodeAuthentication implements Authentication {
+public class WxOAuth2CodeAuthenticationToken implements Authentication {
 
     private static final long serialVersionUID = 4815555761809821333L;
+    private final String appid;
 
     private final String code;
 
-    public WxOAuth2CodeAuthentication(String code) {
-        super();
+    public WxOAuth2CodeAuthenticationToken(String appid, String code) {
+        this.appid = appid;
         this.code = code;
     }
 
@@ -43,7 +44,7 @@ public class WxOAuth2CodeAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return appid;
     }
 
     @Override
@@ -53,7 +54,6 @@ public class WxOAuth2CodeAuthentication implements Authentication {
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
     }
 
 }

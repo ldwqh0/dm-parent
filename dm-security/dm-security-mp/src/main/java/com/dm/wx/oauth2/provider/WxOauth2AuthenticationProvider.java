@@ -1,11 +1,9 @@
 package com.dm.wx.oauth2.provider;
 
+import com.dm.wx.oauth2.WxOAuth2AccessToken;
+import com.dm.wx.oauth2.WxOauth2Service;
 import com.dm.wx.oauth2.authentication.WxAuthenticationToken;
 import com.dm.wx.oauth2.authentication.WxOauth2AccessTokenAuthenticationToken;
-import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
-import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.common.service.WxOAuth2Service;
-import me.chanjar.weixin.mp.api.WxMpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -40,14 +38,14 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
 
     private AuthenticationUserDetailsService<WxOauth2AccessTokenAuthenticationToken> authenticationUserDetailsService;
 
-    private WxOAuth2Service wxOAuth2Service;
+    private WxOauth2Service wxOauth2Service;
 
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     private final UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
 
-    public void setWxMpService(WxMpService wxMpService) {
-        this.wxOAuth2Service = wxMpService.getOAuth2Service();
+    public void setWxOauth2Service(WxOauth2Service wxOauth2Service) {
+        this.wxOauth2Service = wxOauth2Service;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
 
     @Override
     public void afterPropertiesSet() {
-        Assert.notNull(this.wxOAuth2Service, "the wxOauth2Service can not be null");
+        Assert.notNull(this.wxOauth2Service, "the wxOauth2Service can not be null");
     }
 
     @Override
@@ -67,22 +65,23 @@ public class WxOauth2AuthenticationProvider implements AuthenticationProvider,
         }
         try {
             final String code = String.valueOf(authentication.getCredentials());
-            final WxOAuth2AccessToken token = wxOAuth2Service.getAccessToken(code);
-            final WxOauth2AccessTokenAuthenticationToken authenticationToken = new WxOauth2AccessTokenAuthenticationToken(token, Collections.singleton(new SimpleGrantedAuthority("ROLE_WX_USER")));
+            final String appid = String.valueOf(authentication.getPrincipal());
+            WxOAuth2AccessToken accessToken = WxOAuth2AccessToken.from(appid, wxOauth2Service.getAccessToken(appid, code));
+            final WxOauth2AccessTokenAuthenticationToken authenticationToken = new WxOauth2AccessTokenAuthenticationToken(accessToken, Collections.singleton(new SimpleGrantedAuthority("ROLE_WX_USER")));
             if (authenticationUserDetailsService != null) {
                 UserDetails userDetails = authenticationUserDetailsService.loadUserDetails(authenticationToken);
                 preAuthenticationChecks.check(userDetails);
-                return new WxAuthenticationToken(token, userDetails, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
+                return new WxAuthenticationToken(accessToken, userDetails, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
             }
             return authenticationToken;
-        } catch (WxErrorException e) {
+        } catch (Exception e) {
             throw new BadCredentialsException("微信登录时发生错误", e);
         }
     }
 
     @Override
     public boolean supports(final Class<?> authentication) {
-        return WxOAuth2CodeAuthentication.class.isAssignableFrom(authentication);
+        return WxOAuth2CodeAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
     public void setAuthenticationUserDetailsService(AuthenticationUserDetailsService<WxOauth2AccessTokenAuthenticationToken> authenticationUserDetailsService) {

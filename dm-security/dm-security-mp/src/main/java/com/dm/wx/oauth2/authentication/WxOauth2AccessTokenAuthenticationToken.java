@@ -1,6 +1,6 @@
 package com.dm.wx.oauth2.authentication;
 
-import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
+import com.dm.wx.oauth2.WxOAuth2AccessToken;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,6 +31,10 @@ public class WxOauth2AccessTokenAuthenticationToken extends AbstractAuthenticati
 
     @Override
     public Object getPrincipal() {
+        return accessToken;
+    }
+
+    public WxOAuth2AccessToken getAccessToken() {
         return accessToken;
     }
 }

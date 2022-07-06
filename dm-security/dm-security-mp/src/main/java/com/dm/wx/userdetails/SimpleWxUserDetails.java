@@ -1,7 +1,6 @@
 package com.dm.wx.userdetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,31 +14,32 @@ public class SimpleWxUserDetails implements WxUserDetails, UserDetails {
     private static final long serialVersionUID = 874394269828106471L;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    private final WxMpUser wxMpUser;
+//    private final WxMpUser wxMpUser;
 
-    private final String openId;
+    private final String openid;
 
-    private final String unionId;
+//    private final String unionId;
 
-    public SimpleWxUserDetails(WxMpUser userinfo, Collection<? extends GrantedAuthority> authorities) {
-        this.openId = userinfo.getOpenId();
-        this.wxMpUser = userinfo;
-        this.unionId = userinfo.getUnionId();
+    public SimpleWxUserDetails(String openid, Collection<? extends GrantedAuthority> authorities) {
+        this.openid = openid;
+//        this.openid = userinfo.getOpenid();
+//        this.wxMpUser = userinfo;
+//        this.unionId = userinfo.getUnionId();
         this.authorities = arrayList(authorities);
     }
 
-    public WxMpUser getWxMpUser() {
-        return wxMpUser;
+//    public WxMpUser getWxMpUser() {
+//        return wxMpUser;
+//    }
+
+    @Override
+    public String getUnionid() {
+        throw new RuntimeException("方法未实现");
     }
 
     @Override
-    public String getOpenId() {
-        return this.openId;
-    }
-
-    @Override
-    public String getUnionId() {
-        return this.unionId;
+    public String getOpenid() {
+        return this.openid;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SimpleWxUserDetails implements WxUserDetails, UserDetails {
 
     @Override
     public String getUsername() {
-        return this.wxMpUser.getOpenId();
+        return this.getOpenid();
     }
 
     @Override
