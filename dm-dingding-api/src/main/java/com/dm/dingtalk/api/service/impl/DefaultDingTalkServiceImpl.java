@@ -158,7 +158,7 @@ public class DefaultDingTalkServiceImpl implements DingTalkService, Initializing
     @Override
     // 只能单线程获取用户
     public OapiUserGetDeptMemberResponse fetchUsers(Long depId) {
-        log.info("获取部门的用户信息在线程{}", +Thread.currentThread().getId());
+        log.debug("获取部门【{}】的用户信息在线程【{}】", depId, Thread.currentThread().getId());
         String url = SERVER + "/user/getDeptMember?access_token={0}&deptId={1}";
         OapiUserGetDeptMemberResponse response = restTemplate.getForObject(url, OapiUserGetDeptMemberResponse.class,
                 getAccessToken(), depId);
