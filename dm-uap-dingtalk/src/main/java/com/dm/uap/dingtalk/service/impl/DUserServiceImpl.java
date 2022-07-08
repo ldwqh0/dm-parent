@@ -120,19 +120,6 @@ public class DUserServiceImpl implements DUserService {
         return createToDingTalk(dUser);
     }
 
-    /**
-     * 将钉钉用户信息同步到系统uap
-     *
-     * @param dUsers
-     * @return
-     */
-    private void syncToUap(List<DUser> dUsers) {
-        log.info("开始同步用户信息到UAP,共[{}]条记录", dUsers.size());
-        List<User> users = dUsers.stream().map(this::toUser).collect(Collectors.toList());
-        users = userRepository.saveAll(users);
-        log.info("同步用户信息到UAP完成,成功合并[{}]条记录", users.size());
-    }
-
     private User toUser(DUser dUser) {
         User user = dUser.getUser();
         if (Objects.isNull(user)) {
@@ -187,7 +174,7 @@ public class DUserServiceImpl implements DUserService {
      */
     private DUser copyProperties(DUser dUser, OapiUserGetResponse rsp) {
         dUserConverter.copyProperties(dUser, rsp);
-        log.info("正在合并用户信息 userid={}", dUser.getUserid());
+        log.debug("正在合并用户信息 userid={}", dUser.getUserid());
         // 合并是否部门领导信息
         try {
             Set<DDepartment> departments = rsp.getDepartment().stream().map(dDepartmentRepository::getOne)
@@ -315,7 +302,7 @@ public class DUserServiceImpl implements DUserService {
     @Transactional
     public void syncToUap(String dUserid) {
         try {
-            log.info("同步id为【{}】的用户信息", dUserid);
+            log.debug("同步id为【{}】的用户信息", dUserid);
             Thread.sleep(30);
             OapiUserGetResponse item = dingTalkService.fetchUserById(dUserid);
             DUser dUser = copyProperties(new DUser(item.getUserid()), item);
@@ -323,7 +310,7 @@ public class DUserServiceImpl implements DUserService {
             User user = toUser(dUser);
             userRepository.save(user);
         } catch (Exception e) {
-            log.error("同步 id为【{}】的用户信息时出错", dUserid);
+            log.error("同步 id为【{}】的用户信息时出错", dUserid, e);
         }
     }
 
