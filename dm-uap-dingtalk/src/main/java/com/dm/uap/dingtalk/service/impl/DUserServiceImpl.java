@@ -62,15 +62,20 @@ public class DUserServiceImpl implements DUserService {
     @Autowired
     private DRoleGroupService dRoleGroupService;
 
+    @Autowired
+    private DUserService dUserService;
+
     /**
      * 采用批处理同步的模式
      */
     @Override
-    @Transactional
     public void syncToUap() {
         dDepartmentService.syncToUap();
         dRoleGroupService.syncToUap();
-        syncToUap(fetch());
+        Collection<String> fetchedUsers = dUserService.fetchDUserState();
+        // 同步用户信息
+        log.info("开始同步用户信息，共{}条", fetchedUsers.size());
+        fetchedUsers.forEach(it -> dUserService.syncToUap(it));
     }
 
     @Override
@@ -174,60 +179,6 @@ public class DUserServiceImpl implements DUserService {
     }
 
     /**
-     * 从服务器拉取钉钉用户信息，并将信息保存到本地
-     *
-     * @return
-     */
-    private List<DUser> fetch() {
-        List<DDepartment> dDepartments = dDepartmentRepository.findAll();
-        // 遍历所有部门
-        Set<String> userIds = dDepartments.stream()
-                .map(DDepartment::getId)
-                .map(departmentId -> {
-                    try {
-                        // 每次进程进来的时候，延迟30毫秒
-                        Thread.sleep(30); // 因为钉钉对同时并发的请求数量有限制
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        return dingTalkService.fetchUsers(departmentId);
-                    } catch (DDepartmentNotFoundException e) {
-                        OapiUserGetDeptMemberResponse emptyResponse = new OapiUserGetDeptMemberResponse();
-                        emptyResponse.setUserIds(Collections.emptyList());
-                        return emptyResponse;
-                    }
-                })// 从钉钉服务器上拉取所有部门的用户信息
-                .map(OapiUserGetDeptMemberResponse::getUserIds)
-                .flatMap(List::stream)// 获取所有的用户列表
-                .collect(Collectors.toSet());
-        // 将不在列表中的用户标记为删除
-        dUserRepository.setDeletedByUseridNotIn(userIds, true);
-        // 将在列表中的用户标记为未删除
-        dUserRepository.setDeletedByUseridIn(userIds, false);
-        List<Long> deleteUsers = dUserRepository.findUserIdsByDUserDeleted(true);
-        if (CollectionUtils.isNotEmpty(deleteUsers)) {
-            userRepository.batchSetEnabled(deleteUsers, false);
-        }
-        List<DUser> users = userIds.stream()
-                // 将从服务器上抓取的数据，复制到本地数据库中
-                .map(userid -> {
-                    try {
-                        Thread.sleep(30);
-                        return dingTalkService.fetchUserById(userid);
-                    } catch (Exception e) {
-                        log.error("获取用户信息时发生错误,用户id=[{}]", userid, e);
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .map(item -> copyProperties(new DUser(item.getUserid()), item))
-                .collect(Collectors.toList());
-        // 保存所有用户信息
-        return dUserRepository.saveAll(users);
-    }
-
-    /**
      * 将从服务上获取到的用户信息，映射到本地数据模型
      *
      * @param dUser
@@ -306,7 +257,7 @@ public class DUserServiceImpl implements DUserService {
     }
 
     /**
-     * 解析用户排序信息字符串 {@link parseLeaderMap}
+     * 解析用户排序信息字符串
      *
      * @param str
      * @return
@@ -360,4 +311,60 @@ public class DUserServiceImpl implements DUserService {
         return dUser;
     }
 
+    @Override
+    @Transactional
+    public void syncToUap(String dUserid) {
+        try {
+            log.info("同步id为【{}】的用户信息", dUserid);
+            Thread.sleep(30);
+            OapiUserGetResponse item = dingTalkService.fetchUserById(dUserid);
+            DUser dUser = copyProperties(new DUser(item.getUserid()), item);
+            dUser = dUserRepository.save(dUser);
+            User user = toUser(dUser);
+            userRepository.save(user);
+        } catch (Exception e) {
+            log.error("同步 id为【{}】的用户信息时出错", dUserid);
+        }
+    }
+
+    /**
+     * 同步钉钉用户的状态
+     */
+    @Override
+    @Transactional
+    public Collection<String> fetchDUserState() {
+        List<DDepartment> dDepartments = dDepartmentRepository.findAll();
+        // 遍历所有部门
+        Set<String> userIds = dDepartments.stream()
+                .map(DDepartment::getId)
+                .map(departmentId -> {
+                    try {
+                        // 每次进程进来的时候，延迟30毫秒
+                        Thread.sleep(30); // 因为钉钉对同时并发的请求数量有限制
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        return dingTalkService.fetchUsers(departmentId);
+                    } catch (DDepartmentNotFoundException e) {
+                        OapiUserGetDeptMemberResponse emptyResponse = new OapiUserGetDeptMemberResponse();
+                        emptyResponse.setUserIds(Collections.emptyList());
+                        return emptyResponse;
+                    }
+                })// 从钉钉服务器上拉取所有部门的用户信息
+                .map(OapiUserGetDeptMemberResponse::getUserIds)
+                .flatMap(List::stream)// 获取所有的用户列表
+                .collect(Collectors.toSet());
+        // 将不在列表中的用户标记为删除
+        dUserRepository.setDeletedByUseridNotIn(userIds, true);
+        // 将在列表中的用户标记为未删除
+        dUserRepository.setDeletedByUseridIn(userIds, false);
+
+        // TODO 这个应该在另外一个逻辑里面处理
+        List<Long> deleteUsers = dUserRepository.findUserIdsByDUserDeleted(true);
+        if (CollectionUtils.isNotEmpty(deleteUsers)) {
+            userRepository.batchSetEnabled(deleteUsers, false);
+        }
+        return userIds;
+    }
 }
