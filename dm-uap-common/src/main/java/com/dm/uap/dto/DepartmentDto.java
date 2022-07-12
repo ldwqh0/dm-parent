@@ -2,6 +2,7 @@ package com.dm.uap.dto;
 
 import com.dm.data.domain.Identifiable;
 import com.dm.uap.entity.Department.Types;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -89,6 +90,18 @@ public class DepartmentDto implements Identifiable<Long>, Serializable {
      * logo, 部门的logo字符串表现方式，可能是文件的ID，URL路径，或者BASE64形式的字符串，具体由前端控制
      */
     private final String logo;
+
+    @JsonCreator
+    private DepartmentDto(@JsonProperty("id") Long id,
+                          @JsonProperty("fullName") String fullName,
+                          @JsonProperty("shortname") String shortname,
+                          @JsonProperty("description") String description,
+                          @JsonProperty("type") Types type,
+                          @JsonProperty("parent") DepartmentDto parent,
+                          @JsonProperty("director") String director,
+                          @JsonProperty("logo") String logo) {
+        this(id, fullName, shortname, description, type, parent, director, logo, null, null);
+    }
 
     private DepartmentDto(Long id,
                           String fullName,

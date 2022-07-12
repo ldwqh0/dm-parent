@@ -2,10 +2,7 @@ package com.dm.auth.dto;
 
 import com.dm.auth.entity.Menu.MenuType;
 import com.dm.data.domain.Identifiable;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -120,8 +117,19 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         this.childrenCount = childrenCount;
     }
 
-    private MenuDto() {
-        this(null, null, null, null, null, null, null, null, null, null, null, null);
+    @JsonCreator
+    private MenuDto(@JsonProperty("id") Long id,
+                    @JsonProperty("name") String name,
+                    @JsonProperty("title") String title,
+                    @JsonProperty("enabled") Boolean enabled,
+                    @JsonProperty("url") String url,
+                    @JsonProperty("icon") String icon,
+                    @JsonProperty("description") String description,
+                    @JsonProperty("type") MenuType type,
+                    @JsonProperty("order") Long order,
+                    @JsonProperty("parent") MenuDto parent,
+                    @JsonProperty("openInNewWindow") Boolean openInNewWindow) {
+        this(id, name, title, enabled, url, icon, description, type, order, parent, openInNewWindow, null);
     }
 
     @Override

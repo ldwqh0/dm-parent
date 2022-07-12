@@ -5,8 +5,10 @@ import com.dm.common.validation.constraints.Mobile;
 import com.dm.data.domain.Identifiable;
 import com.dm.uap.entity.Address;
 import com.dm.uap.entity.User;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -160,32 +162,33 @@ public class UserDto implements Serializable, Identifiable<Long> {
 
     private final Address address;
 
-    private UserDto(Long id,
-                    String no,
-                    String givenName,
-                    String familyName,
-                    String middleName,
-                    String profile,
-                    String website,
-                    User.Gender gender,
-                    String username,
-                    String fullName,
-                    String password,
-                    Boolean enabled,
-                    String email,
-                    Boolean emailVerified,
-                    String mobile,
-                    Boolean phoneNumberVerified,
-                    String description,
-                    Set<UserRoleDto> roles,
-                    String scenicName,
-                    String regionCode,
-                    List<UserPostDto> posts,
-                    LocalDate birthDate,
-                    String profilePhoto,
-                    String zoneinfo,
-                    String local,
-                    Address address) {
+    @JsonCreator
+    private UserDto(@JsonProperty("id") Long id,
+                    @JsonProperty("no") String no,
+                    @JsonProperty("givenName") String givenName,
+                    @JsonProperty("familyName") String familyName,
+                    @JsonProperty("middleName") String middleName,
+                    @JsonProperty("profile") String profile,
+                    @JsonProperty("website") String website,
+                    @JsonProperty("gender") User.Gender gender,
+                    @JsonProperty("username") String username,
+                    @JsonProperty("fullName") String fullName,
+                    @JsonProperty("password") String password,
+                    @JsonProperty("enabled") Boolean enabled,
+                    @JsonProperty("email") String email,
+                    @JsonProperty("emailVerified") Boolean emailVerified,
+                    @JsonProperty("mobile") String mobile,
+                    @JsonProperty("phoneNumberVerified") Boolean phoneNumberVerified,
+                    @JsonProperty("description") String description,
+                    @JsonProperty("roles") Set<UserRoleDto> roles,
+                    @JsonProperty("scenicName") String scenicName,
+                    @JsonProperty("regionCode") String regionCode,
+                    @JsonProperty("posts") List<UserPostDto> posts,
+                    @JsonProperty("birthDate") LocalDate birthDate,
+                    @JsonProperty("profilePhoto") String profilePhoto,
+                    @JsonProperty("zoneinfo") String zoneinfo,
+                    @JsonProperty("local") String local,
+                    @JsonProperty("address") Address address) {
         this.id = id;
         this.no = no;
         this.givenName = givenName;

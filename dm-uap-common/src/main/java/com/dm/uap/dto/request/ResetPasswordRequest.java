@@ -12,9 +12,8 @@ public class ResetPasswordRequest implements Serializable {
 
     private final String rePassword;
 
-    public ResetPasswordRequest(
-        @JsonProperty("password") String password,
-        @JsonProperty("rePassword") String rePassword) {
+    public ResetPasswordRequest(@JsonProperty("password") String password,
+                                @JsonProperty("rePassword") String rePassword) {
         this.password = password;
         this.rePassword = rePassword;
     }

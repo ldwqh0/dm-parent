@@ -60,21 +60,15 @@ public class ResourceDto implements Serializable, Identifiable<Long> {
      */
     private final Set<RoleDto> denyAuthorities = new HashSet<>();
 
-    private ResourceDto() {
-        this(null, null, null, null, null, null, null, null, null);
-    }
-
-    private ResourceDto(
-        @JsonProperty("id") Long id,
-        @JsonProperty("name") String name,
-        @JsonProperty("methods") Set<HttpMethod> methods,
-        @JsonProperty("matcher") String matcher,
-        @JsonProperty("description") String description,
-        @JsonProperty("scope") Set<String> scope,
-        @JsonProperty("matchType") MatchType matchType,
-        @JsonProperty("accessAuthorities") Set<RoleDto> accessAuthorities,
-        @JsonProperty("denyAuthorities") Set<RoleDto> denyAuthorities
-    ) {
+    private ResourceDto(@JsonProperty("id") Long id,
+                        @JsonProperty("name") String name,
+                        @JsonProperty("methods") Set<HttpMethod> methods,
+                        @JsonProperty("matcher") String matcher,
+                        @JsonProperty("description") String description,
+                        @JsonProperty("scope") Set<String> scope,
+                        @JsonProperty("matchType") MatchType matchType,
+                        @JsonProperty("accessAuthorities") Set<RoleDto> accessAuthorities,
+                        @JsonProperty("denyAuthorities") Set<RoleDto> denyAuthorities) {
         this.id = id;
         this.name = name;
         CollectionUtils.addAll(this.methods, methods);
