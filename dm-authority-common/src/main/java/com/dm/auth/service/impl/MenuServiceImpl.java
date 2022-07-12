@@ -45,24 +45,16 @@ public class MenuServiceImpl implements MenuService {
     @CacheEvict(cacheNames = {"AuthorityMenus"}, allEntries = true)
     public MenuDto save(MenuDto menuDto) {
         preCheck(menuDto);
-        final Menu menu = copyProperties(new Menu(), menuDto);
+        Menu menu = copyProperties(new Menu(), menuDto);
         // 在保存新菜单时，继承父菜单的权限设置
         menuDto.getParent().map(MenuDto::getId)
             .map(menuRepository::getById)
             .ifPresent(parent -> {
                 menu.setParent(parent);
-                // 添加权限信息
-                List<Role> authorities = roleRepository.findByMenu(parent);
-                if (CollectionUtils.isNotEmpty(authorities)) {
-                    authorities.stream().map(Role::getMenus).forEach(menus -> menus.add(menu));
-                }
+                menu.setRoles(parent.getRoles());
             });
         Menu menuResult = menuRepository.save(menu);
-        // 如果前端没有设置排序，会自动生成一个排序
-        if (Objects.isNull(menu.getOrder())) {
-            menuResult.setOrder(menu.getId());
-        }
-        return MenuConverter.toDto(menuResult, menuRepository.childrenCount(menuResult));
+        return MenuConverter.toDto(menuResult, 0);
     }
 
     @Override

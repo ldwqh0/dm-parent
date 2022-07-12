@@ -109,6 +109,12 @@ public class Role extends AbstractEntity {
         CollectionUtils.addAll(this.menus, menus);
     }
 
+    public void addMenu(Menu menu) {
+        if (Objects.nonNull(menu)) {
+            this.menus.add(menu);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

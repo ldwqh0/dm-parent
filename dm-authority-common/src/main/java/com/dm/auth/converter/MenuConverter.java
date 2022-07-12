@@ -23,14 +23,13 @@ public final class MenuConverter {
         model.getParent().map(MenuConverter::toSimpleDto)
             .ifPresent(builder::parent);
         return builder;
-
     }
 
     private static MenuDto toSimpleDto(Menu model) {
         return newBuilder(model).build();
     }
 
-    public static MenuDto toDto(Menu model, Long childrenCount) {
+    public static MenuDto toDto(Menu model, Integer childrenCount) {
         return newBuilder(model).childrenCount(childrenCount).build();
     }
 }

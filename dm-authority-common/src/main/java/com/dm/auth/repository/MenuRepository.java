@@ -19,7 +19,7 @@ public interface MenuRepository
     List<Menu> findByParentId(Long parentId, Sort sort);
 
     @Query("select count(m) from Menu m where m.parent=:parent")
-    long childrenCount(@Param("parent") Menu parent);
+    int childrenCount(@Param("parent") Menu parent);
 
     boolean existsByName(String name);
 

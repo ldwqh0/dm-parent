@@ -6,8 +6,8 @@ import com.dm.data.domain.AbstractEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Collections.unmodifiableList;
@@ -106,6 +106,22 @@ public class Menu extends AbstractEntity {
             children.forEach(child -> child.setParent(this));
             CollectionUtils.addAll(this.children, children);
         }
+    }
+
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(name = "dm_role_menu_", joinColumns = {
+        @JoinColumn(name = "menu_id_", referencedColumnName = "id_", foreignKey = @ForeignKey(name = "FK_dm_role_menu_menu_id_"))
+    }, inverseJoinColumns = {
+        @JoinColumn(name = "role_id_", referencedColumnName = "id_", foreignKey = @ForeignKey(name = "FK_dm_role_menu_role_id_"))
+    }, indexes = {
+        @Index(columnList = "role_id_", name = "IDX_dm_role_menu_role_id_"),
+        @Index(columnList = "menu_id_", name = "IDX_dm_role_menu_menu_id_")
+    })
+    private final List<Role> roles = new ArrayList<>();
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles.clear();
+        CollectionUtils.addAll(this.roles, roles);
     }
 
     public Menu(@NotNull String name) {
@@ -210,18 +226,16 @@ public class Menu extends AbstractEntity {
         return unmodifiableList(children);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Menu menu = (Menu) o;
-        return enabled == menu.enabled && Objects.equals(name, menu.name) && Objects.equals(title, menu.title) && Objects.equals(url, menu.url) && Objects.equals(order, menu.order) && Objects.equals(icon, menu.icon) && Objects.equals(description, menu.description) && Objects.equals(parent, menu.parent) && type == menu.type && Objects.equals(openInNewWindow, menu.openInNewWindow) && Objects.equals(children, menu.children);
+    public List<Role> getRoles() {
+        return unmodifiableList(this.roles);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name, title, enabled, url, order, icon, description, parent, type, openInNewWindow, children);
+    /**
+     * 自动生成菜单排序,默认使用id号
+     */
+    @PostPersist
+    private void autoSetOrder() {
+        setOrder(getId());
     }
 
     @Override
@@ -239,10 +253,5 @@ public class Menu extends AbstractEntity {
             ", openInNewWindow=" + openInNewWindow +
             ", children=" + children +
             '}';
-    }
-
-    @PostPersist
-    private void autoSetOrder() {
-        this.setOrder(getId());
     }
 }

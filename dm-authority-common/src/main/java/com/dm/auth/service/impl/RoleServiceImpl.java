@@ -109,7 +109,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> search(String group, String key, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
-        if (Objects.nonNull(group)) {
+        if (StringUtils.isNotBlank(group)) {
             query.and(qRole.group.eq(group));
         }
         if (StringUtils.isNotBlank(key)) {
@@ -117,7 +117,6 @@ public class RoleServiceImpl implements RoleService {
                 .or(qRole.description.containsIgnoreCase(key))
                 .or(qRole.group.containsIgnoreCase(key))
             );
-            return roleRepository.findAll(query, pageable);
         }
         return roleRepository.findAll(query, pageable);
     }
