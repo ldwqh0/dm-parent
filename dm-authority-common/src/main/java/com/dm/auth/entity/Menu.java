@@ -240,4 +240,9 @@ public class Menu extends AbstractEntity {
             ", children=" + children +
             '}';
     }
+
+    @PostPersist
+    private void autoSetOrder() {
+        this.setOrder(getId());
+    }
 }

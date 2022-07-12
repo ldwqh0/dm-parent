@@ -54,7 +54,6 @@ public class MenuDto implements Serializable, Identifiable<Long> {
      */
     private final MenuType type;
 
-    private final Long order;
     /**
      * 父菜单
      */
@@ -80,7 +79,6 @@ public class MenuDto implements Serializable, Identifiable<Long> {
      * @param icon            菜单图标
      * @param description     菜单描述
      * @param type            菜单类型
-     * @param order           菜单排序
      * @param parent          父级菜单
      * @param openInNewWindow 是否在新窗口中打开菜单
      * @param childrenCount   字菜单个数
@@ -93,7 +91,6 @@ public class MenuDto implements Serializable, Identifiable<Long> {
                     String icon,
                     String description,
                     MenuType type,
-                    Long order,
                     MenuDto parent,
                     Boolean openInNewWindow,
                     Long childrenCount) {
@@ -109,14 +106,13 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         } else {
             this.type = type;
         }
-        this.order = order;
         this.parent = parent;
         this.openInNewWindow = TRUE.equals(openInNewWindow);
         this.childrenCount = childrenCount;
     }
 
     private MenuDto() {
-        this(null, null, null, null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, null, null);
     }
 
     @Override
@@ -152,10 +148,6 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         return type;
     }
 
-    public Long getOrder() {
-        return order;
-    }
-
     public boolean isOpenInNewWindow() {
         return openInNewWindow;
     }
@@ -188,12 +180,12 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MenuDto menuDto = (MenuDto) o;
-        return Objects.equals(id, menuDto.id) && Objects.equals(name, menuDto.name) && Objects.equals(title, menuDto.title) && Objects.equals(enabled, menuDto.enabled) && Objects.equals(url, menuDto.url) && Objects.equals(icon, menuDto.icon) && Objects.equals(description, menuDto.description) && type == menuDto.type && Objects.equals(order, menuDto.order) && Objects.equals(parent, menuDto.parent) && Objects.equals(openInNewWindow, menuDto.openInNewWindow) && Objects.equals(childrenCount, menuDto.childrenCount);
+        return Objects.equals(id, menuDto.id) && Objects.equals(name, menuDto.name) && Objects.equals(title, menuDto.title) && Objects.equals(enabled, menuDto.enabled) && Objects.equals(url, menuDto.url) && Objects.equals(icon, menuDto.icon) && Objects.equals(description, menuDto.description) && type == menuDto.type && Objects.equals(parent, menuDto.parent) && Objects.equals(openInNewWindow, menuDto.openInNewWindow) && Objects.equals(childrenCount, menuDto.childrenCount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, title, enabled, url, icon, description, type, order, parent, openInNewWindow, childrenCount);
+        return Objects.hash(id, name, title, enabled, url, icon, description, type, parent, openInNewWindow, childrenCount);
     }
 
     public static Builder builder() {
@@ -209,7 +201,6 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         private String icon;
         private String description;
         private MenuType type;
-        private Long order;
         private MenuDto parent;
         private Boolean openInNewWindow;
         private Long childrenCount;
@@ -257,11 +248,6 @@ public class MenuDto implements Serializable, Identifiable<Long> {
             return this;
         }
 
-        public Builder order(Long order) {
-            this.order = order;
-            return this;
-        }
-
         public Builder parent(MenuDto parent) {
             this.parent = parent;
             return this;
@@ -278,7 +264,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
         }
 
         public MenuDto build() {
-            return new MenuDto(id, name, title, enabled, url, icon, description, type, order, parent, openInNewWindow, childrenCount);
+            return new MenuDto(id, name, title, enabled, url, icon, description, type, parent, openInNewWindow, childrenCount);
         }
     }
 }

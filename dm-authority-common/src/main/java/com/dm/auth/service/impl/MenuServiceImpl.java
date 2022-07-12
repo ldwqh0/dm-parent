@@ -280,7 +280,6 @@ public class MenuServiceImpl implements MenuService {
         model.setIcon(dto.getIcon());
         model.setDescription(dto.getDescription());
         model.setType(dto.getType());
-        model.setOrder(dto.getOrder());
         model.setOpenInNewWindow(dto.isOpenInNewWindow());
         return model;
     }
