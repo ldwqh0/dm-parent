@@ -15,6 +15,7 @@ import java.util.Optional;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 @JsonInclude(NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DepartmentDto implements Identifiable<Long>, Serializable {
     private static final long serialVersionUID = -4966481409754529111L;
 
@@ -70,7 +71,7 @@ public class DepartmentDto implements Identifiable<Long>, Serializable {
     /**
      * 上级部门信息
      */
-    @JsonIgnoreProperties({"parent", "description", "parents"})
+    @JsonIgnoreProperties(value = {"parent", "description", "parents"}, allowSetters = true)
     private final DepartmentDto parent;
 
     public Optional<DepartmentDto> getParent() {

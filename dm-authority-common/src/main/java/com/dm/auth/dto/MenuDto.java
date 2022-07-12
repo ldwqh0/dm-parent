@@ -17,6 +17,7 @@ import static java.lang.Boolean.TRUE;
  * @author LiDong
  */
 @JsonInclude(NON_ABSENT)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MenuDto implements Serializable, Identifiable<Long> {
     private static final long serialVersionUID = 7184771144233410172L;
     /**
@@ -60,7 +61,7 @@ public class MenuDto implements Serializable, Identifiable<Long> {
     /**
      * 父菜单
      */
-    @JsonIgnoreProperties({"parent", "url", "description", "openInNewWindow"})
+    @JsonIgnoreProperties(value = {"parent", "url", "description", "openInNewWindow"}, allowSetters = true)
     private final MenuDto parent;
 
     /**
