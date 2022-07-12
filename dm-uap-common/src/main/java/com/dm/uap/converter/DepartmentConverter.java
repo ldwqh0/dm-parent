@@ -9,20 +9,20 @@ public final class DepartmentConverter {
     }
 
     private static DepartmentDto.Builder newBuilder(Department model) {
-        return DepartmentDto.builder()
+        DepartmentDto.Builder builder = DepartmentDto.builder()
             .id(model.getId())
             .fullName(model.getFullName())
             .shortname(model.getShortName())
             .description(model.getDescription())
             .type(model.getType())
-            .parent(model.getParent().map(DepartmentConverter::toSimpleDto).orElse(null))
             .director(model.getDirector())
             .logo(model.getLogo());
+        model.getParent().map(DepartmentConverter::toSimpleDto).ifPresent(builder::parent);
+        return builder;
     }
 
     public static DepartmentDto toSimpleDto(Department model) {
         return newBuilder(model).build();
-
     }
 
     /**

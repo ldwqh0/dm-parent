@@ -9,7 +9,7 @@ public final class MenuConverter {
     }
 
     private static MenuDto.Builder newBuilder(Menu model) {
-        return MenuDto.builder()
+        MenuDto.Builder builder = MenuDto.builder()
             .id(model.getId())
             .name(model.getName())
             .title(model.getTitle())
@@ -20,6 +20,10 @@ public final class MenuConverter {
             .type(model.getType())
             .order(model.getOrder())
             .openInNewWindow(model.isOpenInNewWindow());
+        model.getParent().map(MenuConverter::toSimpleDto)
+            .ifPresent(builder::parent);
+        return builder;
+
     }
 
     private static MenuDto toSimpleDto(Menu model) {
@@ -27,8 +31,6 @@ public final class MenuConverter {
     }
 
     public static MenuDto toDto(Menu model, Long childrenCount) {
-        return newBuilder(model)
-            .childrenCount(childrenCount)
-            .build();
+        return newBuilder(model).childrenCount(childrenCount).build();
     }
 }

@@ -3,7 +3,6 @@ package com.dm.security.web.controller;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
@@ -25,14 +24,14 @@ public class CurrentAuthorityController {
     }
 
     /**
-     * 获取当前会话id
+     * 获取当前会话id     *
      *
      * @param request 请求
      * @return 会话的id
      * @ignoreParams request
      */
     @ResponseBody
-    @RequestMapping("session")
+    @GetMapping("session")
     public String session(WebRequest request) {
         return request.getSessionId();
     }
