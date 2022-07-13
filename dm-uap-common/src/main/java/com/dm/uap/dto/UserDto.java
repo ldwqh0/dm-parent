@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
@@ -162,6 +163,10 @@ public class UserDto implements Serializable, Identifiable<Long> {
 
     private final Address address;
 
+    private final ZonedDateTime createdTime;
+
+    private final ZonedDateTime lastModifiedTime;
+
     @JsonCreator
     private UserDto(@JsonProperty("id") Long id,
                     @JsonProperty("no") String no,
@@ -189,6 +194,41 @@ public class UserDto implements Serializable, Identifiable<Long> {
                     @JsonProperty("zoneinfo") String zoneinfo,
                     @JsonProperty("local") String local,
                     @JsonProperty("address") Address address) {
+        this(id, no, givenName, familyName, middleName, profile, website, gender, username,
+            fullName, password, enabled, email, emailVerified,
+            mobile, phoneNumberVerified, description, roles, scenicName,
+            regionCode, posts, birthDate, profilePhoto, zoneinfo, local,
+            address, null, null);
+    }
+
+    private UserDto(Long id,
+                    String no,
+                    String givenName,
+                    String familyName,
+                    String middleName,
+                    String profile,
+                    String website,
+                    User.Gender gender,
+                    String username,
+                    String fullName,
+                    String password,
+                    Boolean enabled,
+                    String email,
+                    Boolean emailVerified,
+                    String mobile,
+                    Boolean phoneNumberVerified,
+                    String description,
+                    Set<UserRoleDto> roles,
+                    String scenicName,
+                    String regionCode,
+                    List<UserPostDto> posts,
+                    LocalDate birthDate,
+                    String profilePhoto,
+                    String zoneinfo,
+                    String local,
+                    Address address,
+                    ZonedDateTime createdTime,
+                    ZonedDateTime lastModifiedTime) {
         this.id = id;
         this.no = no;
         this.givenName = givenName;
@@ -206,6 +246,8 @@ public class UserDto implements Serializable, Identifiable<Long> {
         this.mobile = mobile;
         this.phoneNumberVerified = TRUE.equals(phoneNumberVerified);
         this.description = description;
+        this.createdTime = createdTime;
+        this.lastModifiedTime = lastModifiedTime;
         CollectionUtils.addAll(this.roles, roles);
         this.scenicName = scenicName;
         this.regionCode = regionCode;
@@ -370,6 +412,8 @@ public class UserDto implements Serializable, Identifiable<Long> {
         private String zoneinfo;
         private String local;
         private Address address;
+        private ZonedDateTime createdTime;
+        private ZonedDateTime lastModifiedTime;
 
         private Builder() {
         }
@@ -508,8 +552,18 @@ public class UserDto implements Serializable, Identifiable<Long> {
             return this;
         }
 
+        public Builder lastModifiedTime(ZonedDateTime lastModifiedTime) {
+            this.lastModifiedTime = lastModifiedTime;
+            return this;
+        }
+
+        public Builder createdTime(ZonedDateTime createdTime) {
+            this.createdTime = createdTime;
+            return this;
+        }
+
         public UserDto build() {
-            return new UserDto(id, no, givenName, familyName, middleName, profile, website, gender, username, fullName, password, enabled, email, emailVerified, mobile, phoneNumberVerified, description, roles, scenicName, regionCode, posts, birthDate, profilePhoto, zoneinfo, local, address);
+            return new UserDto(id, no, givenName, familyName, middleName, profile, website, gender, username, fullName, password, enabled, email, emailVerified, mobile, phoneNumberVerified, description, roles, scenicName, regionCode, posts, birthDate, profilePhoto, zoneinfo, local, address, createdTime, lastModifiedTime);
         }
     }
 }

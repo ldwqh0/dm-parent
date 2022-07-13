@@ -31,6 +31,7 @@ public final class UserConverter {
             .email(model.getEmail())
             .emailVerified(model.isEmailVerified())
             .mobile(model.getMobile())
+            .enabled(model.isEnabled())
             .phoneNumberVerified(model.isPhoneNumberVerified())
             .scenicName(model.getScenicName())
             .regionCode(model.getRegionCode())
@@ -38,7 +39,9 @@ public final class UserConverter {
             .profilePhoto(model.getProfilePhoto())
             .zoneinfo(model.getZoneinfo())
             .local(model.getLocal())
-            .address(model.getAddress());
+            .address(model.getAddress())
+            .createdTime(model.getCreatedTime())
+            .lastModifiedTime(model.getLastModifiedTime());
     }
 
     public static UserDto toDto(User model) {

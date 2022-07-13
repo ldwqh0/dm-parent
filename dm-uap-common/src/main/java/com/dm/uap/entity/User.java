@@ -3,19 +3,19 @@ package com.dm.uap.entity;
 import com.dm.collections.CollectionUtils;
 import com.dm.data.domain.AbstractEntity;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "dm_user_", indexes = {
     @Index(name = "UDX_dm_user_username_", columnList = "username_", unique = true),
@@ -184,9 +184,16 @@ public class User extends AbstractEntity {
     @Column(name = "profile_photo_", length = 4000)
     private String profilePhoto;
 
-    @LastModifiedDate
     @Column(name = "last_modified_time_")
     private ZonedDateTime lastModifiedTime;
+
+    @Column(name = "created_time_")
+    private ZonedDateTime createdTime = ZonedDateTime.now();
+
+    @PreUpdate
+    void autoSetLastModifiedTime() {
+        this.lastModifiedTime = ZonedDateTime.now();
+    }
 
     public enum Gender {
         /**
@@ -419,21 +426,15 @@ public class User extends AbstractEntity {
         return lastModifiedTime;
     }
 
-    public void setLastModifiedTime(ZonedDateTime lastModifiedTime) {
+    void setLastModifiedTime(ZonedDateTime lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        User user = (User) o;
-        return accountExpired == user.accountExpired && credentialsExpired == user.credentialsExpired && enabled == user.enabled && emailVerified == user.emailVerified && phoneNumberVerified == user.phoneNumberVerified && Objects.equals(username, user.username) && Objects.equals(no, user.no) && Objects.equals(givenName, user.givenName) && Objects.equals(familyName, user.familyName) && Objects.equals(middleName, user.middleName) && Objects.equals(profile, user.profile) && Objects.equals(website, user.website) && gender == user.gender && Objects.equals(password, user.password) && Objects.equals(fullName, user.fullName) && Objects.equals(email, user.email) && Objects.equals(mobile, user.mobile) && Objects.equals(description, user.description) && Objects.equals(zoneinfo, user.zoneinfo) && Objects.equals(local, user.local) && Objects.equals(address, user.address) && Objects.equals(roles, user.roles) && Objects.equals(posts, user.posts) && Objects.equals(orders, user.orders) && Objects.equals(regionCode, user.regionCode) && Objects.equals(attributes, user.attributes) && Objects.equals(birthDate, user.birthDate) && Objects.equals(scenicName, user.scenicName) && Objects.equals(profilePhoto, user.profilePhoto) && Objects.equals(lastModifiedTime, user.lastModifiedTime);
+    public ZonedDateTime getCreatedTime() {
+        return createdTime;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), username, no, givenName, familyName, middleName, profile, website, gender, password, accountExpired, credentialsExpired, enabled, fullName, email, emailVerified, mobile, phoneNumberVerified, description, zoneinfo, local, address, roles, posts, orders, regionCode, attributes, birthDate, scenicName, profilePhoto, lastModifiedTime);
+    void setCreatedTime(ZonedDateTime createdTime) {
+        this.createdTime = createdTime;
     }
 }

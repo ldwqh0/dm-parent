@@ -151,8 +151,12 @@ public class DepartmentDto implements Identifiable<Long>, Serializable {
      * 是否有子部门
      */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    public boolean isHasChildren() {
-        return this.childrenCount > 0;
+    public Boolean getHasChildren() {
+        if (Objects.nonNull(childrenCount)) {
+            return this.childrenCount > 0;
+        } else {
+            return null;
+        }
     }
 
     public Long getChildrenCount() {
