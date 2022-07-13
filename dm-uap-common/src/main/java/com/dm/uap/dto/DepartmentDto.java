@@ -155,11 +155,11 @@ public class DepartmentDto implements Identifiable<Long>, Serializable {
         return this.childrenCount > 0;
     }
 
-    public long getChildrenCount() {
+    public Long getChildrenCount() {
         return childrenCount;
     }
 
-    public long getUserCount() {
+    public Long getUserCount() {
         return userCount;
     }
 
