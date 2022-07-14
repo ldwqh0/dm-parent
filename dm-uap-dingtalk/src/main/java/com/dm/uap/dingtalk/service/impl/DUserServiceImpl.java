@@ -141,7 +141,7 @@ public class DUserServiceImpl implements DUserService {
         }
 
         // 设置职务信息
-        Map<Department, String> post = new HashMap<Department, String>();
+        Map<Department, String> post = new HashMap<>();
         Map<DDepartment, String> _post = dUser.getPosts();
         if (MapUtils.isNotEmpty(_post)) {
             Set<Entry<DDepartment, String>> postEntry = _post.entrySet();
@@ -149,7 +149,7 @@ public class DUserServiceImpl implements DUserService {
                 post.put(e.getKey().getDepartment(), e.getValue());
             });
         } else if (CollectionUtils.isNotEmpty(dUser.getDepartments())) {
-            String pos = dUser.getPosition();
+            String pos = Objects.isNull(dUser.getPosition()) ? "" : dUser.getPosition();
             dUser.getDepartments().forEach(d -> {
                 post.put(d.getDepartment(), pos);
             });
