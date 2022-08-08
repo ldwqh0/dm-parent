@@ -44,7 +44,9 @@ public class DefaultDeviceVerificationCodeService implements DeviceVerificationC
                 && StringUtils.equals(key, savedItem.getKey())
                 && StringUtils.equalsIgnoreCase(verifyCode, savedItem.getCode()))
             .orElse(false);
-        codeStorage.remove(verifyId);
+        if (result) {
+            codeStorage.remove(verifyId);
+        }
         return result;
     }
 }
