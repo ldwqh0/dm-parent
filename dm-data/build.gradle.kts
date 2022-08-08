@@ -13,6 +13,7 @@ dependencies {
     compileOnly("org.springframework:spring-web")
     compileOnly("jakarta.validation:jakarta.validation-api")
     compileOnly("com.querydsl:querydsl-jpa")
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 
     annotationProcessor("com.querydsl:querydsl-apt:${Configuration.Versions.queryDsl}:jpa")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
