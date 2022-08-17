@@ -41,7 +41,9 @@ dependencyManagement {
             dependency("com.github.binarywang:weixin-java-mp:${Configuration.Versions.weixin_java_mp}")
             dependency("com.nimbusds:oauth2-oidc-sdk:${Configuration.Versions.nimbusds}")
             dependency("com.google.guava:guava:${Configuration.Versions.guava}")
-
+            dependency("org.springframework.boot:spring-boot-starter-web:${Configuration.Versions.springBoot}") {
+                exclude("org.springframework.boot:spring-boot-starter-tomcat")
+            }
         }
     }
 }
