@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * This class provides helper methods in parsing configuration values.
@@ -83,13 +84,17 @@ public class ConfigHelper {
             instance = defaultInstance;
         } else {
             try {
-                instance = Class.forName(paramValue).newInstance();
+                instance = Class.forName(paramValue).getDeclaredConstructor().newInstance();
             } catch (IllegalAccessException iae) {
                 throw new ConfigException(paramName, paramValue, iae);
             } catch (ClassNotFoundException cnfe) {
                 throw new ConfigException(paramName, paramValue, cnfe);
             } catch (InstantiationException ie) {
                 throw new ConfigException(paramName, paramValue, ie);
+            } catch (NoSuchMethodException ne) {
+                throw new ConfigException(paramName, paramValue, ne);
+            } catch (InvocationTargetException ite) {
+                throw new ConfigException(paramName, paramValue, ite);
             }
         }
 
