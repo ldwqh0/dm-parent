@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final GrantedAuthorityDto defaultGrantedAuthority = new GrantedAuthorityDto(1L, "内置分组_ROLE_AUTHENTICATED");
+    private final GrantedAuthorityDto defaultGrantedAuthority = GrantedAuthorityDto.ROLE_AUTHENTICATED;
 
     public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -48,7 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserDetails toUserDetails(User user) {
-        Set<GrantedAuthorityDto> grantedAuthorities = new HashSet<>(Sets.transform(user.getRoles(), userRole -> new GrantedAuthorityDto(userRole.getId(), userRole.getGroup() + "_" + userRole.getName())));
+        Set<GrantedAuthorityDto> grantedAuthorities = new HashSet<>(Sets.transform(user.getRoles(), userRole -> GrantedAuthorityDto.of(userRole.getId(), userRole.getGroup() + "_" + userRole.getName())));
         grantedAuthorities.add(defaultGrantedAuthority);
         return UserDetailsDto.builder()
             .id(user.getId())

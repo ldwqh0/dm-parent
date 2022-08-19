@@ -26,7 +26,7 @@ public final class RoleConverter {
     }
 
     public static GrantedAuthorityDto toGrantedAuthorityDto(Role role) {
-        return new GrantedAuthorityDto(role.getId(), role.getGroup() + "_" + role.getName());
+        return GrantedAuthorityDto.of(role.getId(), role.getGroup() + "_" + role.getName());
     }
 
     public static RoleDto toDto(Role model) {
@@ -36,5 +36,4 @@ public final class RoleConverter {
     public static MenuAuthorityDto toMenuAuthorityDto(Role role) {
         return new MenuAuthorityDto(role.getId(), role.getName(), Sets.transform(role.getMenus(), it -> MenuConverter.toDto(it, null)));
     }
-
 }
