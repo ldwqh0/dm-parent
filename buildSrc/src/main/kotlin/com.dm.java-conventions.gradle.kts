@@ -79,17 +79,6 @@ publishing {
                 password = "NC=d3W)28)]W"
             }
         }
-
-//        maven {
-//            val releasesRepoUrl = "http://demo.yzhxh.com:8081/nexus/repository/maven-releases/"
-//            val snapshotsRepoUrl = "http://demo.yzhxh.com:8081/nexus/repository/maven-snapshots/"
-//            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
-//            isAllowInsecureProtocol = true
-//            credentials {
-//                username = "lidong"
-//                password = ";lkjpo09234"
-//            }
-//        }
     }
 }
 
