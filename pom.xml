@@ -747,12 +747,12 @@
   </build>
   <distributionManagement>
     <repository>
-      <id>nexus-releases</id>
+      <id>nexus-aliyun-releases</id>
       <name>Nexus Release Repository</name>
       <url>https://packages.aliyun.com/maven/repository/2124183-release-zS40pt</url>
     </repository>
     <snapshotRepository>
-      <id>nexus-snapshots</id>
+      <id>nexus-aliyun-snapshots</id>
       <name>Nexus Snapshot Repository</name>
       <url>https://packages.aliyun.com/maven/repository/2124183-snapshot-jg10er</url>
     </snapshotRepository>

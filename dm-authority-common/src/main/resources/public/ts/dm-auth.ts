@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.32.889 on 2022-03-24 18:23:13.
+// Generated using typescript-generator version 2.32.889 on 2023-04-07 12:37:22.
 
 export interface MenuAuthorityDto extends Serializable {
     roleId?: number;
@@ -71,16 +71,16 @@ export interface Serializable {
 }
 
 export interface Sort extends Streamable<Order>, Serializable {
-    unsorted?: boolean;
     sorted?: boolean;
+    unsorted?: boolean;
 }
 
 export interface Pageable {
     offset?: number;
     sort?: Sort;
+    unpaged?: boolean;
     paged?: boolean;
     pageNumber?: number;
-    unpaged?: boolean;
     pageSize?: number;
 }
 
@@ -94,9 +94,9 @@ export interface Slice<T> extends Streamable<T> {
     number?: number;
     sort?: Sort;
     first?: boolean;
-    pageable?: Pageable;
     last?: boolean;
     numberOfElements?: number;
+    pageable?: Pageable;
 }
 
 export interface Streamable<T> extends Iterable<T>, Supplier<Stream<T>> {

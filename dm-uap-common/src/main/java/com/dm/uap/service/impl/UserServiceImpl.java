@@ -81,7 +81,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException(mobile));
     }
 
-
     @Override
     @Transactional
     @Caching(evict = {
@@ -218,8 +217,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public boolean userExistsByEmail(String email, Long... excludes) {
         BooleanExpression expression = qUser.email.equalsIgnoreCase(email);
-        if (ArrayUtils.isNotEmpty(excludes)) {
-            expression = expression.and(qUser.id.notIn(excludes));
+        List<Long> excludesList = Arrays.stream(excludes).filter(Objects::nonNull).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(excludesList)) {
+            expression = expression.and(qUser.id.notIn(excludesList));
         }
         return userRepository.exists(expression);
     }
@@ -227,8 +227,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public boolean userExistsByMobile(String mobile, Long... excludes) {
         BooleanExpression expression = qUser.mobile.equalsIgnoreCase(mobile);
-        if (ArrayUtils.isNotEmpty(excludes)) {
-            expression = expression.and(qUser.id.notIn(excludes));
+        List<Long> excludesList = Arrays.stream(excludes).filter(Objects::nonNull).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(excludesList)) {
+            expression = expression.and(qUser.id.notIn(excludesList));
         }
         return userRepository.exists(expression);
     }
@@ -263,7 +264,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserConverter.toDto(userRepository.save(originUser));
     }
 
-
     private void validationUser(UserDto user, Long... exclude) {
         String mobile = user.getMobile();
         String email = user.getEmail();
@@ -275,7 +275,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             Assert.from(email, v -> !userExistsByEmail(v, exclude)).orElseThrow(() -> new DataValidateException("邮箱已经被占用"));
         }
     }
-
 
     private User copyProperties(User user, UserDto userDto) {
         if (Objects.nonNull(user) && Objects.nonNull(userDto)) {
