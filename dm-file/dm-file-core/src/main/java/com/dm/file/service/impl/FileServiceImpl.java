@@ -1,5 +1,7 @@
 package com.dm.file.service.impl;
 
+import com.dm.collections.Lists;
+import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.dto.FileInfoDto;
 import com.dm.file.entity.FileInfo;
 import com.dm.file.exception.FileStorageException;
@@ -28,16 +30,16 @@ public class FileServiceImpl implements FileInfoService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<FileInfo> findById(UUID id) {
-        return fileInfoRepository.findById(id);
+    public Optional<FileInfoDto> findById(UUID id) {
+        return fileInfoRepository.findById(id).map(FileInfoConverter::toDto);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FileInfo save(MultipartFile file, FileInfoDto _info) {
+    public FileInfoDto save(MultipartFile file, FileInfoDto _info) {
         FileInfo fileInfo = save(_info);
         if (storageService.save(file, fileInfo.getPath())) {
-            return fileInfo;
+            return FileInfoConverter.toDto(fileInfo);
         } else {
             throw new FileStorageException();
         }
@@ -46,10 +48,34 @@ public class FileServiceImpl implements FileInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(UUID id) {
-        fileInfoRepository.findById(id).ifPresent(file -> {
-            storageService.delete(file.getPath());
-            fileInfoRepository.deleteById(id);
-        });
+        fileInfoRepository.findById(id)
+            .ifPresent(file -> {
+                storageService.delete(file.getPath());
+                fileInfoRepository.deleteById(id);
+            });
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public FileInfoDto save(Path[] src, FileInfoDto fileInfo) {
+        FileInfo file = save(fileInfo);
+        if (storageService.save(src, file.getPath())) {
+            return FileInfoConverter.toDto(file);
+        } else {
+            throw new FileStorageException();
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<FileInfoDto> findByNameAndHash(String filename, String sha256, String md5) {
+        return fileInfoRepository.findByFilenameAndSha256AndMd5(filename, sha256, md5).map(FileInfoConverter::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FileInfoDto> findById(List<UUID> files) {
+        return Lists.transform(fileInfoRepository.findAllById(files), FileInfoConverter::toDto);
     }
 
     private FileInfo save(FileInfoDto _info) {
@@ -59,27 +85,6 @@ public class FileServiceImpl implements FileInfoService {
         String storagePath = fileInfo.getId() + "." + ext;
         fileInfo.setPath(storagePath);
         return fileInfo;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Throwable.class)
-    public FileInfo save(Path[] src, FileInfoDto fileInfo) {
-        FileInfo file = save(fileInfo);
-        if (storageService.save(src, file.getPath())) {
-            return file;
-        } else {
-            throw new FileStorageException();
-        }
-    }
-
-    @Override
-    public Optional<FileInfo> findByNameAndHash(String filename, String sha256, String md5) {
-        return fileInfoRepository.findByFilenameAndSha256AndMd5(filename, sha256, md5);
-    }
-
-    @Override
-    public List<FileInfo> findById(List<UUID> files) {
-        return fileInfoRepository.findAllById(files);
     }
 
     private FileInfo copyProperties(FileInfo dest, FileInfoDto src) {

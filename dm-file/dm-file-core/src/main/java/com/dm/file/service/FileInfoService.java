@@ -1,7 +1,6 @@
 package com.dm.file.service;
 
 import com.dm.file.dto.FileInfoDto;
-import com.dm.file.entity.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ public interface FileInfoService {
      * @param id 文件id
      * @return 获取到的文件信息
      */
-    Optional<FileInfo> findById(UUID id);
+    Optional<FileInfoDto> findById(UUID id);
 
     /**
      * 保存文件，并返回文件信息
@@ -26,7 +25,7 @@ public interface FileInfoService {
      * @return 保存后的文件信息
      * @throws Exception 保存失败时抛出异常
      */
-    FileInfo save(MultipartFile file, FileInfoDto fileInfo) throws Exception;
+    FileInfoDto save(MultipartFile file, FileInfoDto fileInfo) throws Exception;
 
     /**
      * 删除指定的文件
@@ -44,9 +43,9 @@ public interface FileInfoService {
      * @return 保存之后的文件信息
      * @throws IOException 保存失败时抛出异常
      */
-    FileInfo save(Path[] src, FileInfoDto fileInfo) throws IOException;
+    FileInfoDto save(Path[] src, FileInfoDto fileInfo) throws IOException;
 
-    Optional<FileInfo> findByNameAndHash(String filename, String sha256, String md5);
+    Optional<FileInfoDto> findByNameAndHash(String filename, String sha256, String md5);
 
-    List<FileInfo> findById(List<UUID> files);
+    List<FileInfoDto> findById(List<UUID> files);
 }

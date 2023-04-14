@@ -2,17 +2,16 @@ package com.dm.file.controller;
 
 import com.dm.common.exception.DataNotExistException;
 import com.dm.file.config.FileConfig;
-import com.dm.file.converter.FileInfoConverter;
 import com.dm.file.dto.FileInfoDto;
 import com.dm.file.dto.PackageFileDto;
 import com.dm.file.dto.Range;
-import com.dm.file.entity.FileInfo;
 import com.dm.file.exception.RangeNotSatisfiableException;
 import com.dm.file.service.FileInfoService;
 import com.dm.file.service.FileStorageService;
 import com.dm.file.service.PackageFileService;
 import com.dm.file.service.ThumbnailService;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +83,7 @@ public class FileController {
         MediaType.APPLICATION_JSON_VALUE
     })
     public FileInfoDto get(@PathVariable("id") UUID id) {
-        return FileInfoConverter.toDto(fileService.findById(id).orElseThrow(DataNotExistException::new));
+        return fileService.findById(id).orElseThrow(DataNotExistException::new);
     }
 
     /**
@@ -101,9 +100,9 @@ public class FileController {
         if (StringUtils.isBlank(originalFilename)) {
             originalFilename = "";
         }
-        FileInfo file_ = fileService.save(file, FileInfoDto.builder().filename(originalFilename).size(file.getSize()).build());
+        FileInfoDto file_ = fileService.save(file, FileInfoDto.builder().filename(originalFilename).size(file.getSize()).build());
         thumbnailService.createThumbnail(file_.getPath());
-        return FileInfoConverter.toDto(file_);
+        return file_;
     }
 
     /**
@@ -118,7 +117,7 @@ public class FileController {
     public FileInfoDto findByNameAndHash(@RequestParam("filename") String filename,
                                          @RequestParam("sha256") String sha256,
                                          @RequestParam("md5") String md5) {
-        return fileService.findByNameAndHash(filename, sha256, md5).map(FileInfoConverter::toDto).orElse(null);
+        return fileService.findByNameAndHash(filename, sha256, md5).orElse(null);
     }
 
     /**
@@ -137,13 +136,14 @@ public class FileController {
                               @RequestParam("filename") String filename,
                               @RequestParam("file") MultipartFile chunkFile) {
         // TODO 待处理
-        Optional<FileInfo> file = fileService.findByNameAndHash(filename, sha256, md5);
-        if (file.isPresent()) {
-            // TODO 如果文件已经存在，将上传的信息添加到文件的尾部
-        } else {
-            // TODO　如果文件不存在，保存新的文件
-        }
-        return null;
+        throw new NotImplementedException();
+        //        Optional<FileInfo> file = fileService.findByNameAndHash(filename, sha256, md5);
+        //        if (file.isPresent()) {
+        //            // TODO 如果文件已经存在，将上传的信息添加到文件的尾部
+        //        } else {
+        //            // TODO　如果文件不存在，保存新的文件
+        //        }
+        //        return null;
     }
 
     /**
@@ -174,11 +174,10 @@ public class FileController {
                 length += Files.size(filePath);
                 tempFiles[i] = filePath;
             }
-            ;
             FileInfoDto fileInfo = FileInfoDto.builder()
                 .filename(filename)
                 .size(length).build();
-            FileInfo _result = fileService.save(tempFiles, fileInfo);
+            FileInfoDto _result = fileService.save(tempFiles, fileInfo);
             // 创建文件缩略图
             thumbnailService.createThumbnail(_result.getPath());
             for (Path file : tempFiles) {
@@ -189,7 +188,7 @@ public class FileController {
                     log.error("删除临时文件时发生异常", e);
                 }
             }
-            return FileInfoConverter.toDto(_result);
+            return _result;
         } else {
             return null;
         }
@@ -230,7 +229,7 @@ public class FileController {
     public ResponseEntity<?> preview(
         @PathVariable("id") UUID id) {
         return fileService.findById(id)
-            .map(FileInfo::getPath)
+            .map(FileInfoDto::getPath)
             .map(this::buildAccessRedirectResponse)
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -254,7 +253,7 @@ public class FileController {
     public ResponseEntity<?> previewThumbnails(@PathVariable("id") UUID id,
                                                @RequestParam(value = "level", defaultValue = "1") int level) {
         return fileService.findById(id)
-            .map(FileInfo::getPath)
+            .map(FileInfoDto::getPath)
             // 构建缩略图路径
             .map(path -> StringUtils.join("th", level, "/", path, ".jpg"))
             .map(this::buildAccessRedirectResponse)
@@ -277,14 +276,14 @@ public class FileController {
                                                      @RequestHeader(value = "user-agent") String userAgent,
                                                      @RequestParam(value = "filename", required = false, defaultValue = "package.zip") String filename) throws IOException {
         // 如果没有找到所有文件，返回404
-        List<FileInfo> fileInfos = fileService.findById(files);
+        List<FileInfoDto> fileInfos = fileService.findById(files);
         if (fileInfos.size() < files.size()) {
             return ResponseEntity.notFound().build();
         } else {
             StreamingResponseBody body = outputStream -> {
                 try (ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
                     Map<String, Integer> fileCountMap = new HashMap<>();
-                    for (FileInfo file : fileInfos) {
+                    for (FileInfoDto file : fileInfos) {
                         if (fileStorageService.exist(file.getPath())) {
                             // 进行文件重名计数
                             String entryName = file.getFilename();
@@ -403,17 +402,18 @@ public class FileController {
         return fileService.findById(id)
             // 判断文件是否存在
             .filter(item -> fileStorageService.exist(item.getPath()))
-            .map(fileItem -> fileItem.getLastModifiedDate()
-                .filter(lastModified -> checkNotModified(request, lastModified))
-                .map(lastModified -> this.<Resource>buildNotModified())
-                .orElseGet(() -> {
+            .map(item -> {
+                if (checkNotModified(request, item.getCreateTime())) {
+                    return this.buildNotModified();
+                } else {
                     try {
-                        return this.buildDownloadBody(fileItem, getRanges(range, fileItem), agentUse);
+                        return this.buildDownloadBody(item, getRanges(range, item), agentUse);
                     } catch (IOException e) {
                         log.error("下载文件时发送错误", e);
                         throw new RuntimeException(e);
                     }
-                }))
+                }
+            })
             .orElseGet(this::buildNotFount);
     }
 
@@ -436,28 +436,25 @@ public class FileController {
         @PathVariable("id") UUID id,
         @RequestParam(value = "level", defaultValue = "1") int level,
         WebRequest request) {
-        return fileService.findById(id).filter(fileInfo -> thumbnailService.exists(fileInfo.getPath(), level)).map(
-                file -> file.getLastModifiedDate()
-                    .filter(lastModify -> this.checkNotModified(request, lastModify))
-                    .map(lastModify -> this.<Resource>buildNotModified())
-                    .orElseGet(() -> {
-                        try {
-                            return this.buildThumbnailResponse(file, level);
-                        } catch (IOException e) {
-                            log.error("构建缩略图时发生错误", e);
-                            throw new RuntimeException(e);
-                        }
-                    }))
-            .orElseGet(this::buildNotFount);
+        return fileService.findById(id)
+            .filter(fileInfo -> thumbnailService.exists(fileInfo.getPath(), level))
+            .map(file -> {
+                if (this.checkNotModified(request, file.getCreateTime())) {
+                    return this.buildNotModified();
+                } else {
+                    try {
+                        return this.buildThumbnailResponse(file, level);
+                    } catch (IOException e) {
+                        log.error("构建缩略图时发生错误", e);
+                        throw new RuntimeException(e);
+                    }
+                }
+            }).orElseGet(this::buildNotFount);
     }
 
-    private ResponseEntity<Resource> buildThumbnailResponse(FileInfo file, int level) throws IOException {
-        BodyBuilder builder = ResponseEntity.ok()
-            .contentType(MediaType.IMAGE_JPEG);
-        file.getLastModifiedDate().ifPresent(lastModifiedDate -> {
-            builder.lastModified(lastModifiedDate);
-            builder.cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
-        });
+    private ResponseEntity<Resource> buildThumbnailResponse(FileInfoDto file, int level) throws IOException {
+        BodyBuilder builder = ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG);
+        builder.lastModified(file.getCreateTime()).cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS));
         return builder.body(thumbnailService.getResource(file.getPath(), level));
     }
 
@@ -469,7 +466,7 @@ public class FileController {
      * @return 解析后的分块信息
      * @throws RangeNotSatisfiableException 请求异常
      */
-    private List<Range> getRanges(String ranges, FileInfo file) {
+    private List<Range> getRanges(String ranges, FileInfoDto file) {
         if (StringUtils.isNotBlank(ranges) && StringUtils.startsWith(ranges, "bytes=")) {
             String rangeStr = StringUtils.removeStart(ranges, "bytes=");
             String[] rangeStrings = rangeStr.split(",");
@@ -480,7 +477,7 @@ public class FileController {
     }
 
     // 构建下载响应体
-    private ResponseEntity<Resource> buildDownloadBody(FileInfo file, List<Range> ranges, String userAgent) throws IOException {
+    private ResponseEntity<Resource> buildDownloadBody(FileInfoDto file, List<Range> ranges, String userAgent) throws IOException {
         try {
             String filename = file.getFilename();
             long fileSize = file.getSize();
@@ -524,7 +521,7 @@ public class FileController {
             if (StringUtils.isNotBlank(userAgent)) {
                 bodyBuilder.header("Content-Disposition", generateAttachmentFilename(userAgent, filename));
             }
-            file.getLastModifiedDate().ifPresent(bodyBuilder::lastModified);
+            bodyBuilder.lastModified(file.getCreateTime());
             return bodyBuilder.body(body);
         } catch (UnsupportedEncodingException e) {
             log.error("构建响应体时发生异常", e);
@@ -533,14 +530,14 @@ public class FileController {
     }
 
     private String generateAttachmentFilename(String userAgent, String filename) throws UnsupportedEncodingException {
-        return "attachment; filename=\"" + generateFilename(userAgent, filename) + "\"; filename*=utf-8''" + URLEncoder.encode(filename, "UTF-8");
+        return "attachment; filename=\"" + generateFilename(userAgent, filename) + "\"; filename*=utf-8''" + URLEncoder.encode(filename, StandardCharsets.UTF_8);
     }
 
     private String generateFilename(String userAgent, String filename) throws UnsupportedEncodingException {
         if (StringUtils.isNotBlank(userAgent) && (StringUtils.contains(userAgent, "Trident")
             || StringUtils.contains(userAgent, "Edge")
             || StringUtils.contains(userAgent, "MSIE"))) {
-            return URLEncoder.encode(filename, "UTF-8");
+            return URLEncoder.encode(filename, StandardCharsets.UTF_8);
         } else {
             return new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         }

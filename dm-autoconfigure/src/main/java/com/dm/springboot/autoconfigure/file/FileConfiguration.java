@@ -34,8 +34,11 @@ public class FileConfiguration {
     }
 
     @Bean
-    public FileInfoService fileInfoService(FileInfoRepository fileInfoRepository,
-                                           FileStorageService fileStorageService) {
+    @ConditionalOnMissingBean(FileInfoService.class)
+    public FileInfoService fileInfoService(
+        FileInfoRepository fileInfoRepository,
+        FileStorageService fileStorageService
+    ) {
         return new FileServiceImpl(
             fileStorageService,
             fileInfoRepository

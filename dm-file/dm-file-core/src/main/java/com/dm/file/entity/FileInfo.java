@@ -49,7 +49,6 @@ public class FileInfo implements Auditable<Auditor<Long, String>, UUID, ZonedDat
 
     @Column(name = "created_date_")
     @CreatedDate
-
     private ZonedDateTime createdDate = ZonedDateTime.now();
 
     @Embedded

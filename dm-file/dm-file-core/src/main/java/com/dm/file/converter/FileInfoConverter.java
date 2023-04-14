@@ -16,7 +16,7 @@ public final class FileInfoConverter {
             .createdBy(model.getCreatedBy().orElse(null))
             .lastModifiedBy(model.getLastModifiedBy().orElse(null))
             .createTime(model.getCreatedDate().orElse(null))
+            .lastModifiedTime(model.getLastModifiedDate().orElse(null))
             .build();
     }
-
 }

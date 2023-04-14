@@ -59,6 +59,8 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
     @JsonProperty(access = READ_ONLY)
     private final ZonedDateTime createTime;
 
+    private final ZonedDateTime lastModifiedTime;
+
     @Override
     public UUID getId() {
         return id;
@@ -88,11 +90,18 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
         return createTime;
     }
 
-    private FileInfoDto() {
-        this(null, null, null, null, null, null, null);
+    public ZonedDateTime getLastModifiedTime() {
+        return lastModifiedTime;
     }
 
-    private FileInfoDto(UUID id, String filename, String path, Long size, Auditor<Long, String> createdBy, Auditor<Long, String> lastModifiedBy, ZonedDateTime createTime) {
+    private FileInfoDto() {
+        this(null, null, null, null, null, null, null, null);
+    }
+
+    private FileInfoDto(UUID id, String filename, String path, Long size, Auditor<Long, String> createdBy, Auditor<Long, String> lastModifiedBy,
+
+                        ZonedDateTime createTime,
+                        ZonedDateTime lastModifiedTime) {
         this.id = id;
         this.filename = filename;
         this.path = path;
@@ -100,6 +109,7 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
         this.createdBy = createdBy;
         this.lastModifiedBy = lastModifiedBy;
         this.createTime = createTime;
+        this.lastModifiedTime = lastModifiedTime;
     }
 
     public static Builder builder() {
@@ -114,6 +124,8 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
         private Auditor<Long, String> createdBy;
         private Auditor<Long, String> lastModifiedBy;
         private ZonedDateTime createTime;
+
+        private ZonedDateTime lastModifiedTime;
 
         private Builder() {
         }
@@ -157,8 +169,13 @@ public class FileInfoDto implements Identifiable<UUID>, Serializable {
             return this;
         }
 
+        public Builder lastModifiedTime(ZonedDateTime lastModifiedTime) {
+            this.lastModifiedTime = lastModifiedTime;
+            return this;
+        }
+
         public FileInfoDto build() {
-            return new FileInfoDto(id, filename, path, size, createdBy, lastModifiedBy, createTime);
+            return new FileInfoDto(id, filename, path, size, createdBy, lastModifiedBy, createTime, lastModifiedTime);
         }
     }
 }
