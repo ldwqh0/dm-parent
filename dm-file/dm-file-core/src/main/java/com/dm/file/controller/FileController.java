@@ -277,7 +277,7 @@ public class FileController {
                                                      @RequestParam(value = "filename", required = false, defaultValue = "package.zip") String filename) throws IOException {
         // 如果没有找到所有文件，返回404
         List<FileInfoDto> fileInfos = fileService.findById(files);
-        if (fileInfos.size() < files.size()) {
+        if (fileInfos.size() == 0) {
             return ResponseEntity.notFound().build();
         } else {
             StreamingResponseBody body = outputStream -> {

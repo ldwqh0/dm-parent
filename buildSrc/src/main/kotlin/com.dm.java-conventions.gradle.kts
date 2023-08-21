@@ -9,24 +9,8 @@ repositories {
 plugins {
     `java-library`
     `maven-publish`
-    `eclipse`
     id("io.spring.dependency-management")
 }
-
-eclipse {
-    sourceSets {
-        main {
-            java {
-                srcDir("build/generated/sources/annotationProcessor/java/main")
-            }
-        }
-    }
-
-    classpath {
-        plusConfigurations.plus(configurations.compileOnly)
-    }
-}
-
 
 dependencyManagement {
     imports {
